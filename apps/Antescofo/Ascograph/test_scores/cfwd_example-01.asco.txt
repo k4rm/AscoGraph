@@ -1,0 +1,14 @@
+BPM 60
+NOTE C4 4.0
+CURVE slider grain:=0.05s ; the grain size is 50 milliseconds
+{
+	0.0 [0]
+	1.0 [0.5]
+	0.5 [1.0] ; 0.5 is the delay from the previous point: 
+	; so, this point will be at 1.5 beats from the C4 onset
+
+	0.5 [0]
+	1.0 [0]
+	0.5 [0.8]
+	0.5 [1.0] 
+}

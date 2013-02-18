@@ -1,0 +1,41 @@
+<install>
+
+	<version>2.1</version>
+	<author>Mehmet Akten</author>
+	<url>http://www.msalibs.org</url>
+    
+	<requires>
+		<addon>ObjCPointer</addon>
+	</requires>
+
+	<add>	
+		<src>
+			<folder name="addons/MSAPhysics/src">			
+				<file>../../../addons/MSAPhysics/src/MSAPhysics.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAPhysics2D.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAPhysics3D.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAAttraction.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAPhysicsCallbacks.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAConstraint.h</file>
+				<file>../../../addons/MSAPhysics/src/MSADataRecorder.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAPhysicsParams.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAParticle.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAParticleDrawer.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAParticleUpdater.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAPhysicsSector.h</file>
+				<file>../../../addons/MSAPhysics/src/MSASpring.h</file>
+				<file>../../../addons/MSAPhysics/src/MSAPhysicsWorld.h</file>
+			</folder>                        
+
+		</src>
+
+		<include>
+			<path>../../../addons/MSAPhysics/src</path>
+		</include>
+		
+		<link>
+		</link>
+
+	</add>
+	
+</install>

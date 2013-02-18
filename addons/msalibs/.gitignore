@@ -1,0 +1,17 @@
+# Mac OS X cruft
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.user
+.DS_Store
+
+build/
+*.app
+*.app/*
+
+# Windows cruft
+*.suo
+*.ncb
+*.sdf
+Debug/
+Release/

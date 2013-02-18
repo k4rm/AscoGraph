@@ -1,0 +1,27 @@
+<install>
+
+	<version>1.2</version>
+	<author>Mehmet Akten</author>
+	<url>www.msalibs.org</url>
+
+    <requires>
+	</requires>
+    
+	<add>	
+		<src>
+			<folder name="addons/MSAObjCPointer/src">			
+				<file>../../../addons/MSAObjCPointer/src/MSAObjCPointer.h</file>
+				<file>../../../addons/MSAObjCPointer/src/MSAObjCPointer.cpp</file>
+			</folder>
+		</src>
+
+		<include>
+			<path>../../../addons/MSAObjCPointer/src</path>
+		</include>
+		
+		<link>
+		</link>
+
+	</add>
+	
+</install>

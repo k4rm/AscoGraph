@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>FoundWorkingCopyPaths</key>
+	<array>
+		<string>/Volumes/Data/Coffy/ofx/of_v0072_osx_release/addons/ofxTimeline</string>
+		<string>/Volumes/Data/Coffy/ofx/of_v0072_osx_release/addons/ofxTween</string>
+		<string>/Volumes/Data/Coffy/ofx/of_v0072_osx_release/addons/ofxMSATimer</string>
+		<string>/Volumes/Data/Coffy/ofx/of_v0072_osx_release/addons/ofxRange</string>
+		<string>/Volumes/Data/Coffy/ofx/of_v0072_osx_release/addons/ofxTextInputField</string>
+		<string>/Volumes/Data/Coffy/ofx/of_v0072_osx_release/addons/ofxTimecode</string>
+	</array>
+	<key>LastWorkingCopyScanDate</key>
+	<date>2012-11-08T16:15:17Z</date>
+	<key>Version</key>
+	<integer>3</integer>
+</dict>
+</plist>

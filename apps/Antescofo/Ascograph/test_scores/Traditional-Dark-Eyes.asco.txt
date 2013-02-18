@@ -1,0 +1,76 @@
+BPM 120
+
+; ----------- measure 1 --- beat 1 ------
+NOTE 0 1/1
+NOTE 6900 1/3
+NOTE 7000 1/3
+NOTE 6900 1/3
+NOTE 6800 1/1
+NOTE 6900 1/1
+
+; ----------- measure 2 --- beat 5 ------
+NOTE 7000 3/2
+NOTE 6900 5/2
+
+; ----------- measure 3 --- beat 9 ------
+NOTE 0 3/2
+NOTE 6900 1/2
+NOTE 6800 1/1
+NOTE 6900 1/1
+
+; ----------- measure 4 --- beat 13 ------
+NOTE 7000 3/2
+NOTE 6900 5/2
+
+; ----------- measure 5 --- beat 17 ------
+NOTE 0 2/1
+NOTE 6900 1/1
+NOTE 7400 1/1
+
+; ----------- measure 6 --- beat 21 ------
+NOTE 7400 3/2
+NOTE 7300 5/2
+
+; ----------- measure 7 --- beat 25 ------
+NOTE 0 1/2
+NOTE 7600 3/2
+NOTE 7700 1/1
+NOTE 7300 1/1
+
+; ----------- measure 8 --- beat 29 ------
+NOTE 7600 3/2
+NOTE 7400 5/2
+
+; ----------- measure 9 --- beat 33 ------
+NOTE 0 2/1
+NOTE 7700 1/1
+NOTE 7900 1/1
+
+; ----------- measure 10 --- beat 37 ------
+NOTE 7700 3/2
+NOTE 7600 3/2
+NOTE 7000 3/1
+
+; ----------- measure 11 --- beat 41 ------
+NOTE 7600 1/1
+NOTE 7700 1/1
+
+; ----------- measure 12 --- beat 45 ------
+NOTE 7600 3/2
+NOTE 7400 3/2
+NOTE 6900 3/1
+
+; ----------- measure 13 --- beat 49 ------
+NOTE 6800 1/1
+NOTE 6900 1/1
+
+; ----------- measure 14 --- beat 53 ------
+NOTE 7000 2/1
+NOTE 6900 2/1
+
+; ----------- measure 15 --- beat 57 ------
+NOTE 7600 2/1
+NOTE 7700 2/1
+
+; ----------- measure 16 --- beat 61 ------
+NOTE 7400 8/1

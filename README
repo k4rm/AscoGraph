@@ -1,0 +1,29 @@
+Ascograph - graphical editor for composition and performance with Antescofo
+
+
+Dependencies :
+--------------
+
+Ascograph is built on OpenFrameworks, version 72.
+
+
+
+Build :
+-------
+
+To build Ascograph, you will need CMake, minimum version 2.8.
+
+# go into the directory where the sources are locate :
+cd apps/Antescofo/Ascograph/
+
+# create makefiles
+cmake cmake
+
+# launch build
+make -j 4
+
+The resulting application will be found in apps/Antescofo/Ascograph/bin/ directory.
+
+
+Thomas Coffy
+thomas.coffy@ircam.fr

@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<museScore version="1.9">
+  <Mag>0.960273</Mag>
+  <xoff>-68.2592</xoff>
+  <yoff>0</yoff>
+  <Spatium>1.76389</Spatium>
+  <Division>480</Division>
+  <Style>
+    <staffUpperBorder>8</staffUpperBorder>
+    <staffLowerBorder>4</staffLowerBorder>
+    <staffDistance>6.5</staffDistance>
+    <akkoladeDistance>5.5</akkoladeDistance>
+    <systemDistance>9.25</systemDistance>
+    <lyricsDistance>6.5</lyricsDistance>
+    <lyricsMinBottomDistance>2</lyricsMinBottomDistance>
+    <systemFrameDistance>7</systemFrameDistance>
+    <frameSystemDistance>7</frameSystemDistance>
+    <minMeasureWidth>4</minMeasureWidth>
+    <barWidth>0.16</barWidth>
+    <doubleBarWidth>0.16</doubleBarWidth>
+    <endBarWidth>0.3</endBarWidth>
+    <doubleBarDistance>0.3</doubleBarDistance>
+    <endBarDistance>0.3</endBarDistance>
+    <bracketWidth>0.35</bracketWidth>
+    <bracketDistance>0.3</bracketDistance>
+    <clefLeftMargin>0.5</clefLeftMargin>
+    <keysigLeftMargin>0.5</keysigLeftMargin>
+    <timesigLeftMargin>0.5</timesigLeftMargin>
+    <clefKeyRightMargin>1.75</clefKeyRightMargin>
+    <stemWidth>0.13</stemWidth>
+    <minNoteDistance>0.5</minNoteDistance>
+    <measureSpacing>1.5</measureSpacing>
+    <barNoteDistance>1.5</barNoteDistance>
+    <noteBarDistance>1</noteBarDistance>
+    <staffLineWidth>0.08</staffLineWidth>
+    <ledgerLineWidth>0.08</ledgerLineWidth>
+    <akkoladeWidth>1.6</akkoladeWidth>
+    <prefixDistance>0.13</prefixDistance>
+    <prefixNoteDistance>0.22</prefixNoteDistance>
+    <beamWidth>0.48</beamWidth>
+    <beamDistance>0.5</beamDistance>
+    <beamMinLen>1.25</beamMinLen>
+    <beamMinSlope>0.1</beamMinSlope>
+    <beamMaxSlope>0.5</beamMaxSlope>
+    <maxBeamTicks>480</maxBeamTicks>
+    <dotNoteDistance>0.5</dotNoteDistance>
+    <dotRestDistance>0.25</dotRestDistance>
+    <dotDotDistance>0.5</dotDotDistance>
+    <propertyDistanceHead>0.5</propertyDistanceHead>
+    <propertyDistanceStem>0.5</propertyDistanceStem>
+    <propertyDistance>0.25</propertyDistance>
+    <pageFillLimit>0.7</pageFillLimit>
+    <lastSystemFillLimit>0.5</lastSystemFillLimit>
+    <hairpinHeight>1.2</hairpinHeight>
+    <hairpinContHeight>0.5</hairpinContHeight>
+    <hairpinWidth>0.13</hairpinWidth>
+    <showPageNumber>1</showPageNumber>
+    <showPageNumberOne>0</showPageNumberOne>
+    <pageNumberOddEven>1</pageNumberOddEven>
+    <showMeasureNumber>1</showMeasureNumber>
+    <showMeasureNumberOne>0</showMeasureNumberOne>
+    <measureNumberInterval>5</measureNumberInterval>
+    <measureNumberAllStaffs>0</measureNumberAllStaffs>
+    <measureNumberSystem>1</measureNumberSystem>
+    <graceNoteMag>0.7</graceNoteMag>
+    <smallStaffMag>0.7</smallStaffMag>
+    <smallNoteMag>0.7</smallNoteMag>
+    <smallClefMag>0.8</smallClefMag>
+    <genClef>1</genClef>
+    <genKeysig>1</genKeysig>
+    <gateTime>70</gateTime>
+    <tenutoGateTime>100</tenutoGateTime>
+    <staccatoGateTime>40</staccatoGateTime>
+    <slurGateTime>90</slurGateTime>
+    </Style>
+  <showInvisible>0</showInvisible>
+  <page-layout>
+    <pageFormat>A4</pageFormat>
+    <page-margins type="both">
+      <left-margin>56.6929</left-margin>
+      <right-margin>56.6929</right-margin>
+      <top-margin>56.6929</top-margin>
+      <bottom-margin>113.386</bottom-margin>
+      </page-margins>
+    </page-layout>
+  <siglist>
+    <sig tick="0">
+      <nom>4</nom>
+      <denom>4</denom>
+      </sig>
+    </siglist>
+  <tempolist fix="1.5">
+    <tempo tick="0">1.5</tempo>
+    </tempolist>
+  <Part>
+    <Staff>
+      <cleflist>
+        <clef tick="0" idx="0"/>
+        </cleflist>
+      <keylist>
+        <key tick="0" idx="0"/>
+        </keylist>
+      <bracket type="1" span="2"/>
+      <barLineSpan>2</barLineSpan>
+      </Staff>
+    <Staff>
+      <cleflist>
+        <clef tick="0" idx="4"/>
+        </cleflist>
+      <keylist>
+        <key tick="0" idx="0"/>
+        </keylist>
+      <barLineSpan>0</barLineSpan>
+      </Staff>
+    <trackName>Piano</trackName>
+    <name>
+<html><head><meta name="qrichtext" content="1" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Times New Roman'; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-family:'helvetica'; font-size:11pt;">Piano</span></p></body></html>
+      </name>
+    <Instrument>
+      <Channel name="normal">
+        <program value="0"/>
+        <controller ctrl="7" value="100"/>
+        <controller ctrl="10" value="60"/>
+        <controller ctrl="93" value="30"/>
+        <controller ctrl="91" value="30"/>
+        </Channel>
+      </Instrument>
+    </Part>
+  <Staff id="1">
+    <Measure number="1">
+      <Beam id="1">
+        </Beam>
+      <Chord>
+        <ticklen>240</ticklen>
+        <Beam>1</Beam>
+        <Note pitch="60" tpc="14"/>
+        </Chord>
+      <Chord>
+        <ticklen>240</ticklen>
+        <Beam>1</Beam>
+        <Note pitch="62" tpc="16"/>
+        </Chord>
+      <Chord>
+        <ticklen>240</ticklen>
+        <Beam>1</Beam>
+        <Note pitch="64" tpc="18"/>
+        </Chord>
+      <Chord>
+        <ticklen>240</ticklen>
+        <Beam>1</Beam>
+        <Note pitch="65" tpc="13"/>
+        </Chord>
+      <Beam id="2">
+        <y1>541.655</y1>
+        <y2>541.655</y2>
+        </Beam>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>2</Beam>
+        <Note>
+          <pitch>60</pitch>
+          <tpc>14</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>2</Beam>
+        <Note>
+          <pitch>62</pitch>
+          <tpc>16</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>2</Beam>
+        <Note pitch="64" tpc="18"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>2</Beam>
+        <Note pitch="65" tpc="13"/>
+        </Chord>
+      <Beam id="3">
+        </Beam>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>3</Beam>
+        <Note pitch="67" tpc="15"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>3</Beam>
+        <Note pitch="69" tpc="17"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>3</Beam>
+        <Note pitch="71" tpc="19"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>3</Beam>
+        <Note pitch="72" tpc="14"/>
+        </Chord>
+      </Measure>
+    <Measure number="2">
+      <Beam id="4">
+        <y1>559.168</y1>
+        <y2>559.168</y2>
+        </Beam>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>4</Beam>
+        <Note pitch="60" tpc="14"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>4</Beam>
+        <Note pitch="62" tpc="16"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>4</Beam>
+        <Note>
+          <pitch>59</pitch>
+          <tpc>19</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>4</Beam>
+        <Note>
+          <pitch>57</pitch>
+          <tpc>17</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Beam id="5">
+        </Beam>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>5</Beam>
+        <Note pitch="67" tpc="15"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>5</Beam>
+        <Note pitch="72" tpc="14"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>5</Beam>
+        <Note pitch="74" tpc="16"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>5</Beam>
+        <Note pitch="76" tpc="18"/>
+        </Chord>
+      <Beam id="6">
+        <y1>145.994</y1>
+        <y2>145.994</y2>
+        </Beam>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>6</Beam>
+        <Note>
+          <pitch>53</pitch>
+          <tpc>13</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>6</Beam>
+        <Note>
+          <pitch>55</pitch>
+          <tpc>15</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>6</Beam>
+        <Note pitch="53" tpc="13"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>6</Beam>
+        <Note>
+          <pitch>52</pitch>
+          <tpc>18</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Rest>
+        <ticklen>480</ticklen>
+        </Rest>
+      </Measure>
+    <Measure number="3">
+      <Text>
+        <subtype>MeasureNumber</subtype>
+        <track>-1</track>
+        </Text>
+      <Beam id="7">
+        <y1>561.11</y1>
+        <y2>520.427</y2>
+        </Beam>
+      <Chord>
+        <ticklen>360</ticklen>
+        <Beam>7</Beam>
+        <Note>
+          <pitch>57</pitch>
+          <tpc>17</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>7</Beam>
+        <Note pitch="67" tpc="15"/>
+        <Note pitch="72" tpc="14"/>
+        <Note pitch="78" tpc="20"/>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Note pitch="60" tpc="14"/>
+        </Chord>
+      <Rest>
+        <ticklen>120</ticklen>
+        </Rest>
+      <Rest>
+        <ticklen>240</ticklen>
+        </Rest>
+      <Beam id="8">
+        <y1>544.786</y1>
+        <y2>481.218</y2>
+        </Beam>
+      <Chord>
+        <ticklen>360</ticklen>
+        <Beam>8</Beam>
+        <StemDirection>up</StemDirection>
+        <Note>
+          <pitch>55</pitch>
+          <tpc>15</tpc>
+          <move>1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>8</Beam>
+        <Note pitch="65" tpc="13"/>
+        <Note pitch="71" tpc="19"/>
+        <Note pitch="74" tpc="16"/>
+        </Chord>
+      <Rest>
+        <ticklen>240</ticklen>
+        </Rest>
+      <Rest>
+        <ticklen>120</ticklen>
+        </Rest>
+      <Rest>
+        <ticklen>120</ticklen>
+        </Rest>
+      </Measure>
+    <Measure number="4">
+      <Rest>
+        <ticklen>0</ticklen>
+        </Rest>
+      </Measure>
+    </Staff>
+  <Staff id="2">
+    <Measure number="1">
+      <Rest>
+        <ticklen>0</ticklen>
+        </Rest>
+      </Measure>
+    <Measure number="2">
+      <Chord>
+        <ticklen>480</ticklen>
+        <Note pitch="48" tpc="14"/>
+        </Chord>
+      <Chord>
+        <ticklen>480</ticklen>
+        <Note pitch="48" tpc="14"/>
+        </Chord>
+      <Chord>
+        <ticklen>480</ticklen>
+        <StemDirection>down</StemDirection>
+        <Note pitch="48" tpc="14"/>
+        </Chord>
+      <Beam id="9">
+        </Beam>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>9</Beam>
+        <Note>
+          <pitch>69</pitch>
+          <tpc>17</tpc>
+          <move>-1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>9</Beam>
+        <Note>
+          <pitch>67</pitch>
+          <tpc>15</tpc>
+          <move>-1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>9</Beam>
+        <Note>
+          <pitch>66</pitch>
+          <tpc>20</tpc>
+          <move>-1</move>
+          </Note>
+        </Chord>
+      <Chord>
+        <ticklen>120</ticklen>
+        <Beam>9</Beam>
+        <Note>
+          <pitch>64</pitch>
+          <tpc>18</tpc>
+          <move>-1</move>
+          </Note>
+        </Chord>
+      </Measure>
+    <Measure number="3">
+      <Rest>
+        <visible>0</visible>
+        <ticklen>0</ticklen>
+        </Rest>
+      </Measure>
+    <Measure number="4">
+      <Rest>
+        <ticklen>0</ticklen>
+        </Rest>
+      </Measure>
+    </Staff>
+  <cursorTrack>4</cursorTrack>
+  </museScore>

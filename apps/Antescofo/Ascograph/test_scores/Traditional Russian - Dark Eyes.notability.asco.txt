@@ -1,0 +1,104 @@
+; This is a sample score for AnteScofo - Anticipatory Score Following
+; Common messages include:
+; 	BPM <float> : indicating tempo in BPM
+;	<float1> <float2> <string> : indicate PITCH (MIDI or MIDIcent) + BEAT DURATION + CUENAME
+;		The Beat duration can be ZERO, indicating a GRACE NOTE or "hors-temps" events.
+;		A Pitch value of ZERO indicates silence.
+;	TRILL	( <float1> <float2> ... <floatN> ) <floatN+> <string>: Indicate a Trill class
+;		with based notes of <float-i> in MIDIcents. A trill, in this terminology is ONE event that
+;		possess several sub-events in time - but all these sub-events contribute to one global event
+;		in time. <floatN+> is the duration in beats and <string> is the cue name.
+;		The trill class can successfully encode multi-phonics when used with yin~ or fiddle~
+;	MULTI	( <float1> <float2> ... <floatN> ) <floatN+> <string>
+;		Multi class is the same as Trills except that we want access to EACH of the events indicated
+;		by <float-i>s. Think of the floats (MIDIcents) between parenthesis as a table of values in
+;		time.
+;		The Multi class can successfully encode continuous events such as Glissandi.
+;	AUDIO OFF: Turns off audio so that events will be triggered automatically using the current
+;		detected TEMPO and their corresponding score beat duration. It must be turned ON afterwards.
+;		AUDIO OFF/ON can successfully detect problematic repeated notes!
+;		AUDIO OFF/ON can be thought of as some sort of tempo locked Q-list.
+;	TEMPO ON/OFF:	Turns tempo decoding on or off for places in the score where the tempo should not
+;		be updated. A typical example is a FERMATA.
+; NOTE: Note the space after and before the opening and closing parenthesis for TRILL and MULTI classes.
+;
+; Transferred from NoteAbilityPro score: Untitled-1
+; Date: 2012 11 14 17:29:53 GMT+01:00
+;
+BPM 120.00
+
+; ---------- measure 1 beat 0.00 ---------
+NOTE 0 1/1
+NOTE 6900 1/3
+NOTE 7000 1/3
+NOTE 6900 1/3
+NOTE 6800 1/1
+NOTE 6900 1/1
+
+; ---------- measure 2 beat 4.00 ---------
+NOTE 7000 3/2
+NOTE 6900 5/2
+
+; ---------- measure 3 beat 8.00 ---------
+NOTE 0 3/2
+NOTE 6900 1/2
+NOTE 6800 1/1
+NOTE 6900 1/1
+
+; ---------- measure 4 beat 12.00 ---------
+NOTE 7000 3/2
+NOTE 6900 5/2
+
+; ---------- measure 5 beat 16.00 ---------
+NOTE 0 2/1
+NOTE 6900 1/1
+NOTE 7400 1/1
+
+; ---------- measure 6 beat 20.00 ---------
+NOTE 7400 3/2
+NOTE 7300 5/2
+
+; ---------- measure 7 beat 24.00 ---------
+NOTE 0 1/2
+NOTE 7600 3/2
+NOTE 7700 1/1
+NOTE 7300 1/1
+
+; ---------- measure 8 beat 28.00 ---------
+NOTE 7600 3/2
+NOTE 7400 5/2
+
+; ---------- measure 9 beat 32.00 ---------
+NOTE 0 2/1
+NOTE 7700 1/1
+NOTE 7900 1/1
+
+; ---------- measure 10 beat 36.00 ---------
+NOTE 7700 3/2
+NOTE 7600 3/2
+NOTE 7000 3/1
+
+; ---------- measure 11 beat 40.00 ---------
+NOTE 7600 1/1
+NOTE 7700 1/1
+
+; ---------- measure 12 beat 44.00 ---------
+NOTE 7600 3/2
+NOTE 7400 3/2
+NOTE 6900 5/2
+
+; ---------- measure 13 beat 48.00 ---------
+NOTE 6900 1/2
+NOTE 6800 1/1
+NOTE 6900 1/1
+
+; ---------- measure 14 beat 52.00 ---------
+NOTE 7000 2/1
+NOTE 6900 2/1
+
+; ---------- measure 15 beat 56.00 ---------
+NOTE 7600 2/1
+NOTE 7700 2/1
+
+; ---------- measure 16 beat 60.00 ---------
+NOTE 7400 8/1
