@@ -1,0 +1,1228 @@
+; This is a sample score for AnteScofo - Anticipatory Score Following
+; Common messages include:
+; 	BPM <float> : indicating tempo in BPM
+;	<float1> <float2> <string> : indicate PITCH (MIDI or MIDIcent) + BEAT DURATION + CUENAME
+;		The Beat duration can be ZERO, indicating a GRACE NOTE or "hors-temps" events.
+;		A Pitch value of ZERO indicates silence.
+;	TRILL	( <float1> <float2> ... <floatN> ) <floatN+> <string>: Indicate a Trill class
+;		with based notes of <float-i> in MIDIcents. A trill, in this terminology is ONE event that
+;		possess several sub-events in time - but all these sub-events contribute to one global event
+;		in time. <floatN+> is the duration in beats and <string> is the cue name.
+;		The trill class can successfully encode multi-phonics when used with yin~ or fiddle~
+;	MULTI	( <float1> <float2> ... <floatN> ) <floatN+> <string>
+;		Multi class is the same as Trills except that we want access to EACH of the events indicated
+;		by <float-i>s. Think of the floats (MIDIcents) between parenthesis as a table of values in
+;		time.
+;		The Multi class can successfully encode continuous events such as Glissandi.
+;	AUDIO OFF: Turns off audio so that events will be triggered automatically using the current
+;		detected TEMPO and their corresponding score beat duration. It must be turned ON afterwards.
+;		AUDIO OFF/ON can successfully detect problematic repeated notes!
+;		AUDIO OFF/ON can be thought of as some sort of tempo locked Q-list.
+;	TEMPO ON/OFF:	Turns tempo decoding on or off for places in the score where the tempo should not
+;		be updated. A typical example is a FERMATA.
+; NOTE: Note the space after and before the opening and closing parenthesis for TRILL and MULTI classes.
+;
+; Transferred from NoteAbilityPro score: Untitled-1
+; Date: 2013 1 22 18:27:10 GMT+01:00
+;
+BPM 60.00
+
+; ---------- measure 1 beat 0.00 ---------
+
+NOTE 0 933/4
+BPM 60.000000 @modulate
+BPM 60.000000 @modulate
+BPM 60.000000 @modulate
+BPM 40.000000 @modulate
+BPM 40.000000 @modulate
+BPM 120.000000 @modulate
+BPM 120.000000 @modulate
+BPM 60.000000 @modulate
+BPM 60.000000 @modulate
+BPM 52.000000 @modulate
+BPM 52.000000 @modulate
+
+; ---------- measure 2 beat 8.00 ---------
+
+
+; ---------- measure 3 beat 9.00 ---------
+
+
+; ---------- measure 4 beat 17.00 ---------
+
+
+; ---------- measure 5 beat 25.00 ---------
+
+
+; ---------- measure 6 beat 30.00 ---------
+
+
+; ---------- measure 7 beat 38.00 ---------
+
+
+; ---------- measure 8 beat 70.00 ---------
+
+
+; ---------- measure 9 beat 78.00 ---------
+
+
+; ---------- measure 10 beat 86.00 ---------
+
+
+; ---------- measure 11 beat 94.00 ---------
+
+
+; ---------- measure 12 beat 102.00 ---------
+
+
+; ---------- measure 13 beat 110.00 ---------
+
+
+; ---------- measure 14 beat 113.00 ---------
+
+
+; ---------- measure 15 beat 116.00 ---------
+
+
+; ---------- measure 16 beat 117.50 ---------
+
+
+; ---------- measure 17 beat 119.00 ---------
+
+
+; ---------- measure 18 beat 119.50 ---------
+
+
+; ---------- measure 19 beat 121.00 ---------
+
+
+; ---------- measure 20 beat 122.00 ---------
+
+
+; ---------- measure 21 beat 123.00 ---------
+
+
+; ---------- measure 22 beat 123.25 ---------
+
+
+; ---------- measure 23 beat 128.25 ---------
+
+
+; ---------- measure 24 beat 128.50 ---------
+
+
+; ---------- measure 25 beat 129.50 ---------
+
+
+; ---------- measure 26 beat 129.75 ---------
+
+
+; ---------- measure 27 beat 132.75 ---------
+
+
+; ---------- measure 28 beat 133.00 ---------
+
+
+; ---------- measure 29 beat 134.00 ---------
+
+
+; ---------- measure 30 beat 134.25 ---------
+
+
+; ---------- measure 31 beat 137.25 ---------
+
+
+; ---------- measure 32 beat 137.50 ---------
+
+
+; ---------- measure 33 beat 138.50 ---------
+
+
+; ---------- measure 34 beat 142.50 ---------
+
+
+; ---------- measure 35 beat 147.00 ---------
+
+
+; ---------- measure 36 beat 151.25 ---------
+
+
+; ---------- measure 37 beat 156.75 ---------
+
+
+; ---------- measure 38 beat 161.00 ---------
+
+
+; ---------- measure 39 beat 165.50 ---------
+
+
+; ---------- measure 40 beat 171.75 ---------
+
+
+; ---------- measure 41 beat 175.75 ---------
+
+
+; ---------- measure 42 beat 180.25 ---------
+
+
+; ---------- measure 43 beat 181.25 ---------
+
+
+; ---------- measure 44 beat 188.75 ---------
+
+
+; ---------- measure 45 beat 194.75 ---------
+
+
+; ---------- measure 46 beat 195.75 ---------
+
+
+; ---------- measure 47 beat 200.25 ---------
+
+
+; ---------- measure 48 beat 205.25 ---------
+
+
+; ---------- measure 49 beat 206.25 ---------
+
+
+; ---------- measure 50 beat 208.25 ---------
+
+
+; ---------- measure 51 beat 210.25 ---------
+
+
+; ---------- measure 52 beat 212.25 ---------
+
+
+; ---------- measure 53 beat 214.25 ---------
+
+
+; ---------- measure 54 beat 216.25 ---------
+
+
+; ---------- measure 55 beat 219.25 ---------
+
+
+; ---------- measure 56 beat 222.25 ---------
+
+
+; ---------- measure 57 beat 225.25 ---------
+
+
+; ---------- measure 58 beat 229.25 ---------
+
+
+; ---------- measure 59 beat 233.25 ---------
+
+NOTE 4400 2/1
+TEMPO OFF
+CHORD ( 4400 9300 8500 7800 7100 6700 ) 1/2
+TEMPO ON
+NOTE 4400 3/2
+CHORD ( 4400 8800 8400 7500 ) 1/2
+NOTE 4400 3/2
+CHORD ( 4400 9400 ) 1/2
+NOTE 4400 3/2
+
+; ---------- measure 60 beat 241.25 ---------
+
+NOTE 4300 3/1
+CHORD ( 4300 8700 ) 1/8
+CHORD ( 4300 8500 ) 1/8
+CHORD ( 4300 7800 ) 1/8
+CHORD ( 4300 8800 ) 1/8
+CHORD ( 4300 8400 ) 1/8
+CHORD ( 4300 8200 ) 1/8
+CHORD ( 4300 8100 ) 9/8
+NOTE 4300 25/8
+
+; ---------- measure 61 beat 249.25 ---------
+
+CHORD ( 8100 3700 ) 1/1
+NOTE 3700 7/1
+
+; ---------- measure 62 beat 257.25 ---------
+
+NOTE 0 7/1
+CHORD ( 7400 6900 5800 ) 5/8
+NOTE 0 3/8
+NOTE 0 3/8
+NOTE 0 3/8
+TEMPO OFF
+
+; ---------- measure 63 beat 265.25 ---------
+
+NOTE 3800 2/1
+TEMPO ON
+CHORD ( 3800 5200 ) 1/4
+CHORD ( 3800 7700 ) 1/2
+TEMPO OFF
+NOTE 3800 1/4
+TEMPO ON
+CHORD ( 3800 5200 ) 1/1
+TEMPO OFF
+NOTE 3800 1/2
+TEMPO ON
+CHORD ( 3800 7700 ) 1/1
+TEMPO OFF
+NOTE 3800 5/2
+TEMPO ON
+
+; ---------- measure 64 beat 273.25 ---------
+
+NOTE 0 1/5
+NOTE 4700 1/5
+NOTE 3800 1/5
+NOTE 3700 1/5
+NOTE 3300 1/5
+NOTE 3900 1/5
+NOTE 0 2/5
+NOTE 3900 1/5
+NOTE 0 16/5
+TEMPO OFF
+
+; ---------- measure 65 beat 276.25 ---------
+
+NOTE 3900 1/4
+TEMPO ON
+NOTE 0 7/4
+TEMPO OFF
+NOTE 3900 1/4
+TEMPO ON
+NOTE 0 11/4
+BPM 60.000000 @modulate
+BPM 60.000000 @modulate
+BPM 60.000000 @modulate
+BPM 60.000000 @modulate
+
+; ---------- measure 66 beat 283.25 ---------
+
+NOTE 6400 5/4
+NOTE 6100 1/8
+NOTE 5900 1/8
+CHORD ( 5900 5300 ) 1/8
+CHORD ( 5900 5800 ) 1/8
+CHORD ( 5900 5600 ) 1/8
+CHORD ( 5600 6200 ) 9/8
+
+; ---------- measure 67 beat 286.25 ---------
+
+NOTE 0 1/4
+NOTE 5500 1/8
+CHORD ( 5500 5900 ) 1/8
+CHORD ( 5500 6200 ) 1/8
+CHORD ( 5500 6100 ) 1/8
+CHORD ( 6100 5600 ) 1/8
+CHORD ( 6100 5300 ) 1/8
+CHORD ( 5300 6200 ) 1/8
+CHORD ( 6200 5800 ) 1/8
+CHORD ( 5800 6400 ) 7/4
+
+; ---------- measure 68 beat 289.25 ---------
+
+NOTE 0 1/8
+NOTE 5600 1/8
+CHORD ( 5600 6200 5900 ) 1/8
+CHORD ( 5600 6100 5900 ) 1/8
+CHORD ( 5900 5900 5800 5500 ) 1/8
+CHORD ( 5900 5900 5300 ) 1/8
+CHORD ( 5300 6400 6100 ) 1/8
+CHORD ( 6400 6100 5800 5600 ) 1/8
+CHORD ( 5800 5600 6200 5900 ) 2/1
+
+; ---------- measure 69 beat 292.25 ---------
+
+NOTE 0 1/4
+CHORD ( 6100 5900 ) 1/8
+CHORD ( 6100 5900 5500 5300 ) 1/8
+CHORD ( 5500 5300 6400 6200 ) 1/8
+CHORD ( 6400 6200 5800 5600 ) 1/8
+CHORD ( 6200 6100 5300 ) 7/4
+NOTE 0 5/8
+
+; ---------- measure 70 beat 295.25 ---------
+
+CHORD ( 6200 6100 ) 1/8
+CHORD ( 6200 6100 5600 5500 ) 1/8
+CHORD ( 6400 5300 ) 1/8
+CHORD ( 6400 5300 5900 5800 ) 5/2
+
+; ---------- measure 71 beat 298.25 ---------
+
+NOTE 3900 1/4
+NOTE 0 3/4
+TEMPO OFF
+NOTE 3900 1/4
+TEMPO ON
+NOTE 0 7/4
+TEMPO OFF
+NOTE 3900 1/4
+TEMPO ON
+NOTE 0 3/4
+
+; ---------- measure 72 beat 302.25 ---------
+
+NOTE 8900 1/8
+NOTE 8700 1/8
+NOTE 8200 1/8
+NOTE 7800 1/8
+NOTE 7600 1/8
+NOTE 7900 1/8
+NOTE 8100 1/1
+NOTE 0 1/1
+TEMPO OFF
+NOTE 3900 1/4
+TEMPO ON
+NOTE 0 2/1
+
+; ---------- measure 73 beat 307.25 ---------
+
+NOTE 5300 1/8
+NOTE 5600 1/8
+NOTE 5500 1/8
+NOTE 6400 1/1
+NOTE 0 13/8
+NOTE 3900 1/4
+NOTE 0 7/4
+NOTE 3600 1/4
+NOTE 0 7/4
+
+; ---------- measure 74 beat 314.25 ---------
+
+CHORD ( 6400 5900 ) 1/1
+NOTE 0 1/8
+CHORD ( 5800 5300 ) 1/8
+CHORD ( 5800 5300 6100 5900 ) 1/8
+CHORD ( 6100 5900 5600 5500 ) 1/8
+CHORD ( 6100 5900 5800 ) 1/8
+CHORD ( 5800 6400 ) 1/8
+CHORD ( 6400 5500 5300 ) 1/8
+CHORD ( 5500 5300 5900 ) 1/8
+CHORD ( 5900 5800 5600 ) 1/8
+CHORD ( 5800 5600 6100 ) 1/8
+CHORD ( 6100 5600 5500 ) 1/8
+CHORD ( 6100 5600 5500 ) 1/8
+CHORD ( 6400 5800 5300 ) 1/1
+
+; ---------- measure 75 beat 317.25 ---------
+
+CHORD ( 5900 5800 ) 1/8
+CHORD ( 5900 5600 5500 ) 1/8
+CHORD ( 5600 5500 6200 6100 ) 5/4
+CHORD ( 5500 5300 ) 1/8
+CHORD ( 5500 5300 6200 5900 ) 1/8
+CHORD ( 5500 5300 5900 6100 ) 1/8
+CHORD ( 5900 6100 5800 ) 1/8
+CHORD ( 5800 6400 5900 ) 1/8
+CHORD ( 6400 5900 5500 ) 1/8
+CHORD ( 6400 5900 5600 ) 1/8
+CHORD ( 6400 5900 5800 ) 1/8
+
+; ---------- measure 76 beat 320.25 ---------
+
+CHORD ( 5800 6200 ) 1/4
+CHORD ( 5800 6100 5900 ) 1/8
+CHORD ( 6100 5900 5800 5500 5300 ) 1/8
+CHORD ( 5800 5500 5300 6400 5900 5900 ) 1/8
+CHORD ( 5800 5500 5300 5900 6100 ) 1/8
+CHORD ( 5800 5500 5300 5900 6200 ) 1/8
+CHORD ( 5800 5300 5900 6200 5800 5300 ) 1/8
+CHORD ( 5800 5300 6200 5600 5500 ) 1/8
+CHORD ( 5800 5300 5600 5500 6100 5900 ) 1/8
+CHORD ( 5800 5300 5600 5500 6100 5900 ) 1/8
+CHORD ( 5800 5300 6100 5900 5600 5500 ) 1/8
+CHORD ( 5800 5300 6400 5900 5800 5300 ) 1/8
+CHORD ( 5800 5300 6100 5900 5600 5500 ) 1/8
+CHORD ( 5800 5300 6200 6100 5900 5800 ) 1/8
+CHORD ( 6200 6100 5800 5300 ) 1/8
+CHORD ( 6400 5900 ) 1/8
+CHORD ( 6100 5800 ) 1/8
+CHORD ( 6200 5600 ) 1/8
+CHORD ( 5800 5300 ) 1/8
+CHORD ( 5800 5300 4500 ) 1/8
+CHORD ( 5800 5300 4200 ) 1/8
+CHORD ( 5800 5300 4300 ) 1/8
+CHORD ( 5800 5300 3200 ) 1/8
+
+; ---------- measure 77 beat 323.25 ---------
+
+CHORD ( 5800 5300 3700 ) 1/8
+CHORD ( 5800 5300 3800 ) 1/8
+CHORD ( 5800 5300 3500 ) 1/8
+CHORD ( 5800 5300 2800 ) 1/8
+CHORD ( 5800 5300 2700 ) 1/8
+CHORD ( 5800 5300 2400 ) 1/8
+CHORD ( 5800 5300 ) 9/4
+
+; ---------- measure 78 beat 326.25 ---------
+
+CHORD ( 8100 6400 5900 ) 1/1
+NOTE 0 1/1
+NOTE 6700 1/4
+TEMPO OFF
+CHORD ( 6700 7800 ) 1/2
+TEMPO ON
+NOTE 6700 5/4
+CHORD ( 6700 9200 8900 ) 1/2
+NOTE 6700 1/2
+
+; ---------- measure 79 beat 331.25 ---------
+
+CHORD ( 6700 8100 7800 ) 23/4
+CHORD ( 8100 7800 ) 9/4
+BPM 60.000000 @modulate
+
+; ---------- measure 80 beat 339.25 ---------
+
+NOTE 0 1/2
+NOTE 4700 1/8
+NOTE 5800 1/8
+NOTE 7300 1/8
+NOTE 8400 1/8
+NOTE 6200 1/2
+NOTE 8100 1/4
+NOTE 9900 1/4
+NOTE 0 1/2
+NOTE 9900 1/4
+NOTE 0 13/4
+
+; ---------- measure 81 beat 342.25 ---------
+
+
+; ---------- measure 82 beat 345.25 ---------
+
+CHORD ( 6400 5900 5800 ) 3/1
+
+; ---------- measure 83 beat 348.25 ---------
+
+CHORD ( 6400 5900 5800 6100 5500 ) 3/1
+
+; ---------- measure 84 beat 351.25 ---------
+
+CHORD ( 6400 5900 5800 6100 5500 6200 5900 ) 2/1
+CHORD ( 6100 5500 6200 5900 ) 1/1
+
+; ---------- measure 85 beat 354.25 ---------
+
+TEMPO OFF
+CHORD ( 6100 5500 6200 5900 5800 5300 ) 2/1
+TEMPO ON
+TEMPO OFF
+CHORD ( 6200 5900 5800 5300 ) 1/1
+TEMPO ON
+
+; ---------- measure 86 beat 357.25 ---------
+
+TEMPO OFF
+CHORD ( 6200 5900 5800 5300 6400 5900 ) 2/1
+TEMPO ON
+TEMPO OFF
+CHORD ( 5800 5300 6400 5900 ) 3/1
+TEMPO ON
+
+; ---------- measure 87 beat 360.25 ---------
+
+TEMPO OFF
+CHORD ( 6400 5900 ) 1/1
+TEMPO ON
+
+; ---------- measure 88 beat 363.25 ---------
+
+CHORD ( 6400 5900 5000 ) 2/1
+NOTE 5000 1/1
+
+; ---------- measure 89 beat 366.25 ---------
+
+CHORD ( 5000 5600 ) 3/1
+
+; ---------- measure 90 beat 369.25 ---------
+
+TEMPO OFF
+CHORD ( 5000 5600 3500 ) 1/1
+TEMPO ON
+CHORD ( 5000 5600 8500 ) 1/3
+CHORD ( 5000 5600 7500 ) 1/6
+CHORD ( 5000 5600 7200 ) 1/2
+NOTE 5600 1/1
+CHORD ( 5600 7800 ) 1/10
+CHORD ( 5600 7700 ) 1/10
+CHORD ( 5600 8100 ) 1/10
+CHORD ( 5600 8000 ) 1/10
+CHORD ( 5600 8400 ) 1/10
+CHORD ( 5600 8200 ) 1/6
+CHORD ( 5600 7900 ) 1/12
+CHORD ( 5600 7900 8400 ) 1/3
+CHORD ( 5600 8500 ) 1/6
+CHORD ( 5600 7500 ) 1/2
+NOTE 5600 1/4
+NOTE 0 3/4
+NOTE 7500 1/8
+NOTE 7200 1/8
+NOTE 8500 1/8
+NOTE 8200 1/8
+NOTE 7400 1/8
+NOTE 8000 1/8
+NOTE 7800 1/8
+NOTE 8100 1/8
+NOTE 8200 1/8
+NOTE 8500 1/8
+NOTE 7200 1/8
+NOTE 7700 1/8
+NOTE 7800 1/8
+NOTE 8500 1/8
+NOTE 7500 1/8
+NOTE 0 1/1
+
+; ---------- measure 91 beat 377.25 ---------
+
+NOTE 7500 1/8
+NOTE 8500 1/8
+NOTE 7200 1/8
+NOTE 8300 1/8
+NOTE 7700 1/8
+NOTE 7900 1/8
+NOTE 8000 1/8
+NOTE 0 5/8
+NOTE 7500 1/8
+NOTE 7200 1/8
+NOTE 8500 1/8
+TEMPO OFF
+NOTE 8100 1/8
+TEMPO ON
+NOTE 0 11/8
+
+; ---------- measure 92 beat 381.25 ---------
+
+NOTE 5200 1/1
+CHORD ( 6200 3500 ) 4/1
+
+; ---------- measure 93 beat 386.25 ---------
+
+NOTE 0 26/1
+
+; ---------- measure 94 beat 389.25 ---------
+
+
+; ---------- measure 95 beat 392.25 ---------
+
+
+; ---------- measure 96 beat 395.25 ---------
+
+
+; ---------- measure 97 beat 400.25 ---------
+
+
+; ---------- measure 98 beat 403.25 ---------
+
+
+; ---------- measure 99 beat 406.25 ---------
+
+
+; ---------- measure 100 beat 409.25 ---------
+
+
+; ---------- measure 101 beat 412.25 ---------
+
+NOTE 6400 3/4
+CHORD ( 6400 4600 ) 1/4
+NOTE 3800 1/5
+NOTE 7200 1/5
+NOTE 7500 1/5
+NOTE 8300 1/5
+NOTE 6100 1/5
+TEMPO OFF
+NOTE 6400 1/1
+TEMPO ON
+
+; ---------- measure 102 beat 415.25 ---------
+
+NOTE 0 3/2
+NOTE 4600 1/2
+CHORD ( 4600 3800 ) 7/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/4
+CHORD ( 3800 3300 4600 ) 1/8
+CHORD ( 3800 3300 4600 ) 1/8
+CHORD ( 3800 3300 4600 ) 1/4
+CHORD ( 3300 4600 3800 ) 1/4
+
+; ---------- measure 103 beat 419.25 ---------
+
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 3/8
+CHORD ( 4600 3300 3800 ) 1/4
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 3800 4600 3300 ) 1/8
+CHORD ( 3800 4600 3300 ) 1/8
+CHORD ( 3800 3300 4600 ) 1/4
+CHORD ( 3800 3300 4600 ) 1/8
+CHORD ( 3800 3300 4600 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3300 3800 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3300 3800 ) 1/8
+CHORD ( 4600 3300 3800 ) 1/8
+CHORD ( 4600 3300 3800 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 3/8
+CHORD ( 3800 3300 4600 ) 1/8
+CHORD ( 3800 3300 4600 ) 1/8
+CHORD ( 3300 4600 3800 ) 1/8
+CHORD ( 3300 4600 3800 ) 1/8
+CHORD ( 3300 4600 3800 ) 1/8
+CHORD ( 3300 4600 3800 ) 1/8
+
+; ---------- measure 104 beat 423.25 ---------
+
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 4600 3800 3300 ) 1/8
+CHORD ( 3800 3300 4600 ) 1/8
+CHORD ( 3300 4600 3800 ) 1/8
+CHORD ( 3300 4600 3800 ) 3/8
+CHORD ( 4600 3800 3300 ) 1/4
+CHORD ( 4600 3800 3300 ) 1/2
+CHORD ( 3800 3300 4600 ) 3/4
+CHORD ( 3300 4600 3800 ) 3/2
+
+; ---------- measure 105 beat 427.25 ---------
+
+NOTE 0 5/1
+
+; ---------- measure 106 beat 431.25 ---------
+
+NOTE 6400 1/2
+CHORD ( 6400 3000 ) 1/2
+CHORD ( 3000 4600 ) 7/8
+CHORD ( 3000 4600 3800 ) 1/8
+CHORD ( 3000 4600 3800 ) 5/4
+
+; ---------- measure 107 beat 435.25 ---------
+
+CHORD ( 3800 4600 3000 ) 1/4
+CHORD ( 4600 3000 3800 ) 1/2
+CHORD ( 4600 3800 3000 ) 5/8
+CHORD ( 3800 3000 4600 ) 1/8
+CHORD ( 3800 4600 3000 ) 1/8
+CHORD ( 3800 4600 3000 ) 1/8
+CHORD ( 3800 4600 3000 ) 1/8
+CHORD ( 4600 3000 3800 ) 1/4
+CHORD ( 3000 3800 4600 ) 1/8
+CHORD ( 3000 4600 3800 ) 1/8
+CHORD ( 3000 3800 4600 ) 1/8
+CHORD ( 3000 3800 4600 ) 1/4
+CHORD ( 3800 4600 3000 ) 1/8
+CHORD ( 4600 3800 3000 ) 1/8
+CHORD ( 4600 3800 3000 ) 1/8
+CHORD ( 4600 3000 3800 ) 1/8
+CHORD ( 4600 3000 3800 ) 1/4
+CHORD ( 4600 3800 3000 ) 1/4
+
+; ---------- measure 108 beat 439.25 ---------
+
+CHORD ( 4600 3800 3000 ) 1/8
+CHORD ( 3800 3000 4600 ) 1/8
+CHORD ( 3800 3000 4600 ) 1/8
+CHORD ( 3000 4600 3800 ) 1/8
+CHORD ( 3000 4600 3800 ) 1/8
+CHORD ( 4600 3800 3000 ) 1/8
+CHORD ( 4600 3800 3000 ) 1/8
+CHORD ( 4600 3800 3000 ) 1/8
+CHORD ( 4600 5100 3800 3000 ) 1/2
+CHORD ( 4600 5100 3800 3000 ) 1/8
+CHORD ( 4600 5100 3800 3000 ) 1/8
+CHORD ( 4600 5100 3800 3000 ) 1/8
+CHORD ( 4600 5100 3800 3000 ) 1/8
+CHORD ( 4600 3800 5100 3000 ) 1/4
+CHORD ( 4600 3000 5100 3800 ) 1/4
+CHORD ( 3000 5100 3800 4600 ) 1/8
+CHORD ( 3000 5100 3800 4600 ) 1/8
+CHORD ( 3000 5100 4600 3800 ) 1/4
+CHORD ( 5100 4600 3800 3000 ) 1/8
+CHORD ( 5100 4600 3800 3000 ) 1/8
+CHORD ( 5100 4600 3000 3800 ) 1/4
+CHORD ( 4600 3000 3800 5100 ) 1/8
+CHORD ( 4600 3000 3800 5100 ) 1/8
+CHORD ( 4600 3000 3800 5100 ) 1/4
+
+; ---------- measure 109 beat 443.25 ---------
+
+CHORD ( 4600 3800 5100 3000 ) 1/8
+CHORD ( 3800 3000 5100 4600 ) 1/8
+CHORD ( 3800 3000 5100 4600 ) 1/8
+CHORD ( 3800 3000 4600 5100 ) 1/8
+CHORD ( 4600 5100 3800 3000 ) 1/8
+CHORD ( 4600 5100 3000 3800 ) 1/8
+CHORD ( 5100 3000 3800 4600 ) 1/8
+CHORD ( 5100 3000 3800 4600 ) 1/8
+CHORD ( 3000 3800 5100 4600 ) 1/2
+CHORD ( 3800 5100 4600 3000 ) 1/2
+CHORD ( 5100 4600 3000 ) 1/4
+CHORD ( 3000 6400 5900 4800 4600 ) 1/8
+CHORD ( 3000 6400 4800 4600 5900 ) 1/8
+CHORD ( 3000 6400 4800 4600 5900 ) 1/8
+CHORD ( 3000 6400 4800 4600 5900 ) 1/8
+CHORD ( 3000 6400 4800 4600 5900 ) 1/8
+CHORD ( 3000 6400 4800 4600 5900 ) 1/8
+CHORD ( 3000 6400 4800 4600 5900 ) 1/8
+CHORD ( 3000 6400 4800 4600 5900 ) 1/8
+CHORD ( 3000 4800 4600 6400 5900 ) 1/8
+CHORD ( 3000 4800 4600 6400 5900 ) 1/8
+CHORD ( 3000 4800 4600 6400 5900 ) 1/8
+CHORD ( 3000 4800 4600 6400 5900 ) 1/8
+CHORD ( 3000 4600 6400 5900 4800 ) 1/8
+CHORD ( 3000 4600 6400 4800 5900 ) 1/8
+
+; ---------- measure 110 beat 447.25 ---------
+
+TRILL ( ( 3000 4800 6400 5900 4600 ) ( 5900 ) ) 1/2 
+TRILL ( ( 4800 6400 5900 4600 3000 ) ( 5900 ) ) 5/8 
+CHORD ( 4800 4600 3000 6400 5900 ) 1/8
+CHORD ( 4800 4600 3000 6400 5900 ) 1/8
+CHORD ( 4800 4600 3000 6400 5900 ) 1/8
+CHORD ( 4800 4600 3000 6400 5900 ) 1/8
+CHORD ( 4800 4600 3000 6400 5900 ) 1/8
+CHORD ( 4800 4600 3000 6400 5900 ) 1/8
+CHORD ( 4800 4600 3000 6400 5900 ) 1/8
+TRILL ( ( 4800 4600 3000 6400 5900 ) ( 6400 ) ) 2/1 
+
+; ---------- measure 111 beat 451.25 ---------
+
+TEMPO OFF
+TRILL ( ( 4800 4600 3000 5900 6400 ) ( 6400 ) ) 2/1 
+TEMPO ON
+NOTE 0 2/1
+
+; ---------- measure 112 beat 455.25 ---------
+
+NOTE 6400 1/1
+NOTE 4900 1/5
+CHORD ( 4900 7800 3800 3800 ) 1/5
+CHORD ( 4900 3800 6700 ) 1/5
+CHORD ( 4900 3800 7500 ) 1/5
+CHORD ( 4900 3800 8900 ) 1/5
+NOTE 0 1/2
+NOTE 6400 3/2
+
+; ---------- measure 113 beat 459.25 ---------
+
+NOTE 0 1/1
+CHORD ( 6400 5900 4900 ) 1/8
+CHORD ( 6400 4900 5900 ) 1/8
+CHORD ( 6400 4900 5900 ) 1/8
+CHORD ( 6400 4900 5900 ) 1/8
+CHORD ( 6400 4900 5900 ) 1/8
+CHORD ( 6400 4900 5900 ) 1/8
+CHORD ( 6400 4900 5900 ) 1/8
+CHORD ( 6400 4900 5900 ) 1/8
+TRILL ( ( 6400 4900 5900 ) ( 5900 ) ) 3/4 
+TRILL ( ( 6400 4900 5900 3800 ) ( 5900 ) ) 1/8 
+TRILL ( ( 6400 4900 5900 3800 ) ( 5900 ) ) 5/8 
+TRILL ( ( 6400 5900 3800 4900 ) ( 5900 ) ) 1/8 
+TRILL ( ( 6400 5900 3800 4900 ) ( 5900 ) ) 3/8 
+
+; ---------- measure 114 beat 463.25 ---------
+
+TRILL ( ( 6400 3800 4900 5900 ) ( 5900 ) ) 3/4 
+TRILL ( ( 6400 4900 5900 3800 ) ( 5900 ) ) 1/4 
+TRILL ( ( 6400 5900 3800 4900 ) ( 5900 ) ) 1/8 
+TRILL ( ( 6400 5900 3800 4900 ) ( 5900 ) ) 1/8 
+TRILL ( ( 6400 5900 3800 4900 ) ( 5900 ) ) 1/8 
+TRILL ( ( 6400 5900 3800 4900 ) ( 5900 ) ) 5/8 
+TRILL ( ( 6400 3800 4900 5900 ) ( 5900 ) ) 2/1 
+
+; ---------- measure 115 beat 467.25 ---------
+
+TRILL ( 5900 ) 2/1 
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 8900 1/8
+NOTE 8900 1/8
+NOTE 8900 1/8
+NOTE 8900 1/8
+NOTE 8900 1/8
+NOTE 8900 1/8
+TRILL ( 8900 ) 1/1 
+
+; ---------- measure 116 beat 471.25 ---------
+
+NOTE 8900 1/8
+CHORD ( 7800 7500 ) 1/8
+CHORD ( 7800 7500 ) 1/8
+NOTE 8900 1/8
+NOTE 8900 1/8
+NOTE 6700 1/8
+NOTE 6700 1/8
+NOTE 6700 1/8
+TRILL ( 6700 ) 2/1 
+NOTE 6700 1/8
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 5900 1/8
+
+; ---------- measure 117 beat 475.25 ---------
+
+NOTE 5900 1/8
+NOTE 0 1/4
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 0 1/4
+NOTE 5900 1/8
+NOTE 5900 1/8
+NOTE 0 15/8
+
+; ---------- measure 118 beat 478.25 ---------
+
+CHORD ( 6400 6200 6100 5600 5500 5300 2700 ) 1/4
+CHORD ( 6400 6200 6100 5600 5500 5300 ) 9/4
+CHORD ( 6400 6200 6100 5600 5500 5300 3000 ) 1/4
+CHORD ( 6400 6200 6100 5600 5500 5300 ) 5/4
+BPM 52.000000 @modulate
+BPM 52.000000 @modulate
+
+; ---------- measure 119 beat 482.25 ---------
+
+NOTE 0 7/2
+CHORD ( 7000 5900 3000 ) 1/2
+
+; ---------- measure 120 beat 486.25 ---------
+
+CHORD ( 7000 3000 5900 ) 1/2
+CHORD ( 7000 3000 5900 3300 ) 5/2
+CHORD ( 3000 3300 7500 7600 ) 1/4
+CHORD ( 3000 3300 7500 4000 ) 3/4
+
+; ---------- measure 121 beat 490.25 ---------
+
+NOTE 0 1/1
+CHORD ( 7100 7000 ) 1/4
+CHORD ( 7000 8100 ) 1/1
+CHORD ( 7000 9200 ) 1/2
+CHORD ( 7000 9200 9600 ) 1/4
+CHORD ( 7000 9200 9600 7000 ) 1/4
+CHORD ( 7000 9200 9600 5900 ) 3/4
+
+; ---------- measure 122 beat 494.25 ---------
+
+NOTE 3800 1/2
+CHORD ( 3800 6800 ) 7/4
+CHORD ( 3800 6800 4200 ) 5/4
+CHORD ( 3800 4200 ) 1/2
+BPM 63.000000 @modulate
+BPM 63.000000 @modulate
+
+; ---------- measure 123 beat 498.25 ---------
+
+NOTE 0 3/2
+CHORD ( 8500 7200 5800 4700 ) 1/2
+NOTE 0 2/1
+
+; ---------- measure 124 beat 502.25 ---------
+
+CHORD ( 7700 9100 6600 6300 ) 1/2
+CHORD ( 7700 9100 6600 5800 ) 1/4
+CHORD ( 9100 6600 5800 8100 ) 5/4
+CHORD ( 3600 3600 ) 1/2
+CHORD ( 3600 3100 ) 1/2
+CHORD ( 3100 3600 ) 1/1
+BPM 52.000000 @modulate
+BPM 52.000000 @modulate
+
+; ---------- measure 125 beat 506.25 ---------
+
+NOTE 6200 5/4
+CHORD ( 6200 7100 6900 6000 5600 4900 4600 ) 3/4
+NOTE 6200 1/1
+NOTE 0 1/4
+NOTE 3400 3/4
+
+; ---------- measure 126 beat 510.25 ---------
+
+CHORD ( 3400 3100 ) 3/4
+CHORD ( 3400 3100 ) 5/4
+CHORD ( 3400 3100 ) 1/4
+CHORD ( 3400 3100 4400 ) 3/4
+CHORD ( 3400 3100 4400 ) 1/2
+NOTE 2700 21/8
+
+; ---------- measure 127 beat 514.25 ---------
+
+CHORD ( 2700 5800 5800 5500 ) 1/8
+CHORD ( 2700 5800 5500 6900 6600 ) 1/8
+CHORD ( 2700 5800 5500 6900 8000 7700 ) 1/8
+CHORD ( 2700 5800 5500 6900 8000 7700 8100 7700 6600 ) 1/8
+CHORD ( 2700 8100 7700 6400 6400 6100 ) 1/4
+CHORD ( 2700 8100 7700 6400 6100 8300 7400 ) 1/8
+CHORD ( 2700 8100 7700 6400 6100 8300 7400 8000 7700 6900 6600 5800 5500 ) 1/4
+CHORD ( 2700 6400 6100 8300 7400 8000 7700 6900 6600 5800 5500 ) 9/4
+
+; ---------- measure 128 beat 518.25 ---------
+
+CHORD ( 6400 6100 8300 7400 8000 7700 6900 6600 5800 5500 ) 5/2
+
+; ---------- measure 129 beat 522.25 ---------
+
+CHORD ( 6900 6900 6600 ) 1/8
+CHORD ( 6900 5800 5500 ) 3/8
+CHORD ( 5800 5500 8300 8000 ) 1/8
+CHORD ( 5800 5500 8300 8000 ) 1/8
+CHORD ( 5800 5500 8300 8000 ) 1/8
+CHORD ( 8300 8000 7200 6900 ) 1/8
+CHORD ( 7200 6900 ) 1/8
+CHORD ( 7200 6900 ) 1/8
+CHORD ( 7200 6900 ) 1/8
+CHORD ( 5800 5500 ) 1/8
+CHORD ( 8000 7700 7700 ) 1/8
+CHORD ( 8000 7700 6900 6600 ) 3/8
+CHORD ( 6900 6600 8000 7700 ) 1/8
+CHORD ( 6900 6600 8000 7700 ) 1/8
+CHORD ( 6900 6600 8000 7700 ) 1/8
+CHORD ( 6900 6600 8000 7700 ) 1/8
+CHORD ( 8000 7700 5200 4300 ) 1/8
+CHORD ( 8000 7700 5200 4300 ) 1/8
+CHORD ( 8000 7700 5200 4300 ) 1/8
+CHORD ( 5200 4300 6900 6600 ) 1/8
+CHORD ( 6900 6600 ) 1/8
+CHORD ( 5800 5500 ) 1/8
+CHORD ( 8000 7700 ) 1/8
+CHORD ( 6400 6100 ) 1/8
+CHORD ( 8000 7700 8100 7700 ) 3/8
+CHORD ( 8000 7700 6600 6300 ) 1/8
+
+; ---------- measure 130 beat 526.25 ---------
+
+CHORD ( 6600 6300 ) 1/8
+CHORD ( 6600 6300 ) 1/8
+CHORD ( 6600 6300 ) 1/8
+CHORD ( 6600 6300 5500 5200 ) 1/8
+CHORD ( 6600 6300 6600 6300 5500 5200 ) 1/8
+CHORD ( 6600 6300 5500 5200 ) 1/8
+CHORD ( 6600 6300 5500 5200 ) 1/8
+CHORD ( 5500 5200 8300 7400 ) 1/8
+CHORD ( 5800 5500 ) 1/8
+CHORD ( 6900 6600 ) 1/8
+CHORD ( 8000 7700 ) 1/8
+CHORD ( 6400 6100 ) 3/8
+CHORD ( 6400 6100 8600 7700 ) 1/8
+CHORD ( 6400 6100 8600 7700 ) 1/8
+CHORD ( 8600 7700 6400 6100 ) 1/8
+CHORD ( 8600 7700 6400 6100 4200 2700 ) 1/8
+CHORD ( 8600 7700 6400 6100 4200 2700 ) 1/8
+CHORD ( 6400 6100 4200 2700 8600 7700 ) 1/8
+CHORD ( 4200 2700 6400 6100 ) 1/2
+CHORD ( 5800 5500 ) 1/8
+CHORD ( 8000 7700 ) 1/8
+CHORD ( 6900 6600 ) 1/8
+CHORD ( 6400 6100 ) 1/8
+CHORD ( 6400 6100 8300 7400 ) 3/8
+CHORD ( 6400 6100 7200 6900 ) 1/8
+
+; ---------- measure 131 beat 530.25 ---------
+
+CHORD ( 7200 6900 ) 1/8
+CHORD ( 7200 6900 6100 5800 ) 1/8
+CHORD ( 7200 6900 6100 5800 ) 1/8
+CHORD ( 7200 6900 6100 5800 ) 1/8
+CHORD ( 7200 6900 6100 5800 ) 5/2
+NOTE 0 3/2
+
+; ---------- measure 132 beat 534.25 ---------
+
+NOTE 3300 1/1
+CHORD ( 3300 7000 ) 1/4
+CHORD ( 3300 7000 5900 ) 5/4
+NOTE 3300 3/4
+CHORD ( 3300 2900 ) 1/4
+
+; ---------- measure 133 beat 538.25 ---------
+
+CHORD ( 3300 2900 ) 1/2
+CHORD ( 3300 2900 3000 ) 1/2
+CHORD ( 3300 2900 3000 ) 3/1
+
+; ---------- measure 134 beat 542.25 ---------
+
+NOTE 0 1/4
+NOTE 3600 1/2
+CHORD ( 3600 4700 ) 3/8
+CHORD ( 3600 4700 5300 ) 1/8
+CHORD ( 3600 4700 5300 6600 ) 11/4
+
+; ---------- measure 135 beat 546.25 ---------
+
+NOTE 7800 5/4
+NOTE 9200 1/4
+NOTE 8100 1/4
+NOTE 7200 1/4
+NOTE 7800 1/4
+NOTE 8100 1/4
+NOTE 8600 1/4
+NOTE 7600 1/4
+NOTE 8000 1/4
+NOTE 8300 5/4
+NOTE 8300 1/2
+NOTE 8500 1/4
+NOTE 7900 1/4
+NOTE 7200 1/4
+NOTE 7800 1/4
+NOTE 7700 1/4
+NOTE 7100 1/4
+NOTE 0 1/2
+
+; ---------- measure 136 beat 553.25 ---------
+
+NOTE 7100 1/1
+NOTE 0 1/1
+NOTE 7500 1/4
+NOTE 7200 1/4
+NOTE 0 1/2
+NOTE 7100 1/4
+NOTE 7500 1/4
+NOTE 8000 1/4
+NOTE 8500 1/4
+NOTE 8200 1/4
+NOTE 7500 1/4
+NOTE 7200 1/4
+NOTE 0 3/4
+TRILL ( 7500 7200 ) 1/1 
+NOTE 0 4/1
+BPM 52.000000 @modulate
+BPM 52.000000 @modulate
+
+; ---------- measure 137 beat 563.25 ---------
+
+NOTE 3100 1/2
+CHORD ( 3100 5100 ) 1/8
+CHORD ( 3100 5100 4000 ) 7/8
+CHORD ( 3100 5100 4000 7000 ) 1/2
+CHORD ( 3100 5100 4000 7000 6200 ) 1/8
+CHORD ( 3100 5100 4000 7000 6200 7300 ) 11/8
+
+; ---------- measure 138 beat 567.25 ---------
+
+NOTE 0 3/1
+TEMPO OFF
+CHORD ( 8100 7700 ) 1/1
+TEMPO ON
+NOTE 0 7/2
+
+; ---------- measure 139 beat 574.75 ---------
+
+CHORD ( 8600 8300 ) 1/1
+NOTE 0 9/2
+TEMPO OFF
+
+; ---------- measure 140 beat 580.25 ---------
+
+NOTE 6300 1/1
+TEMPO ON
+NOTE 0 2/1
+TEMPO OFF
+
+; ---------- measure 141 beat 583.25 ---------
+
+CHORD ( 6600 6200 ) 1/1
+TEMPO ON
+NOTE 0 3/1
+TEMPO OFF
+
+; ---------- measure 142 beat 587.25 ---------
+
+CHORD ( 8000 7700 ) 1/1
+TEMPO ON
+NOTE 0 4/1
+BPM 52.000000 @modulate
+BPM 52.000000 @modulate
+
+; ---------- measure 143 beat 592.25 ---------
+
+CHORD ( 6700 6700 ) 7/4
+CHORD ( 6700 7200 ) 1/4
+CHORD ( 6700 5400 ) 4/3
+CHORD ( 5400 8000 ) 17/12
+
+; ---------- measure 144 beat 596.25 ---------
+
+CHORD ( 4900 4900 ) 1/4
+CHORD ( 4900 7700 7700 ) 3/2
+CHORD ( 4900 7700 5700 ) 5/2
+
+; ---------- measure 145 beat 600.25 ---------
+
+CHORD ( 4800 4800 ) 1/4
+CHORD ( 4800 7500 ) 7/4
+CHORD ( 4800 6600 ) 1/1
+
+; ---------- measure 146 beat 604.25 ---------
+
+CHORD ( 4800 6600 6500 ) 1/3
+CHORD ( 4800 6500 7700 ) 4/1
+CHORD ( 4300 4300 ) 3/4
+CHORD ( 4300 7700 ) 5/4
+
+; ---------- measure 147 beat 608.25 ---------
+
+CHORD ( 4300 6300 ) 2/1
+CHORD ( 5700 5700 ) 1/2
+CHORD ( 5700 7300 ) 1/2
+
+; ---------- measure 148 beat 612.25 ---------
+
+CHORD ( 7300 7300 ) 1/4
+CHORD ( 7300 4800 ) 17/12
+CHORD ( 7300 3100 ) 4/3
+NOTE 3100 1/1
+
+; ---------- measure 149 beat 616.25 ---------
+
+NOTE 0 4/1
+
+; ---------- measure 150 beat 620.25 ---------
+
+CHORD ( 6500 6200 ) 1/2
+CHORD ( 7300 6800 ) 3/2
+CHORD ( 5700 5400 ) 1/5
+CHORD ( 8000 7700 ) 1/5
+CHORD ( 8000 7700 ) 1/10
+CHORD ( 8000 7700 5700 5400 ) 1/10
+CHORD ( 5700 5400 5700 ) 1/5
+CHORD ( 5700 5400 7200 6700 ) 6/5
+
+; ---------- measure 151 beat 624.25 ---------
+
+NOTE 0 1/4
+CHORD ( 7700 7100 ) 1/4
+CHORD ( 7700 7300 ) 1/4
+CHORD ( 7700 6300 ) 1/4
+CHORD ( 7700 7100 6400 5700 5700 4300 ) 1/4
+CHORD ( 7700 7100 6400 5700 4300 4800 ) 1/4
+CHORD ( 5700 4300 4800 7700 7100 ) 1/4
+CHORD ( 5700 4300 4800 7100 7300 ) 1/4
+CHORD ( 7300 7700 7100 5700 5700 4300 ) 1/4
+CHORD ( 5700 6300 4800 ) 1/4
+CHORD ( 6300 4800 5600 5200 ) 1/2
+CHORD ( 5600 5200 7700 6600 ) 1/1
+
+; ---------- measure 152 beat 628.25 ---------
+
+CHORD ( 7500 7500 ) 1/4
+CHORD ( 7500 8000 ) 3/4
+CHORD ( 8000 7500 3300 ) 1/5
+CHORD ( 8000 7500 3300 ) 3/5
+CHORD ( 8000 7500 3300 ) 1/5
+NOTE 3300 1/5
+CHORD ( 3300 6600 6200 ) 2/5
+CHORD ( 3300 6600 6200 ) 1/5
+CHORD ( 3300 6600 6200 ) 1/5
+CHORD ( 6600 6200 ) 2/5
+CHORD ( 6600 6200 5200 4800 ) 1/5
+CHORD ( 6600 6200 5200 4800 ) 2/5
+CHORD ( 5200 4800 7300 6700 5800 ) 1/1

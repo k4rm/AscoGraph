@@ -1,0 +1,18 @@
+; Antescofo score generated using libmusicxml and embedded xml2antescofo converter.
+; Copyright (c) Thomas Coffy - IRCAM 2012
+BPM 120
+
+NOTE 6660 1
+
+		cue01 24
+
+TRILL (5200) 0.33    	; beat = 148.464 	 line 386
+TRILL ((5200 7700) 7700 5200) 3  measure-38  	; beat = 148.794 	 line 390
+TRILL ((5200 10200) 10200) 0.1666    	; beat = 151.794 	 line 391
+		cue01 25
+ 		print MOVING TO MOVEMENT 2
+ 		0.5 antescofo-mess score pluton-part2-asco.txt
+
+SILENCE   4  measure-39  	; beat = 151.961 	 line 398
+
+

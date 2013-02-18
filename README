@@ -13,7 +13,7 @@ Build :
 
 To build Ascograph, you will need CMake, minimum version 2.8.
 
-# go into the directory where the sources are locate :
+# go into the directory where the sources are located :
 cd apps/Antescofo/Ascograph/
 
 # create makefiles

@@ -1,0 +1,134 @@
+; partition bidon Pluton m4
+
+toantescofo suivi 0
+	qlist 4A	0
+
+NOTE 60 1.0	IV-A-e1
+	qlist 4A	1
+NOTE 60 1.0	e2
+	qlist 4A	2
+NOTE 60 1.0	e3
+	qlist 4A	3
+NOTE 60 1.0	e4
+	qlist 4A	4
+NOTE 60 1.0	e5
+	qlist 4A	5
+NOTE 60 1.0	e6
+	qlist 4A	6
+NOTE 60 1.0	e7
+	qlist 4A	7
+
+NOTE 60 1.0	e8
+	qlist 4A	8
+NOTE 60 1.0	e9
+	qlist 4A	9
+
+NOTE 60 1.0	e10
+	qlist 4A	10
+NOTE 60 1.0	e11
+	qlist 4A	11
+NOTE 60 1.0	e12
+	qlist 4A	12
+NOTE 60 1.0	e13
+	qlist 4A	13
+NOTE 60 1.0	e14
+	qlist 4A	14
+NOTE 60 1.0	e15
+	qlist 4A	15
+NOTE 60 1.0	e16
+	qlist 4A	16
+	
+
+; IV-B
+
+NOTE 60 1.0	IV-B-e1
+	qlist 4B	1
+NOTE 60 1.0	e2
+	qlist 4B	2
+NOTE 60 1.0	e3
+	qlist 4B	3
+NOTE 60 1.0	e4
+	qlist 4B	4
+NOTE 60 1.0	e5
+	qlist 4B	5
+NOTE 60 1.0	e6
+	qlist 4B	6
+NOTE 60 1.0	e7
+	qlist 4B	7
+NOTE 60 1.0	e8
+	qlist 4B	8
+
+; IV-C
+NOTE 60 1.0	IV-C-e1
+	qlist 4C	1
+NOTE 60 1.0	e2
+	qlist 4C	2
+NOTE 60 1.0	e3
+	qlist 4C	3
+NOTE 60 1.0	e4
+	qlist 4C	4
+NOTE 60 1.0	e5
+	qlist 4C	5
+NOTE 60 1.0	e6
+	qlist 4C	6
+NOTE 60 1.0	e7
+	qlist 4C	7
+
+NOTE 60 1.0	e8
+	qlist 4C	8
+NOTE 60 1.0	e9
+	qlist 4C	9
+
+NOTE 60 1.0	e10
+	qlist 4C	10
+NOTE 60 1.0	e11
+	qlist 4C	11
+NOTE 60 1.0	e12
+	qlist 4C	12
+NOTE 60 1.0	e13
+	qlist 4C	13
+NOTE 60 1.0	e14
+	qlist 4C	14
+NOTE 60 1.0	e15
+	qlist 4C	15
+
+NOTE 60 1.0	e16
+	qlist 4C	16		; N'EXISTE PAS!!!
+
+; Part IV-D
+NOTE 60 1.0	IV-D-e1
+	qlist 4D	1
+NOTE 60 1.0	e2
+	qlist 4D	2
+NOTE 60 1.0	e3
+	qlist 4D	3
+NOTE 60 1.0	e4
+	qlist 4D	4
+NOTE 60 1.0	e5
+	qlist 4D	5
+NOTE 60 1.0	e6
+	qlist 4D	6
+NOTE 60 1.0	e7
+	qlist 4D	7
+
+NOTE 60 1.0	e8
+	qlist 4D	8
+NOTE 60 1.0	e9
+	qlist 4D	9
+
+NOTE 60 1.0	e10
+	qlist 4D	10
+NOTE 60 1.0	e11
+	qlist 4D	11
+NOTE 60 1.0	e12
+	qlist 4D	12
+NOTE 60 1.0	e13
+	qlist 4D	13
+NOTE 60 1.0	e14
+	qlist 4D	14
+NOTE 60 1.0	e15
+	qlist 4D	15
+	toantescofo score pluton-part5-asco.txt
+
+
+

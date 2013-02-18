@@ -1,0 +1,17 @@
+; Transferred from NoteAbilityPro score: chopinCm.na
+; Date: 2012 12 31 16:07:51 GMT+01:00
+;
+BPM 46.00
+	; Initialize Antescofo - These variables are automatically set upon "start"
+	;	These values might change within different performances but not between same performance.
+	antescofo-mess gamma -1.0, tune 440.0, pedal 1, pedaltime 500.0, nofharm 5, suivi 1 
+	; The above also shows combinations of several messages as in Max/Pd message box
+	; Here, we have activate the PEDAL mode of Antescofo
+; ---------- measure 1 beat 0.00 ---------
+
+ CHORD ( 6700 6300 ) 3/4 ; OK
+
+; CHORD ( 6700 6300 5900 ) 3/4 ; KO
+CHORD ( -5900 4400 ) 1/4
+
+
