@@ -160,6 +160,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	float convertAntescofoOutputToTime(float mOsc_beat, float mOsc_tempo, float mOsc_pitch);
 	void setAutoScroll(bool active);
 	void toggleView();
+	void showNote(int line);
 
 	bool change_action(float beatnum, string action);
 
@@ -184,6 +185,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	bool hoveringOn(float hoverY);
 	void setNoteColor(int n);
 	float lastTimelinePoint;
+	void autoscroll();
 
 	void updateDragOffsets(float clickX);
 	int howManySwitchesAreSelected();
@@ -262,6 +264,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	antescofo   *mAntescofo;
 	Score       *mNetscore;
 	ParseDriver *mParseDriver;
+	map<int,int> line2note;
 
 	ofTrueTypeFont mFont;
 	ofImage* noteImage;

@@ -787,6 +787,14 @@ static void notification(intptr_t windowid, unsigned int iMessage, uintptr_t wPa
       
       switch (scn->nmhdr.code)
       {
+				case SCN_DOUBLECLICK:
+				{
+					NSMutableDictionary* info = [NSMutableDictionary dictionary];
+          NSPoint caretPosition = editor->mBackend->GetCaretPosition();
+					[info setValue: [NSNumber numberWithInt: (int)floorf(caretPosition.y+1)] forKey: @"line"];
+					[editor sendNotification:@"DoubleClick"  withUserInfo: info];
+					break;
+				};
         case SCN_MARGINCLICK:
         {
           long line = [editor getGeneralProperty: SCI_LINEFROMPOSITION parameter: scn->position];

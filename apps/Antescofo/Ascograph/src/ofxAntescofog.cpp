@@ -102,6 +102,7 @@ void ofxAntescofog::menu_item_hit(int n)
             m.setAddress("/antescofo/command");
             m.addStringArg("play");
             mOSCsender.sendMessage(m);
+						break;
         }
         case INT_CONSTANT_BUTTON_START:
         {
@@ -109,6 +110,7 @@ void ofxAntescofog::menu_item_hit(int n)
             m.setAddress("/antescofo/command");
             m.addStringArg("start");
             mOSCsender.sendMessage(m);
+						break;
         }
         case INT_CONSTANT_BUTTON_STOP:
         {
@@ -116,6 +118,7 @@ void ofxAntescofog::menu_item_hit(int n)
             m.setAddress("/antescofo/command");
             m.addStringArg("stop");
             mOSCsender.sendMessage(m);
+						break;
         }
     }
 }
@@ -133,6 +136,21 @@ static ofxAntescofog *fog;
         fog->menu_item_hit([i tag]);
     }
 }
+
+- (void) receiveNotification:(NSNotification *) notification
+{
+	//NSLog([notification name]);
+	if ([[notification name] isEqualToString:@"DoubleClick"]) {
+
+		NSDictionary *userInfo = notification.userInfo;
+		int line = [[userInfo objectForKey:@"line"] intValue];
+		NSLog(@"DoubleClick on line: %d", line);
+    if (fog) {
+        fog->editorDoubleclicked(line);
+    }
+	}
+}
+
 @end
 
 void ofxAntescofog::setupUI() {
@@ -268,6 +286,10 @@ void ofxAntescofog::setupUI() {
     guiSetup_Colors->setFont("NewMedia Fett.ttf");
     guiError->setFont("NewMedia Fett.ttf");
     */
+
+
+		// register double click on editor notification callback
+		[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
 
     guiSetup_Colors->setScrollableDirections(false, true);
     guiError->setScrollAreaToScreen();
@@ -867,11 +889,15 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 #ifdef TARGET_OSX
 		NSSize siz;
 		editor = [ ofxCodeEditor alloc];
-		const char *normal_keywords[] = { "NOTE", "CHORD", "TRILL", "MULTI", "GFWD"};
-		const char *major_keywords[] = { "BPM" "@MACRO_DEF"} ;
+		const char *normal_keywords = "bpm note chord trill multi variance tempo on off";
+		const char *major_keywords = "gfwd group lfwd loop cfwd curve kill abort killof abortof whenever";
+		const char *procedure_keywords = "@macro_def @fun_def @insert #include let until expr tight grain guard map imap loc glob if := s ms";
+		const char *system_keywords = "$rt_tempo $pitch $beat_pos $now $rnow @exp @max @min @log @integrate @normalize @bounded_integrate @add_pair @date @rdate";
 
 		[ editor  set_normal_keywords: normal_keywords ];
 		[ editor  set_major_keywords: major_keywords ];
+		[ editor  set_procedure_keywords: procedure_keywords ];
+		[ editor  set_system_keywords: system_keywords ];
 		NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
 		//string str = "ofxAntescofog: window: "; str += ofGetWidth() + "x"+ ofGetHeight(); console->addln(str);
 
@@ -1397,6 +1423,11 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         timeline.enable();
         guiBottom->enable();
     }
+}
+
+void ofxAntescofog::editorDoubleclicked(int line)
+{
+	ofxAntescofoNote->showNote(line);
 }
 
 

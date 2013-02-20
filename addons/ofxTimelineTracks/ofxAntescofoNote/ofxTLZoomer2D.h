@@ -64,7 +64,8 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 	
 	//this set is NON exponential, but normalized 0-1
 	void setViewRange(ofRange newRange);
-    ofRange getSelectedRange(); //non exponential
+  ofRange getSelectedRange(); //non exponential
+	void setSelectedRange(ofRange newRange);
   private:
 
 	void notifyZoomStarted();

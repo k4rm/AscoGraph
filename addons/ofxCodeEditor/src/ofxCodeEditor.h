@@ -16,7 +16,7 @@
     NSView*		mGLview;
     NSWindow*		mWindow;
     ScintillaView*	mEditor;
-		const char **normal_keywords, **major_keywords;
+		const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords;
 };
 
 //- (void) setColorProperty: (int) property parameter: (long) parameter fromHTML: (NSString*) fromHTML;
@@ -34,9 +34,10 @@
 - (void) getEditorContent: (string&) content;
 //- (void) crossFadeWithOld(NSWindow* window, NSView *oldView, NSView* newView);
 - (void) searchText:(string) str;
-- (void) set_normal_keywords: (const char*[])normal_keywords_;
-- (void) set_major_keywords: (const char*[])major_keywords_;
-
+- (void) set_normal_keywords: (const char*)normal_keywords_;
+- (void) set_major_keywords: (const char*)major_keywords_;
+- (void) set_procedure_keywords: (const char*)procedure_keywords_;
+- (void) set_system_keywords: (const char*)system_keywords_;
 
 @end
 

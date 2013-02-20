@@ -156,3 +156,17 @@ void ofxTLBeatTicker::updateBPMPoints(){
 	}
 
 }
+
+
+void ofxTLBeatTicker::mousePressed(ofMouseEventArgs& args){
+}
+
+void ofxTLBeatTicker::mouseDragged(ofMouseEventArgs& args){
+}
+
+void ofxTLBeatTicker::mouseMoved(ofMouseEventArgs& args){
+}
+
+void ofxTLBeatTicker::mouseReleased(ofMouseEventArgs& args){
+}
+

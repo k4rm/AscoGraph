@@ -40,7 +40,7 @@ ofxTLZoomer2D::ofxTLZoomer2D()
 	maxSelected(false),
 	midSelected(false),
 	currentViewRange(ofRange(0.0, 1.0)),
-	zoomExponent(2.0)
+	zoomExponent(1.0)
 {
 	//bounds.height = 25;
 }
@@ -51,6 +51,7 @@ ofxTLZoomer2D::~ofxTLZoomer2D(){
 
 void ofxTLZoomer2D::draw() {
 	//cout << "zoom: " << bounds.x << ", "<< bounds.y << " : " << bounds.width << "x" << bounds.height << endl;
+	//cout << "zoom2d :" << currentViewRange.min << "->" << currentViewRange.max  << endl<<endl; 
 	ofPushStyle();
 	ofSetColor(timeline->getColors().textColor);
 	//draw min
@@ -229,7 +230,7 @@ void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
 		currentViewRange.max = fmin(xmax, 1.);
 
 		// y
-		float d, yd = -(args.y - yGrabOffset)*5;
+		float d, yd = -(args.y - yGrabOffset)*6;
 		float nyd = screenXtoNormalizedX(yd, ofRange(0, 1.));
 
 		d = screenXtoNormalizedX(xMinGrabOffset - currentViewRange.min);
@@ -242,6 +243,8 @@ void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
 
 		currentViewRange.min = fmax(0., xmin);
 		currentViewRange.max = fmin(xmax, 1.);
+		if (currentViewRange.max < currentViewRange.min)
+			currentViewRange.max = currentViewRange.min + 0.2;
 		notify = true;
 	}
 
@@ -317,5 +320,15 @@ void ofxTLZoomer2D::setViewRange(ofRange newRange){
 
 ofRange ofxTLZoomer2D::getSelectedRange(){
 	return currentViewRange;
+}
+
+void ofxTLZoomer2D::setSelectedRange(ofRange newRange){
+	ofxTLZoomEventArgs zoomEvent;
+	zoomEvent.oldZoom = getViewRange();
+	zoomEvent.sender = timeline;
+
+	currentViewRange = newRange;
+	zoomEvent.currentZoom = getViewRange();
+	ofNotifyEvent(events().zoomEnded, zoomEvent); 
 }
 

@@ -47,6 +47,9 @@
 #include "Editor.h"
 #include "ScintillaBase.h"
 
+#include <iostream> 
+using namespace std;
+
 #ifdef SCI_NAMESPACE
 using namespace Scintilla;
 #endif
@@ -561,6 +564,7 @@ const char *LexState::DescribeWordListSets() {
 
 void LexState::SetWordList(int n, const char *wl) {
 	if (instance) {
+		cout << "SetWordList: " << n << " : " << wl << endl;
 		int firstModification = instance->WordListSet(n, wl);
 		if (firstModification >= 0) {
 			pdoc->ModifiedAt(firstModification);

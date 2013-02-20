@@ -170,7 +170,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 
 			headerHasFocus |= (clickIsInFooter || clickIsInHeader) && !justMadeSelection;
 			footerIsDragging |= clickIsInFooter;
-			cout << "ofxTLPage::mousePressed name:"<<headers[i]->name<<": headerHasFocus "<<headerHasFocus<< " justMadeSelection:"<<justMadeSelection<<endl;
+			//cout << "ofxTLPage::mousePressed name:"<<headers[i]->name<<": headerHasFocus "<<headerHasFocus<< " justMadeSelection:"<<justMadeSelection<<endl;
 			if(headerHasFocus){
 				headers[i]->mousePressed(args);
 			}

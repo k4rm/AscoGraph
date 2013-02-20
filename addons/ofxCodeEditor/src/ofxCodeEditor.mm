@@ -3,33 +3,40 @@
 #import "ScintillaView.h"
 #import "ScintillaCocoa.h"
 #import "InfoBar.h"
-const char procedure_keywords[] = 
-"GFWD"
-"LFWD"
-"CFWD"
-;
+const char *procedure_keywords[] = { "GFWD", "" } ;//, "LFWD", "CFWD"};
 
 const char client_keywords[] = 
-"BPM"
+""
 
 ;
 
 const char user_keywords[] = 
-"@MACRO_DEF"
+""
 ;
 
 static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 @implementation ofxCodeEditor
 
-- (void) set_normal_keywords: (const char*[])normal_keywords_ {
+- (void) set_normal_keywords: (const char*)normal_keywords_ {
 	normal_keywords = normal_keywords_;
 }
 
 
-- (void) set_major_keywords: (const char*[])major_keywords_ {
+- (void) set_major_keywords: (const char*)major_keywords_ {
 	major_keywords = major_keywords_;
 }
+
+- (void) set_procedure_keywords: (const char*)procedure_keywords_ {
+	procedure_keywords = procedure_keywords_;
+}
+
+- (void) set_system_keywords: (const char*)system_keywords_ {
+	system_keywords = system_keywords_;
+}
+
+
+
 
 
 //void ofxCodeEditor::setup(NSWindow* window, NSView* glview, ofRectangle& rect) {
@@ -47,6 +54,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 	[mEditor setOwner:mWindow];
 	NSLog(@"ofxEditor: scintillaview allocated");
+
 
 	[mEditor setBounds:NSMakeRect(0, 0, rect.width, rect.height)];
 
@@ -111,14 +119,20 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 //--------------------------------------------------------------------------------------------------
 
+typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
+
 /**
  * Initialize scintilla editor (styles, colors, markers, folding etc.].
  */
 //void ofxCodeEditor::setupEditor()
 - (void) setupEditor
 {  
-	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_LUA value: 0];
+	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: 0];
 	// alternatively: [mEditor setEditorProperty: SCI_SETLEXERLANGUAGE parameter: nil value: (sptr_t) "mysql"];
+
+  //[mEditor RegisterNotifyCallback(intptr_t windowid, SciNotifyFunc callback);
+	//mEditor.RegisterNotifyCallback(, );
+
 
 	// Number of styles we use with this lexer.
 	[mEditor setGeneralProperty: SCI_SETSTYLEBITS value: [mEditor getGeneralProperty: SCI_GETSTYLEBITSNEEDED]];
@@ -135,8 +149,10 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 0 value: major_keywords];
 	if (normal_keywords)
 		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 1 value: normal_keywords];
+	if (system_keywords)
+		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 4 value: system_keywords];
 	if (procedure_keywords)
-		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 3 value: procedure_keywords];
+		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 5 value: procedure_keywords];
 	if (client_keywords)
 		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 6 value: client_keywords];
 	if (user_keywords)
@@ -151,41 +167,44 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 	//[mEditor setGeneralProperty: SCI_STYLECLEARALL parameter: 0 value: 0];	
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_DEFAULT value: [NSColor blackColor]];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_COMMENT fromHTML: @"#097BF7"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_COMMENTLINE fromHTML: @"#097BF7"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_HIDDENCOMMAND fromHTML: @"#097BF7"];
-	[mEditor setColorProperty: SCI_STYLESETBACK parameter: SCE_MYSQL_HIDDENCOMMAND fromHTML: @"#F0F0F0"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_DEFAULT value: [NSColor blackColor]];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_COMMENT fromHTML: @"#097BF7"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_COMMENTLINE fromHTML: @"#097BF7"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_HIDDENCOMMAND fromHTML: @"#097BF7"];
+	[mEditor setColorProperty: SCI_STYLESETBACK parameter: SCE_ANTESCOFO_HIDDENCOMMAND fromHTML: @"#F0F0F0"];
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_VARIABLE fromHTML: @"378EA5"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_SYSTEMVARIABLE fromHTML: @"378EA5"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_KNOWNSYSTEMVARIABLE fromHTML: @"#3A37A5"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_VARIABLE fromHTML: @"378EA5"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_SYSTEMVARIABLE fromHTML: @"378EA5"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_KNOWNSYSTEMVARIABLE fromHTML: @"#3A37A5"];
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_NUMBER fromHTML: @"#7F7F00"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_SQSTRING fromHTML: @"#FFAA3E"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_NUMBER fromHTML: @"#7F7F00"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_SQSTRING fromHTML: @"#FFAA3E"];
 
 	// Note: if we were using ANSI quotes we would set the DQSTRING to the same color as the 
 	//       the back tick string.
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_DQSTRING fromHTML: @"#274A6D"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_DQSTRING fromHTML: @"#274A6D"];
 
 	// Keyword highlighting.
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_MAJORKEYWORD fromHTML: @"#007F00"];
-	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_MYSQL_MAJORKEYWORD value: 1];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_KEYWORD fromHTML: @"#007F00"];
-	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_MYSQL_KEYWORD value: 1];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_PROCEDUREKEYWORD fromHTML: @"#56007F"];
-	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_MYSQL_PROCEDUREKEYWORD value: 1];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_USER1 fromHTML: @"#808080"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_USER2 fromHTML: @"#808080"];
-	[mEditor setColorProperty: SCI_STYLESETBACK parameter: SCE_MYSQL_USER2 fromHTML: @"#F0E0E0"];
+
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_KEYWORD fromHTML: @"#5C007F"];
+	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_KEYWORD value: 1];
+	
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_MAJORKEYWORD fromHTML: @"#007F00"];
+	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_MAJORKEYWORD value: 1];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_KEYWORD fromHTML: @"#FF0000"];
+	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_KEYWORD value: 1];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_PROCEDUREKEYWORD fromHTML: @"#E6007F"];
+	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_PROCEDUREKEYWORD value: 1];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_USER1 fromHTML: @"#808080"];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_USER2 fromHTML: @"#808080"];
+	[mEditor setColorProperty: SCI_STYLESETBACK parameter: SCE_ANTESCOFO_USER2 fromHTML: @"#F0E0E0"];
 
 	// The following 3 styles have no impact as we did not set a keyword list for any of them.
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_DATABASEOBJECT value: [NSColor redColor]];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_FUNCTION value: [NSColor redColor]];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_FUNCTION value: [NSColor redColor]];
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_IDENTIFIER value: [NSColor blackColor]];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_MYSQL_QUOTEDIDENTIFIER fromHTML: @"#274A6D"];
-	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_SQL_OPERATOR value: 1];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_IDENTIFIER value: [NSColor blackColor]];
+	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_QUOTEDIDENTIFIER fromHTML: @"#274A6D"];
+	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_OPERATOR value: 1];
 
 	// Line number style.
 	[mEditor setColorProperty: SCI_STYLESETFORE parameter: STYLE_LINENUMBER fromHTML: @"#F0F0F0"];

@@ -349,6 +349,7 @@ file ( GLOB_RECURSE SCINTILLA_SOURCES
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.cxx
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.mm
 )
+#set (SCINTILLA_SOURCES ${SCINTILLA_SOURCES} ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexers/LexAntescofo.cxx)
 
 
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/ PROPERTIES COMPILE_FLAGS "-x objective-c++")

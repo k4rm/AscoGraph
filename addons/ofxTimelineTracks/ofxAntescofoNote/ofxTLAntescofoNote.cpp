@@ -210,6 +210,8 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 
 		}
 		ofRect(bounds.x + piano_width, bounds.y + j * rowHeight, bounds.width - piano_width, rowHeight);
+		ofSetColor(0, 0, 0, 10);
+		ofLine(bounds.x, bounds.y + j * rowHeight, bounds.x + bounds.width, bounds.y + j * rowHeight);
 	}
 
 	/* // draw note number guides
@@ -621,26 +623,50 @@ void ofxTLAntescofoNote::draw_showStaves() {
 }
 
 
-void ofxTLAntescofoNote::draw() {
-	ofPushStyle();
-#ifdef AUTOSCROLL_BROKEN
-	if (bAutoScroll && mDur_in_secs) {
-		float pos = timeline->getPercentComplete();
-		ofxTLZoomer *zoom = timeline->getZoomer();
-		ofRange r = zoom->getViewRange();
-		float d = r.span();
+void ofxTLAntescofoNote::autoscroll() {
+	static float lastpos = 0;
+//#ifdef AUTOSCROLL_BROKEN
+	float pos = timeline->getPercentComplete();
+	if (bAutoScroll && mDur_in_secs && lastpos != pos) {
+		ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
 
-		if (pos && (r.min - d/2 <= pos || r.max + d/2 >= pos )) {
-			//ofRange actualZoom = zoom->getViewRange();
-			//float min = actualZoom.min; //timeline->screenXtoNormalizedX(actualZoom.min);
-			//float max = actualZoom.max; //timeline->screenXtoNormalizedX(actualZoom.max);
-			//cout << "pos:"<< pos <<" range: "<< actualZoom.min << "->"<< actualZoom.max << " to "<< min << " -> "<<max<<endl;
-			//cout << "pos:"<< pos <<" range: "<< r.min << "->"<< r.max<<endl;
+		ofRange z = zoom->getViewRange();
+		ofRange oldz = z;
+		cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
+		// continuous scrolling : keep playhead on center
+		if (pos) {
+			float c = z.center(); 
+			float d = pos - c;
 
+			z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+			if (z.min == .0 && z.span() < oldz.span())
+				z.max = oldz.max - oldz.min;
+			if (z.max == 1. && z.span() < oldz.span())
+				z.min = z.max - oldz.max + oldz.min;
+
+
+			cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			zoom->setViewRange(z);
+			//zoom->setSelectedRange(z);
+#if 0
+			float logSpan = powf(z.span(), 2.0);
+			//recompute view range
+			c = ofMap(pos, z.span()/2, 1.0 - z.span()/2, logSpan/2, 1.0-logSpan/2);
+			cout << "c="<<c << endl;
+
+			//z.min = ofClamp(pos - c, 0, 1); z.max = ofClamp(pos + c, 0, 1);
+			z = ofRange(c - logSpan/2, c + logSpan/2);
+			//zoom->setSelectedRange(ofRange(c - logSpan/2, c + logSpan/2));
+			zoom->setSelectedRange(z);
+#endif
+
+			//zoom->setSelectedRange(z);
+			//zoom->setViewRange(z);
+			/*
 			ofRange n;//(pos - d/2, pos + d/2);
 
-			if (r.min - d/2 <= pos) n.min = ofClamp(pos-d/2, 0, r.min + .01);
-			if (r.max + d/2 >= pos) n.max = ofClamp(pos+d/2, r.max + .01, 1);
+			//if (r.min - d/2 <= pos) n.min = ofClamp(pos-d/2, 0, r.min + .01);
+			//if (r.max + d/2 >= pos) n.max = ofClamp(pos+d/2, r.max + .01, 1);
 
 			//if (pos >= r.max || pos <= r.min)
 			{
@@ -650,11 +676,20 @@ void ofxTLAntescofoNote::draw() {
 				if (n.max >= 1.0) n.max = 1;
 
 				zoom->setViewRange(n);
-			}
+			} 
+			*/
+			lastpos = pos;
 		}
-	}
-#endif
 
+		// page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
+	}
+//#endif
+
+
+}
+
+void ofxTLAntescofoNote::draw() {
+	ofPushStyle();
 	//**** DRAW BORDER
 	ofNoFill();
 	if(hover){
@@ -668,6 +703,7 @@ void ofxTLAntescofoNote::draw() {
 	}	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
+	autoscroll();
 	if (bShowPianoRoll) {
 		draw_showPianoRoll();
 	} else
@@ -699,13 +735,12 @@ int ofxTLAntescofoNote::pitchForScreenY(int y) {
 }
 
 bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
+
 	//cout << "ofxTLAntescofoNote::mousePressed " << endl;
-	ofVec2f screenpoint(args.x,args.y);
+	ofVec2f screenpoint(args.x, args.y);
 	shouldCreateNewSwitch = false;
 
-	updateDragOffsets(args.x);
 
-	pointsAreDraggable = !ofGetModifierKeyShift();
 
 	//************************ Range Click
 	changingRangeMin = rangeMinSliderBounds.inside(screenpoint);
@@ -720,6 +755,9 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 		return false;
 	}
 
+	if (!bounds.inside(args.x, args.y)) return false;
+	cout << "pas faux" << endl;
+	pointsAreDraggable = !ofGetModifierKeyShift();
 	//************************ Track Focusing
 	bool clickInRect = bounds.inside(screenpoint);
 	if(clickInRect){
@@ -727,15 +765,14 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 			focused = true;
 			//			return;
 		}
-	}
-
-	if(!clickInRect){
-		if(!ofGetModifierKeyShift()){
+	} else {
+		if(pointsAreDraggable){
 			//unselectAll();
 			focused = false;
 		}
 		return false;
 	}
+	updateDragOffsets(args.x);
 	//************************
 	bool shouldDeselect = false;
 	bool didSelectedStartTime;
@@ -889,11 +926,10 @@ void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //b
 		if(timeline->getMovePlayheadOnPaste()){
 			if(switchHandle != NULL){
 				//timeline->setPercentComplete(didSelectedStartTime ? switchHandle->time.min : switchHandle->time.max);
-				timeline->setPercentComplete(didSelectedStartTime ? timeline->beatToNormalizedX(switchHandle->beat.min)
-						: timeline->beatToNormalizedX(switchHandle->beat.max));
+				//timeline->setPercentComplete(didSelectedStartTime ? timeline->beatToNormalizedX(switchHandle->beat.min) : timeline->beatToNormalizedX(switchHandle->beat.max));
 			}
 			else{
-				timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+				//timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
 			}
 		}
 	}
@@ -910,6 +946,7 @@ void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //b
 }
 
 void ofxTLAntescofoNote::mouseReleased(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return;
 	// don't look for changing ranges after mouse button is released
 	changingRangeMin = false;
 	changingRangeMax = false;
@@ -1213,6 +1250,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					switches.push_back(newSwitch);
 					str << "added new switch for MULTI source: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
 					console->addln(str.str()); str.str("");
+					line2note[e->scloc->begin.line] = switches.size() - 1;
 					bGot_Action = false;
 				}
 				for (vector<float>::iterator m = e->multi_target.begin(); m != e->multi_target.end(); m++) { // MULTI destinations
@@ -1231,6 +1269,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->lineNum_end = e->scloc->end.line;
 					newSwitch->colNum_end = e->scloc->end.column;
 					switches.push_back(newSwitch);
+					line2note[e->scloc->begin.line] = switches.size() - 1;
 					str << "added new switch for MULTI target: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
 					console->addln(str.str()); str.str("");
 					bGot_Action = false;
@@ -1262,6 +1301,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->label = e->cuename;
 			//if (newSwitch->label.compare(0, 7, "measure") == 0)                 newSwitch->measure = newSwitch->label.substr(7, newSwitch->label.size());
 			switches.push_back(newSwitch);
+			line2note[e->scloc->begin.line] = switches.size() - 1;
 			str << "added new switch: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
 			console->addln(str.str()); str.str("");
 			bGot_Action = false;
@@ -1297,6 +1337,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				if (j == e->pitch_list.begin()) newSwitch->label = e->cuename;
 				newSwitch->type = getNoteType(e);
 				switches.push_back(newSwitch);
+				line2note[e->scloc->begin.line] = switches.size() - 1;
 				str << "added new switch: CHORD:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
 				console->addln(str.str()); str.str("");
 			}
@@ -1326,6 +1367,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->colNum_end = e->scloc->end.column;
 					if (r == t->begin()) newSwitch->label = e->cuename;
 					switches.push_back(newSwitch);
+					line2note[e->scloc->begin.line] = switches.size() - 1;
 					str << "added new switch for TRILL: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
 					console->addln(str.str()); str.str("");
 					bGot_Action = false;
@@ -1335,7 +1377,8 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		}
 
 	}
-	ofxAntescofoAction->setScore(score);
+	if (ofxAntescofoAction)
+		ofxAntescofoAction->setScore(score);
 	str << "Score tempo : " << 60/score->tempo;
 	console->addln(str.str()); str.str("");
 	trimRange();
@@ -1466,6 +1509,56 @@ string ofxTLAntescofoNote::getXMLStringForSwitches(bool selectedOnly){
 	settings.copyXmlToString(ret);
 	//	cout << " xml request rep " << ret << endl;
 	return ret;
+}
+
+
+// highlight note on doubclick event in the editor
+void ofxTLAntescofoNote::showNote(int line)
+{
+	// find note to highlight
+	map<int, int>::iterator b;
+
+	if ((b = line2note.find(line)) != line2note.end()) {
+		unselectAll();
+
+		// select corresponding note
+		int n = b->second;
+		if (n < switches.size() && switches[n]) {
+			switches[n]->startSelected = true;
+			switches[n]->endSelected = true;
+
+			// move zoom to show note
+			float pos = timeline->beatToNormalizedX(switches[n]->beat.center());
+			ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
+			ofRange z = zoom->getViewRange();
+			ofRange oldz = z;
+			cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
+			float c = z.center(); 
+			float d = pos - c;
+
+			z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+			if (z.min == .0 && z.span() < oldz.span())
+				z.max = oldz.max - oldz.min;
+			if (z.max == 1. && z.span() < oldz.span())
+				z.min = z.max - oldz.max + oldz.min;
+
+			cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			zoom->setViewRange(z);
+
+		}
+				/*
+		for(int i = 0; i < switches.size(); i++) {
+			if (switches[i]->beat.min >= b->second && switches[i]->beat.max <= b->second ) {
+				cout << "found note: "<< b->second << endl;
+				switches[i]->startSelected = true;
+				switches[i]->endSelected = true;
+			}
+		}
+		*/
+	} else 
+		cerr << "Note not found for line " << line << endl;
+	
+
 }
 
 vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromXML(ofxXmlSettings xmlStore){
@@ -1788,8 +1881,9 @@ void ofxTLAntescofoNote::trimRange() {
 }
 
 void ofxTLAntescofoNote::drawRectChanged(){
-	guiHeaderHeight = 11;
-	ofRectangle startRect = ofRectangle(bounds.x + 100 - guiXPadding, 0, 0, guiHeaderHeight);
+	guiHeaderHeight = 13;
+	//ofRectangle startRect = ofRectangle(bounds.x + 100 - guiXPadding, 0, 0, guiHeaderHeight);
+	ofRectangle startRect = ofRectangle(bounds.x + bounds.width - 220 - guiXPadding, 0, 0, guiHeaderHeight);
 	//portInButtonBounds = getBoundsEastOf(startRect, "In: " + midiIn.getName());
 	//armInButtonBounds = getBoundsEastOf(portInButtonBounds, "Arm");
 	rangeLabelBounds = getBoundsEastOf(startRect, "Range");

@@ -484,12 +484,4 @@ static int 			diffMillis;
 
 }
 
-/*
-- (void)menu_item_hit:(id)sender
-{
-    cout << "menu item button hit" << endl;
-}
-*/
-
-
 @end

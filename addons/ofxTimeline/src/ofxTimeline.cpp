@@ -45,7 +45,7 @@ bool headersort(ofxTLTrackHeader* a, ofxTLTrackHeader* b){
 
 #define TAB_HEIGHT 0 // 18
 #define TICKER_HEIGHT 17 //27
-#define ZOOMER_HEIGHT 30
+#define ZOOMER_HEIGHT 23
 #define INOUT_HEIGHT 0 //7
 
 ofxTimeline::ofxTimeline()

@@ -68,6 +68,7 @@ class ofxTLBeatTicker;
 
 @interface ofxCocoaDelegate (ofxAntescofogAdditions)
 - (void)menu_item_hit:(id)sender;
+- (void) receiveNotification:(NSNotification *) notification;
 @end
 
 class AntescofoTimeline : public ofxTimeline
@@ -114,6 +115,7 @@ class ofxAntescofog : public ofBaseApp{
 		void setEditorMode(bool state, float beatn);
 		ofxCodeEditor* editor;
 		void editorShowLine(int linea, int lineb);
+		void editorDoubleclicked(int line);
 
 		ofxTLAntescofoNote* ofxAntescofoNote;
 		ofxTLAntescofoAction* ofxAntescofoAction;

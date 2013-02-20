@@ -1,6 +1,19 @@
 Ascograph - graphical editor for composition and performance with Antescofo
 
 
+Ascograph Features: 
+-------------------
+
+* automatic conversion from MusicXML files to Antescofo Language.
+* automatic scrolling of notes view and editor view with Antescofo Score
+  Follower.
+* note selection from editor or interface, in both directions
+  for fast and easy modifications : double click on a line in the text
+  editor to see which note it is in the pianoroll.
+* syntax coloring
+
+
+
 Dependencies :
 --------------
 

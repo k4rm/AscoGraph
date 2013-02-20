@@ -321,6 +321,7 @@ void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ofxTLTicker::mousePressed(ofMouseEventArgs& args){
+	cout << "pute" << endl;
 	//TODO change playhead position
 	dragging = bounds.inside(args.x, args.y);
 	if(dragging){
