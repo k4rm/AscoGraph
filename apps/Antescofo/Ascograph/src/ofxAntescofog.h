@@ -32,12 +32,14 @@
 #define INT_CONSTANT_BUTTON_PLAY        11
 #define INT_CONSTANT_BUTTON_START       12
 #define INT_CONSTANT_BUTTON_STOP        13
+#define INT_CONSTANT_BUTTON_SAVE_AS     14
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
 #define TEXT_CONSTANT_BUTTON_LOAD               "Load score"
 #define TEXT_CONSTANT_BUTTON_RELOAD             "Reload score"
 #define TEXT_CONSTANT_BUTTON_SAVE               "Save score"
+#define TEXT_CONSTANT_BUTTON_SAVE_AS            "Save score as"
 #define TEXT_CONSTANT_BUTTON_COLOR_SETUP        "Color preferences"
 #define TEXT_CONSTANT_BUTTON_OSC_SETUP          "OSC Setup"
 #define TEXT_CONSTANT_BUTTON_COLOR_SETUP_EXIT   "Exit color preferences"
@@ -58,6 +60,7 @@
 #define TEXT_CONSTANT_BUTTON_BACK               "Back"
 #define TEXT_CONSTANT_TEMP_FILENAME             "/tmp/tmpfile-ascograph.txt"
 #define TEXT_CONSTANT_TITLE_LOAD_SCORE          "Select a score : MusicXML2 or Antescofo format"
+#define TEXT_CONSTANT_TITLE_SAVE_AS_SCORE       "Save score in Antescofo format"
 #define TEXT_CONSTANT_TEMP_ACTION_FILENAME      "/tmp/ascograph_tmp.asco.txt"
 
 
@@ -182,6 +185,7 @@ class ofxAntescofog : public ofBaseApp{
 		// open/save file
 		int loadScore(string filename);
 		void saveScore();
+		void saveAsScore();
 
 		bool bEditorShow;
 

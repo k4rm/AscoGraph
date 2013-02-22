@@ -64,8 +64,7 @@ void xmlpart2antescofo::reset ()
 	fCurrentOffset = 0;
 	fPendingPops = 0;
 	fMeasNum = 0;
-	fCurBeat = 1;
-	fLastDur = 0;
+	fCurBeat = rational(1);
     fTrill = fGlissandoStart = fGlissandoStop = fInBackup = fInForward = false;
 }
 
@@ -124,11 +123,9 @@ void xmlpart2antescofo::checkDelayed (long time)
 void xmlpart2antescofo::stackClean () 
 {
 	if (fInCue) {
-		pop();			
 		fInCue = false;
 	}
 	if (fInGrace) {
-		pop();			
 		fInGrace = false;
 	}
 }
@@ -136,21 +133,20 @@ void xmlpart2antescofo::stackClean ()
 //______________________________________________________________________________
 void xmlpart2antescofo::checkStaff (int staff) {
     if (staff != fCurrentStaff) {
-        Santescofoelement tag = antescofotag::create("staff");
 		int offset = staff - fCurrentStaff;
 //cout << "move from staff " << fCurrentStaffIndex << " to " << (fCurrentStaffIndex + offset) << endl;
 		fCurrentStaff = staff;
         fCurrentStaffIndex += offset;
-		tag->add (antescofoparam::create(fCurrentStaffIndex, false));
-        add (tag);
     }
 }
 
 //______________________________________________________________________________
-void xmlpart2antescofo::moveMeasureTime (int duration, bool moveVoiceToo)
+void xmlpart2antescofo::moveMeasureTime (rational duration, bool moveVoiceToo)
 {
-    //cout << "moveMeasureTime: fCurBeat:"<<fCurBeat<<" dur:"<< duration << " moveVoiceToo:"<<moveVoiceToo<<endl;
-	rational r(duration, fCurrentDivision*4);
+  //cout << "moveMeasureTime: fCurBeat:"<<fCurBeat.getNumerator() <<"/"<< fCurBeat.getDenominator()<<" dur:"<< duration.toFloat() << " moveVoiceToo:"<<moveVoiceToo<<endl;
+	//rational r(duration, fCurrentDivision*4);
+	rational r = duration;
+	r /= fCurrentDivision; //XXX *4;
 	r.rationalise();
 	fCurrentMeasurePosition += r;
 	fCurrentMeasurePosition.rationalise();
@@ -159,12 +155,14 @@ void xmlpart2antescofo::moveMeasureTime (int duration, bool moveVoiceToo)
         if (moveVoiceToo) {
             fCurrentVoicePosition += r;
             fCurrentVoicePosition.rationalise();
+						/*
             // advance fCurBeat
-            rational d(duration, fCurrentDivision);
+            rational d = duration;// d /= fCurrentDivision;
             d.rationalise();
-            cout << "moveMeasureTime: add fCurBeat:" << fCurBeat << " : " << d.toFloat() << endl;
-            fCurBeat += d.toFloat();
-            fLastDur = d;
+            cout << "moveMeasureTime: add fCurBeat:" << fCurBeat.toFloat() << " : " << d.toFloat() << endl;
+            fCurBeat += d;//.toFloat();
+						fCurBeat.rationalise();
+						*/
         }
 }
 
@@ -195,14 +193,15 @@ void xmlpart2antescofo::visitStart ( S_backup& elt )
     fInBackup = true;
 	stackClean();	// closes pending chords, cue and grace
 	int duration = elt->getIntValue(k_duration, 0);
-    cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat << endl;
+    cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat.toFloat() << endl;
 
 	if (duration) {
 		// backup is supposed to be used only for moving between voices
 		// thus we don't move the voice time (which is supposed to be 0)
-		moveMeasureTime (-duration, false);
+		moveMeasureTime (rational(-duration), false);
+		//fCurBeat -= duration;
     }
-    cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat << endl;
+    cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat.toFloat() << endl;
 }
 
 //______________________________________________________________________________
@@ -213,15 +212,17 @@ void xmlpart2antescofo::visitStart ( S_forward& elt )
         && (elt->getIntValue(k_staff, 0) == fTargetStaff);
     int duration = elt->getIntValue(k_duration, 0);
     cout << "FORWARD("<<scanElement<<") ----------------> " << duration << endl;
-    if (fCurBeat == 1 && fMeasNum > 1)
-        moveMeasureTime(duration, true);
+    if (fCurBeat.toFloat() == 1 && fMeasNum > 1)
+        moveMeasureTime(rational(duration), true);
     else 
-        moveMeasureTime(duration,/*false*/ scanElement);
+        moveMeasureTime(rational(duration),/*false*/ scanElement);
+
+		if (scanElement) fCurBeat += duration;
     if (!scanElement) return;
 
 
     if (duration) {		
-        rational r(duration, fCurrentDivision*4);
+        rational r(duration, fCurrentDivision*4); // XXX
         r.rationalise();
         //antescofonoteduration dur (r.getNumerator(), r.getDenominator());
         //Santescofoelement note = antescofonote::create(fTargetVoice, "empty", 0, dur, "");
@@ -260,8 +261,6 @@ void xmlpart2antescofo::visitStart ( S_measure& elt )
 		ctree<xmlelement>::iterator repeat = elt->find(k_repeat);
 		if ((repeat == elt->end()) || (repeat->getAttributeValue("direction") != "forward")) {
 			checkStaff (fTargetStaff);
-			Santescofoelement tag = antescofotag::create("bar");
-			add (tag);
 		}
 	}
 	fCurrentMeasure = elt;
@@ -283,7 +282,7 @@ void xmlpart2antescofo::visitStart ( S_measure& elt )
 
         //if (fMeasNum == 1) fCurBeat = 1;
 
-        cout << "--------------------------------- visit start S_measure: fMeasNum:"<<fMeasNum << " fCurBeat:"<< fCurBeat << endl;
+        cout << "--------------------------------- visit start S_measure: fMeasNum:"<<fMeasNum << " fCurBeat:"<< fCurBeat.toFloat() << endl;
 /*
         float abs_curBeat = .0;
         if (fMeasNum > 1 && fCurBeat == 1) {
@@ -310,9 +309,9 @@ void xmlpart2antescofo::visitStart ( S_measure& elt )
 //______________________________________________________________________________
 void xmlpart2antescofo::visitEnd ( S_measure& elt ) 
 {
-    cout << "--------------------------------- visit end S_measure: fCurBeat:"<<fCurBeat << endl;
+    cout << "--------------------------------- visit end S_measure: fCurBeat:"<<fCurBeat.toFloat() << endl;
 
-    cout << "fCurrentMeasureLength: "<<fCurrentMeasureLength.toFloat() << " fCurBeat:"<< fCurBeat << " "<< endl;// << " d:"  << fCurrentMeasureLength.toFloat() - fCurBeat << endl;
+    cout << "fCurrentMeasureLength: "<<fCurrentMeasureLength.toFloat() << " fCurBeat:"<< fCurBeat.toFloat() << " "<< endl;// << " d:"  << fCurrentMeasureLength.toFloat() - fCurBeat << endl;
     checkVoiceTime (fCurrentMeasureLength, fCurrentVoicePosition);
 
     /*
@@ -334,9 +333,8 @@ void xmlpart2antescofo::visitEnd ( S_measure& elt )
     if (!scanElement) {
         rational d(fCurrentMeasureLength.toFloat(), fCurrentDivision);
         d.rationalise();
-        cout << "visitEnd S_measure: add fCurBeat:" << fCurBeat << " : " << d.toFloat() << endl;
-        fCurBeat += d.toFloat();
-        fLastDur = d;
+        cout << "visitEnd S_measure: add fCurBeat:" << fCurBeat.toFloat() << " : " << d.toFloat() << endl;
+        fCurBeat += d;
     }
 }
 
@@ -379,8 +377,6 @@ void xmlpart2antescofo::visitEnd ( S_direction& elt )
 void xmlpart2antescofo::visitEnd ( S_key& elt ) 
 {
 	if (fNotesOnly) return;
-	//Santescofoelement tag = antescofotag::create("key");
-	// tag->add (antescofoparam::create(keysignvisitor::fFifths, false)); add (tag);
 	fFifths = keysignvisitor::fFifths;
 	//sMode = keysignvisitor::sMode;
 
@@ -389,17 +385,11 @@ void xmlpart2antescofo::visitEnd ( S_key& elt )
 //______________________________________________________________________________
 void xmlpart2antescofo::visitStart ( S_coda& elt )
 {
-	if (fSkipDirection) return;
-	Santescofoelement tag = antescofotag::create("coda");
-	add(tag);
 }
 
 //______________________________________________________________________________
 void xmlpart2antescofo::visitStart ( S_segno& elt )
 {
-	if (fSkipDirection) return;
-	Santescofoelement tag = antescofotag::create("segno");
-	add(tag);
 }
 
 //______________________________________________________________________________
@@ -408,21 +398,13 @@ void xmlpart2antescofo::visitStart ( S_wedge& elt )
 	if (fSkipDirection) return;
 
 	string type = elt->getAttributeValue("type");
-	Santescofoelement tag;
 	if (type == "crescendo") {
-		tag = antescofotag::create("crescBegin");
 		fCrescPending = true;
 	}
 	else if (type == "diminuendo") {
-		tag = antescofotag::create("dimBegin");
 		fCrescPending = false;
 	}
 	else if (type == "stop") {
-		tag = antescofotag::create(fCrescPending ? "crescEnd" : "dimEnd");
-	}
-	if (tag) {
-		if (fCurrentOffset) addDelayed(tag, fCurrentOffset);
-		else add (tag);
 	}
 
 }
@@ -436,7 +418,6 @@ void xmlpart2antescofo::visitEnd ( S_metronome& elt )
 	if (fBeats.size() != 1) return;					// support per minute tempo only (for now)
 	if (!metronomevisitor::fPerMinute) return;		// support per minute tempo only (for now)
 
-	Santescofoelement tag = antescofotag::create("tempo");
 	beat b = fBeats[0];
 	rational r = NoteType::type2rational(NoteType::xml(b.fUnit)), rdot(3,2);
 	while (b.fDots-- > 0) {
@@ -446,14 +427,10 @@ void xmlpart2antescofo::visitEnd ( S_metronome& elt )
 
 	stringstream s;
 	s << metronomevisitor::fPerMinute;
-	//tag->add (antescofoparam::create("tempo=\""+s.str()+"\"", false));
-	//tag->add (antescofoparam::create("BPM "+s.str(), false));
 	string str;
     s >> str;
     w.setBPM(str);
 	cout << "xmlpart2antescofo : got metronome : BPM: "<< metronomevisitor::fPerMinute<< endl;
-    if (fCurrentOffset) addDelayed(tag, fCurrentOffset);
-	add (tag);
 }
 
 //______________________________________________________________________________
@@ -464,11 +441,6 @@ void xmlpart2antescofo::visitStart( S_dynamics& elt)
 	ctree<xmlelement>::literator iter;
 	for (iter = elt->lbegin(); iter != elt->lend(); iter++) {
 		if ((*iter)->getType() != k_other_dynamics) {
-			Santescofoelement tag = antescofotag::create("intens");
-			tag->add (antescofoparam::create((*iter)->getName()));
-			if (fGeneratePositions) xml2antescofovisitor::addPosition(elt, tag, 12);
-			if (fCurrentOffset) addDelayed(tag, fCurrentOffset);
-			else add (tag);
 		}
 	}
 }
@@ -493,12 +465,6 @@ void xmlpart2antescofo::visitStart( S_octave_shift& elt)
 		size = 0;
 	else if (type != "down") return;
 
-	Santescofoelement tag = antescofotag::create("oct");
-	if (tag) {
-		tag->add (antescofoparam::create(size, false));
-//		add (tag);			// todo: handling of octave offset with notes
-// in addition, there is actually a poor support for the oct tag in antescofo
-	}
 }
 
 //______________________________________________________________________________
@@ -530,27 +496,20 @@ void xmlpart2antescofo::visitEnd ( S_sound& elt )
 {
 	if (fNotesOnly) return;
 
-	Santescofoelement tag = 0;
 	Sxmlattribute attribute;
 	
-	if ((attribute = elt->getAttribute("dacapo")))
-		tag = antescofotag::create("daCapo");
+	/*if ((attribute = elt->getAttribute("dacapo")))
 	else {
 		if ((attribute = elt->getAttribute("dalsegno"))) {
-			tag = antescofotag::create("dalSegno");
 		}
 		else if ((attribute = elt->getAttribute("tocoda"))) {
-			tag = antescofotag::create("daCoda");
 		}
 		else if ((attribute = elt->getAttribute("fine"))) {
-			tag = antescofotag::create("fine");
 		} else if ((attribute = elt->getAttribute("tempo"))) {
             cout << "xmlpart2antescofo : got sound tempo : BPM: "<< attribute->getValue() << endl;
             w.setBPM(attribute->getValue());
         }
-//		if (tag) tag->add(antescofoparam::create("id="+attribute->getValue(), false));
-	}
-	if (tag) add (tag);
+	}*/
 }
 
 //______________________________________________________________________________
@@ -558,16 +517,10 @@ void xmlpart2antescofo::visitEnd ( S_ending& elt )
 {
 	string type = elt->getAttributeValue("type");
 	if (type == "start") {
-		Santescofoelement tag = antescofotag::create("volta");
 		string num = elt->getAttributeValue ("number");
-		tag->add(antescofoparam::create(num, true));
-		tag->add(antescofoparam::create(num + ".", true));
-		push(tag);
 	}
 	else {
-		if (type == "discontinue")
-			current()->add(antescofoparam::create("format=\"|-\"", false));
-		pop();
+		//if (type == "discontinue")
 	}
 }
 
@@ -590,8 +543,6 @@ void xmlpart2antescofo::visitStart ( S_barline& elt )
 	const string& location = elt->getAttributeValue("location");
 	if (location == "middle") {
 		// todo: handling bar-style (not yet supported in antescofo)
-		Santescofoelement tag = antescofotag::create("bar");
-		add(tag);
 	}
 	// todo: support for left and right bars
 	// currently automatically handled at measure boundaries
@@ -633,13 +584,6 @@ void xmlpart2antescofo::visitEnd ( S_time& elt )
 		}
 
     }
-	if (fNotesOnly) return;
-
-	Santescofoelement tag = antescofotag::create("meter");
-    tag->add (antescofoparam::create(timesign));
-
-	if (fGenerateBars) tag->add (antescofoparam::create("autoBarlines=\"off\"", false));
-	add(tag);
 }
 
 //______________________________________________________________________________
@@ -668,10 +612,7 @@ void xmlpart2antescofo::visitEnd ( S_clef& elt )
 		param += "+8";
 	else if (clefvisitor::fOctaveChange == -1)
 		param += "-8";
-	Santescofoelement tag = antescofotag::create("clef");
 	checkStaff (staffnum);
-    tag->add (antescofoparam::create(param));
-    add(tag);
 }
 
 //______________________________________________________________________________
@@ -714,7 +655,6 @@ bool xmlpart2antescofo::checkTiedBegin ( const std::vector<S_tied>& tied )
     if (i != tied.end()) {
         cout << "got start Tied"<<endl;
 
-		Santescofoelement tag = antescofotag::create("tieBegin");
 /*		string num = (*i)->getAttributeValue ("number");
         cout << "got start Tied number:" << num<< endl;
         if (num.size())
@@ -722,7 +662,6 @@ bool xmlpart2antescofo::checkTiedBegin ( const std::vector<S_tied>& tied )
 		string placement = (*i)->getAttributeValue("placement");
         if (placement == "below")
             tag->add (antescofoparam::create("curve=\"down\"", false));*/
-		add(tag);
         r = true;
 	}
     return r;
@@ -736,11 +675,10 @@ bool xmlpart2antescofo::checkTiedEnd ( const std::vector<S_tied>& tied )
 	if (i != tied.end()) {
         cout << "got end Tied"<<endl;
 
-		Santescofoelement tag = antescofotag::create("tieEnd");
 /*		string num = (*i)->getAttributeValue ("number");
         if (num.size())
             tag->add (antescofoparam::create(num, false));
-*/		add(tag);
+*/
         r = true;
 	}
     return r;
@@ -751,14 +689,6 @@ void xmlpart2antescofo::checkSlurBegin ( const std::vector<S_slur>& slurs )
 {
 	std::vector<S_slur>::const_iterator i = findTypeValue(slurs, "start");
 	if (i != slurs.end()) {
-		string tagName = "slurBegin";
-		string num = (*i)->getAttributeValue("number");
-		if (num.size()) tagName += ":" + num;
-		Santescofoelement tag = antescofotag::create(tagName);
-		string placement = (*i)->getAttributeValue("placement");
-        if (placement == "below")
-            tag->add (antescofoparam::create("curve=\"down\"", false));
-		add(tag);
 	}
 }
 
@@ -766,11 +696,6 @@ void xmlpart2antescofo::checkSlurEnd ( const std::vector<S_slur>& slurs )
 {
 	std::vector<S_slur>::const_iterator i = findTypeValue(slurs, "stop");
 	if (i != slurs.end()) {
-		string tagName = "slurEnd";
-		string num = (*i)->getAttributeValue("number");
-		if (num.size()) tagName += ":" + num;
-		Santescofoelement tag = antescofotag::create (tagName);
-		add(tag);
 	}
 }
 
@@ -781,10 +706,6 @@ void xmlpart2antescofo::checkBeamBegin ( const std::vector<S_beam>& beams )
 	if (i != beams.end()) {
 		if (!fBeamOpened ) {
 			fCurrentBeamNumber = (*i)->getAttributeIntValue("number", 1);
-//			Santescofoelement tag = antescofotag::create("beamBegin");	// poor support of the begin end form in antescofo
-//			add (tag);
-			Santescofoelement tag = antescofotag::create("beam");
-			push (tag);
 			fBeamOpened = true;
 		}
 	}
@@ -817,23 +738,19 @@ void xmlpart2antescofo::checkBeamEnd ( const std::vector<S_beam>& beams )
 //______________________________________________________________________________
 void xmlpart2antescofo::checkStem ( const S_stem& stem ) 
 {
-	Santescofoelement tag;
 	if (stem) {
 		if (stem->getValue() == "down") {
 			if (fCurrentStemDirection != kStemDown) {
-				tag = antescofotag::create("stemsDown");
 				fCurrentStemDirection = kStemDown;
 			}
 		}
 		else if (stem->getValue() == "up") {
 			if (fCurrentStemDirection != kStemUp) {
-				tag = antescofotag::create("stemsUp");
 				fCurrentStemDirection = kStemUp;
 			}
 		}
 		else if (stem->getValue() == "none") {
 			if (fCurrentStemDirection != kStemNone) {
-				tag = antescofotag::create("stemsOff");
 				fCurrentStemDirection = kStemNone;
 			}
 		}
@@ -841,35 +758,24 @@ void xmlpart2antescofo::checkStem ( const S_stem& stem )
 		}
 	}
 	else if (fCurrentStemDirection != kStemUndefined) {
-		tag = antescofotag::create("stemsAuto");
 		fCurrentStemDirection = kStemUndefined;
 	}
-	if (tag) add(tag);
 }
 
 //______________________________________________________________________________
 int xmlpart2antescofo::checkArticulation ( const notevisitor& note ) 
 {
 	int n = 0;
-	Santescofoelement tag;
 	if (note.fAccent) {
-		tag = antescofotag::create("accent");
-		push(tag);
 		n++;
 	}
 	if (note.fStrongAccent) {
-		tag = antescofotag::create("marcato");
-		push(tag);
 		n++;
 	}
 	if (note.fStaccato) {
-		tag = antescofotag::create("stacc");
-		push(tag);
 		n++;
 	}
 	if (note.fTenuto) {
-		tag = antescofotag::create("ten");
-		push(tag);
 		n++;
 	}
 	return n;
@@ -901,8 +807,6 @@ void xmlpart2antescofo::checkCue (const notevisitor& nv)
 	if (nv.isCue()) {
 		if (!fInCue) {
 			fInCue = true;
-			Santescofoelement tag = antescofotag::create("cue");
-			push(tag);
 		}
 	}
 	else if (fInCue) {
@@ -917,13 +821,10 @@ void xmlpart2antescofo::checkGrace (const notevisitor& nv)
 	if (nv.isGrace()) {
 		if (!fInGrace) {
 			fInGrace = true;
-			Santescofoelement tag = antescofotag::create("grace");
-			push(tag);
 		}
 	}
 	else if (fInGrace) {
 		fInGrace = false;
-		pop();			
 	}
 }
 
@@ -1006,24 +907,30 @@ string xmlpart2antescofo::noteName ( const notevisitor& nv )
 }
 
 //______________________________________________________________________________
-antescofonoteduration xmlpart2antescofo::noteDuration ( const notevisitor& nv )
+rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
 {
-	antescofonoteduration dur(0,0);
+	rational dur(0);
+#if 0
 	if (nv.getType() == kRest) {
-		rational r(nv.getDuration(), fCurrentDivision*4);
+		rational r(nv.getDuration(), fCurrentDivision/**4*/); // XXX pas *4
 		r.rationalise();
-		dur.set (r.getNumerator(), r.getDenominator());
+		dur = r; //.set (r.getNumerator(), r.getDenominator());
 	}
 	else {
+#endif
 		rational r = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
 		if (r.getNumerator() == 0) // graphic type missing or unknown
-			r.set (nv.getDuration(), fCurrentDivision*4);
+			r.set (nv.getDuration(), fCurrentDivision/**4*/); // XXX pas *4
 		r.rationalise();
 		rational tm = nv.getTimeModification();
 		r *= tm;
 		r.rationalise();
-		dur.set (r.getNumerator(), r.getDenominator(), nv.getDots());
-	}
+		dur.set (r.getNumerator()*4, r.getDenominator()); // XXX Numerator * 4 ?
+		int dots = nv.getDots();
+		if (dots) 
+			dur += (dur * dots) / 2;
+		dur.rationalise();
+	//}
 
 	return dur;
 }
@@ -1045,7 +952,7 @@ bool xmlpart2antescofo::checkNotation( S_note& elt )
                             for (ctree<xmlelement>::iterator k = elt->begin(); k != elt->end(); k++) {
                                 switch (k->getType()) {
                                     case k_trill_mark:
-                                        //Santescofoelement tag = antescofotag::create("trill");
+                                    case k_tremolo:
                                         fTrill = true;
                                         return true;
                                 }
@@ -1086,17 +993,17 @@ void xmlpart2antescofo::visitStart ( S_duration& elt )
         r.rationalise();
 
         if (fInBackup) {
-            cout << "Backup duration : removing "<< r.toFloat()<<" to fCurBeat:"<<fCurBeat << endl;
-            fCurBeat -= r.toFloat();
-            cout << "Backup duration : new fCurBeat:"<<fCurBeat << endl;
+            cout << "Backup duration : removing "<< r.toFloat()<<" to fCurBeat:"<<fCurBeat.toFloat() << endl;
+            fCurBeat -= r;
+            cout << "Backup duration : new fCurBeat:"<<fCurBeat.toFloat() << endl;
         }
         else if (fInForward) {
-            cout << "Backup duration : adding "<< r.toFloat()<<" to fCurBeat:"<< fCurBeat << endl;
-            fCurBeat += r.toFloat();
-            cout << "Backup duration : new fCurBeat:"<<fCurBeat << endl;
+            cout << "Forward duration : adding "<< r.toFloat()<<" to fCurBeat:"<< fCurBeat.toFloat() << endl;
+            fCurBeat += r;
+            cout << "Forward duration : new fCurBeat:"<<fCurBeat.toFloat() << endl;
         }
     }
-    if (fCurBeat <= 0) fCurBeat = 1;
+    if (fCurBeat.toFloat() <= 0) fCurBeat = rational(1);
 }
 
 // check we want to convert this measure
@@ -1118,8 +1025,11 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
     bool tiedStart = checkTiedBegin (nv.getTied());
     bool tiedEnd = checkTiedEnd (nv.getTied());
 
+		/*
     rational d(nv.getDuration(), fCurrentDivision);
     d.rationalise();
+		*/
+		rational d = noteDuration(nv);
 
     int flag = ANTESCOFO_FLAG_NULL;
     if (tiedStart)          flag = ANTESCOFO_FLAG_TIED_START;
@@ -1148,6 +1058,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
         return;
     }
 
+		fCurBeat.rationalise();
     if (nv.inChord() && !fTrill && !fGlissandoStart && !fGlissandoStop) {
         w.AddNote(ANTESCOFO_CHORD, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
     }
@@ -1158,24 +1069,12 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
     else if (fTrill)
         w.AddNote(ANTESCOFO_TRILL, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
     else {
-        if (nv.isGrace()) d = 0;
+        if (nv.isGrace()) d = rational(0);
         w.AddNote(ANTESCOFO_NOTE, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
     }
+		fCurBeat += d;
 }
 
-void xmlpart2antescofo::advance_beat_duration()
-{
-    //cout << "advance_beat_duration you wanna "<<endl;
-
-    // advance fCurBeat and fLastDur
-	float d = ((float)(getDuration())) / fCurrentDivision;
-	if (!inChord()) { // XXX ???  && ! isCue() && !inGrace())
-        //cout << "advance_beat_duration in "<<endl;
-        fCurBeat += d;
-		fLastDur = d;
-	}
-}
-    
 //______________________________________________________________________________
 void xmlpart2antescofo::visitEnd ( S_note& elt )
 {
@@ -1187,8 +1086,9 @@ void xmlpart2antescofo::visitEnd ( S_note& elt )
 	bool scanVoice = (notevisitor::getVoice() == fTargetVoice);
 #if 0
 	if (!isGrace()) {
-		moveMeasureTime (getDuration(), scanVoice);
-		checkDelayed (getDuration());		// check for delayed elements (directions with offset)
+		rational rdur = noteDuration(*this); cout << "rdur:"<<rdur.toFloat() << endl;;
+		moveMeasureTime (rdur, scanVoice);
+		checkDelayed (rdur.toFloat());//getDuration());		// check for delayed elements (directions with offset)
     }
 #endif
 
@@ -1227,12 +1127,12 @@ void xmlpart2antescofo::visitEnd ( S_note& elt )
             fMeasureEmpty = false;
 
         
-#if 1
-            if (!isGrace()) {
-                moveMeasureTime (getDuration(), scanVoice);
-                checkDelayed (getDuration());		// check for delayed elements (directions with offset)
-            }
-            //advance_beat_duration();
+#if 0
+						if (!isGrace()) {
+							rational rdur = noteDuration(*this); cout << "rdur:"<<rdur.toFloat() << endl;;
+							moveMeasureTime (rdur, scanVoice);
+							checkDelayed (rdur.toFloat());//getDuration());		// check for delayed elements (directions with offset)
+						}
 #endif
 }
 

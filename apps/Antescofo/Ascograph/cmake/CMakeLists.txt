@@ -58,6 +58,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/Environment.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Statements.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Values.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/TemporalRegex.cpp
 	${ANTESCOFO_PARSER_PATH}/parser/parsedriver.cpp
 	${ANTESCOFO_PARSER_PATH}/parser/scanner.lll
 	${ANTESCOFO_PARSER_PATH}/parser/parser.yy

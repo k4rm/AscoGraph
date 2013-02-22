@@ -56,6 +56,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/Environment.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Statements.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Values.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/TemporalRegex.cpp
 	${ANTESCOFO_PARSER_PATH}/parser/parsedriver.cpp
 	${ANTESCOFO_PARSER_PATH}/parser/scanner.lll
 	${ANTESCOFO_PARSER_PATH}/parser/parser.yy
@@ -73,7 +74,7 @@ set (OFX_FREETYPE_INCL_PATH ../../../../libs/freetype/include/ ../../../../libs/
 set (OFX_RTAUDIO_INCL_PATH ../../../../libs/rtAudio/include/)
 set (GST_INCL_PATH ../../../../../gstreamer-1.0.2/)
 
-set (LIB_MUSICXML_PATH ../../Antescofog/libmusicxml-3.0-src/src/)
+set (LIB_MUSICXML_PATH ../../Ascograph/libmusicxml-3.0-src/src/)
 set (OFX_MUSICXML_INCL_PATH 
 		${LIB_MUSICXML_PATH}/interface/ 
 		${LIB_MUSICXML_PATH}/elements/

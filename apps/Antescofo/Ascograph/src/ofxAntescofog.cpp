@@ -65,6 +65,10 @@ void ofxAntescofog::menu_item_hit(int n)
             ofLogVerbose("Save score hit");
 						saveScore();
             break;
+				case INT_CONSTANT_BUTTON_SAVE_AS:
+            ofLogVerbose("Save As score hit");
+						saveAsScore();
+            break;
         case INT_CONSTANT_BUTTON_COLORSETUP:
             if (!bShowColorSetup) {
                 timeline.disable();
@@ -205,6 +209,12 @@ void ofxAntescofog::setupUI() {
     id saveMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
     [saveMenuItem setTag:INT_CONSTANT_BUTTON_SAVE];
     [fileMenu addItem:saveMenuItem];
+
+    // . save as
+    id saveAsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score As" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
+    [saveAsMenuItem setTag:INT_CONSTANT_BUTTON_SAVE_AS];
+    [fileMenu addItem:saveAsMenuItem];
+
 
     [fileMenuItem setSubmenu:fileMenu];
     [menubar addItem:fileMenuItem];
@@ -1193,6 +1203,10 @@ void ofxAntescofog::exit()
 void ofxAntescofog::saveScore() {
 	// for now just save the content of the text editor
 	if (bEditorShow) {
+		if (mScore_filename.empty()) {
+			saveAsScore();
+			return;
+		}
 		string s;
 		[ editor getEditorContent:s ];
 		if (!s.empty()) {
@@ -1208,6 +1222,32 @@ void ofxAntescofog::saveScore() {
 
 
 }
+
+
+void ofxAntescofog::saveAsScore() {
+	if (bEditorShow) {
+		string s;
+		[ editor getEditorContent:s ];
+		if (!s.empty()) {
+			ofFileDialogResult openFileResult = ofSystemSaveDialog("ascograph-score.txt", TEXT_CONSTANT_TITLE_SAVE_AS_SCORE);
+			if (openFileResult.bSuccess){
+				string f = openFileResult.filePath;
+				ofLogVerbose("Selected file: " + f);
+				// save and try to parse
+				// show dialog confirming
+				mScore_filename = f;
+				ofstream outfile;
+				outfile.open (mScore_filename.c_str());
+				outfile << s;
+				outfile.close();
+				loadScore(mScore_filename);
+			} else {
+				ofLogVerbose("Cancel load score hit.");
+			}
+		}
+	}
+}
+
 
 int ofxAntescofog::loadScore(string filename) {
 	ofxAntescofoNote->clear_error();

@@ -117,7 +117,8 @@ class EXP xmlpart2antescofo :
 	rational fCurrentVoicePosition;	// the current position within a voice
 	rational fCurrentTimeSign;		// the current time signature
 	int		fMeasNum, fnBeats, fnBeat_type;
-	float fCurBeat, fLastDur;
+	float fLastDur;
+	rational fCurBeat;
     bool    fRepeatForward, fRepeatBackward;
     string  fRehearsals;
 
@@ -132,7 +133,7 @@ class EXP xmlpart2antescofo :
 	void push (Santescofoelement& elt)		{ add(elt); fStack.push(elt); }
 	void pop ()							{ fStack.pop(); }
 
-	void moveMeasureTime (int duration, bool moveVoiceToo=false);
+	void moveMeasureTime (rational duration, bool moveVoiceToo=false);
 	void reset ();
 	void stackClean	();
 
@@ -155,7 +156,7 @@ class EXP xmlpart2antescofo :
 	int step2i(const std::string& step) const;
 	float getMidiPitch(const notevisitor& nv) const;
 	std::string			noteName		( const notevisitor& nv );
-	antescofonoteduration	noteDuration	( const notevisitor& nv );
+	rational noteDuration	( const notevisitor& nv );
 
 	std::vector<S_beam>::const_iterator findValue ( const std::vector<S_beam>& beams, const std::string& val ) const;
 	std::vector<S_slur>::const_iterator findTypeValue ( const std::vector<S_slur>& slurs, const std::string& val ) const;
@@ -198,7 +199,6 @@ class EXP xmlpart2antescofo :
 		virtual void visitStart( S_beat_type& elt )	{ w.nBeat_type = fnBeat_type = (int)(*elt); }
 		virtual void visitEnd  ( S_beats& elt) {}
 		virtual void visitEnd( S_beat_type& elt )	{ }
-        void advance_beat_duration();
     public:
 				 xmlpart2antescofo(antescofowriter& _w, bool generateComments, bool generateStem, bool generateBar=true);
 		virtual ~xmlpart2antescofo() {}
