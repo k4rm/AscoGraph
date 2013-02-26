@@ -117,8 +117,7 @@ class EXP xmlpart2antescofo :
 	rational fCurrentVoicePosition;	// the current position within a voice
 	rational fCurrentTimeSign;		// the current time signature
 	int		fMeasNum, fnBeats, fnBeat_type;
-	float fLastDur;
-	rational fCurBeat;
+	rational fCurBeat, fLastDur;
     bool    fRepeatForward, fRepeatBackward;
     string  fRehearsals;
 

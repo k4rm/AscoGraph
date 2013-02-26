@@ -1350,8 +1350,8 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					ofxTLAntescofoNoteOn *newSwitch = new ofxTLAntescofoNoteOn();
 					newSwitch->type = ANTESCOFO_TRILL;
 					newSwitch->startSelected = newSwitch->endSelected = false;
-					newSwitch->beat.min = e->beatcum + e->beat_duration/3;
-					newSwitch->beat.max = newSwitch->beat.min + e->beat_duration*2/3;
+					newSwitch->beat.min = e->beatcum ;//+ e->beat_duration/3;
+					newSwitch->beat.max = newSwitch->beat.min + e->beat_duration; //*2/3;
 					newSwitch->pitch = abs(*r) > 1000 ? *r / 100 : *r;
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;

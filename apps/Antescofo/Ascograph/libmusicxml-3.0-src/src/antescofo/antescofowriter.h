@@ -67,7 +67,7 @@ class antescofowriter {
 	public:
 		enum pedalType { kDamperPedal, kSoftpedal, kSostenutoPedal };
 
-		antescofowriter() : fLastBPM("0"), fBPM("120"), nBeats(4), print_notes_names(true) { }
+		antescofowriter() : fLastBPM("0"), fBPM("120"), nBeats(4), print_notes_names(false) { }
 		~antescofowriter() {}
 
 		map<rational, measure_elt> v_Notes;
@@ -112,7 +112,7 @@ class antescofowriter {
                         return beat;
 
                     } else { // found
-                        cout << "AddBeat: got beat associated to measure: beat " << i->second.toFloat() << " and measure " << i->first << endl;
+                        //cout << "AddBeat: got beat associated to measure: beat " << i->second.toFloat() << " and measure " << i->first << endl;
                         map<int, rational>::iterator n, p;
                         // if beatprev < beat < beatnext return beat
                         if ((n = measure2beat.find(nmeasure+1)) != measure2beat.end()) {
@@ -137,7 +137,7 @@ class antescofowriter {
 		void AddNote(int type, float pitch, rational dur, float nmeasure, rational &curBeat, int flag_ = ANTESCOFO_FLAG_NULL, string rehearsal = "") {
 			map<rational, measure_elt>::iterator i;
 			cout << "; Addnote(beat:"<<curBeat.getNumerator() << "/" << curBeat.getDenominator() << ", meas:" << nmeasure <<" pitch:"<<pitch << " dur:"<< dur.getNumerator()<<"/"<<dur.getDenominator() << " type:"<<  type << " bpm:"<<fBPM<<") ";
-			//cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl; print(false);
+			cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl; print(false);
 
 			/*if (nmeasure > 1 && curBeat == 1) {
 			  cout << "problem: replace " << curBeat << " by " << fCurBeat_internal << endl;
@@ -283,7 +283,9 @@ class antescofowriter {
                                     }
                                     // else :
                                     i->second.type = ANTESCOFO_CHORD;
-                                    i->second.pitches.push_back(pitch);
+																		if (dur.toFloat() == .0) // handle grace notes
+																			i->second.grace_pitches.push_back(pitch);
+																		else i->second.pitches.push_back(pitch);
                                     i->second.nMeasure = nmeasure;
                                     i->second.m_pos = curBeat;
                                 } else { // if already present note's duration is different of new one, create it.
@@ -316,7 +318,7 @@ class antescofowriter {
 							}
 						} else { // new note is longer than already present one, so copy present pitches into new note with new_dur duration
 							new_dur = rational(0) - new_dur;
-							cout << "; Addnote : expanding new longer note: new_dur:" << new_dur.toFloat();
+							cout << "; Addnote : expanding new longer note: new_dur:" << new_dur.toFloat() << endl;
 
 							if (i->second.type == ANTESCOFO_REST) { // replace REST by NOTE, then add REST with diff duration
 								cout << "replace REST by NOTE, then add REST with diff duration"<<endl;

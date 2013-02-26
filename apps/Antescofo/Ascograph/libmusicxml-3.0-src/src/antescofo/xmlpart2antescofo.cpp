@@ -65,6 +65,7 @@ void xmlpart2antescofo::reset ()
 	fPendingPops = 0;
 	fMeasNum = 0;
 	fCurBeat = rational(1);
+	fLastDur = 0;
     fTrill = fGlissandoStart = fGlissandoStop = fInBackup = fInForward = false;
 }
 
@@ -152,7 +153,7 @@ void xmlpart2antescofo::moveMeasureTime (rational duration, bool moveVoiceToo)
 	fCurrentMeasurePosition.rationalise();
 	if (fCurrentMeasurePosition > fCurrentMeasureLength)
 		fCurrentMeasureLength = fCurrentMeasurePosition;
-        if (moveVoiceToo) {
+	if (moveVoiceToo) {
             fCurrentVoicePosition += r;
             fCurrentVoicePosition.rationalise();
 						/*
@@ -178,7 +179,7 @@ void xmlpart2antescofo::checkVoiceTime ( const rational& currTime, const rationa
 		/*antescofonoteduration dur (diff.getNumerator(), diff.getDenominator());
 		Santescofoelement note = antescofonote::create(fTargetVoice, "empty", 0, dur, "");
 		add (note);*/
-                //cout << "checkVoiceTime: should add rest note dur:"<<diff.getNumerator() << "/"<<diff.getDenominator() << endl;
+    cout << "checkVoiceTime: adding rest note dur:"<<diff.getNumerator() << "/"<<diff.getDenominator() << endl;
 		w.AddNote(ANTESCOFO_REST, 0, diff, fMeasNum, fCurBeat, 0);
 		fCurrentVoicePosition += diff;
 		fCurrentVoicePosition.rationalise();
@@ -199,9 +200,10 @@ void xmlpart2antescofo::visitStart ( S_backup& elt )
 		// backup is supposed to be used only for moving between voices
 		// thus we don't move the voice time (which is supposed to be 0)
 		moveMeasureTime (rational(-duration), false);
-		//fCurBeat -= duration;
-    }
-    cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat.toFloat() << endl;
+		//fCurBeat -= noteDuration(*this); 
+		//fCurBeat -= rational(duration, fCurrentDivision);
+  }
+  cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat.toFloat() << endl;
 }
 
 //______________________________________________________________________________
@@ -217,15 +219,18 @@ void xmlpart2antescofo::visitStart ( S_forward& elt )
     else 
         moveMeasureTime(rational(duration),/*false*/ scanElement);
 
-		if (scanElement) fCurBeat += duration;
+		if (scanElement)
+		  fCurBeat += rational(duration, fCurrentDivision);
+		  //fCurBeat += noteDuration(*this);//rational(duration, fCurrentDivision);
     if (!scanElement) return;
 
 
     if (duration) {		
-        rational r(duration, fCurrentDivision*4); // XXX
+        rational r(duration, fCurrentDivision);//*4); // XXX
         r.rationalise();
         //antescofonoteduration dur (r.getNumerator(), r.getDenominator());
         //Santescofoelement note = antescofonote::create(fTargetVoice, "empty", 0, dur, "");
+				cout << "forward: adding rest, maybe wrong?" << endl;
         w.AddNote(ANTESCOFO_REST, 0, r, fMeasNum, fCurBeat, 0);
         //add (note);
         fMeasureEmpty = false;
@@ -331,10 +336,11 @@ void xmlpart2antescofo::visitEnd ( S_measure& elt )
 
     bool scanElement = (elt->getIntValue(k_voice, 0) == fTargetVoice) && (elt->getIntValue(k_staff, 0) == fTargetStaff);
     if (!scanElement) {
-        rational d(fCurrentMeasureLength.toFloat(), fCurrentDivision);
-        d.rationalise();
+        rational d(fCurrentMeasureLength.toFloat(), fCurrentDivision); d.rationalise();
+				//rational d = noteDuration(*this);
         cout << "visitEnd S_measure: add fCurBeat:" << fCurBeat.toFloat() << " : " << d.toFloat() << endl;
         fCurBeat += d;
+				fLastDur = d;
     }
 }
 
@@ -919,18 +925,29 @@ rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
 	else {
 #endif
 		rational r = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
-		if (r.getNumerator() == 0) // graphic type missing or unknown
+		//cout << "noteDuration: t2r: "<< r.getNumerator() << "/" << r.getDenominator() << endl;
+		if (r.getNumerator() == 0) { // graphic type missing or unknown
 			r.set (nv.getDuration(), fCurrentDivision/**4*/); // XXX pas *4
+			if (nv.getType() == kRest)
+				r /= 4;
+			//cout << "noteDuration: getDur:"<< r.getNumerator() << "/" << r.getDenominator() << endl;
+		}
 		r.rationalise();
 		rational tm = nv.getTimeModification();
+		//cout << "noteDuration: tm=" << tm.getNumerator() << "/" << tm.getDenominator() << endl;
 		r *= tm;
+		//if (tm.getNumerator() == 1 && tm.getDenominator() == 1) r /= 4;
 		r.rationalise();
+		//cout << "noteDuration: after *tm: "<< r.getNumerator() << "/" << r.getDenominator() << endl;
 		dur.set (r.getNumerator()*4, r.getDenominator()); // XXX Numerator * 4 ?
+		//cout << "noteDuration: after *4 dur="<< dur.getNumerator() << "/" << dur.getDenominator() << endl;
 		int dots = nv.getDots();
 		if (dots) 
 			dur += (dur * dots) / 2;
-		dur.rationalise();
 	//}
+
+	//if (nv.getType() == kRest) { dur /= 4; }
+	dur.rationalise();
 
 	return dur;
 }
@@ -1048,7 +1065,6 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
     for (vector<string>::const_iterator v = w.write_staves.begin(); v != w.write_staves.end(); v++) {
         stringstream ss;
         ss << fCurrentStaff;
-        // cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ COMPARE $$$$$$ "<< *v << " $$$$$$ and $$$$$$ " << ss.str() << endl;
         if (*v == ss.str()) {
             badstaff = false;
             cout << " ------------------------------------------ WARNING not converting this staff: " << *v << endl;
@@ -1060,6 +1076,9 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 
 		fCurBeat.rationalise();
     if (nv.inChord() && !fTrill && !fGlissandoStart && !fGlissandoStop) {
+				cout << "newNote: isInChord so removing "<< fLastDur.toFloat() << " to curBeat: " << fCurBeat.toFloat() << endl;
+			  fCurBeat -= fLastDur; // because fucking MusicXML notation <chord/> is full of shit
+				fLastDur = 0;
         w.AddNote(ANTESCOFO_CHORD, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
     }
     else if (nv.getType() == notevisitor::kRest)
@@ -1072,7 +1091,10 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
         if (nv.isGrace()) d = rational(0);
         w.AddNote(ANTESCOFO_NOTE, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
     }
-		fCurBeat += d;
+		//if (!nv.inChord()) {
+			fCurBeat += d;
+			fLastDur = d;
+		//}
 }
 
 //______________________________________________________________________________
@@ -1119,7 +1141,7 @@ void xmlpart2antescofo::visitEnd ( S_note& elt )
                 browser.browse(*note);
                 checkStaff(nv.getStaff());
                 newNote (nv, elt);
-            } 
+            }
 
             //checkBeamEnd (notevisitor::getBeam());
             //checkSlurEnd (notevisitor::getSlur());
