@@ -326,6 +326,7 @@ static int 			diffMillis;
  **/
 - (void) updateOpenGLContext
 {
+	NSLog(@"ofxCocoaDelegate: updateOpenGLContext !!!");
     ofStyle style = ofGetStyle();
     ofEnableBlendMode( style.blendingMode );
     if( style.smoothing )

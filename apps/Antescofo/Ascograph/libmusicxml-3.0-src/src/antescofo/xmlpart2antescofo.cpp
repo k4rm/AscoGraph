@@ -218,23 +218,24 @@ void xmlpart2antescofo::visitStart ( S_forward& elt )
         moveMeasureTime(rational(duration), true);
     else 
         moveMeasureTime(rational(duration),/*false*/ scanElement);
-
-		if (scanElement)
-		  fCurBeat += rational(duration, fCurrentDivision);
-		  //fCurBeat += noteDuration(*this);//rational(duration, fCurrentDivision);
     if (!scanElement) return;
 
 
     if (duration) {		
-        rational r(duration, fCurrentDivision);//*4); // XXX
+        rational r = noteDuration(*this); //(duration, fCurrentDivision);//*4); // XXX
         r.rationalise();
         //antescofonoteduration dur (r.getNumerator(), r.getDenominator());
         //Santescofoelement note = antescofonote::create(fTargetVoice, "empty", 0, dur, "");
-				cout << "forward: adding rest, maybe wrong?" << endl;
+				cout << "forward: not adding rest, maybe wrong?" << endl;
         w.AddNote(ANTESCOFO_REST, 0, r, fMeasNum, fCurBeat, 0);
         //add (note);
         fMeasureEmpty = false;
     }
+		
+		if (scanElement)
+		  //fCurBeat += rational(duration, fCurrentDivision);
+		  fCurBeat += noteDuration(*this);//rational(duration, fCurrentDivision);
+
 }
 
 //______________________________________________________________________________

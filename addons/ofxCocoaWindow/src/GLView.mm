@@ -155,7 +155,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		[[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval]; 
 		
 		[self setupDisplayLink];
-                [self setupNSTimer];
+                //[self setupNSTimer];
 		
 		// Look for changes in view size
 		// Note, -reshape will not be called automatically on size changes because NSView does not export it to override 
@@ -163,7 +163,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 												 selector:@selector(reshape) 
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
-		 glEnable(GL_MULTISAMPLE_ARB);
+		 //glEnable(GL_MULTISAMPLE_ARB);
 	} else {
             cerr << "!!!!!!!!!!!!!!!!!!!!! CocoaWindow: GLView: no frameRect" << endl;
         }
@@ -230,8 +230,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	}
     
     
+	if (ofGetFrameNum() > 0) {
     ofNotifyUpdate();
     ofNotifyDraw();
+	}
     
     
 	//[[self openGLContext] flushBuffer];

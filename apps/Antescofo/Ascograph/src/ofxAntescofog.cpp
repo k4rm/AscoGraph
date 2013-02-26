@@ -36,6 +36,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
     bErrorInitDone = false;
     bEditorShow = false;
     bSetupDone = false;
+		editor = 0;
     if (argc > 1) mScore_filename = argv[1];
 
 		gettimeofday(&last_draw_time, 0);
@@ -470,7 +471,7 @@ void ofxAntescofog::setup(){
 
 		//ofBackground(.15*255);
 		//ofSetFrameRate(60);
-    ofSetVerticalSync(false);
+    ofSetVerticalSync(true);
     ofEnableSmoothing();
     ofEnableAlphaBlending();
 
@@ -506,7 +507,7 @@ void ofxAntescofog::setup(){
     // finally open a score if given on command line
     //if (mScore_filename.size()) loadScore(mScore_filename);
 
-		setEditorMode(!bEditorShow, 0);
+		setEditorMode(bEditorShow, 0);
 		bSetupDone = true;
 }
 
@@ -514,8 +515,7 @@ void ofxAntescofog::setup(){
 void ofxAntescofog::update() {
     if (!bSetupDone)
         return;
-	if (!bEditorShow)
-		score_w = ofGetWindowWidth() - score_x;
+	//if (!bEditorShow) score_w = ofGetWindowWidth() - score_x;
 	//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
 	timeline.setWidth(score_w);
   timeline.setOffset(ofVec2f(score_x, score_y));
@@ -609,23 +609,6 @@ void ofxAntescofog::update() {
     }
     guiBottom->update();
 }
-
-	/*
-void ofxAntescofog::addTrackCurve(string trackName, Event* e)
-{
-	string xmlFileName;
-	if(xmlFileName == ""){
-		string uniqueName = timeline.confirmedUniqueName(trackName);
-		xmlFileName = ofToDataPath("GUI/" + uniqueName + "_.xml");
-	}
-
-	timeline.addCurves(trackName, xmlFileName);
-	ofxTLCurve* c =  timeline.getTrack(trackName);
-	c->setValueRangeMin();
-	c->setValueRangeMax();
-	c->addKeyframeAtMillis();
-}
-	*/
 
 //--------------------------------------------------------------
 void ofxAntescofog::draw() {
@@ -920,8 +903,11 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 		else if (access(mScore_filename.c_str(), R_OK))
 			[ editor loadFile:TEXT_CONSTANT_TEMP_FILENAME ];
 	} else {
-		[ editor die];
-		cocoaWindow->setWindowShape(ofGetWidth() - CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
+		if (editor) {
+			[ editor die];
+			score_w = ofGetWindowWidth() - score_x;
+			cocoaWindow->setWindowShape(ofGetWidth() - CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
+		}
 	}
 #endif
 }

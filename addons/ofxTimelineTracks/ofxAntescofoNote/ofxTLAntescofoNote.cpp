@@ -756,7 +756,6 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 	}
 
 	if (!bounds.inside(args.x, args.y)) return false;
-	cout << "pas faux" << endl;
 	pointsAreDraggable = !ofGetModifierKeyShift();
 	//************************ Track Focusing
 	bool clickInRect = bounds.inside(screenpoint);
