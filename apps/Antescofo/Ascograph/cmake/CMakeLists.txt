@@ -207,6 +207,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_LIB_SOURCES}
 	${ANTESCOFO_PARSER_SOURCES}
 	${LIB_MUSICXML_PATH}/antescofo/antescofotree.cpp
+	${LIB_MUSICXML_PATH}/antescofo/antescofowriter.cpp
 	${LIB_MUSICXML_PATH}/antescofo/xml2antescofovisitor.cpp
 	${LIB_MUSICXML_PATH}/antescofo/xmlpart2antescofo.cpp
 	${LIB_MUSICXML_PATH}/elements/factory.cpp

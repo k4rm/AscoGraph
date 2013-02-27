@@ -241,9 +241,9 @@ void xmlpart2antescofo::visitStart ( S_forward& elt )
 //______________________________________________________________________________
 void xmlpart2antescofo::visitStart ( S_part& elt ) 
 {
-    cout << endl << "--------------------------------- visit start S_part " << endl;
-	reset();
 	if (!current()) {
+    cout << endl << "--------------------------------- visit start S_part " << endl;
+		reset();
 		Santescofoelement seq = antescofoseq::create();
 		start (seq);
 	}
