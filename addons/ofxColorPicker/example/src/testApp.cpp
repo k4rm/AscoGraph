@@ -1,25 +1,70 @@
 #include "testApp.h"
 
+///////////////////////////////////////////
+//	INIT.
+///////////////////////////////////////////
+
 void testApp::setup()
 {
-				float editor_x = 50;
-				float editor_y = 50;
-
-				editor = new ofxCodeEditor();
-
-				NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
-				NSView *nsview_ = [cocoaWindow->delegate getNSView];
-				ofRectangle r(editor_x, editor_y, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
-				editor->setup(nswin, nsview_, r);
+	ofSetFrameRate( frameRate = 60 );
+	ofSetVerticalSync( true );
+	
+	colorPicker0.setColorRadius( 1.0 );
+	colorPicker1.setColorRadius( 1.0 );
+	
+	colorPicker0.setColorAngle( 0.5 );
+	colorPicker1.setColorAngle( 0.83 );
 }
+
+///////////////////////////////////////////
+//	UPDATE.
+///////////////////////////////////////////
 
 void testApp::update()
 {
+	float ang;
+	ang += frameRate * 0.00002;
+
+	colorPicker1.setColorAngle( colorPicker1.getColorAngle() + ang );
+	
+	colorPicker0.update();
+	colorPicker1.update();
+	
+	rect.setCornerColor( colorPicker0.getColor(), 0 );
+	rect.setCornerColor( colorPicker0.getColor(), 1 );
+	rect.setCornerColor( colorPicker1.getColor(), 2 );
+	rect.setCornerColor( colorPicker1.getColor(), 3 );
 }
+
+///////////////////////////////////////////
+//	DRAW.
+///////////////////////////////////////////
 
 void testApp::draw()
 {
+	rect.draw();
+	
+	//--
+
+	int x, y, w, h, g;
+
+	w = 150;
+	h = 300;
+	x = 20;
+	
+	g = (int)( ( ofGetHeight() - h * 2 ) / 3 );		// gap.
+	y = g;
+	
+	colorPicker0.draw( x, y, w, h );
+	
+	y = y + h + g;
+	
+	colorPicker1.draw( x, y, w, h );
 }
+
+///////////////////////////////////////////
+//	HANDLERS.
+///////////////////////////////////////////
 
 void testApp::keyPressed(int key)
 {

@@ -143,7 +143,7 @@ public:
     void draw()
     {
         if(parent != NULL)
-        {            
+        {
             ofRect(parent->getX()+x, parent->getY()+y, width, height); 
         }
         else
@@ -209,6 +209,39 @@ public:
 		return halfheight; 
 	}
 	
+    float getRelativeMinX()
+    {
+        return MIN(getX(), getX() + getWidth());  // - width
+    }
+    
+    float getRelativeMinY()
+    {
+        return MIN(getY(), getY() + getHeight());  // - height
+    }
+    
+    float getRelativeMaxX()
+    {
+        return MAX(getX(), getX() + getWidth());  // - width
+    }
+    
+    float getRelativeMaxY()
+    {
+        return MAX(getY(), getY() + getHeight());  // - height
+    }
+    
+    bool rIntersects(const ofRectangle& rect)
+    {
+        return (getRelativeMinX() < rect.getMaxX() && getRelativeMaxX() > rect.getMinX() &&
+                getRelativeMinY() < rect.getMaxY() && getRelativeMaxY() > rect.getMinY());
+    }
+
+    //give an input rect, let me know if I am inside of it (completely, no overflow)
+    bool rInside(const ofRectangle& rect)
+    {
+        return (getRelativeMinX() > rect.getMinX() && getRelativeMaxX() < rect.getMaxX() &&
+                getRelativeMinY() > rect.getMinY() && getRelativeMaxY() < rect.getMaxY());
+    }
+
 protected: 
     float halfwidth;
     float halfheight;

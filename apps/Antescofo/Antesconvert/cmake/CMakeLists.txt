@@ -462,7 +462,7 @@ SET_SOURCE_FILES_PROPERTIES(${MACOS_BUNDLE_ICON_FILE} PROPERTIES MACOSX_PACKAGE_
 
 set( MACOSX_RESOURCE_FILES
 	${CMAKE_SOURCE_DIR}/../bin/data/Arrow.png
-	${CMAKE_SOURCE_DIR}/../bin/data/menlo.ttf
+	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
 )
 

@@ -145,7 +145,8 @@ class ofxAntescofog : public ofBaseApp{
 
 		// UI
 		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC;
-		ofxUIScrollableCanvas *guiSetup_Colors, *guiError;
+		ofxUICanvas *guiSetup_Colors;
+		ofxUIScrollableCanvas *guiError;
 		ofxUISlider *mSliderBPM;
 		ofxUILabel  *mLabelBeat, *mLabelPitch;
 		ofxUILabelButton *mSaveColorButton;

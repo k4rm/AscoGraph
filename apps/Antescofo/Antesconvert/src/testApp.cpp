@@ -92,6 +92,7 @@ void sliderDisable()
 void testApp::setupContent()
 {
     guiContent = new ofxUICanvas(25, 0, ofGetWidth()-25, ofGetHeight());
+    guiContent->setFont("DroidSansMono.ttf");
     ofImage *im = new ofImage();
     if (im->loadImage("Arrow.png"))
         guiContent->addWidgetDown(new ofxUIImage(0, 0, 748, 200, im, ""));
@@ -100,17 +101,23 @@ void testApp::setupContent()
         abort();
     }
 
-    guiContent->addWidgetDown(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_QUIT, OFX_UI_FONT_SMALL));
+    guiContent->addWidgetDown(new ofxUILabelToggle(false, string(TEXT_CONSTANT_BUTTON_QUIT), OFX_UI_FONT_SMALL));
 
-		guiContent->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_LOAD, OFX_UI_FONT_SMALL));
+		guiContent->addWidgetRight(new ofxUILabelToggle(false, string(TEXT_CONSTANT_BUTTON_LOAD), OFX_UI_FONT_SMALL));
 
-    mWSave = new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_SAVE, OFX_UI_FONT_SMALL);
+    mWSave = new ofxUILabelToggle(false, string(TEXT_CONSTANT_BUTTON_SAVE), OFX_UI_FONT_SMALL);
     guiContent->addWidgetRight(mWSave);
     mWSave->setVisible(false);
+    mWSave->setLabelVisible(false);
 
-		mWConvert = new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_CONVERT, OFX_UI_FONT_SMALL);
+		mWConvert = new ofxUILabelToggle(false, string(TEXT_CONSTANT_BUTTON_CONVERT), OFX_UI_FONT_SMALL);
 		guiContent->addWidgetRight(mWConvert);
 		mWConvert->setVisible(false);
+		mWConvert->setLabelVisible(false);
+
+		ofxUISpacer *space = new ofxUISpacer(ofGetWidth()-10, 3);
+		space->setVisible(false);
+		guiContent->addWidgetDown(space);
 
 
 		guiContent->setTheme(OFX_UI_THEME_BLUEBLUE);
@@ -148,6 +155,7 @@ void testApp::setup(){
     //load(); // xml settings
     //guiTop = new ofxUICanvas(0, 0, ofGetWidth(), 215);//, ofGetWidth(), ofGetHeight());
     guiSlider = new ofxUICanvas(0, 0, 25, ofGetHeight());
+    guiSlider->setFont("DroidSansMono.ttf");
     //guiContent->setScrollAreaToScreen();
 		//guiContent->setScrollableDirections(false, true); 
 		//guiContent->setSnapping(false);
@@ -156,7 +164,7 @@ void testApp::setup(){
     //guiTop->getRect()->setHeight(ofGetHeight());
 		
     guiError = new ofxUIScrollableCanvas(10, ofGetHeight()/3, ofGetWidth()-20, ofGetHeight()/3);//-100-10);
-    
+    guiError->setFont("DroidSansMono.ttf");
 		/*
     string title(TEXT_CONSTANT_TITLE);
     title += TEXT_CONSTANT_VERSION;
@@ -302,6 +310,7 @@ void testApp::display_error()
 	} else {
 		guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setState(0);
 		guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setVisible(true);
+		((ofxUILabelToggle*)guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL))->setLabelVisible(true);
 	}
 }
 
@@ -399,6 +408,7 @@ int testApp::loadScore(string filename, string outfilename) {
 		widgets.push_back(e);
 		guiContent->addWidgetRight(static_measures);
 		mWConvert->setVisible(true);
+		mWConvert->setLabelVisible(true);
 
 		//static_guiTop->addWidgetDown(new ofxUISpacer(ofGetWidth()-4, 1));
 
@@ -515,8 +525,10 @@ int testApp::convertScore(string filename, string outfilename) {
         }
         //mWInfo->setVisible(true);
         mWSave->setVisible(true);
+        mWSave->setLabelVisible(true);
         return 1;
     } else display_error();
+		return 0;
 }
 
 void testApp::clear() {

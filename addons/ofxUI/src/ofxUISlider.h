@@ -30,35 +30,53 @@
 class ofxUISlider : public ofxUIWidgetWithLabel
 {
 public:
-    ofxUISlider() {}
-    
-    ofxUISlider(float x, float y, float w, float h, float _min, float _max, float _value, string _name)
+    ofxUISlider() : ofxUIWidgetWithLabel()
     {
-        useReference = false;         
-        rect = new ofxUIRectangle(x,y,w,h); 
-        init(w, h, _min, _max, &_value, _name); 		
+    
     }
     
-    ofxUISlider(float w, float h, float _min, float _max, float _value, string _name)
+    ofxUISlider(string _name, float _min, float _max, float _value, float w, float h, float x = 0, float y = 0) : ofxUIWidgetWithLabel()
     {
-        useReference = false;         
-        rect = new ofxUIRectangle(0,0,w,h); 
-        init(w, h, _min, _max, &_value, _name); 
-    }    
-    
-    ofxUISlider(float x, float y, float w, float h, float _min, float _max, float *_value, string _name)
+        useReference = false;
+        init(_name, _min, _max, &_value, w, h, x, y);
+    }
+
+    ofxUISlider(string _name, float _min, float _max, float *_value, float w, float h, float x = 0, float y = 0) : ofxUIWidgetWithLabel()
     {
-        useReference = true; 
-        rect = new ofxUIRectangle(x,y,w,h); 
-        init(w, h, _min, _max, _value, _name); 		
+        useReference = true;
+        init(_name, _min, _max, _value, w, h, x, y);
     }
     
-    ofxUISlider(float w, float h, float _min, float _max, float *_value, string _name)
+    // DON'T USE THE NEXT CONSTRUCTORS
+    // This is maintained for backward compatibility and will be removed on future releases
+    
+    ofxUISlider(float x, float y, float w, float h, float _min, float _max, float _value, string _name) : ofxUIWidgetWithLabel()
+    {
+        useReference = false;         
+        init(_name, _min, _max, &_value, w, h, x, y);
+//        ofLogWarning("OFXUISLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUISlider(float w, float h, float _min, float _max, float _value, string _name) : ofxUIWidgetWithLabel()
+    {
+        useReference = false;         
+        init(_name, _min, _max, &_value, w, h, 0, 0);
+//        ofLogWarning("OFXUISLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUISlider(float x, float y, float w, float h, float _min, float _max, float *_value, string _name) : ofxUIWidgetWithLabel()
     {
         useReference = true; 
-        rect = new ofxUIRectangle(0,0,w,h); 
-        init(w, h, _min, _max, _value, _name); 
-    }        
+        init(_name, _min, _max, _value, w, h, x, y);
+//        ofLogWarning("OFXUISLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUISlider(float w, float h, float _min, float _max, float *_value, string _name) : ofxUIWidgetWithLabel()
+    {
+        useReference = true; 
+        init(_name, _min, _max, _value, w, h, 0, 0);
+//        ofLogWarning("OFXUISLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
     
     ~ofxUISlider()
     {
@@ -68,9 +86,10 @@ public:
         }
     }   
     
-    virtual void init(float w, float h, float _min, float _max, float *_value, string _name)
+    virtual void init(string _name, float _min, float _max, float *_value, float w, float h, float x, float y)
     {
-        name = _name; 				
+        rect = new ofxUIRectangle(x,y,w,h);
+        name = string(_name);  				
 		if(w > h)
 		{
 			kind = OFX_UI_WIDGET_SLIDER_H;  			
@@ -96,9 +115,9 @@ public:
             *valueRef = value; 
         }
 
-		max = _max; 
+		max = _max;
 		min = _min; 
-        labelPrecision = 2;
+        labelPrecision = 2;    
         
 		if(value > max)
 		{
@@ -113,17 +132,17 @@ public:
         
 		if(kind == OFX_UI_WIDGET_SLIDER_H)
 		{
-			label = new ofxUILabel(0,h+padding,(name+" LABEL"), (name + ": " + ofToString(max,labelPrecision)), OFX_UI_FONT_SMALL); 
+			label = new ofxUILabel(0,h+padding,string(name+" LABEL"), string(name + ": " + ofToString(max,labelPrecision)), OFX_UI_FONT_SMALL);
 		}
 		else 
 		{
-			label = new ofxUILabel(0,h+padding,(name+" LABEL"), name, OFX_UI_FONT_SMALL); 	
+			label = new ofxUILabel(0,h+padding,string(name+" LABEL"), string(name), OFX_UI_FONT_SMALL);
 		}
         
 		label->setParent(label); 
 		label->setRectParent(rect); 
         label->setEmbedded(true);
-        increment = fabs(max - min) / 10.0;         
+        increment = fabs(max - min) / 100.0;
     }
     
     virtual void update()
@@ -131,6 +150,7 @@ public:
         if(useReference)
         {
             value = ofMap(*valueRef, min, max, 0.0, 1.0, true);
+            updateLabel(); 
         }
     }
 
@@ -315,8 +335,8 @@ public:
 		
     }
 	
-    void windowResized(int w, int h) 
-    {
+    void windowResized(int w, int h)
+	{            
 		
     }
     
@@ -348,8 +368,9 @@ public:
         else if(value < 0.0)
         {
             value = 0.0;
-        }        
-        updateValueRef();        
+        }
+                
+        updateValueRef();
 		updateLabel(); 
 	}
     
@@ -362,7 +383,7 @@ public:
 	{
 		if(kind == OFX_UI_WIDGET_SLIDER_H)
 		{
-			label->setLabel(name + ": " + ofToString(getScaledValue(),labelPrecision)); 		
+			label->setLabel(name + ": " + ofToString(getScaledValue(),labelPrecision));
 		}		
 	}
 	
@@ -433,18 +454,22 @@ public:
     void setLabelVisible(bool _labelVisible)
     {
         label->setVisible(_labelVisible);
+        paddedRect->height -= label->getPaddingRect()->height;        
     }
     
     void setVisible(bool _visible)
     {
         visible = _visible; 
-        label->setVisible(visible); 
+        label->setVisible(visible);
     }
 	
 	virtual void setParent(ofxUIWidget *_parent)
 	{
 		parent = _parent; 
-		paddedRect->height += label->getPaddingRect()->height; 
+        label->getRect()->setY(rect->getHeight()+padding);
+        paddedRect->height = rect->getHeight() + label->getPaddingRect()->height + padding;
+        paddedRect->x = -padding;
+        paddedRect->y = -padding; 
         if(label->getPaddingRect()->width > paddedRect->width)
         {
             paddedRect->width = label->getPaddingRect()->width;				
@@ -479,7 +504,7 @@ public:
         return min; 
     }
     
-    ofVec2f getMaxAndMind()
+    ofVec2f getMaxAndMin()
     {
         return ofVec2f(max, min); 
     }
@@ -501,7 +526,7 @@ public:
     }
     
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
-	float value, increment; 
+    float value, increment;
     float *valueRef; 
     bool useReference;     
 	float max, min;  

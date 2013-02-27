@@ -30,90 +30,97 @@
 class ofxUILabelToggle : public ofxUIToggle
 {
 public:
-    ofxUILabelToggle(float x, float y, float w, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM)
+    ofxUILabelToggle(string _name, bool _value, float w = 0, float h = 0, float x = 0, float y = 0, int _size = OFX_UI_FONT_MEDIUM, bool _justifyLeft = false) : ofxUIToggle()
     {
-        useReference = false; 
-        rect = new ofxUIRectangle(x,y,w,0);                                                      
-        autoSize = false;         
-        init(&_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(float x, float y, float w, float h, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM)
-    {
-        useReference = false; 
-        rect = new ofxUIRectangle(x,y,w,h);                                                     
-        autoSize = false;         
-        init(&_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(float w, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM, float h = 0)
-    {
-        useReference = false;         
-        rect = new ofxUIRectangle(0,0,w,h);                                                      
-        autoSize = false;         
-        init(&_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(float x, float y, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM)
-    {				
-        useReference = false;         
-        rect = new ofxUIRectangle(x,y,0,0);                 
-        autoSize = true;         
-        init(&_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM)
-    {				
-        useReference = false;         
-        rect = new ofxUIRectangle(0,0,0,0);                 
-        autoSize = true;         
-        init(&_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(float x, float y, float w, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM)
-    {
-        useReference = true;         
-        rect = new ofxUIRectangle(x,y,w,0);                                                     
-        autoSize = false;         
-        init(_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(float x, float y, float w, float h, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM)
-    {
-        useReference = true;         
-        rect = new ofxUIRectangle(x,y,w,h);                                                     
-        autoSize = false;         
-        init(_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(float w, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM, float h = 0)
-    {
-        useReference = true;                 
-        rect = new ofxUIRectangle(0,0,w,h);                                                      
-        autoSize = false;         
-        init(_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(float x, float y, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM)
-    {				
-        useReference = true;          
-        rect = new ofxUIRectangle(x,y,0,0);                 
-        autoSize = true;         
-        init(_value, _name, _size); 
-    }
-    
-    ofxUILabelToggle(bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM)
-    {	
-        useReference = true;                 
-        rect = new ofxUIRectangle(0,0,0,0);                 
-        autoSize = true;         
-        init(_value, _name, _size); 
+        useReference = false;
+        init(_name, &_value, w, h, x, y, _size, _justifyLeft);
     }
 
+    ofxUILabelToggle(string _name, bool *_value, float w = 0, float h = 0, float x = 0, float y = 0, int _size = OFX_UI_FONT_MEDIUM, bool _justifyLeft = false) : ofxUIToggle()
+    {
+        useReference = true;
+        init(_name, _value, w, h, x, y, _size, _justifyLeft);
+    }
+
+    // DON'T USE THE NEXT CONSTRUCTORS
+    // This is maintained for backward compatibility and will be removed on future releases
+
+    ofxUILabelToggle(float x, float y, float w, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {
+        useReference = false; 
+        init(_name, &_value, w, 0, x, y, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
     
-    void init(bool *_value, string _name, int _size)
-    {        
-		name = _name; 		        
+    ofxUILabelToggle(float x, float y, float w, float h, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {
+        useReference = false; 
+        init(_name, &_value, w, h, x, y, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(float w, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM, float h = 0) : ofxUIToggle()
+    {
+        useReference = false;         
+        init(_name, &_value, w, h, 0, 0, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(float x, float y, bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {				
+        useReference = false;         
+        init(_name, &_value, 0, 0, x, y, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(bool _value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {				
+        useReference = false;         
+        init(_name, &_value, 0, 0, 0, 0, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(float x, float y, float w, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {
+        useReference = true;         
+        init(_name, _value, w, 0, x, y, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(float x, float y, float w, float h, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {
+        useReference = true;         
+        init(_name, _value, w, h, x, y, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(float w, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM, float h = 0) : ofxUIToggle()
+    {
+        useReference = true;                 
+        init(_name, _value, w, h, 0, 0, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(float x, float y, bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {				
+        useReference = true;          
+        init(_name, _value, 0, 0, x, y, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUILabelToggle(bool *_value, string _name, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
+    {	
+        useReference = true;                 
+        init(_name, _value, 0, 0, 0, 0, _size);
+//        ofLogWarning("OFXUILABELTOGGLE: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    virtual void init(string _name, bool *_value, float w = 0, float h = 0, float x = 0, float y = 0, int _size = OFX_UI_FONT_MEDIUM, bool _justifyLeft = false)
+    {
+        rect = new ofxUIRectangle(x,y,w,h);
+        autoSize = w == 0 ? true : false;
+        justifyLeft = _justifyLeft; 
+		name = string(_name);  		        
         kind = OFX_UI_WIDGET_LABELTOGGLE; 		
         paddedRect = new ofxUIRectangle(-padding, -padding, padding*2.0, padding*2.0);
 		paddedRect->setParent(rect); 
@@ -136,22 +143,41 @@ public:
         setValue(*_value);        
     }	
 	
+    void setLabelText(string labeltext)
+    {
+        label->setLabel(labeltext);
+        if(!autoSize)
+        {
+            ofxUIRectangle *labelrect = label->getRect();
+            float h = labelrect->getHeight();
+            float ph = rect->getHeight();
+            float w = labelrect->getWidth();
+            float pw = rect->getWidth();
+            labelrect->y = (int)(ph*.5 - h*.5);
+            labelrect->x = (int)(pw*.5 - w*.5-padding*.5);
+        }
+    }
+    
 	void setParent(ofxUIWidget *_parent)
 	{
-		parent = _parent; 
-        if(rect->height == 0)
+		parent = _parent;
+        float compareHeight = label->getPaddingRect()->height+padding*2.0;
+        if(rect->height == 0 || rect->height < compareHeight)
         {
-            rect->height = label->getPaddingRect()->height+padding*2.0; 
+            rect->height = compareHeight;
         }
 		ofxUIRectangle *labelrect = label->getRect(); 
         
+        label->setParent(this);
+        labelrect->setParent(rect);
+                
         if(autoSize)
         {
             rect->width = label->getPaddingRect()->width+padding*2.0;             
         }
         else
         {
-            while(labelrect->width+padding*4.0 > rect->width)
+            while(labelrect->width+padding*4.0 > rect->width && label->getLabel().size() > 0)
             {
                 string labelstring = label->getLabel();
                 string::iterator it;
@@ -165,17 +191,34 @@ public:
 		float h = labelrect->getHeight(); 
 		float ph = rect->getHeight(); 	
         
-        float w = labelrect->getWidth(); 
-        float pw = rect->getWidth(); 
         
-		labelrect->y = (int)(ph*.5 - h*.5); 
-        labelrect->x = (int)(pw*.5 - w*.5-padding*.5); 
-		paddedRect->height = rect->height+padding*2.0;  
-        paddedRect->width = rect->width+padding*2.0;  
-	}	
+		labelrect->y = (int)(ph*.5 - h*.5);
+       
+        
+        if(justifyLeft)
+        {
+            labelrect->x = padding; 
+        }
+        else
+        {
+            float w = labelrect->getWidth();
+            float pw = rect->getWidth();
+            labelrect->x = (int)(pw*.5 - w*.5-padding*.5);     
+        }
+        
+		paddedRect->height = rect->height+padding*2.0;
+        paddedRect->width = rect->width+padding*2.0;
+	}
     
-protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
+    void setLabelVisible(bool _visible)
+    {
+        drawLabel = _visible;
+        label->setVisible(drawLabel);
+    }
+    
+protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent;
     bool autoSize; 
-}; 
+    bool justifyLeft; 
+};
 
 #endif

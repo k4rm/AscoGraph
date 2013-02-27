@@ -30,37 +30,43 @@
 class ofxUIDropDownList : public ofxUIToggle
 {
 public:    
-    ofxUIDropDownList(float x, float y, float w, string _name, vector<string> items, int _size)
+    ofxUIDropDownList(string _name, vector<string> items, float w = 0, float x = 0, float y = 0, int _size = OFX_UI_FONT_MEDIUM) : ofxUIToggle()
     {
-        rect = new ofxUIRectangle(x,y,w,0);                     
-        autoSize = false;         
-        init(_name, items, _size);         
+        init(_name, items, w, x, y, _size);
     }
     
-    ofxUIDropDownList(float w, string _name, vector<string> items, int _size)
+    // DON'T USE THE NEXT CONSTRUCTORS
+    // This is maintained for backward compatibility and will be removed on future releases
+
+    ofxUIDropDownList(float x, float y, float w, string _name, vector<string> items, int _size) : ofxUIToggle()
     {
-        rect = new ofxUIRectangle(0,0,w,0);                     
-        autoSize = false;         
-        init(_name, items, _size);         
-    }    
-    
-    ofxUIDropDownList(float x, float y, string _name, vector<string> items, int _size)
-    {
-        rect = new ofxUIRectangle(x,y,0,0); 
-        autoSize = true; 
-        init(_name, items, _size);         
+        init(_name, items, w, x, y, _size);
+//        ofLogWarning("OFXUIDROPDOWNLIST: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
     }
     
-    ofxUIDropDownList(string _name, vector<string> items, int _size)
+    ofxUIDropDownList(float w, string _name, vector<string> items, int _size) : ofxUIToggle()
     {
-        rect = new ofxUIRectangle(0,0,0,0); 
-        autoSize = true; 
-        init(_name, items, _size);         
-    }    
+        init(_name, items, w, 0, 0, _size);
+//        ofLogWarning("OFXUIDROPDOWNLIST: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
+    }
     
-    void init(string _name, vector<string> items, int _size)
+    ofxUIDropDownList(float x, float y, string _name, vector<string> items, int _size) : ofxUIToggle()
     {
-		name = _name; 		        
+        init(_name, items, 0, x, y, _size);
+//        ofLogWarning("OFXUIDROPDOWNLIST: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
+    }
+    
+//    ofxUIDropDownList(string _name, vector<string> items, int _size)
+//    {
+//        init(_name, items, 0, 0, 0, _size);
+//        ofLogWarning("OFXUIDROPDOWNLIST: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
+//    }    
+    
+    void init(string _name, vector<string> items, float w = 0, float x = 0, float y = 0, int _size = OFX_UI_FONT_MEDIUM)
+    {
+        rect = new ofxUIRectangle(x,y,w,0);
+        autoSize = w == 0 ? true : false;
+		name = string(_name);  		        
 		kind = OFX_UI_WIDGET_DROPDOWNLIST; 		        
 		paddedRect = new ofxUIRectangle(-padding, -padding, padding*2.0, padding*2.0);
 		paddedRect->setParent(rect);     
@@ -81,6 +87,26 @@ public:
         singleSelected = NULL; 
     }
 
+    virtual void draw()
+    {
+        ofPushStyle();
+        
+        ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+        
+        drawPadded();
+        drawPaddedOutline();
+        
+        drawBack();
+        
+        drawOutline();
+        drawOutlineHighlight();
+        
+        drawFill();
+        drawFillHighlight();
+        
+        ofPopStyle();
+    }
+    
     void clearToggles()
     {        
         while(toggles.size())
@@ -90,6 +116,14 @@ public:
         }
     }    
     
+    void clearSelected()
+    {
+        for(int i = 0; i < toggles.size(); i++)
+        {
+	        toggles[i]->setValue(false);
+        }            
+        selected.clear();
+    }
     
     void addToggle(string toggleName)
     {        
@@ -173,28 +207,6 @@ public:
     {                 
         return selected;         
     }
-    
-    virtual void setDrawPadding(bool _draw_padded_rect)
-	{
-		draw_padded_rect = _draw_padded_rect; 
-        label->setDrawPadding(false);
-//        for(int i = 0; i < toggles.size(); i++)s
-//        {
-//            ofxUILabelToggle * toggle = (ofxUILabelToggle *) toggles[i];
-//            toggle->setDrawPadding(false);
-//        }
-	}
-    
-    virtual void setDrawPaddingOutline(bool _draw_padded_rect_outline)
-	{
-		draw_padded_rect_outline = _draw_padded_rect_outline; 
-        label->setDrawPaddingOutline(false);
-//        for(int i = 0; i < toggles.size(); i++)
-//        {
-//            ofxUILabelToggle * toggle = (ofxUILabelToggle *) toggles[i];
-//            toggle->setDrawPaddingOutline(false);
-//        }
-    }  
 
     void initToggles(vector<string> &items, int _size)
     {
@@ -218,10 +230,25 @@ public:
 		}        
     }
     
+    void setLabelText(string labeltext)
+    {
+        label->setLabel(labeltext);
+        if(!autoSize)
+        {
+            ofxUIRectangle *labelrect = label->getRect();
+            float h = labelrect->getHeight();
+            float ph = rect->getHeight();
+            float w = labelrect->getWidth();
+            float pw = rect->getWidth();
+            labelrect->y = (int)(ph*.5 - h*.5);
+            labelrect->x = (int)(pw*.5 - w*.5-padding*.5);
+        }
+    }
+    
     void setParent(ofxUIWidget *_parent)
 	{
 		parent = _parent;         
-        rect->height = label->getPaddingRect()->height+padding*2.0; 
+        rect->height = label->getPaddingRect()->height+padding*2.0;
 		ofxUIRectangle *labelrect = label->getRect(); 
         if(autoSize)
         {
@@ -241,7 +268,7 @@ public:
         }
 
 		float h = labelrect->getHeight(); 
-		float ph = rect->getHeight(); 	        
+		float ph = rect->getHeight();
         float w = labelrect->getWidth(); 
         float pw = rect->getWidth(); 
         
@@ -256,15 +283,15 @@ public:
 			ofxUILabelToggle *t = toggles[i]; 			
 			t->setParent(this); 
 			t->getRect()->setParent(this->getRect()); 
-        
+            t->getRect()->x = 0;
             t->getRect()->y = yt; 			
             yt +=t->getRect()->getHeight();         
             if(autoSize)
             {
                 t->getRect()->setWidth(rect->getWidth());
             }
-            t->getPaddingRect()->setWidth(paddedRect->getWidth()); 
-		}			
+            t->getPaddingRect()->setWidth(paddedRect->getWidth());
+		}
 	}	    
     
     void mouseReleased(int x, int y, int button) 
@@ -272,7 +299,6 @@ public:
         if(rect->inside(x, y) && hit)
         {
             setValue(!(*value));
-            setToggleVisibility(*value); 
 #ifdef TARGET_OPENGLES
             state = OFX_UI_STATE_NORMAL;        
 #else            
@@ -295,14 +321,12 @@ public:
     
     void open()
     {
-        *value = true; 
-        setToggleVisibility(*value); 
+        setValue(true);
     }
     
     void close()
     {
-        *value = false; 
-        setToggleVisibility(*value); 
+        setValue(false);
     }
 
     
@@ -354,9 +378,7 @@ public:
             {
                 close();
             }
-        }        
-
-
+        }
         
         if(!allowMultiple)
         {
@@ -403,9 +425,39 @@ public:
         allowMultiple = _allowMultiple; 
     }
     
+    virtual void setValue(bool _value)
+	{
+		*value = _value;
+        draw_fill = *value;
+        setModal(*value);
+        setToggleVisibility(*value);
+        label->setDrawBack((*value));        
+	}
+    
+    virtual void setModal(bool _modal)      //allows for piping mouse/touch input to widgets that are outside of parent's rect/canvas
+    {
+        modal = _modal;
+        if(parent != NULL)
+        {
+            if(modal)
+            {
+                parent->addModalWidget(this);
+            }
+            else
+            {
+                parent->removeModalWidget(this);
+            }
+        }
+        
+        for(int i = 0; i < toggles.size(); i++)
+        {
+            toggles[i]->setModal(modal);
+        }
+    }    
+    
     bool isOpen()
     {
-        return *value; 
+        return *value;
     }
     
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 

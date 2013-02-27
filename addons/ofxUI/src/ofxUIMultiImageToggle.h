@@ -30,17 +30,33 @@
 class ofxUIMultiImageToggle : public ofxUIToggle
 {
 public:        
-    ofxUIMultiImageToggle(float x, float y, float w, float h, bool _value, string _pathURL, string _name,  int _size= OFX_UI_FONT_SMALL)
+    ofxUIMultiImageToggle(float x, float y, float w, float h, bool _value, string _pathURL, string _name,  int _size= OFX_UI_FONT_SMALL) : ofxUIToggle()
     {
+        useReference = false; 
         rect = new ofxUIRectangle(x,y,w,h); 
+        init(w, h, &_value, _pathURL, _name, _size);
+    }
+    
+    ofxUIMultiImageToggle(float w, float h, bool _value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUIToggle()
+    {
+        useReference = false;         
+        rect = new ofxUIRectangle(0,0,w,h);
+        init(w, h, &_value, _pathURL, _name, _size);
+    }    
+    
+    ofxUIMultiImageToggle(float x, float y, float w, float h, bool *_value, string _pathURL, string _name,  int _size= OFX_UI_FONT_SMALL) : ofxUIToggle()
+    {
+        useReference = true;
+        rect = new ofxUIRectangle(x,y,w,h);
         init(w, h, _value, _pathURL, _name, _size);
     }
     
-    ofxUIMultiImageToggle(float w, float h, bool _value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL)
+    ofxUIMultiImageToggle(float w, float h, bool *_value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUIToggle()
     {
-        rect = new ofxUIRectangle(0,0,w,h); 
-        init(w, h, _value, _pathURL, _name, _size);        
-    }    
+        useReference = true;
+        rect = new ofxUIRectangle(0,0,w,h);
+        init(w, h, _value, _pathURL, _name, _size);
+    }
     
     
     ~ofxUIMultiImageToggle()
@@ -51,9 +67,9 @@ public:
         delete on;
     }
     
-    void init(float w, float h, bool _value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL)
+    void init(float w, float h, bool *_value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL)
     {
-		name = _name; 		
+		name = string(_name);  		
 		kind = OFX_UI_WIDGET_MULTIIMAGETOGGLE;
         
 		paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
@@ -63,7 +79,19 @@ public:
 		label->setParent(label); 
 		label->setRectParent(rect); 
         label->setEmbedded(true);		
-        setValue(_value); 
+
+        if(useReference)
+        {
+            value = _value;
+        }
+        else
+        {
+            value = new bool();
+            *value = *_value;
+        }
+        
+        setValue(*_value);
+        
         drawLabel = true;
         label->setVisible(drawLabel);      
         
@@ -89,7 +117,7 @@ public:
     
     void drawBack()                     //NORMAL
     {
-        if(draw_back)
+        if(draw_back && !draw_fill)
         {
             ofSetColor(255); 
             back->draw(rect->getX(), rect->getY(), rect->getWidth(), rect->getHeight());       
@@ -164,7 +192,11 @@ public:
         }        
     }    
     
-
+    virtual void setValue(bool _value)
+	{
+		*value = _value;
+        draw_fill = *value;
+	}
     
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
     ofImage *back; 

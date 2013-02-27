@@ -30,21 +30,30 @@
 class ofxUITextInput : public ofxUIWidgetWithLabel
 {
 public:
-    ofxUITextInput(float x, float y, float w, string _name, string _textstring, int _size, float h = 0)
+    ofxUITextInput(string _name, string _textstring, float w, float h = 0, float x = 0, float y = 0, int _size = OFX_UI_FONT_MEDIUM) : ofxUIWidgetWithLabel()
     {
-        rect = new ofxUIRectangle(x,y,w,h); 
-        init(w, _name, _textstring, _size); 
+        init(_name, _textstring, w, h, x, y, _size);
     }
     
-    ofxUITextInput(float w, string _name, string _textstring, int _size, float h = 0)
-    {
-        rect = new ofxUIRectangle(0,0,w,h); 
-        init(w, _name, _textstring, _size); 
-    }    
+    // DON'T USE THE NEXT CONSTRUCTORS
+    // This is maintained for backward compatibility and will be removed on future releases
     
-    void init(float w, string _name, string _textstring, int _size)
+    ofxUITextInput(float x, float y, float w, string _name, string _textstring, int _size, float h = 0) : ofxUIWidgetWithLabel() 
     {
-		name = _name; 		
+        init(_name, _textstring, w, h, x, y, _size);
+//        ofLogWarning("OFXUITEXTINPUT: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    ofxUITextInput(float w, string _name, string _textstring, int _size, float h = 0) : ofxUIWidgetWithLabel()
+    {
+        init(_name, _textstring, w, h, 0, 0, _size);
+//        ofLogWarning("OFXUITEXTINPUT: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
+    
+    void init(string _name, string _textstring, float w, float h = 0, float x = 0, float y = 0, int _size = OFX_UI_FONT_MEDIUM)
+    {
+        rect = new ofxUIRectangle(x,y,w,h); 
+		name = string(_name);  		
 		kind = OFX_UI_WIDGET_TEXTINPUT; 		
 		textstring = _textstring; 
 		defaultstring = _textstring; 
@@ -88,6 +97,10 @@ public:
         }
         if(clicked)
 		{
+            ofNoFill();
+            ofSetColor(color_outline_highlight);
+            rect->draw();
+            
 			float h = label->getRect()->height; 
 			
 			float ph = rect->getHeight(); 
@@ -124,8 +137,7 @@ public:
         }    
         else
         {
-            state = OFX_UI_STATE_NORMAL;        
-            unClick(); 
+            state = OFX_UI_STATE_NORMAL;
         }
         stateChange();         
     }
@@ -139,7 +151,6 @@ public:
         else
         {
             state = OFX_UI_STATE_NORMAL;  
-            unClick(); 
         }
         stateChange();     
     }
@@ -165,7 +176,11 @@ public:
         }    
         else
         {
-            state = OFX_UI_STATE_NORMAL;        
+            state = OFX_UI_STATE_NORMAL;
+            if(clicked)
+            {
+                unClick();  
+            }
         }
         stateChange();         
     }
@@ -213,7 +228,14 @@ public:
 					break;
 					
 				case OF_KEY_RETURN:
-					triggerType = OFX_UI_TEXTINPUT_ON_ENTER; 					
+					if(autoclear)
+					{
+						triggerType = OFX_UI_TEXTINPUT_ON_ENTER;
+					}
+					else
+					{
+						triggerType = OFX_UI_TEXTINPUT_ON_UNFOCUS;
+					}
 					triggerEvent(this); 			
 					if(autoclear)
 					{
@@ -221,6 +243,7 @@ public:
                         displaystring = textstring;                         
 						label->setLabel(displaystring); 
 					}
+                    clicked = false; 
 					break;
 					
 				case OF_KEY_RIGHT:
@@ -255,7 +278,7 @@ public:
 			}
 		}
     }
-    
+        
     void unClick()
     {
         if(clicked)
@@ -263,7 +286,7 @@ public:
             clicked = false;          
 			triggerType = OFX_UI_TEXTINPUT_ON_UNFOCUS; 
 			triggerEvent(this);             
-        }     
+        }
     }
     void stateChange()
     {        

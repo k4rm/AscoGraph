@@ -34,7 +34,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
     bOSCSetupInitDone = false;
     bShowError = false;
     bErrorInitDone = false;
-    bEditorShow = false;
+    bEditorShow = true;
     bSetupDone = false;
 		editor = 0;
     if (argc > 1) mScore_filename = argv[1];
@@ -289,9 +289,10 @@ void ofxAntescofog::setupUI() {
     guiBottom = new ofxUICanvas(0, 0, score_x+score_w, score_y);
     guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight());
     guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y);
-    guiSetup_Colors = new ofxUIScrollableCanvas(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+    guiSetup_Colors = new ofxUICanvas(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 
-    /*guiTop->setFont("NewMedia Fett.ttf");
+    guiBottom->setFont("DroidSansMono.ttf");
+		/*
     guiBottom->setFont("NewMedia Fett.ttf");
     guiSetup_OSC->setFont("NewMedia Fett.ttf");
     guiSetup_Colors->setFont("NewMedia Fett.ttf");
@@ -302,7 +303,7 @@ void ofxAntescofog::setupUI() {
 		// register double click on editor notification callback
 		[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
 
-    guiSetup_Colors->setScrollableDirections(false, true);
+    //guiSetup_Colors->setScrollableDirections(false, true);
     guiError->setScrollAreaToScreen();
     guiError->setScrollableDirections(true, false);
     guiSetup_OSC->setColorBack(ofColor(0, 0, 0, 0));
@@ -317,6 +318,8 @@ void ofxAntescofog::setupUI() {
     //guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
     mSliderBPM = new ofxUISlider(16*4*10, 0, 70, 12, 30, 300, 120, TEXT_CONSTANT_BUTTON_BPM);
     guiBottom->addWidgetDown(mSliderBPM);
+
+
 #if NO_UIBUTTONS
     guiBottom->addWidgetRight(new ofxUILabelToggle(bSnapToGrid, TEXT_CONSTANT_BUTTON_SNAP, OFX_UI_FONT_SMALL));
     guiBottom->addWidgetRight(new ofxUILabelToggle(bAutoScroll, TEXT_CONSTANT_BUTTON_AUTOSCROLL, OFX_UI_FONT_SMALL));
@@ -325,19 +328,25 @@ void ofxAntescofog::setupUI() {
     guiBottom->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL));
 #endif
     //guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
-    ofxUIButton *b = new ofxUIButton(30, 15, false, "NOTE"); b->setColorBack(ofxAntescofoNote->color_note);
+    ofxUIButton *b = new ofxUIButton("NOTE", false, 30, 15);
     guiBottom->addWidgetRight(b);
+		b->setColorBack(ofxAntescofoNote->color_note);
 
-    b = new ofxUIButton(30, 15, false, "CHORD"); b->setColorBack(ofxAntescofoNote->color_note_chord);
+    b = new ofxUIButton(30, 15, false, "CHORD");
     guiBottom->addWidgetRight(b);
+		b->setColorBack(ofxAntescofoNote->color_note_chord);
     
-    b = new ofxUIButton(30, 15, false, "MULTI"); b->setColorBack(ofxAntescofoNote->color_note_multi);
+    b = new ofxUIButton(30, 15, false, "MULTI"); 
     guiBottom->addWidgetRight(b);
-    
-    b = new ofxUIButton(30, 15, false, "TRILL"); b->setColorBack(ofxAntescofoNote->color_note_trill);
+		b->setColorBack(ofxAntescofoNote->color_note_multi);
+
+    b = new ofxUIButton(30, 15, false, "TRILL"); 
     guiBottom->addWidgetRight(b);
+		b->setColorBack(ofxAntescofoNote->color_note_trill);
  
-   
+		ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
+		space->setVisible(false);
+		guiBottom->addWidgetDown(space);
     mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, OFX_UI_FONT_SMALL);
     guiBottom->addWidgetDown(mLabelBeat);
     mLabelBeat = new ofxUILabel("0", OFX_UI_FONT_SMALL);
@@ -375,6 +384,7 @@ void ofxAntescofog::setupUI() {
     mSaveColorButton = new ofxUILabelButton(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2, 100, false, TEXT_CONSTANT_BUTTON_SAVE_COLOR);
     guiSetup_Colors->addWidget(mSaveColorButton);
     mSaveColorButton->setVisible(false);
+		mSaveColorButton->setLabelVisible(false);
     guiSetup_Colors->setVisible(false);
    
     guiError->setVisible(false);
@@ -917,12 +927,12 @@ void ofxAntescofog::save_ColorPicker(string name)
     if (mColorChanged.size()) {// color set
         *(colorString2var[mColorChanged]) = mColorPicker.getColor();
         mSaveColorButton->setVisible(false);
+				mSaveColorButton->setLabelVisible(false);
         ofxUIWidget *u = guiSetup_Colors->getWidget(mColorChanged);
         if (u) u->setColorBack(mColorPicker.getColor());
         mColorChanged.erase();
         mColorPicker.hide();
         timeline.getColors().load();
-        guiSetup_Colors->setScrollableDirections(false, true);
     }
 }
 
@@ -953,8 +963,8 @@ void ofxAntescofog::draw_ColorPicker(string name)
     mColorPicker.draw( x-w/2, y-h/2, w, h );
     mColorPicker.addListeners();
     mColorPicker.show();
-    guiSetup_Colors->setScrollableDirections(false, false);
     mSaveColorButton->setVisible(true);
+		mSaveColorButton->setLabelVisible(true);
     
     ofxUIRectangle *r = mSaveColorButton->getPaddingRect();
     r->x = x + w - 50;
@@ -968,7 +978,7 @@ void ofxAntescofog::draw_ColorAsset(string name, ofColor *color)
 {
     //guiSetup_Colors->centerWidgets();
     ofSetColor(*color);
-    ofxUIButton *b = new ofxUIButton(250, 25, false, name);
+    ofxUIButton *b = new ofxUIButton(200, 25, false, name);
     guiSetup_Colors->addWidgetDown(b);
     b->setColorBack(*color);
 }
@@ -985,6 +995,7 @@ void ofxAntescofog::draw_ColorSetup()
 
     if (!bColorSetupInitDone) {// init and create buttons with color rect
 
+        guiSetup_Colors->addWidgetDown(new ofxUILabel("Choose a color to change then press \"Save color\"", OFX_UI_FONT_LARGE));
         guiSetup_Colors->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, OFX_UI_FONT_SMALL));
         for (map<string, ofColor*>::const_iterator c = colorString2var.begin(); c != colorString2var.end(); c++)
             draw_ColorAsset(c->first, c->second);
@@ -993,6 +1004,7 @@ void ofxAntescofog::draw_ColorSetup()
     } else {
         guiSetup_Colors->setVisible(true);
         guiSetup_Colors->getWidget(TEXT_CONSTANT_BUTTON_BACK)->setVisible(true);
+        ((ofxUILabelToggle*)guiSetup_Colors->getWidget(TEXT_CONSTANT_BUTTON_BACK))->setLabelVisible(true);
         for (map<string, ofColor*>::const_iterator c = colorString2var.begin(); c != colorString2var.end(); c++) {
             guiSetup_Colors->getWidget(c->first)->setVisible(true);
         }
@@ -1016,6 +1028,7 @@ void ofxAntescofog::draw_OSCSetup() {
     } else {
         guiSetup_OSC->setVisible(true);
         guiSetup_OSC->getWidget(TEXT_CONSTANT_BUTTON_BACK)->setVisible(true);
+        ((ofxUILabelToggle*)guiSetup_OSC->getWidget(TEXT_CONSTANT_BUTTON_BACK))->setLabelVisible(true);
         for (map<string, string*>::const_iterator c = oscString2var.begin(); c != oscString2var.end(); c++) {
             guiSetup_OSC->getWidget(c->first)->setVisible(true);
         }
@@ -1157,6 +1170,7 @@ void ofxAntescofog::display_error()
     } else {
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setState(0);
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setVisible(true);
+        ((ofxUILabelToggle*)guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL))->setLabelVisible(true);
     }
 }
 

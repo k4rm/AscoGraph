@@ -28,87 +28,58 @@
 #include "ofxUIWidgetWithLabel.h"
 #include "ofxUIToggle.h"
 
-class ofxUIToggleMatrix : public ofxUIWidgetWithLabel
+class ofxUIToggleMatrix : public ofxUIWidget
 {
 public:
-    ofxUIToggleMatrix(float x, float y, float w, float h, int _rows, int _cols, string _name)
+    ofxUIToggleMatrix(float x, float y, float w, float h, int _rows, int _cols, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(x,y,w,h); 
-        init(w, h, _rows, _cols, _name); 
+        init(w, h, _rows, _cols, _name, _size);
     }
     
-    ofxUIToggleMatrix(float w, float h, int _rows, int _cols, string _name)
+    ofxUIToggleMatrix(float w, float h, int _rows, int _cols, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(0,0,w,h); 
-        init(w, h, _rows, _cols, _name); 
+        init(w, h, _rows, _cols, _name, _size);
     }    
     
-    void init(float w, float h, int _rows, int _cols, string _name)
+    void init(float w, float h, int _rows, int _cols, string _name, int _size = OFX_UI_FONT_SMALL)
     {
-        name = _name; 		
+        name = string(_name);  		
 		kind = OFX_UI_WIDGET_TOGGLEMATRIX; 		
 		rows = _rows; 
         cols = _cols; 
         draw_back = false;  
 		paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
 		paddedRect->setParent(rect); 
-        
-		label = new ofxUILabel(0,0,(name+" LABEL"), name, OFX_UI_FONT_SMALL); 
-		label->setParent(label); 
-		label->setRectParent(rect); 
-        label->setEmbedded(true);
-        
+        		
+        toggleWidth = w;
+        toggleHeight = h;
+                
         ofPoint pos = ofPoint(0,0); 
-		for(int i = 0; i < rows; i++)
+        for(int j = 0; j < rows; j++)
         {
-            for(int j = 0; j < cols; j++)
-            {            
-                ofxUIToggle *toggle = new ofxUIToggle(pos.x,pos.y, w, h, false, (name+"("+ofToString(i,0)+","+ofToString(j,0)+")")); 
-                toggle->setLabelVisible(false); 
+            for(int i = 0; i < cols; i++)
+            {
+                ofxUIToggle *toggle = new ofxUIToggle(pos.x,pos.y, toggleWidth, toggleHeight, false, (name+"("+ofToString(i,0)+","+ofToString(j,0)+")"));
+                toggle->setLabelVisible(false);
+                toggle->setEmbedded(true); 
                 toggles.push_back(toggle);                 
-                pos.x += w+padding; 
+                pos.x += toggleWidth+padding;
             }
-            pos.y += h+padding; 
+            pos.y += toggleHeight+padding;
             pos.x = 0;
         }
         allowMultiple = true;  
     }
-
-    virtual void setDrawPadding(bool _draw_padded_rect)
-	{
-		draw_padded_rect = _draw_padded_rect; 
-        label->setDrawPadding(false);
-		for(int i = 0; i < toggles.size(); i++)
-		{
-			ofxUIToggle *t = toggles[i]; 			
-            t->setDrawPadding(false);             
-        }        
-	}
-    
-    virtual void setDrawPaddingOutline(bool _draw_padded_rect_outline)
-	{
-		draw_padded_rect_outline = _draw_padded_rect_outline; 
-        label->setDrawPaddingOutline(false);
-		for(int i = 0; i < toggles.size(); i++)
-		{
-			ofxUIToggle *t = toggles[i]; 			
-            t->setDrawPaddingOutline(false);             
-        }        
-	}  
-
-	ofxUILabel *getLabel()
-	{
-		return label; 
-	}
 	
     void setVisible(bool _visible)
     {
-        visible = _visible; 
-        label->setVisible(visible);         
+        visible = _visible;   
 		for(int i = 0; i < toggles.size(); i++)
 		{
 			ofxUIToggle *t = toggles[i]; 			
-            t->setVisible(visible);             
+            t->setVisible(visible);
             t->getLabelWidget()->setVisible(false);
         }
     }
@@ -132,29 +103,33 @@ public:
 	void setParent(ofxUIWidget *_parent)
 	{
 		parent = _parent; 
-		ofxUIRectangle *labelrect = label->getRect(); 
-
-        float tWidth = cols*(toggles[0]->getRect()->width)+cols*padding; 
-		float tHeight = rows*(toggles[0]->getRect()->height)+rows*padding; 
-
-        for(int i = 0; i < toggles.size(); i++)
-		{
-			ofxUIToggle *t = toggles[i]; 			
-			t->setParent(this); 
-			t->getRect()->setParent(this->getRect()); 
-        }
         
-        labelrect->x = 0; 
-        labelrect->y = tHeight+padding; 
+        float tWidth = cols*(toggles[0]->getRect()->width)+cols*padding;
+		float tHeight = rows*(toggles[0]->getRect()->height)+rows*padding;
 
-        tWidth+=padding; 
-        if(label->getPaddingRect()->width > tWidth)
+
+        ofPoint pos = ofPoint(0,0);
+        for(int j = 0; j < rows; j++)
         {
-            tWidth = label->getPaddingRect()->width; 
+            for(int i = 0; i < cols; i++)
+            {
+                int index = i+j*cols; 
+                ofxUIToggle *t = toggles[index];
+                t->setParent(this);
+                t->getRect()->setParent(this->getRect());                
+                t->getRect()->setX(pos.x);
+                t->getRect()->setY(pos.y);
+                t->setLabelVisible(false);
+                pos.x += toggleWidth+padding;
+            }
+            pos.y += toggleHeight+padding;
+            pos.x = 0;            
         }
-        
-		paddedRect->width = tWidth; 	
-		paddedRect->height = tHeight+padding+label->getPaddingRect()->height; 			
+                    
+        rect->setWidth(tWidth);
+        rect->setHeight(tHeight); 
+		paddedRect->width = rect->getWidth()+padding*2;
+		paddedRect->height = rect->getHeight()+padding*2;
 	}	
     
     void setAllToggles(bool _value)
@@ -197,7 +172,12 @@ public:
 
 	vector<ofxUIToggle *> getToggles()
 	{
-		return toggles; 
+		return toggles;
+	}
+
+	vector<ofxUIToggle *> *getTogglesPtr()
+	{
+		return &toggles;
 	}
 	
 	void triggerEvent(ofxUIWidget *child)
@@ -219,8 +199,9 @@ public:
 
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
 	vector<ofxUIToggle *> toggles; 		   
-    int rows, cols; 
+    int rows, cols;
+    float toggleWidth, toggleHeight; 
     bool allowMultiple;     
-}; 
+};
 
 #endif

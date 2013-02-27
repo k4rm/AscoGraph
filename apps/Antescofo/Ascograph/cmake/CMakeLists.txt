@@ -379,6 +379,7 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMSAInteractiveObject/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/osc/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/ip
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/
@@ -602,15 +603,14 @@ of_find_glut()
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSCI_NAMESPACE -DSCI_LEXER ")
 
 set( MACOSX_RESOURCE_FILES
-	${CMAKE_SOURCE_DIR}/../bin/data/menlo.ttf
 	${CMAKE_SOURCE_DIR}/../bin/data/info_bar_bg.png
 	${CMAKE_SOURCE_DIR}/../bin/data/note.png
-	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
+	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
 )
 
 set( MACOSX_RESOURCE_FILES_FONTS
-	"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
+	#"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/Ascograph.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 

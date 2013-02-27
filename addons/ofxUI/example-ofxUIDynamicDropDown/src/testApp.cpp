@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup()
 {
+    ofBackground(50);
     float xInit = OFX_UI_GLOBAL_WIDGET_SPACING; 
     float length = 320; 
     gui = new ofxUICanvas();
@@ -13,12 +14,14 @@ void testApp::setup()
     gui->addWidgetDown(new ofxUILabel("PRESS '3' TO DELETE ALL IN LIST", OFX_UI_FONT_MEDIUM));         
     vector<string> names; 
     names.push_back("ONE");    names.push_back("TWO");    names.push_back("THREE");    names.push_back("FOUR");    names.push_back("FIVE");
-    ddl = new ofxUIDropDownList(length-xInit, "DYNAMIC DROP DOWN", names, OFX_UI_FONT_MEDIUM); 
+    ddl = new ofxUIDropDownList(length-xInit, "DYNAMIC DROP DOWN", names, OFX_UI_FONT_MEDIUM);
     ddl->setAllowMultiple(true);
-    ddl->setAutoClose(true);
+//    ddl->setAutoClose(true);
     gui->addWidgetDown(ddl);
+    gui->setTheme(OFX_UI_THEME_BARBIE);
     
-    ofAddListener(gui->newGUIEvent, this, &testApp::guiEvent); 
+//    gui->setDrawWidgetPadding(true);
+    ofAddListener(gui->newGUIEvent, this, &testApp::guiEvent);
 }
 
 //--------------------------------------------------------------
@@ -44,12 +47,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
     
     cout << "WIDGET NAME: " << name << endl; 
     
-    if(name == "BACKGROUND VALUE")
-    {
-        ofxUISlider *slider = (ofxUISlider *) e.widget;    
-        ofBackground(slider->getScaledValue());
-    }
-    else if(name == "FULLSCREEN")
+    if(name == "FULLSCREEN")
     {
         ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
         ofSetFullscreen(toggle->getValue());   
@@ -87,6 +85,10 @@ void testApp::keyPressed(int key)
             ddl->clearToggles();
             break;
 
+        case '4':
+            ddl->setLabelText("TEST LABEL");
+            break;
+            
         default:
             break;
     }

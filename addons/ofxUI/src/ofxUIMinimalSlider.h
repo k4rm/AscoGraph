@@ -30,64 +30,82 @@
 class ofxUIMinimalSlider : public ofxUISlider
 {
 public:
-    ofxUIMinimalSlider(float x, float y, float w, float h, float _min, float _max, float _value, string _name, int _size = OFX_UI_FONT_SMALL)
+    
+    ofxUIMinimalSlider(string _name, float _min, float _max, float _value, float w, float h, float x = 0, float y = 0, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
     {
-        useReference = false;                                         
-        rect = new ofxUIRectangle(x,y,w,h); 
-        autoSize = false; 
-        init(w, h, _min, _max, &_value, _name, _size); 		
+        useReference = false;
+        init(_name, _min, _max, &_value, w, h, x, y, _size);
     }
     
-    ofxUIMinimalSlider(float w, float h, float _min, float _max, float _value, string _name, int _size = OFX_UI_FONT_SMALL)
+    ofxUIMinimalSlider(string _name, float _min, float _max, float *_value, float w, float h, float x = 0, float y = 0, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
+    {
+        useReference = true;
+        init(_name, _min, _max, _value, w, h, x, y, _size);
+    }
+    
+    ofxUIMinimalSlider(float x, float y, float w, float h, float _min, float _max, float _value, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
     {
         useReference = false;                                         
-        rect = new ofxUIRectangle(0,0,w,h); 
-        autoSize = false; 
-        init(w, h, _min, _max, &_value, _name, _size); 
-    }    
+        init(_name, _min, _max, &_value, w, h, x, y, _size);
+//        ofLogWarning("OFXUIMINIMALSLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");
+    }
     
-    ofxUIMinimalSlider(float w, float _min, float _max, float _value, string _name, int _size = OFX_UI_FONT_SMALL)
+    ofxUIMinimalSlider(float w, float h, float _min, float _max, float _value, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
+    {
+        useReference = false;                                          
+        init(_name, _min, _max, &_value, w, h, 0, 0, _size);
+//        ofLogWarning("OFXUIMINIMALSLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
+    }
+    
+    ofxUIMinimalSlider(float w, float _min, float _max, float _value, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
     {
         useReference = false;                                                 
-        rect = new ofxUIRectangle(0,0,w,0); 
-        autoSize = true; 
-        init(w, 0, _min, _max, &_value, _name, _size); 
-    }    
-    
-    ofxUIMinimalSlider(float x, float y, float w, float h, float _min, float _max, float *_value, string _name, int _size = OFX_UI_FONT_SMALL)
-    {
-        useReference = true;                                         
-        rect = new ofxUIRectangle(x,y,w,h); 
-        autoSize = false; 
-        init(w, h, _min, _max, _value, _name, _size); 		
+        init(_name, _min, _max, &_value, w, 0, 0, 0, _size);
+//        ofLogWarning("OFXUIMINIMALSLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
     }
     
-    ofxUIMinimalSlider(float w, float h, float _min, float _max, float *_value, string _name, int _size = OFX_UI_FONT_SMALL)
+    ofxUIMinimalSlider(float x, float y, float w, float h, float _min, float _max, float *_value, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
     {
-        useReference = true;                                         
-        rect = new ofxUIRectangle(0,0,w,h); 
-        autoSize = false; 
-        init(w, h, _min, _max, _value, _name, _size); 
-    } 
+        useReference = true;
+        init(_name, _min, _max, _value, w, h, x, y, _size);
+//        ofLogWarning("OFXUIMINIMALSLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
+    }
     
-    ofxUIMinimalSlider(float w, float _min, float _max, float *_value, string _name, int _size = OFX_UI_FONT_SMALL)
+    ofxUIMinimalSlider(float w, float h, float _min, float _max, float *_value, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
+    {
+        useReference = true;
+        init(_name, _min, _max, _value, w, h, 0, 0, _size);
+//        ofLogWarning("OFXUIMINIMALSLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
+    }
+    
+    ofxUIMinimalSlider(float w, float _min, float _max, float *_value, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUISlider()
     {
         useReference = true;                                                 
-        rect = new ofxUIRectangle(0,0,w,0); 
-        autoSize = true; 
-        init(w, 0, _min, _max, _value, _name, _size); 
-    } 
+        init(_name, _min, _max, _value, w, 0, 0, 0, _size);
+//        ofLogWarning("OFXUIMINIMALSLIDER: DON'T USE THIS CONSTRUCTOR. THIS WILL BE REMOVED ON FUTURE RELEASES.");        
+    }
     
-    void init(float w, float h, float _min, float _max, float *_value, string _name, int _size)
+
+    void init(string _name, float _min, float _max, float *_value, float w, float h, float x, float y, int _size = OFX_UI_FONT_SMALL) 
     {
-        name = _name; 				
+        if(h < .1)
+        {
+            autoSize = true;
+        }
+        else
+        {
+            autoSize = false; 
+        }
+        
+        rect = new ofxUIRectangle(x,y,w,h);
+        name = string(_name);  				
         kind = OFX_UI_WIDGET_MINIMALSLIDER;
         
 		paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding);
 		paddedRect->setParent(rect);     
         
         draw_fill = true; 
-        
+        showValue = true; 
         value = *_value;                                               //the widget's value
         
         if(useReference)
@@ -135,7 +153,7 @@ public:
     
     virtual void drawFillHighlight()
     {
-        if(draw_fill_highlight)
+        if(draw_fill_highlight && showValue)
         {
             ofFill(); 
             ofSetColor(color_fill_highlight); 
@@ -147,7 +165,7 @@ public:
     
     virtual void drawOutlineHighlight()
     {
-        if(draw_outline_highlight)
+        if(draw_outline_highlight && showValue)
         {
             ofNoFill();
             ofSetColor(color_outline_highlight); 
@@ -195,24 +213,35 @@ public:
             labelstring.erase (it); 
             label->setLabel(labelstring);
         }            
-        if(autoSize || rect->getHeight() < label->getPaddingRect()->getHeight())
+        if(autoSize || rect->getHeight() <= label->getPaddingRect()->getHeight())
         {
-            rect->setHeight(label->getPaddingRect()->getHeight());             
+            rect->setHeight(label->getPaddingRect()->getHeight()+padding*2.0);             
         }
         
 		float h = labelrect->getHeight(); 
 		float ph = rect->getHeight(); 	
         
 		labelrect->y = (int)(ph*.5 - h*.5);
-        labelrect->x = padding;
+        labelrect->x = padding*2.0;
 		paddedRect->setHeight(rect->getHeight()+padding*2.0);  
         paddedRect->setWidth(rect->getWidth()+padding*2.0);
         updateValueRef();
         updateLabel(); 
 	}	
     
+    virtual void setShowValue(bool _showValue)
+    {
+        showValue = _showValue;
+    }
+    
+    bool getShowValue()
+    {
+        return showValue;
+    }
+    
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
-    bool autoSize;     
+    bool autoSize;
+    bool showValue; 
 }; 
 
 #endif

@@ -29,15 +29,14 @@ class ofxUIWidget
 {
 public:
     ofxUIWidget() 
-    {        
-        name = "base"; 
-        id_ = -1; 
+    {
+        name = string("base");
+        ID = -1;
         hit = false; 
         visible = true; 
 #ifdef TARGET_OPENGLES
         touchId = -1; 
 #endif
-        
         state = OFX_UI_STATE_NORMAL; 
         draw_back = true; 
         draw_outline = false; 
@@ -58,8 +57,8 @@ public:
         color_padded_rect = OFX_UI_COLOR_PADDED;
         color_padded_rect_outline = OFX_UI_COLOR_PADDED_OUTLINE;     
         
-        dead = false; 
-        embedded = false; 
+        embedded = false;
+		modal = false;
     }
     
     virtual ~ofxUIWidget() 
@@ -147,7 +146,7 @@ public:
     
     virtual void drawPadded()
     {
-		if(draw_padded_rect)
+		if(draw_padded_rect && !embedded)
 		{
             ofFill();
             ofSetColor(color_padded_rect); 
@@ -157,7 +156,7 @@ public:
     
     virtual void drawPaddedOutline()
     {
-        if(draw_padded_rect_outline)
+        if(draw_padded_rect_outline && !embedded)
 		{
             ofNoFill();
             ofSetColor(color_padded_rect_outline); 
@@ -174,7 +173,7 @@ public:
             this->mousePressed(touch.x, touch.y, 0);
             if(hit)
             {
-                touchId = touch.id_;    
+                touchId = touch.id;    
             }            
         }    
     }
@@ -203,7 +202,7 @@ public:
             this->mouseReleased(touch.x, touch.y, 0); 
             touchId = -1;                
         }
-    }         
+    }
     
     void touchDoubleTap(ofTouchEventArgs& touch)
     {
@@ -242,14 +241,14 @@ public:
 	
 	virtual void setName(string _name)
 	{
-		name = _name; 
+		name = string(_name);  
 	}
     
 	virtual void setState(int _state)
     {
         state = _state; 
     }
-    
+    //--------------------------------------------------------------------------------
 	virtual void setDrawPadding(bool _draw_padded_rect)
 	{
 		draw_padded_rect = _draw_padded_rect; 
@@ -282,9 +281,44 @@ public:
 	
 	virtual void setDrawOutlineHighLight(bool _draw_outline_hightlight)
 	{
-		draw_outline_highlight = draw_outline_highlight; 
+		draw_outline_highlight = _draw_outline_hightlight; 
+	}
+    //--------------------------------------------------------------------------------
+	virtual bool getDrawPadding()
+	{
+		return draw_padded_rect; 
+	}
+    
+    virtual bool getDrawPaddingOutline()
+	{
+		return draw_padded_rect_outline; 
+	}
+
+	virtual bool getDrawBack()
+	{
+		return draw_back; 
+	}
+    
+	virtual bool getDrawOutline()
+	{
+		return draw_outline; 
+	}
+    
+	virtual bool getDrawFill()
+	{
+		return draw_fill; 
 	}
 	
+	virtual bool getDrawFillHighLight()
+	{
+		return draw_fill_highlight; 
+	}
+	
+	virtual bool getDrawOutlineHighLight()
+	{
+		return draw_outline_highlight;
+	}
+    
 	virtual void setColorBack(ofColor _color_back)
 	{
 		color_back = _color_back; 
@@ -355,8 +389,6 @@ public:
 		return color_fill_highlight; 
 	}
 	
-
-	
     virtual int getKind()
 	{
 		return kind; 
@@ -394,9 +426,9 @@ public:
         }
     }
     
-	virtual string getName()
+	virtual string& getName()
 	{
-		return name; 
+		return name;
 	}
 	
 	virtual void triggerEvent(ofxUIWidget *child)
@@ -453,12 +485,12 @@ public:
     
     void setID(int _id)
     {
-        id_ = _id; 
+        ID = _id;
     }
     
     int getID()
     {
-        return id_;
+        return ID;
     }
     
     virtual void addWidget(ofxUIWidget *widget)
@@ -476,7 +508,64 @@ public:
         return false; 
     }
     
-
+    virtual bool isModal()
+    {
+        return modal;
+    }
+    
+    virtual void setModal(bool _modal)      //allows for piping mouse/touch input to widgets that are outside of parent's rect/canvas
+    {
+        modal = _modal;
+        if(parent != NULL)
+        {
+            if(modal)
+            {
+                parent->addModalWidget(this);
+            }
+            else
+            {
+                parent->removeModalWidget(this);
+            }
+        }
+    }
+    
+    virtual void addModalWidget(ofxUIWidget *widget)
+    {
+        if(parent != NULL)
+        {
+            parent->addModalWidget(widget);
+        }
+    }
+    
+    virtual void removeModalWidget(ofxUIWidget *widget)
+    {
+        if(parent != NULL)
+        {
+            parent->removeModalWidget(widget);
+        }
+    }
+    
+    virtual void addEmbeddedWidget(ofxUIWidget *widget)
+    {
+        widget->setEmbedded(true);
+        embeddedWidgets.push_back(widget);        
+    }
+    
+    virtual int getEmbeddedWidgetsSize()
+    {
+        return embeddedWidgets.size();
+    }
+    
+    ofxUIWidget *getEmbeddedWidget(int index)
+    {
+        return embeddedWidgets[index%embeddedWidgets.size()];
+    }
+    
+    virtual void clearEmbeddedWidgets()
+    {
+        embeddedWidgets.clear();        //does not deallocate widgets, just deletes the pointers and sets the size to zero
+    }
+    
 protected:    
 	ofxUIWidget *parent; 
 	ofxUIRectangle *rect; 	
@@ -484,11 +573,12 @@ protected:
 	
     string name;            //State Properties
 	int kind; 
-	bool visible; 
-    int id_;     
+	bool visible;
+    int ID;
     bool hit; 
     int state; 
     bool embedded;
+    bool modal;
     
 	bool draw_back;         //Rendering Properties 
 	bool draw_outline; 
@@ -510,11 +600,11 @@ protected:
     ofColor color_padded_rect; 
 	ofColor color_padded_rect_outline;
     
+    vector<ofxUIWidget *> embeddedWidgets; 
+    
 #ifdef TARGET_OPENGLES          //iOS Mode
     int touchId;     
 #endif
-    
-    bool dead; 
 };
 
 #endif

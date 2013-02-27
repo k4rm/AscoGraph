@@ -30,13 +30,13 @@
 class ofxUIWaveform : public ofxUIWidget
 {
 public:    
-    ofxUIWaveform(float x, float y, float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name)
+    ofxUIWaveform(float x, float y, float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(x,y,w,h); 
         init(w, h, _buffer, _bufferSize, _min, _max, _name);
     }
     
-    ofxUIWaveform(float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name)
+    ofxUIWaveform(float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(0,0,w,h); 
         init(w, h, _buffer, _bufferSize, _min, _max, _name);
@@ -44,11 +44,11 @@ public:
     
     void init(float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name)
     {
-		name = _name; 				
-		kind = OFX_UI_WIDGET_WAVEFORM; 
-		
-		paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
-		paddedRect->setParent(rect); 
+        name = string(_name);  				
+        kind = OFX_UI_WIDGET_WAVEFORM; 
+
+        paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
+        paddedRect->setParent(rect); 
 		
         draw_fill = true; 
         
@@ -61,12 +61,26 @@ public:
             buffer = NULL; 
         }
         
-		bufferSize = _bufferSize; 
-		max = _max; 
-		min = _min; 		
-		scale = rect->getHeight()*.5; 
-        inc = rect->getWidth()/((float)bufferSize-1.0);         
+        bufferSize = _bufferSize; 
+        max = _max; 
+        min = _min; 		
+        scale = rect->getHeight()*.5;
+        inc = rect->getWidth()/((float)bufferSize-1.0);
     }
+    
+    
+    virtual void drawBack()
+    {
+        if(draw_back)
+        {
+            ofFill();
+            ofSetColor(color_back);
+            rect->draw();
+            
+            ofLine(rect->getX(), rect->getY()+rect->getHalfHeight(), rect->getX()+rect->getWidth(), rect->getY()+rect->getHalfHeight());
+        }
+    }
+    
     
     virtual void drawFill()
     {
@@ -83,8 +97,8 @@ public:
 			}
             if(buffer != NULL)
             {
-                glPushMatrix();
-                glTranslatef(rect->getX(), rect->getY()+scale, 0);
+                ofPushMatrix(); 
+                ofTranslate(rect->getX(), rect->getY()+scale, 0);
                 ofSetLineWidth(1.5); 
                 ofBeginShape();		
                 for (int i = 0; i < bufferSize; i++)
@@ -93,7 +107,7 @@ public:
                 }
                 ofEndShape();
                 ofSetLineWidth(1); 
-                glPopMatrix();
+                ofPopMatrix(); 
             }
         }
     }
@@ -101,7 +115,38 @@ public:
 	void setParent(ofxUIWidget *_parent)
 	{
 		parent = _parent; 
-	}	
+	}
+    
+    void setMax(float _max)
+    {
+        max = _max;
+    }
+    
+    float getMax()
+    {
+        return max;
+    }
+    
+    void setMin(float _min)
+    {
+        min = _min;
+    }
+    
+    float getMin()
+    {
+        return min;
+    }
+    
+    ofVec2f getMaxAndMind()
+    {
+        return ofVec2f(max, min);
+    }
+    
+    void setMaxAndMin(float _max, float _min)
+    {
+        max = _max;
+        min = _min;
+    }
     
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
 	float *buffer; 

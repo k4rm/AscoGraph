@@ -30,18 +30,33 @@
 class ofxUIMultiImageButton : public ofxUIButton
 {
 public:        
-    ofxUIMultiImageButton(float x, float y, float w, float h, bool _value, string _pathURL, string _name,  int _size= OFX_UI_FONT_SMALL)
+    ofxUIMultiImageButton(float x, float y, float w, float h, bool _value, string _pathURL, string _name, int _size= OFX_UI_FONT_SMALL) : ofxUIButton()
     {
+        useReference = false;
         rect = new ofxUIRectangle(x,y,w,h); 
+        init(w, h, &_value, _pathURL, _name, _size);
+    }
+    
+    ofxUIMultiImageButton(float w, float h, bool _value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUIButton()
+    {
+        useReference = false; 
+        rect = new ofxUIRectangle(0,0,w,h);
+        init(w, h, &_value, _pathURL, _name, _size);
+    }
+        
+    ofxUIMultiImageButton(float x, float y, float w, float h, bool *_value, string _pathURL, string _name, int _size= OFX_UI_FONT_SMALL) : ofxUIButton()
+    {
+        useReference = true;
+        rect = new ofxUIRectangle(x,y,w,h);
         init(w, h, _value, _pathURL, _name, _size);
     }
     
-    ofxUIMultiImageButton(float w, float h, bool _value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL)
+    ofxUIMultiImageButton(float w, float h, bool *_value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL) : ofxUIButton()
     {
-        rect = new ofxUIRectangle(0,0,w,h); 
-        init(w, h, _value, _pathURL, _name, _size);        
-    }    
-        
+        useReference = true; 
+        rect = new ofxUIRectangle(0,0,w,h);
+        init(w, h, _value, _pathURL, _name, _size);
+    }
     
     ~ofxUIMultiImageButton()
     {
@@ -50,20 +65,32 @@ public:
         delete on;
     }
     
-    void init(float w, float h, bool _value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL)
+    void init(float w, float h, bool *_value, string _pathURL, string _name, int _size = OFX_UI_FONT_SMALL)
     {
-		name = _name; 		
+		name = string(_name);  		
 		kind = OFX_UI_WIDGET_MULTIIMAGEBUTTON;
         
 		paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
 		paddedRect->setParent(rect); 
         
-		label = new ofxUILabel(w+padding*2.0,0, (name+" LABEL"), name, _size); 
+		label = new ofxUILabel(w,0, (name+" LABEL"), name, _size); 
 		label->setParent(label); 
 		label->setRectParent(rect); 
-        label->setEmbedded(true);		
-        setValue(_value); 
-        drawLabel = true;
+        label->setEmbedded(true);
+
+        if(useReference)
+        {
+            value = _value;
+        }
+        else
+        {
+            value = new bool();
+            *value = *_value;
+        }
+        
+        setValue(*_value);
+        
+        drawLabel = false;
         label->setVisible(drawLabel);      
         
         string coreURL = _pathURL;
@@ -82,8 +109,6 @@ public:
         over = new ofImage();   over->loadImage(coreURL+"over"+extension);         
         on = new ofImage();     on->loadImage(coreURL+"on"+extension);         
     }       
-    
-   
     
     void drawBack()                     //NORMAL
     {
@@ -158,7 +183,13 @@ public:
         }        
     }
     
-protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
+    virtual void setValue(bool _value)
+	{
+		*value = _value;
+        draw_fill = *value;
+	}
+
+protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent;
     ofImage *back; 
     ofImage *over; 
     ofImage *on; 

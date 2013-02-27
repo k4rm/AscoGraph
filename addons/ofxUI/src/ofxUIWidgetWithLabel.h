@@ -26,7 +26,8 @@
 #define OFXUI_WIDGETWITHLABEL
 
 #include "ofxUIWidget.h"
-#include "ofxUILabel.h"
+
+class ofxUILabel; 
 
 class ofxUIWidgetWithLabel : public ofxUIWidget           
 {
@@ -49,6 +50,35 @@ public:
     virtual ofxUILabel* getLabelWidget()
     {
         return label;
+    }
+    
+    virtual void toggleColors()
+    {
+        ofColor fill = getColorFill();
+        float af = fill.a;
+        ofColor back = getColorBack();
+        float ab = back.a;
+        
+        setColorFill(ofColor(back, af));
+        setColorBack(ofColor(fill, ab));
+    }
+    
+    virtual void setModal(bool _modal)      //allows for piping mouse/touch input to widgets that are outside of parent's rect/canvas
+    {
+        modal = _modal;
+        ofxUIWidget *labelWidget = (ofxUIWidget *) label;
+        labelWidget->setModal(modal);
+        if(parent != NULL)
+        {
+            if(modal)
+            {
+                parent->addModalWidget(this);
+            }
+            else
+            {
+                parent->removeModalWidget(this);
+            }
+        }
     }
     
 protected:    

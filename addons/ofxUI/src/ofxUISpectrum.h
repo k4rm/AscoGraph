@@ -30,13 +30,13 @@
 class ofxUISpectrum : public ofxUIWidget
 {
 public:
-    ofxUISpectrum(float x, float y, float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name)
+    ofxUISpectrum(float x, float y, float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(x,y,w,h); 
         init(w,h,_buffer, _bufferSize, _min, _max, _name); 
     }
     
-    ofxUISpectrum(float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name)
+    ofxUISpectrum(float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(0,0,w,h); 
         init(w,h,_buffer, _bufferSize, _min, _max, _name); 
@@ -44,7 +44,7 @@ public:
 
     void init(float w, float h, float *_buffer, int _bufferSize, float _min, float _max, string _name)
     {
-		name = _name; 				
+		name = string(_name);  				
 		kind = OFX_UI_WIDGET_SPECTRUM; 
 		
 		paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
@@ -84,8 +84,8 @@ public:
 			}
             if(buffer != NULL)
             {
-                glPushMatrix();
-                glTranslatef(rect->getX(), rect->getY()+scale, 0); 
+                ofPushMatrix();
+                ofTranslate(rect->getX(), rect->getY()+scale, 0); 
                 ofBeginShape();		
                 ofVertex(0, 0); 
                 for (int i = 0; i < bufferSize; i++)
@@ -94,7 +94,7 @@ public:
                 }
                 ofVertex((bufferSize-1)*inc, 0);
                 ofEndShape(true);
-                glPopMatrix();						
+                ofPopMatrix(); 
             }
         }
     }
@@ -102,7 +102,38 @@ public:
 	void setParent(ofxUIWidget *_parent)
 	{
 		parent = _parent; 
-	}	
+	}
+    
+    void setMax(float _max)
+    {
+        max = _max;
+    }
+    
+    float getMax()
+    {
+        return max;
+    }
+    
+    void setMin(float _min)
+    {
+        min = _min;
+    }
+    
+    float getMin()
+    {
+        return min;
+    }
+    
+    ofVec2f getMaxAndMind()
+    {
+        return ofVec2f(max, min);
+    }
+    
+    void setMaxAndMin(float _max, float _min)
+    {
+        max = _max;
+        min = _min;
+    }
     
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
 	float *buffer; 

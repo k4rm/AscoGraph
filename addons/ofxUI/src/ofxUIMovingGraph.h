@@ -30,13 +30,13 @@
 class ofxUIMovingGraph : public ofxUIWidget
 {
 public:    
-    ofxUIMovingGraph(float x, float y, float w, float h, vector<float> _buffer, int _bufferSize, float _min, float _max, string _name)
+    ofxUIMovingGraph(float x, float y, float w, float h, vector<float> _buffer, int _bufferSize, float _min, float _max, string _name) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(x,y,w,h); 
         init(w, h, _buffer, _bufferSize, _min, _max, _name);
     }
     
-    ofxUIMovingGraph(float w, float h, vector<float> _buffer, int _bufferSize, float _min, float _max, string _name)
+    ofxUIMovingGraph(float w, float h, vector<float> _buffer, int _bufferSize, float _min, float _max, string _name) : ofxUIWidget()
     {
         rect = new ofxUIRectangle(0,0,w,h); 
         init(w, h, _buffer, _bufferSize, _min, _max, _name);
@@ -44,20 +44,20 @@ public:
     
     void init(float w, float h, vector<float> _buffer, int _bufferSize, float _min, float _max, string _name)
     {
-		name = _name; 				
-		kind = OFX_UI_WIDGET_MOVINGGRAPH; 
-		
-		paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
-		paddedRect->setParent(rect); 
-		
+        name = string(_name);  				
+        kind = OFX_UI_WIDGET_MOVINGGRAPH; 
+
+        paddedRect = new ofxUIRectangle(-padding, -padding, w+padding*2.0, h+padding*2.0);
+        paddedRect->setParent(rect); 
+
         draw_fill = true; 
-        
+
         buffer = _buffer;					//the widget's value
-        
-		bufferSize = _bufferSize; 
-		max = _max; 
-		min = _min; 		
-		scale = rect->getHeight()*.5; 
+
+        bufferSize = _bufferSize; 
+        max = _max; 
+        min = _min; 		
+        scale = rect->getHeight()*.5; 
         inc = rect->getWidth()/((float)bufferSize-1.0);         
     }
     
@@ -65,17 +65,17 @@ public:
     {
         if(draw_fill)
         {			
-			ofNoFill(); 
-			if(draw_fill_highlight)
-			{
-				ofSetColor(color_fill_highlight); 
-			}        
-			else 
-			{
-				ofSetColor(color_fill); 		 	
-			}
-            glPushMatrix();
-            glTranslatef(rect->getX(), rect->getY()+scale, 0);
+            ofNoFill(); 
+            if(draw_fill_highlight)
+            {
+                ofSetColor(color_fill_highlight); 
+            }        
+            else 
+            {
+                ofSetColor(color_fill); 		 	
+            }
+            ofPushMatrix();
+            ofTranslate(rect->getX(), rect->getY()+scale, 0);
             ofSetLineWidth(1.5); 
             ofBeginShape();		
             for (int i = 0; i < bufferSize; i++)
@@ -84,8 +84,7 @@ public:
             }
             ofEndShape();
             ofSetLineWidth(1); 
-            glPopMatrix();
-            
+            ofPopMatrix();            
         }
     }
 		        
@@ -114,10 +113,41 @@ public:
         buffer = _buffer; 
     }
     
+    void setMax(float _max)
+    {
+        max = _max;
+    }
+    
+    float getMax()
+    {
+        return max;
+    }
+    
+    void setMin(float _min)
+    {
+        min = _min;
+    }
+    
+    float getMin()
+    {
+        return min;
+    }
+    
+    ofVec2f getMaxAndMind()
+    {
+        return ofVec2f(max, min);
+    }
+    
+    void setMaxAndMin(float _max, float _min)
+    {
+        max = _max;
+        min = _min;
+    }    
+
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
     vector<float> buffer;
-	float max, min, scale, inc; 
-	int bufferSize; 
+    float max, min, scale, inc;
+    int bufferSize; 
 }; 
 
 

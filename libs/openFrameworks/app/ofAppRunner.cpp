@@ -56,7 +56,9 @@ void ofRunApp(ofBaseApp * OFSA){
 		OFSAptr->mouseY = 0;
 	}
 
+#ifndef TARGET_ANDROID
 	atexit(ofExitCallback);
+#endif
 
 	#ifdef WIN32_HIGH_RES_TIMING
 		timeBeginPeriod(1);		// ! experimental, sets high res time
@@ -88,7 +90,6 @@ void ofSetupOpenGL(ofPtr<ofAppBaseWindow> windowPtr, int w, int h, int screenMod
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-		cerr << "ofSetupOpenGL: error" << endl;
 		/* Problem: glewInit failed, something is seriously wrong. */
 		ofLog(OF_LOG_ERROR, "Error: %s\n", glewGetErrorString(err));
 	}
@@ -153,7 +154,9 @@ void ofRunApp(ofPtr<ofBaseApp> OFSA){
 		OFSAptr->mouseY = 0;
 	}
 
+#ifndef TARGET_ANDROID
 	atexit(ofExitCallback);
+#endif
 
 	#ifdef WIN32_HIGH_RES_TIMING
 		timeBeginPeriod(1);		// ! experimental, sets high res time
