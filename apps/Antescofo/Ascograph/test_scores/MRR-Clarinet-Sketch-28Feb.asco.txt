@@ -1,0 +1,656 @@
+; Antescofo score generated using libmusicxml and embedded xml2antescofo converter.
+; Copyright (c) Thomas Coffy - IRCAM 2013
+BPM 96
+
+; ----------- measure 1 --- beat 1
+NOTE 0 1/2 measure1
+NOTE G#4 1/6
+NOTE F4 1/3
+NOTE F4 3/4
+NOTE F4 0
+NOTE F#4 1/4
+NOTE 0 1/3
+NOTE D4 1/3
+TRILL ( C4 ) 1/3
+
+; ----------- measure 2 --- beat 4
+NOTE 0 1/5 measure2
+NOTE D#4 1/5
+NOTE F4 1/5
+NOTE D#4 1/5
+NOTE B3 1/5
+NOTE A3 1/2
+NOTE 0 1/4
+NOTE F#3 1/4
+
+; ----------- measure 3 --- beat 6
+NOTE 0 2/3 measure3
+NOTE F3 0
+NOTE G#3 1/3
+NOTE 0 1
+
+; ----------- measure 4 --- beat 8
+NOTE D#3 1/5 measure4
+NOTE C4 1/5
+NOTE D4 1/5
+NOTE A4 1/5
+NOTE B4 1/5
+NOTE B4 3/4
+NOTE 0 1/4
+NOTE A4 0
+NOTE B4 0
+NOTE F#5 0
+NOTE G#5 1
+
+; ----------- measure 5 --- beat 11
+NOTE G#5 1/3 measure5
+NOTE E5 1/3
+NOTE A4 1/3
+NOTE G4 1/2
+NOTE 0 1/2
+NOTE 0 1/2
+NOTE A4 0
+TRILL ( A#3 ) 1/2
+
+; ----------- measure 6 --- beat 14
+NOTE 0 1/2 measure6
+NOTE E3 1/6
+NOTE B3 1/6
+NOTE F#4 1/6
+NOTE G#4 1/8
+NOTE C#4 1/8
+NOTE C4 1/8
+NOTE G4 1/8
+NOTE D5 1
+NOTE D5 0
+NOTE F5 1/6
+NOTE E5 1/6
+NOTE A#4 1/6
+
+; ----------- measure 7 --- beat 17
+NOTE D#4 1/2 measure7
+TRILL ( A5 ) 1/4
+TRILL ( C#6 ) 1/4
+TRILL ( A5 ) 1/3
+TRILL ( C#6 ) 1/3
+TRILL ( C6 ) 1/6
+TRILL ( D#6 ) 1/6
+TRILL ( C6 ) 1/4
+TRILL ( D#6 ) 1/4
+TRILL ( D6 ) 1/4
+TRILL ( E6 ) 1/4
+
+; ----------- measure 8 --- beat 20
+NOTE D6 1/7 measure8
+NOTE E6 1/7
+NOTE C#6 1/7
+NOTE B5 1/7
+NOTE G5 1/7
+NOTE A5 1/7
+NOTE C5 1/7
+NOTE A#4 1/2
+NOTE 0 1/4
+NOTE G#3 1/4
+
+; ----------- measure 9 --- beat 22
+NOTE 0 2/3 measure9
+NOTE D3 0
+NOTE C4 1/3
+NOTE 0 1/3
+NOTE E4 1/6
+NOTE F#4 1/6
+NOTE F4 1/6
+NOTE B3 1/6
+
+; ----------- measure 10 --- beat 24
+NOTE D#4 1/2 measure10
+NOTE 0 1/2
+NOTE E5 4/3
+NOTE F#4 2/3
+
+; ----------- measure 11 --- beat 27
+NOTE C5 3/4 measure11
+NOTE A#3 5/4
+
+; ----------- measure 12 --- beat 29
+NOTE D#4 1/2 measure12
+NOTE 0 1/2
+NOTE F#4 1/6
+NOTE D4 1/6
+NOTE C4 1/6
+NOTE G3 1/6
+NOTE D#3 1/6
+NOTE G3 1/6
+
+; ----------- measure 13 --- beat 31
+NOTE C4 1/7 measure13
+NOTE D4 1/7
+NOTE F#4 1/7
+NOTE G#4 1/7
+NOTE F#4 1/7
+NOTE B3 1/7
+NOTE A3 1/7
+NOTE D3 1/8
+NOTE A3 1/8
+NOTE B3 1/8
+NOTE F#4 1/8
+NOTE G#4 1/8
+NOTE C#4 1/8
+NOTE G#4 1/8
+NOTE D#5 5/8
+
+; ----------- measure 14 --- beat 67/2 ------
+NOTE 0 1/4 measure14
+NOTE D#5 0
+TRILL ( G5 ) 7/12
+TRILL ( C5 ) 16/15
+NOTE C5 0
+NOTE D5 1/5
+NOTE C5 1/5
+NOTE F4 1/5
+
+; ----------- measure 15 --- beat 36
+NOTE D#4 1/2 measure15
+NOTE 0 1/2
+NOTE 0 1/3
+NOTE F#4 0
+NOTE G#4 0
+NOTE F5 1/3
+NOTE 0 1/3
+NOTE 0 1/2
+NOTE B4 0
+NOTE A3 1/2
+
+; ----------- measure 16 --- beat 39
+NOTE 0 1/2 measure16
+NOTE 0 1/4
+NOTE C#4 0
+NOTE D#4 0
+NOTE C5 1/4
+NOTE 0 2/3
+NOTE E5 0
+NOTE D4 1/3
+NOTE 0 1/2
+NOTE A5 13/6
+
+; ----------- measure 17 --- beat 131/3 ------
+TRILL ( F5 ) 1/6 measure17
+TRILL ( G#5 ) 1/6
+TRILL ( F5 ) 1/2
+TRILL ( G#5 ) 1/2
+
+; ----------- measure 18 --- beat 45
+NOTE 0 1/4 measure18
+NOTE E5 1/4
+NOTE G#5 1/4
+NOTE G5 1/4
+NOTE D#5 1/5
+NOTE B4 1/5
+NOTE C#5 1/5
+NOTE C5 1/5
+NOTE A4 1/5
+
+; ----------- measure 19 --- beat 47
+NOTE D#3 1/2 measure19
+NOTE 0 1/3
+NOTE D#3 1/6
+NOTE D3 1/6
+NOTE F#3 1/6
+NOTE F3 1/6
+NOTE G#3 1/6
+NOTE E3 1/6
+NOTE G3 1/6
+NOTE A3 1/6
+NOTE A#3 1/6
+NOTE C#4 1/6
+NOTE B3 1/6
+NOTE C4 1/6
+NOTE F4 1/6
+
+; ----------- measure 20 --- beat 50
+NOTE D#4 1/5 measure20
+NOTE D4 1/5
+NOTE E4 1/5
+NOTE B4 1/5
+NOTE C#5 1/5
+NOTE G#5 2/3
+NOTE G#5 1/3
+NOTE 0 1/2
+NOTE 0 1/6
+NOTE G#3 1/6
+NOTE A#3 1/6
+
+; ----------- measure 21 --- beat 53
+NOTE F4 1/6 measure21
+NOTE G4 1/6
+NOTE D5 1/6
+NOTE E5 1/6
+NOTE B5 1/6
+NOTE C#6 1/6
+NOTE C#6 5/3
+NOTE B5 1/3
+
+; ----------- measure 22 --- beat 56
+NOTE 0 1/2 measure22
+NOTE D#4 1/6
+NOTE A#4 1/6
+NOTE C5 1/6
+NOTE G5 1/6
+NOTE A5 1/6
+NOTE E6 1/6
+NOTE 0 1/2
+NOTE 0 1/7
+NOTE A3 1/7
+NOTE B3 1/7
+NOTE F#4 1/7
+NOTE G#4 1/7
+NOTE D#5 1/7
+NOTE F5 1/7
+
+; ----------- measure 23 --- beat 59
+NOTE D6 7/6 measure23
+NOTE A#4 1/6
+NOTE G5 1/6
+NOTE A5 1/2
+NOTE 0 1/5
+NOTE E4 1/5
+NOTE F#4 1/5
+NOTE C#5 1/5
+NOTE D#5 1/5
+
+; ----------- measure 24 --- beat 62
+NOTE A#5 3/2 measure24
+NOTE C6 3/2
+
+; ----------- measure 25 --- beat 65
+NOTE 0 1/4 measure25
+NOTE B5 1/4
+NOTE E5 1/4
+NOTE D5 1/4
+NOTE A5 1/5
+NOTE G5 1/5
+NOTE C5 1/5
+NOTE A#4 1/5
+NOTE D#5 1/5
+
+; ----------- measure 26 --- beat 67
+NOTE C#5 1/7 measure26
+NOTE F#4 1/7
+NOTE E4 1/7
+NOTE A3 1/7
+NOTE G3 1/7
+NOTE 0 2/7
+NOTE 0 1/8
+NOTE D#3 1/8
+NOTE F3 1/8
+NOTE C4 1/8
+NOTE D4 1/8
+NOTE A4 1/8
+NOTE B4 1/8
+NOTE F#5 1/8
+
+; ----------- measure 27 --- beat 69
+BPM 76 @modulate
+NOTE G#5 4/3 measure27
+NOTE F5 2/3
+NOTE F5 1/2
+NOTE A#5 3/2
+
+; ----------- measure 28 --- beat 73
+NOTE E5 3/2 measure28
+NOTE F#5 3/2
+
+; ----------- measure 29 --- beat 76
+NOTE D5 2 measure29
+
+; ----------- measure 30 --- beat 78
+NOTE B5 5/2 measure30
+TRILL ( B5 ) 1/2
+NOTE C#6 0
+NOTE B5 2
+
+; ----------- measure 31 --- beat 83
+NOTE 0 1/2 measure31
+NOTE F5 5/2
+
+; ----------- measure 32 --- beat 86
+TRILL ( D5 ) 1/2 measure32
+TRILL ( F5 ) 1/2
+
+; ----------- measure 33 --- beat 87
+TRILL ( D5 ) 1/2 measure33
+TRILL ( F5 ) 1/2
+TRILL ( D5 ) 1/4
+TRILL ( F5 ) 1/4
+NOTE 0 1/2
+NOTE 0 1/3
+NOTE A4 2/3
+
+; ----------- measure 34 --- beat 90
+NOTE A4 5/2 measure34
+NOTE 0 1/4
+NOTE G3 1/4
+
+; ----------- measure 35 --- beat 93
+NOTE 0 1 measure35
+NOTE A#3 1/3
+NOTE 0 1/3
+NOTE E3 1/3
+NOTE 0 1/4
+NOTE D4 1/4
+NOTE 0 1/2
+
+; ----------- measure 36 --- beat 96
+BPM 60 @modulate
+NOTE A#4 7/3 measure36
+NOTE F4 0
+NOTE A#4 1/3
+NOTE A4 1/3
+
+; ----------- measure 37 --- beat 99
+NOTE A4 3/2 measure37
+NOTE 0 1/4
+NOTE D#4 7/4
+
+; ----------- measure 38 --- beat 205/2 ------
+NOTE D#4 1/6 measure38
+NOTE F4 1/6
+NOTE A4 1/6
+NOTE E5 1/4
+NOTE A#4 1/2
+NOTE A4 0
+NOTE D5 1/4
+NOTE D5 1
+
+; ----------- measure 39 --- beat 105
+NOTE 0 1/3 measure39
+NOTE G#5 2/3
+NOTE G#5 3/4
+NOTE A4 3/4
+NOTE B3 11/6
+
+; ----------- measure 40 --- beat 328/3 ------
+NOTE A#3 2/3 measure40
+NOTE A#3 1/4
+TRILL ( E4 ) 7/12
+NOTE F#3 1/6
+
+; ----------- measure 41 --- beat 111
+NOTE F#3 3/2 measure41
+NOTE F4 7/6
+TRILL ( F4 ) 1/6
+TRILL ( A4 ) 1/6
+
+; ----------- measure 42 --- beat 114
+TRILL ( F4 ) 3/8 measure42
+TRILL ( A4 ) 3/8
+TRILL ( D#4 ) 1/8
+TRILL ( A4 ) 1/8
+TRILL ( D#4 ) 1/2
+TRILL ( A4 ) 1/2
+NOTE 0 1/2
+NOTE A5 2/3
+
+; ----------- measure 43 --- beat 703/6 ------
+NOTE A5 1/6 measure43
+NOTE G#5 1/6
+NOTE E5 1/6
+NOTE A4 1/6
+NOTE D5 1/6
+NOTE D5 3/2
+NOTE A#4 3/2
+
+; ----------- measure 44 --- beat 121
+NOTE 0 1/3 measure44
+TRILL ( A4 ) 1/3
+TRILL ( A#4 ) 1/3
+
+; ----------- measure 45 --- beat 122
+TRILL ( A4 ) 1/4 measure45
+TRILL ( A#4 ) 1/4
+NOTE 0 1/6
+NOTE A#4 1/6
+NOTE D#4 1/6
+NOTE A4 1/6
+NOTE B3 1/6
+NOTE G4 1/6
+NOTE F4 1/6
+NOTE A#3 1/6
+NOTE F#3 1/6
+
+; ----------- measure 46 --- beat 124
+BPM 76 @modulate
+NOTE G#3 1/2 measure46
+NOTE G#5 27/10
+
+; ----------- measure 47 --- beat 636/5 ------
+NOTE G#5 0
+NOTE A#5 1/5 measure47
+NOTE F5 1/5
+NOTE E5 1/5
+NOTE B4 1/5
+NOTE G5 5/2
+
+; ----------- measure 48 --- beat 261/2 ------
+NOTE F5 3/2 measure48
+NOTE 0 1/6
+NOTE G#5 0
+NOTE F5 1/6
+NOTE G5 1/6
+NOTE C5 1/6
+NOTE B4 1/6
+NOTE F#4 1/6
+
+; ----------- measure 49 --- beat 133
+NOTE E5 9/4 measure49
+NOTE 0 1/4
+NOTE F5 0
+NOTE D#5 1/6
+NOTE E5 1/6
+NOTE D5 1/6
+
+; ----------- measure 50 --- beat 136
+NOTE C#5 2 measure50
+NOTE 0 1/7
+NOTE F5 0
+NOTE C#5 1/7
+NOTE G4 1/7
+NOTE C5 1/7
+NOTE A#4 1/7
+NOTE F#4 1/7
+NOTE B3 1/7
+
+; ----------- measure 51 --- beat 139
+NOTE A4 4/3 measure51
+NOTE F4 1/3
+TRILL ( F4 ) 1/2
+TRILL ( D#4 ) 23/15
+
+; ----------- measure 52 --- beat 1427/10 ------
+TRILL ( C4 ) 1/5 measure52
+TRILL ( C#4 ) 1/5
+TRILL ( A3 ) 1/5
+TRILL ( G#3 ) 1/5
+NOTE 0 2/3
+NOTE G4 1/3
+NOTE G4 2
+
+; ----------- measure 53 --- beat 293/2 ------
+NOTE G4 0
+NOTE F4 1/5 measure53
+NOTE C#4 1/5
+NOTE 0 1/5
+NOTE F4 0
+NOTE C#4 1/5
+NOTE F4 1/5
+NOTE 0 1/2
+NOTE E4 3/2
+
+; ----------- measure 54 --- beat 299/2 ------
+NOTE E4 1/6 measure54
+NOTE F4 1/6
+NOTE D#4 1/6
+NOTE D4 5/6
+NOTE B3 1/3
+NOTE B3 0
+NOTE A#3 1/3
+
+; ----------- measure 55 --- beat 303/2 ------
+NOTE 0 1/5 measure55
+NOTE B3 0
+NOTE C#4 1/5
+NOTE C4 1/5
+NOTE G3 1/5
+NOTE A3 1/5
+NOTE G#3 1/3
+NOTE 0 1/3
+NOTE F#3 1/3
+NOTE 0 1/2
+NOTE A3 19/6
+
+; ----------- measure 57 --- beat 943/6 ------
+NOTE A#4 1/3 measure57
+NOTE A#4 5/2
+
+; ----------- measure 58 --- beat 160
+NOTE A#4 0
+NOTE C5 1/4 measure58
+NOTE G4 1
+NOTE A4 1/4
+NOTE 0 1/5
+NOTE A4 0
+NOTE G#4 1/5
+NOTE E4 1/5
+NOTE F4 1/5
+NOTE B3 1/5
+
+; ----------- measure 59 --- beat 325/2 ------
+BPM 88 @modulate
+NOTE D#3 1/2 measure59
+NOTE D6 23/14
+NOTE D6 1/7
+NOTE B5 1/7
+NOTE C6 1/7
+NOTE A#5 1/7
+NOTE A5 1/7
+NOTE F#5 1/7
+
+; ----------- measure 60 --- beat 331/2 ------
+NOTE G#5 2/9 measure60
+NOTE G5 2/9
+NOTE E5 2/9
+NOTE F5 2/9
+NOTE D#5 2/9
+NOTE C5 2/9
+NOTE C#5 2/9
+NOTE B4 2/9
+NOTE A#4 2/9
+NOTE 0 1/2
+NOTE B5 8/3
+
+; ----------- measure 61 --- beat 512/3 ------
+NOTE G#5 1/6 measure61
+NOTE A#5 1/6
+NOTE G5 1/6
+NOTE F#5 1/6
+NOTE A5 1/6
+
+; ----------- measure 62 --- beat 343/2 ------
+NOTE F5 1/7 measure62
+NOTE C#5 1/7
+NOTE E5 1/7
+NOTE C5 1/7
+NOTE A#4 1/7
+NOTE 0 2/7
+NOTE 0 1
+NOTE G#5 16/5
+
+; ----------- measure 63 --- beat 1767/10 ------
+NOTE F#5 1/5 measure63
+NOTE G5 1/5
+NOTE F5 1/5
+NOTE D#5 1/5
+
+; ----------- measure 64 --- beat 355/2 ------
+NOTE E5 1/6 measure64
+NOTE C#5 1/6
+NOTE D5 1/6
+NOTE B4 1/6
+NOTE A#4 1/6
+NOTE 0 1/6
+NOTE 0 1/3
+NOTE C#5 1/6
+NOTE A4 1/6
+NOTE A#4 1/6
+NOTE G4 1/6
+NOTE F#4 1/6
+NOTE G#4 1/6
+NOTE F4 1/6
+NOTE 0 1/2
+
+; ----------- measure 65 --- beat 361/2 ------
+NOTE 0 1/3 measure65
+NOTE B4 1/3
+NOTE 0 1/3
+NOTE A#3 1/2
+NOTE 0 1/4
+NOTE E4 1/4
+NOTE 0 1/2
+NOTE G#4 1/6
+NOTE F4 1/6
+NOTE F#4 1/6
+
+; ----------- measure 66 --- beat 367/2 ------
+NOTE D4 1/7 measure66
+NOTE E4 1/7
+NOTE C#4 1/7
+NOTE C4 1/7
+NOTE G3 1/7
+NOTE G#3 1/7
+NOTE B3 1/7
+NOTE 0 1/2
+NOTE F3 0
+NOTE F#4 1/2
+NOTE 0 2/7
+NOTE C#4 1/7
+NOTE B3 1/7
+NOTE C4 1/7
+NOTE F4 1/7
+NOTE E4 1/7
+
+; ----------- measure 67 --- beat 373/2 ------
+NOTE D#4 1/3 measure67
+NOTE 0 1/3
+NOTE D#4 0
+NOTE C#4 1/3
+NOTE 0 1
+NOTE C4 1/2
+NOTE 0 1/4
+NOTE F#3 1/4
+
+; ----------- measure 68 --- beat 379/2 ------
+NOTE 0 1/2 measure68
+NOTE 0 1/6
+NOTE G#3 1/6
+NOTE B3 1/6
+NOTE 0 1/2
+NOTE F3 1/2
+
+; ----------- measure 69 --- beat 383/2 ------
+NOTE 0 1/3 measure69
+NOTE A#3 0
+NOTE A3 1/3
+TRILL ( E3 ) 1/6
+TRILL ( G3 ) 1/6
+TRILL ( E3 ) 3/8
+TRILL ( G3 ) 3/8
+NOTE 0 1/4
+
+; ----------- measure 70 --- beat 387/2 ------
+NOTE 0 1/5 measure70
+NOTE B3 1/5
+NOTE F4 1/5
+NOTE E4 1/5
+NOTE A#3 1/5
+NOTE D#3 1/2
+NOTE 0 1/2
