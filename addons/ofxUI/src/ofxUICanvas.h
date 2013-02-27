@@ -1129,7 +1129,7 @@ public:
         centerWidgetsOnCanvas(true, true);
     }
 
-    virtual virtual void addModalWidget(ofxUIWidget *widget)
+    virtual void addModalWidget(ofxUIWidget *widget)
     {
         widgetsAreModal[widget->getName()] = widget;
     }
