@@ -37,6 +37,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
     bEditorShow = true;
     bSetupDone = false;
 		editor = 0;
+		bShouldRedraw = true;
     if (argc > 1) mScore_filename = argv[1];
 
 		gettimeofday(&last_draw_time, 0);
@@ -430,6 +431,7 @@ void ofxAntescofog::setupOSC(){
 
 //--------------------------------------------------------------
 void ofxAntescofog::setupTimeline(){
+	//ofSetBackgroundAuto(false);
 	timeline.setOffset(ofVec2f(score_x, score_y));
 	timeline.setup(); //registers events
 
@@ -518,6 +520,12 @@ void ofxAntescofog::setup(){
     //if (mScore_filename.size()) loadScore(mScore_filename);
 
 		setEditorMode(bEditorShow, 0);
+
+		drawCache.allocate(ofGetWindowWidth(), ofGetHeight(), GL_RGBA);
+		drawCache.begin();
+		ofClear(255,255,255, 0);
+    drawCache.end();
+	 
 		bSetupDone = true;
 }
 
@@ -616,41 +624,66 @@ void ofxAntescofog::update() {
         //ofNotifyEvent(playbackStarted, )
         mHasReadMessages = false;
         //timeline.play();
+				bShouldRedraw = true;
     }
     guiBottom->update();
 }
 
 //--------------------------------------------------------------
 void ofxAntescofog::draw() {
+
 	//ofRectangle r = timeline.getDrawRect();
 	//cout << "ofxAntescofog: draw: total draw rect:" << r.x << ", " << r.y << " : " << r.width << "x" << r.height << endl;
-    if (!bSetupDone)
-        return;
+	if (!bSetupDone)
+		return;
 
-		struct timeval now;
-		gettimeofday(&now, 0);
+	/*
+	struct timeval now;
+	gettimeofday(&now, 0);
 #define DRAW_MAX_DELTA_USEC	100000
-		if ((now.tv_sec*1000000L + now.tv_usec) - (last_draw_time.tv_sec*1000000L + last_draw_time.tv_usec) < DRAW_MAX_DELTA_USEC) {
-			return;
-		}
+	if ((now.tv_sec*1000000L + now.tv_usec) - (last_draw_time.tv_sec*1000000L + last_draw_time.tv_usec) < DRAW_MAX_DELTA_USEC) {
+		return;
+	}
+	*/
 
-    ofFill();
-		// testing glview shit : ofSetColor(255, 255, 255, 150); ofCircle(50, 50, 25);
-    ofSetColor(ofxAntescofoNote->color_staves_bg);
-		//if (!bEditorShow) 
+	ofFill();
+	if (bShowColorSetup) {
+		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
-  
-    if (bShowColorSetup) {
-        draw_ColorSetup();
-    } else if (bShowOSCSetup) {
-        draw_OSCSetup();
-    } else if (bShowError) {
-        draw_error();
-    } else {
-        timeline.draw();
-				guiBottom->draw();
-    }
-		console->draw();
+		draw_ColorSetup();
+	} else if (bShowOSCSetup) {
+		ofSetColor(ofxAntescofoNote->color_staves_bg);
+		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+		draw_OSCSetup();
+	} else if (bShowError) {
+		ofSetColor(ofxAntescofoNote->color_staves_bg);
+		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+		draw_error();
+	} else {
+
+		if (!bShouldRedraw) {
+			drawCache.draw(0, 0);
+		} else {
+			ofSetColor(255, 255, 255, 255);
+			drawCache.begin();
+			ofClear(255,255,255, 0);
+			ofPushStyle();
+			ofFill();
+			ofSetColor(ofxAntescofoNote->color_staves_bg);
+			ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+
+			timeline.draw();
+			guiBottom->draw();
+			console->draw();
+
+			ofPopStyle();
+			drawCache.end();
+
+			//ofBackground(255, 255, 255, 255);
+			drawCache.draw(0, 0);
+			bShouldRedraw = false;
+		}
+	}
 }
 
 void ofxAntescofog::load()
@@ -1064,23 +1097,27 @@ void ofxAntescofog::keyPressed(int key){
     if (key == OF_KEY_F7){
         ofToggleFullscreen();
     }
+	bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
 void ofxAntescofog::keyReleased(int key){
-
+	bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseMoved( int x, int y){
+	bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseDragged( int x, int y, int button ){
+	bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
 void ofxAntescofog::mousePressed( int x, int y, int button ) {
+	bShouldRedraw = true;
     //cout << "Fog : mousePressed r:"<< mEditorRect.x << ","<< mEditorRect.y << ","<< mEditorRect.width << "," << mEditorRect.height <<" inside:"<< mEditorRect.inside(x, y) << endl;
     
 #if 0
@@ -1106,6 +1143,7 @@ void ofxAntescofog::mousePressed( int x, int y, int button ) {
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseReleased( int x, int y, int button ){
+	bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
@@ -1123,8 +1161,17 @@ void ofxAntescofog::windowResized(ofResizeEventArgs& resizeEventArgs) { // (int 
 
 	score_w = resizeEventArgs.width - score_x - 10;
 	guiBottom->getRect()->width = score_w + score_x;
+
+	drawCache.allocate(resizeEventArgs.width, ofGetHeight(), GL_RGBA);
+
+	drawCache.begin();
+	ofClear(255,255,255, 0);
+	drawCache.end();
+	 
+
 #endif
 
+	bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
@@ -1189,6 +1236,7 @@ void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 			break; // only one file supported yet
 		}
 	}
+	bShouldRedraw = true;
 }
 
 
@@ -1288,6 +1336,7 @@ int ofxAntescofog::loadScore(string filename) {
 	if (bEditorShow)
 		[ editor loadFile:mScore_filename ];
 
+	bShouldRedraw = true;
 	return n;
 }
 
@@ -1329,6 +1378,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
             guiBottom->disable();
             e.widget->setName(TEXT_CONSTANT_BUTTON_COLOR_SETUP_EXIT);
         } else {
+						bShouldRedraw = true;
             timeline.enable();
             bShowColorSetup = false;
             guiBottom->enable();
@@ -1347,6 +1397,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
             e.widget->setName(TEXT_CONSTANT_BUTTON_OSC_SETUP_EXIT);
         } else {
             timeline.enable();
+						bShouldRedraw = true;
             //ofxAntescofoNote->disable();
             bShowOSCSetup = false;
             guiBottom->enable();
@@ -1452,6 +1503,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         if (bShowColorSetup) {
             bShowColorSetup = false;
             guiSetup_Colors->disable();
+						guiSetup_Colors->setVisible(false);
         } else if (bShowOSCSetup) {
             bShowOSCSetup = false;
             guiSetup_OSC->disable();
@@ -1468,6 +1520,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 void ofxAntescofog::editorDoubleclicked(int line)
 {
 	ofxAntescofoNote->showNote(line);
+	bShouldRedraw = true;
 }
 
 
@@ -1479,6 +1532,7 @@ void ofxAntescofog::editorShowLine(int linea, int lineb)
 		if (linea + 35 < n)
 			[ editor scrollLine:(-35) ];
 
+		bShouldRedraw = true;
 	}
 }
 

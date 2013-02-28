@@ -611,7 +611,7 @@ set( MACOSX_RESOURCE_FILES
 )
 
 set( MACOSX_RESOURCE_FILES_FONTS
-	#"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
+	"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/Ascograph.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 

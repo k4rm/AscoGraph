@@ -153,6 +153,8 @@ class ofxAntescofog : public ofBaseApp{
 		void exit();
 		void guiEvent(ofxUIEventArgs &e);
 		ofxUIDropDownList *mUImenu;
+		ofFbo	drawCache;
+		bool bShouldRedraw;
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;
