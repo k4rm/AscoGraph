@@ -242,8 +242,10 @@ void xmlpart2antescofo::visitStart ( S_forward& elt )
         fMeasureEmpty = false;
     }
 		
-		if (scanElement)
+		if (scanElement) {
 		  fCurBeat += rational(duration, fCurrentDivision);
+			fCurBeat.rationalise();
+		}
 		  //fCurBeat += noteDuration(*this);//rational(duration, fCurrentDivision);
 
 }
@@ -1084,6 +1086,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
         return;
     }
 
+		assert(fCurBeat.toFloat() > 0);
 		fCurBeat.rationalise();
     if (nv.inChord() && !fTrill && !fGlissandoStart && !fGlissandoStop) {
 				cout << "newNote: isInChord so removing "<< fLastDur.toFloat() << " to curBeat: " << fCurBeat.toFloat() << endl;
