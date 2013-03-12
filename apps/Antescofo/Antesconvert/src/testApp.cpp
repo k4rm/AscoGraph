@@ -14,6 +14,7 @@ static map<string, pair<string,bool> > radios_val; // map : button name and valu
 static float _maxy = 0;
 static list<ofxUIWidget*> _widgets;
 bool _notenames = true;
+bool _shouldLoad = false;
 
 string intToString(int i)
 {
@@ -220,6 +221,23 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	if (_shouldLoad) {
+		clear();
+		ofFileDialogResult openFileResult = ofSystemLoadDialog(TEXT_CONSTANT_TITLE_LOAD_SCORE);
+		if (openFileResult.bSuccess){
+			string f = openFileResult.filePath;
+			ofLogVerbose("Selected file: " + f);
+			loadScore(f, TEXT_CONSTANT_TEMP_FILENAME);
+			((ofxUILabelButton*)guiContent->getWidget(TEXT_CONSTANT_BUTTON_LOAD))->setValue(false);
+			//ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+			//b->setValue(false);
+		} else {
+			ofLogVerbose("Cancel load score hit.");
+		}
+		_shouldLoad = false;
+
+	}
+
     ofFill();
     ofBackground(0, 0, 0, 255);
     //ofSetColor(0, 0, 0, 255);
@@ -565,17 +583,8 @@ void testApp::guiEvent(ofxUIEventArgs &e)
     // load score
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_LOAD)
 	{
-        ofFileDialogResult openFileResult = ofSystemLoadDialog(TEXT_CONSTANT_TITLE_LOAD_SCORE);
-        if (openFileResult.bSuccess){
-			string f = openFileResult.filePath;
-			ofLogVerbose("Selected file: " + f);
-			clear();
-            loadScore(f, TEXT_CONSTANT_TEMP_FILENAME);
-            ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
-            b->setValue(false);
-		} else {
-			ofLogVerbose("Cancel load score hit.");
-		}
+		_shouldLoad = true;
+		return;
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_SAVE)
     {

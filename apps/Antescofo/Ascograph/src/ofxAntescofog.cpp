@@ -1328,7 +1328,7 @@ int ofxAntescofog::loadScore(string filename) {
 		cout << "Sending OSC \"read "<< mScore_filename << "\" to Antescofo Patch." << endl;
 		mOSCsender.sendMessage(m);
 	} else {
-		mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
+		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 		display_error();
 	}
 

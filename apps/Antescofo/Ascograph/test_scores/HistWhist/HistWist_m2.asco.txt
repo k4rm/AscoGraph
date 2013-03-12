@@ -1,0 +1,563 @@
+; HistWhist Second Movement
+BPM 120
+
+@INSERT "Includes/Time.asco.txt"
+@INSERT "Includes/hw-m2-macros.asco.txt"
+
+	 print one beat: @beat2sec(1.0) ms - two beats: @beat2sec(2.0) @local 
+
+; process name, initial delay, period, low gain (db), high gain (db)
+@MACRO_DEF harm_loop( NUM, INIT_DELAY , PERIOD, LOWG, HIGHG )
+{
+	LFWD	INIT_DELAY hNUM_p	PERIOD
+	{
+		harmNUM LOWG	@beat2msec( expr{PERIOD/2.0} )	@name hNUM_p_1
+		expr{PERIOD/2.0}	harmNUM	HIGHG	@beat2msec( expr{PERIOD/2.0} )	@name hNUM_p_2
+	}
+}
+
+	 buf1_playloop stop @local 
+	 buf2_playloop stop @local 
+	 buf3_playloop stop @local 
+	 buf4_playloop stop @local 
+;FWD	sd1 -127.0
+		spat3 -127.0 @local 
+		sd2 -127.0 @local 
+	 buf1	-127.0 @local 
+	 buf2	-127.0 @local 
+	 spat1 -127.0 @local 
+;FWD spat2 -127.0
+;FWD spat4 -127.0
+;FWD spat5 -127.0
+;FWD spat6 -127.0
+;FWD spat7 -127.0		; Soundfile from mvt.1 dying out...
+	 del -127.0 @local 
+		del_clear	bang @local 
+
+		harm1 0.0 
+		harm2 0.0 
+		harm3 0.0 
+		harm4 0.0 
+
+NOTE 60 1.0	e2001
+		hw_m20x20.pgm	14	; hw_m2-1 
+;	PFWD	del_presets.pgm	8
+;	PFWD	del 0.0
+		harm1 transpose 200 
+		harm2 transpose -200 
+		harm3 transpose -700 
+		harm4 transpose -1100 
+	
+	; harms to spat2
+		spat2 0.0	1000 
+		spat2_az	270 
+	
+	; vln to spat1 movements:
+		spat1 0.0 
+		spat1_az	270 
+	LFWD	spat1_rot	1.5	spat1_yaw	0 360	1.5
+	
+	;@harm_loop(1, 0.0, 2.0, -50.0, 0.0)
+	 	spat2_ctl fact pres 120, fact rev 80, fact prer 80 
+
+	LFWD h1_p 2.0
+	{
+		harm1	-50.0	@beat2msec(1.0)		
+		1.0		harm1	3.0	@beat2msec(1.0)
+	}
+		
+	LFWD h2_p 2.666
+	{
+		harm2	-50.0	@beat2msec(1.333)
+		1.333		harm2	3.0	@beat2msec(1.333)
+	}
+	
+	LFWD h3_p 3.2
+	{
+		harm3	-43.0	@beat2msec(1.6)
+		1.6		harm3	6.0	@beat2msec(1.6)
+	}
+	
+	LFWD h4_p 4.4
+	{
+		harm4	-38.0	@beat2msec(2.2)
+		2.2		harm4	9.0	@beat2msec(2.2)
+	}
+	
+	; Record the sustain in buffer 1
+	GFWD 2.0 buf1_r
+	{
+		buf1_record 1
+		6.0	buf1_record 0
+		; now playback
+		0.3	print buf playloop start
+		spat3_ctl fact pres 100, fact rev 85, fact prer 100
+		spat3 0.0 500
+		spat3_az	270
+		buf1	0.0 500
+		buf1_playloop bang
+	}
+
+NOTE 60 1.0	e2004
+		hw_m20x20.pgm	15	; cut vln>del and vln>harms 
+	
+
+NOTE 60 1.0	e2006-A
+	KILL h1_p
+	 harm1 -120.0	4000  @local 
+	
+		spat1_cyc	270	90	4.0 
+	 spat4 -15.0 @local 
+	 spat4_cyc	stop	; for mplay of m1 
+	
+		harm3 transpose -600	4.0 
+	
+NOTE 60 1.0 e2006-B
+	KILL h3_p
+	 harm3 -120.0	4000 @local 
+	
+NOTE 60 1.0 e2006-C
+	KILL h4_p
+	 harm4 -120.0	4000 @local 
+	KILL h2_p
+	 harm2 6.0 3000 @local 
+		
+NOTE 60 1.0 e2014
+		hw_m20x20.pgm	14	; hw_m2-1 
+	
+		spat1_cyc	stop 
+	
+	; harms to spat2
+		spat2 0.0 
+		spat2_az	270 
+
+	; vln to spat1 movements:
+		spat1_az	270 
+	LFWD	spat1_rot	4.0	spat1_yaw	0 360	4.0
+	
+		harm1 transpose 200 
+		harm2 transpose -200 
+		harm3 transpose -900 
+		harm4 transpose -1300 
+	
+	GFWD buf2_r
+	{
+		
+		1.0 buf1 -127 3000
+		buf2_record 1
+		4.0	buf2_record 0
+		; now playback
+		0.3	spat3_ctl fact pres 100, fact rev 85, fact prer 100
+		spat3 0.0 500
+		; LFWD spat3_rot 3.0 spat3_path	270	180	3.0
+		spat3_cyc 90	270	3.0		; for buffer 2
+		spat2_cyc 270	90	3.0		; for harmonizers synch to buf2
+		buf2	0.0 500
+		buf2_playloop bang
+		buf1_playloop stop
+		print BUF2: loop playback START
+	}
+	; period = 1, alternate between the four harms
+	
+	LFWD h1_p 4.0
+	{
+		harm1	3.0	@beat2msec(1.0)
+		1.0		harm1	-50.0	@beat2msec(1.0)
+	}
+	
+	LFWD 1.0 h2_p 4.0
+	{
+		harm2	3.0	@beat2msec(1.0)
+		1.0		harm2	-50.0	@beat2msec(1.0)
+	}
+	
+	LFWD 1.0 h3_p 4.0
+	{
+		harm3	6.0	@beat2msec(1.0)
+		1.0		harm3	-50.0	@beat2msec(1.0)
+	}
+	LFWD 0.0 h3_g 2.3
+	{
+		harm3 transpose -800 1.15
+		1.15 harm3 transpose -900 1.15
+	}
+	
+	LFWD 1.0 h4_p 4.0
+	{
+		harm4	9.0	@beat2msec(1.0)
+		1.0		harm4	-50.0	@beat2msec(1.0)
+	}
+	
+
+NOTE 60 1.0	e2017
+		hw_m20x20.pgm	15	; cut vln>del and vln>harms 
+	KILLFWD spat1_rot
+
+NOTE 60 1.0	e2019-A
+		spat1_cyc	270	90	1.5 
+	LFWD	spat1_ym	0.333	spat1_yaw	0	360	0.333
+	
+	KILL h1_p
+	 	harm1  -120.0 3000 
+		harm2 transpose -500	4.0 
+	
+NOTE 60 1.0	e2019-B
+	KILL h4_p
+	 	harm4  -120.0 3000 
+
+NOTE 60 1.0	e2019-C
+	KILL h3_p
+	KILL h3_g
+	 	harm3  -120.0 3000 
+	KILL h2_p
+	 harm2 3.0	3000 
+	
+NOTE 60 1.0	e2035
+	KILLFWD spat1_ym
+		
+		spat1_cyc	stop 
+		spat2_cyc	stop 
+		spat3_cyc	stop 
+	
+NOTE 60 1.0	e2036
+		hw_m20x20.pgm	14	; hw_m2-1 
+	; harms to spat2
+		spat2 0.0 
+		spat2_cyc	270	90	5.0 
+	; vln to spat1 movements:
+		spat1_az	270 
+	LFWD	spat1_rot	4.0	spat1_yaw	0 360	4.0
+	
+		harm1 transpose 200,	transpose 	-100	13.0 
+		harm2 transpose -200,	transpose	-330	14.0 
+		harm3 transpose -600,	transpose	-380	15.0 
+		harm4 transpose -1300, 	transpose	-550	16.0 
+	
+	GFWD 0.0 buf3_r
+	{
+		buf2 -127 8000
+		0.5 buf3_record 1
+		4.5	buf3_record 0
+		; now playback
+		0.3	spat3_ctl fact pres 100, fact rev 100, fact prer 100
+		spat3 -6.0 500
+		spat3_cyc 90	270	3.0		; for buffer 3 (2)
+		spat2_cyc 270	90	3.0		; for harmonizers synch to buf3 (2)
+		buf3	0.0 500
+		buf3_playloop bang
+		buf2_playloop stop
+		print BUF3: playback loop START
+	}
+	
+	GFWD h4_p
+	{
+		LFWD h4_p_levels 4.0
+		{
+			harm4	6.0	@beat2msec(1.5)
+			1.5		harm4	-50.0	@beat2msec(1.5)
+		}		
+		KILL 11.5 h4_p_levels
+		LFWD 0.5 h4_p_levels 4.0
+		{
+			harm4	3.0	@beat2msec(1.5)
+			1.5		harm4	-50.0	@beat2msec(1.5)
+		}
+		
+		LFWD 4.0 h4_p_trans 3.0
+		{
+			harm4 transpose -650	1.5
+			1.5 harm4 transpose -500	1.5
+		}
+	}
+	
+	LFWD 1.0 h3_p 4.0
+	{
+		harm3	3.0	@beat2msec(1.5)
+		1.5		harm3	-50.0	@beat2msec(1.5)
+	}
+	
+	LFWD 1.0 h2_p 4.0
+	{
+		harm2	3.0	@beat2msec(1.5)
+		1.5		harm2	-50.0	@beat2msec(1.5)
+	}
+	
+	GFWD h1_p
+	{
+		LFWD 1.0 h1_p_levels 4.0
+		{
+			harm1	3.0	@beat2msec(1.5)
+			1.5		harm1	-50.0	@beat2msec(1.5)
+		}
+		
+		LFWD 11.0 h1_p_trans	3.0
+		{
+			harm1 transpose	40	1.5
+			1.5 harm1 transpose	-100	1.5
+		}
+	}
+
+	
+NOTE 60 1.0	e2041
+	KILLFWD spat1_rot
+	
+		hw_m20x20.pgm	15	; cut vln>del and vln>harms 
+
+NOTE 60 1.0	e2042
+		spat1_cyc	270	90	1.0 
+	LFWD	spat1_ym	0.25	spat1_yaw	0	360	0.25
+	KILL h1_p_trans
+	 harm1 transpose 830 12.0 @local 
+	 harm2 transpose 150 10.0 @local 
+	 harm3 transpose 690 13.0 @local 
+
+NOTE 60 1.0	e2055
+		spat2_cyc stop 
+	KILL h1_p_levels
+	KILL h4_p_trans
+	KILL h4_p_levels
+	KILL h3_p
+	KILL h2_p
+	 print e2055: Killed h1_p_levels and started tremolo @local 
+	
+	;harm_loop( NUM, INIT_DELAY, PERIOD, LOWG, HIGHG )
+	;	@harm_loop(1, 0.0, 2.0, -50.0, 3.0)
+
+	;TREMOLO(NUM, PER, AMIN, AMAX)
+	@TREMOLO(1,0.08, -3, -25) 
+	 harm1 transpose 1100.0	1.0	 @local 
+
+	;KILL  1.0 h2_p
+	 print Killed h2_p and started tremolo @local 
+	@TREMOLO(2,0.0917, 0, -20) 
+	 harm2 transpose	820.0	1.55 @local 
+	 print Starting buf1 @local 
+	 buf1_playloop bang @local 
+	 buf1 -6.0 4.0 @local 
+
+	;KILL 1.0  h3_p
+	 print Killed h3_p and started tremolo @local 
+	@TREMOLO(3,0.1177, -3, -28)
+	 harm3 transpose	0.0	1.7 @local 
+	 print Starting buf2 @local 
+	 buf2_playloop bang @local 
+	 buf2 -8.0 4.0 @local 
+
+	;KILL 1.0 h4_p_levels
+	  print Killed h3_p and started tremolo @local 
+	@TREMOLO(4,0.0717, 0, -22) 
+	 harm4 transpose	-610.0	2.1 @local 
+
+;	@harm_loop(2, 0.0, 2.666, -50.0, 3.0)
+;	@harm_loop(3, 0.0, 1.7, -50.0, 6.0)
+;	@harm_loop(4, 0.0, 2.3, -50.0, 9.0)
+
+
+NOTE 60 1.0	e2058
+	; vln to spat1 movements:
+		spat1 0.0 
+	LFWD	spat1_rot	0.1	spat1_yaw	0 360	0.1
+	KILL spat1_ym
+;	KILL h4_p
+	 buf2_playloop stop @local 
+	 buf2 -127.0 0.5 @local 
+	 harm4 -120.0 3000 @local 
+
+	 1.0 buf1_playloop stop @local 
+	 buf1 -127.0 0.5 @local 
+	  harm2 transpose -100	4.0 @local 
+
+;	KILL 1.0 h3_p
+	 harm3 -120.0 3000 @local 
+;	KILL 1.0 h1_p
+	 harm1 -120.0 3000 @local 
+;	KILL h2_p
+	 harm2	3.0 3000 @local 
+
+	KILL h4_tremolo
+	KILL h3_tremolo
+	KILL h1_tremolo
+	
+	; old stuff
+;	FWD	spat2	-120.0	10000
+;	FWD 6.0	spat3 -120.0	10000
+;	FWD 8.0	buf3_playloop stop 
+;	FWD spat2_cyc	stop
+;	FWD spat3_cyc	stop
+;	KILL h1_p_levels
+;	KILL h1_p_trans
+;	KILLFWD h2_p
+;	KILLFWD h3_p
+;	KILL h4_p_levels
+;	KILL h4_p_trans
+	
+
+NOTE 60 1.0	e2059			; old e214
+	KILL spat1_ym	
+	KILL h2_tremolo
+
+		hw_m20x20.pgm	14	; hw_m2-1 
+	
+	GFWD 0.0 buf4_r
+	{
+		buf3 -127 8000
+		1.0 buf4_record 1
+		0.0 buf3_playloop stop
+		3.0	buf4_record 0
+		; now playback
+		0.3	spat3_ctl fact pres 100, fact rev 100, fact prer 100
+		spat3 -6.0 500
+		buf4	0.0 500
+		buf4_playloop bang
+		print BUF4: playback loop START
+	}
+	
+		spat1_cyc	stop 
+		
+	; harms to spat2
+		spat2 -10.0 
+		spat2_cyc	270	90	5.0 
+		spat3_cyc	90 270	3.0 
+	; vln to spat1 movements:
+		spat1_cyc	90	270	5.0 
+	LFWD	spat1_rot	2.5	spat1_yaw	0 360	2.5
+	
+		harm1 0.0	 
+		harm2 0.0	2000	 
+		harm3 0.0	 
+		harm4 0.0	 
+		harm1 transpose 100, 	transpose 	-1100	12.0 
+		harm2 transpose -100,	transpose	-650	12.0 
+		harm3 transpose -300,	transpose	-200	12.0 
+		harm4 transpose -400,	transpose	250		12.0 
+
+	; HARMONIZOR GAIN LOOPS
+	@harm_loop(1, 0.0, 4.0, -60.0, 0.0)
+	@harm_loop(2, 1.0, 4.0, -60.0, 0.0)
+	@harm_loop(3, 1.0, 4.0, -60.0, 0.0)
+	@harm_loop(4, 1.0, 4.0, -60.0, 0.0)
+
+
+NOTE 60 1.0	e2064
+	 spat2_ctl source omni 0.0 @local 
+
+		hw_m20x20.pgm	15	; hw_m2-1 
+	
+	 	spat2_ctl fact pres 120, fact rev 35, fact prer 80 
+
+	KILL h1_p
+	KILL h2_p
+	KILL h3_p
+	KILL h4_p
+	
+	 buf1_playloop bang @local 
+	 buf1 0.0 @local 
+	; harm1 movements
+	@harm_hob_gain(1, 0.4, 1.6, 0.2, 0.8)
+	@harm_hob_note(1, 0.666, 2.5, 100, -35.0, 1300)
+
+	; harm2 movements
+	 buf2_playloop bang @local 
+	 buf2 0.0 @local 
+	@harm_hob_gain(2, 0.333, 1.5, 0.1666, 0.75)
+	@harm_hob_note(2, 0.5, 3.0, -100, -300, 0)
+
+	; harm3 movements
+	 buf3_playloop bang @local 
+	 buf3 0.0 @local 
+	@harm_hob_gain(3, 0.5, 1.4, 0.333, 0.7)
+	@harm_hob_note(3, 0.35, 3.15, -100, -300, 0)
+
+	; harm4 movements
+	 buf4_playloop bang @local 
+	 buf4 0.0 @local 
+	@harm_hob_gain(4, 0.25, 1.8, 0.333, 0.9)
+	@harm_hob_note(4, 0.5, 3.3, -100, -300, 0)
+
+NOTE 60 1.0	e2089
+	KILL harm_nob1
+	KILL h1_tremolo
+		harm1 -127	2000 @local 
+	KILL harm_nob2
+	KILL h2_tremolo
+		harm2 -127	4000 @local 
+	KILL harm_nob3
+	KILL h3_tremolo
+		harm3 -127	6000 @local 
+	KILL harm_nob4
+	KILL h4_tremolo
+		harm4 -127	8000 @local 
+
+	
+NOTE 60 1.0	 e2090	;old e219
+	 spat1_cyc stop @local 
+	 spat2_cyc stop @local 
+	 spat3_cyc stop @local 
+	KILL spat1_rot
+	 spat1 0.0 @local 
+	;FWD spat3 0.0
+		hw_m20x20.pgm	17	; harms>del 
+
+	GFWD buf1_process
+	{
+		buf1_playloop bang
+		buf1 0.0
+		harm1 6.0, 0.0 15000, transpose -1100, transpose 1100	65.0
+	}
+
+NOTE 60 1.0	e2091
+	GFWD buf2_process
+	{
+		buf2_playloop bang
+		buf2 0.0
+		harm2 6.0, 0.0 15000, transpose -1300, transpose 0	62.0	
+	}
+
+NOTE 60 1.0	e2092
+	GFWD buf3_process
+	{
+		buf3_playloop bang
+		buf3 0.0
+		harm3 6.0, 3.0 15000, transpose -800, transpose -500	58.0	
+	}
+
+NOTE 60 1.0	e2093
+	GFWD buf4_process
+	{
+		buf4_playloop bang
+		buf4 0.0
+		harm4 -6.0, 3.0 20000, transpose -800, transpose -2300	42.0	
+	}
+	
+NOTE 60 1.0	e2115
+	 harm2 -100 10000 @local 
+		3.0 harm3 -100 10000	 @local 
+
+	 	spat4_az 270 @local 
+			mplay1	s2115-d.aif -15. @local 
+	 spat4 -15.0 @local 
+
+	 	spat5_az 180 @local 
+			1.0 mplay2	s2115-c.aif -12. @local 
+	 spat5 -15.0 @local 
+
+	 	spat6_az 90 @local 
+			1.0 mplay3	s2115-b.aif -10. @local 
+	 spat6 -15.0 @local 
+
+	 	spat7_az 0 @local 
+			mplay4	s2115-a.aif -8. @local 
+	 spat7 -15.0	 @local 
+
+NOTE 60 1.0	e2020
+
+		harm1 -127.0	100 
+		harm2 -127.0	100 
+		harm3 -127.0	100 
+		harm4 -127.0	100 
+	; change score
+	 antescofo-score Movement3 
+NOTE 0 1.0	dummy
+
+
+	
