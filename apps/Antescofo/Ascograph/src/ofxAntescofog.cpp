@@ -1312,6 +1312,10 @@ int ofxAntescofog::loadScore(string filename) {
 		n = ofxAntescofoNote->loadscoreAntescofo(antescore);
 	}
 	if (n) {
+		bShowError = false;
+		guiError->disable();
+		timeline.enable();
+		guiBottom->enable();
 		ofxAntescofoNote->setZoomBounds(z);
 		timeline.getZoomer()->setViewRange(z);
 		bpm = timeline.getBPM();
