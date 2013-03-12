@@ -1,28 +1,28 @@
 ; Set of useful time functions for Antescofo
 
-@FUN_DEF beat2msec(X) {
-	1000*X*60.0/RT_TEMPO
+@FUN_DEF beat2msec($X) {
+	1000*$X*60.0/$RT_TEMPO
 }
 
-@FUN_DEF beat2sec(X) {
-	X*60.0/RT_TEMPO
+@FUN_DEF beat2sec($X) {
+	$X*60.0/$RT_TEMPO
 }
 
-@FUN_DEF beat2ticks(X) {
-	X*4*480
+@FUN_DEF beat2ticks($X) {
+	$X*4*480
 }
 
-@MACRO_DEF hz2ms(hz)
+@MACRO_DEF hz2ms($hz)
 {
-	expr{ (1/hz)*1000.0 }
+	expr{ (1/$hz)*1000.0 }
 }
 
-@MACRO_DEF hz2beat(hz)
+@MACRO_DEF hz2beat($hz)
 {
-	expr{ (1/hz)*(RT_TEMPO/60.0) }
+	expr{ (1/$hz)*($RT_TEMPO/60.0) }
 }
 
-@FUN_DEF hz_bms(hz)
+@FUN_DEF hz_bms($hz)
 {
-	 (1/hz)*1000.0*(RT_TEMPO/60.0) 
+	 (1/$hz)*1000.0*($RT_TEMPO/60.0) 
 }

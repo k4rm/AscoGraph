@@ -4,15 +4,16 @@ BPM 120
 @INSERT "Includes/Time.asco.txt"
 @INSERT "Includes/hw-m2-macros.asco.txt"
 
-	 print one beat: @beat2sec(1.0) ms - two beats: @beat2sec(2.0) @local 
 
-; process name, initial delay, period, low gain (db), high gain (db)
-@MACRO_DEF harm_loop( NUM, INIT_DELAY , PERIOD, LOWG, HIGHG )
+	print one beat: @beat2sec(1.0) ms - two beats: @beat2sec(2.0) @local 
+	;process name, initial delay, period, low gain (db), high gain (db)
+
+@MACRO_DEF harm_loop( $NUM, $INIT_DELAY, $PERIOD, $LOWG, $HIGHG )
 {
-	LFWD	INIT_DELAY hNUM_p	PERIOD
+	LFWD $INIT_DELAY h$NUM/* */_p	$PERIOD
 	{
-		harmNUM LOWG	@beat2msec( expr{PERIOD/2.0} )	@name hNUM_p_1
-		expr{PERIOD/2.0}	harmNUM	HIGHG	@beat2msec( expr{PERIOD/2.0} )	@name hNUM_p_2
+		harm$NUM $LOWG	@beat2msec( ( $PERIOD/2.0 ) )	@name h$NUM/* */_p_1
+		($PERIOD/2.0)	harm$NUM	$HIGHG	@beat2msec( ($PERIOD/2.0) )	@name h$NUM/* */_p_2
 	}
 }
 
@@ -55,8 +56,10 @@ NOTE 60 1.0	e2001
 	; vln to spat1 movements:
 		spat1 0.0 
 		spat1_az	270 
-	LFWD	spat1_rot	1.5	spat1_yaw	0 360	1.5
-	
+	LFWD	spat1_rot	1.5
+	{
+		spat1_yaw	0 360	1.5
+	}
 	;@harm_loop(1, 0.0, 2.0, -50.0, 0.0)
 	 	spat2_ctl fact pres 120, fact rev 80, fact prer 80 
 
@@ -133,7 +136,10 @@ NOTE 60 1.0 e2014
 
 	; vln to spat1 movements:
 		spat1_az	270 
-	LFWD	spat1_rot	4.0	spat1_yaw	0 360	4.0
+	LFWD spat1_rot 4.0
+	{
+		spat1_yaw	0 360	4.0
+	}
 	
 		harm1 transpose 200 
 		harm2 transpose -200 
@@ -195,8 +201,10 @@ NOTE 60 1.0	e2017
 
 NOTE 60 1.0	e2019-A
 		spat1_cyc	270	90	1.5 
-	LFWD	spat1_ym	0.333	spat1_yaw	0	360	0.333
-	
+	LFWD	spat1_ym	0.333
+	{
+		spat1_yaw	0	360	0.333
+	}
 	KILL h1_p
 	 	harm1  -120.0 3000 
 		harm2 transpose -500	4.0 
@@ -226,8 +234,10 @@ NOTE 60 1.0	e2036
 		spat2_cyc	270	90	5.0 
 	; vln to spat1 movements:
 		spat1_az	270 
-	LFWD	spat1_rot	4.0	spat1_yaw	0 360	4.0
-	
+	LFWD	spat1_rot	4.0
+	{	
+		spat1_yaw	0 360	4.0
+	}
 		harm1 transpose 200,	transpose 	-100	13.0 
 		harm2 transpose -200,	transpose	-330	14.0 
 		harm3 transpose -600,	transpose	-380	15.0 
@@ -305,7 +315,10 @@ NOTE 60 1.0	e2041
 
 NOTE 60 1.0	e2042
 		spat1_cyc	270	90	1.0 
-	LFWD	spat1_ym	0.25	spat1_yaw	0	360	0.25
+	LFWD	spat1_ym	0.25	
+	{
+		spat1_yaw	0	360	0.25
+	}
 	KILL h1_p_trans
 	 harm1 transpose 830 12.0 @local 
 	 harm2 transpose 150 10.0 @local 
@@ -356,7 +369,10 @@ NOTE 60 1.0	e2055
 NOTE 60 1.0	e2058
 	; vln to spat1 movements:
 		spat1 0.0 
-	LFWD	spat1_rot	0.1	spat1_yaw	0 360	0.1
+	LFWD	spat1_rot	0.1
+	{
+		spat1_yaw	0 360	0.1
+	}
 	KILL spat1_ym
 ;	KILL h4_p
 	 buf2_playloop stop @local 
@@ -420,8 +436,10 @@ NOTE 60 1.0	e2059			; old e214
 		spat3_cyc	90 270	3.0 
 	; vln to spat1 movements:
 		spat1_cyc	90	270	5.0 
-	LFWD	spat1_rot	2.5	spat1_yaw	0 360	2.5
-	
+	LFWD	spat1_rot	2.5
+	{
+		spat1_yaw	0 360	2.5
+	}
 		harm1 0.0	 
 		harm2 0.0	2000	 
 		harm3 0.0	 
