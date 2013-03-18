@@ -1,0 +1,8 @@
+BPM 60
+
+NOTE C4 8.0
+GFWD testgroup 
+{
+	action_one
+	action_two 12
+}

@@ -1107,7 +1107,7 @@ void ofxAntescofog::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseMoved( int x, int y){
-	bShouldRedraw = true;
+	//bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
