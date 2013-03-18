@@ -7,7 +7,6 @@
 //
 #include <algorithm>
 #include <string>
-#include "ofxTimeline.h"
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
 #include "ofxTLMultiCurves.h"
@@ -54,21 +53,31 @@ void ofxTLAntescofoAction::setup()
 
 void ofxTLAntescofoAction::draw()
 {
-    if (mActionRects.empty()) {
-        //bounds.height = 0;
-				disable();
-		}
+	if (mActionRects.empty()) {
+		//bounds.height = 0;
+		disable();
+	}
 	if (mScore && bounds.height > 6) {
 		for (list<ActionRect*>::const_iterator i = mActionRects.begin(); i != mActionRects.end(); i++) {
-			if (zoomBounds.intersects(timeline->beatToNormalizedX((*i)->beatnum))) {
-				ofSetColor(0, 0, 0, 125);
+			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
+					|| zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration)) {
+				/* ofSetColor(0, 0, 0, 125);
 				ofRect((*i)->rect);
 				ofSetColor(255, 255, 255, 255);
 				mFont.drawString((*i)->drawn_action, (*i)->rect.x, (*i)->rect.y + 15);
+				*/
+				ofSetColor(0, 0, 0, 125);
+	
+				ActionRect *act = *i;
+				//act->rect.x =  bounds.x + normalizedXtoScreenX( timeline->beatToNormalizedX(act->beatnum), zoomBounds);
+				//act->rect.y = bounds.y + 3;
+				//act->rect.width = normalizedXtoScreenX( timeline->beatToNormalizedX(act->duration), zoomBounds);
+				//cout << "ofxTLAntescofoAction: beat:" << act->beatnum <<" duration:" << act->duration<< " w:"<< act->rect.width << endl;
+				act->draw(this);
+				//(*i)->print(this);
 			}
 		}
 	}
-
 
 }
 
@@ -76,23 +85,9 @@ void ofxTLAntescofoAction::draw()
 void ofxTLAntescofoAction::drawBitmapStringHighlight(string text, int x, int y, const ofColor& background, const ofColor& foreground) {
 }
 
-void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
-{
-
-	// clean tabs
-	string tab("\t");
-	string doublespace("  ");
-	findAndReplace(action, tab, doublespace);
-
-	ActionRect *ar = new ActionRect(action, beatnum, e);
-
-	// extract data
-	if (e->gfwd) {
-		for (vector<Action*>::const_iterator i = e->gfwd->actions().begin(); i != e->gfwd->actions().end(); i++)
-		{
-			cout << "ofxTLAntescofoAction::add_action: adding : " << endl << action<< endl;
-			Cfwd* c = dynamic_cast<Cfwd*>(*i);
-			if (c) {
+void ofxTLAntescofoAction::add_action_curves(float beatnum, ActionRect *ar, Cfwd *c) 
+{ 
+	if (c) {
 				cout << "got Cfwd: " << c->label() << endl; 
 				Display_cfwd* d = new Display_cfwd();
 				d->label = c->label();
@@ -157,63 +152,99 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 				}
 				ar->cfwd = d;
 				cout << "ofxTLAntescofoAction::add_action: delays size:" << d->delays.size() << endl;
-			}
-		}
-
-		//for (int n = 0; n < ar->cfwd->delays.size(); n++) { cout << " ------- delays " << ar->cfwd->delays[n] << endl; }
-		// add track
-		if (ar && ar->cfwd && ar->cfwd->values.size() && ar->cfwd->delays.size() && (*(ar->cfwd->values.begin())).size()) {
-			string trackName = string("CFWD ") + ar->cfwd->label;
-			string xmlFileName;
-			if(xmlFileName == ""){
-				string uniqueName = getTimeline()->confirmedUniqueName(trackName);
-				xmlFileName = ofToDataPath("GUI/" + uniqueName + "_.xml");
-			}
-
-			int howmany = (*(ar->cfwd->values.begin())).size();
-			ofxTLMultiCurves* curves = new ofxTLMultiCurves();
-			curves->clear();
-			curves->disable();
-			getTimeline()->addTrack(trackName, curves);
-			curves->setHowmany(howmany);
-			ar->trackName = trackName;
-
-			// set values ranges
-			int j = 0; 
-			for (int j = 0; j < howmany; j++) {
-				float min = 0, max = 0;
-				for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-					if (min > (*i)[j]) min = (*i)[j];
-					if (max < (*i)[j]) max = (*i)[j];
-				}
-				curves->setValueRangeMax(j, max);
-				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
-				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
-				curves->setValueRangeMin(j, min);
-			}
-
-			// set keyframes
-			for (int n = 0; n < howmany; n++) {
-				double dcumul = 0.;
-				for (int k = 0; k < ar->cfwd->delays.size(); k++) {
-					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
-					dcumul += ar->cfwd->delays[k];
-					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << timeline->beatToMillisec(ar->beatnum + dcumul)
-						<< " val=" <<  ar->cfwd->values[k][n] << endl;
-
-					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
-					curves->addKeyframeAtBeatAtCurveId(n, ar->cfwd->values[k][n], ar->beatnum + dcumul);
-					// }
-				}
-
-				curves->enable();
-			}
-		}
 	}
 
-	// store for future use
-	mActionRects.push_back(ar);
+	//for (int n = 0; n < ar->cfwd->delays.size(); n++) { cout << " ------- delays " << ar->cfwd->delays[n] << endl; }
+	// add track
+	if (ar && ar->cfwd && ar->cfwd->values.size() && ar->cfwd->delays.size() && (*(ar->cfwd->values.begin())).size()) {
+		string trackName = string("CFWD ") + ar->cfwd->label;
+		string xmlFileName;
+		if(xmlFileName == ""){
+			string uniqueName = getTimeline()->confirmedUniqueName(trackName);
+			xmlFileName = ofToDataPath("GUI/" + uniqueName + "_.xml");
+		}
+
+		int howmany = (*(ar->cfwd->values.begin())).size();
+		ofxTLMultiCurves* curves = new ofxTLMultiCurves();
+		curves->clear();
+		curves->disable();
+		getTimeline()->addTrack(trackName, curves);
+		curves->setHowmany(howmany);
+		ar->trackName = trackName;
+
+		// set values ranges
+		int j = 0; 
+		for (int j = 0; j < howmany; j++) {
+			float min = 0, max = 0;
+			for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
+				if (min > (*i)[j]) min = (*i)[j];
+				if (max < (*i)[j]) max = (*i)[j];
+			}
+			curves->setValueRangeMax(j, max);
+			cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
+			cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
+			curves->setValueRangeMin(j, min);
+		}
+
+		// set keyframes
+		for (int n = 0; n < howmany; n++) {
+			double dcumul = 0.;
+			for (int k = 0; k < ar->cfwd->delays.size(); k++) {
+				//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
+				dcumul += ar->cfwd->delays[k];
+				//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
+				cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << timeline->beatToMillisec(ar->beatnum + dcumul)
+					<< " val=" <<  ar->cfwd->values[k][n] << endl;
+
+				//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
+				curves->addKeyframeAtBeatAtCurveId(n, ar->cfwd->values[k][n], ar->beatnum + dcumul);
+				// }
+			}
+
+			curves->enable();
+		}
+	}
+}
+
+ofColor ofxTLAntescofoAction::get_random_color() {
+	static ofColor color(205, 1, 1, 200);
+	
+	color += ofColor(10, 255, 255, 200);
+	return color;
+}
+
+void ofxTLAntescofoAction::attribute_header_colors(list<ActionRect*> actionrects) {
+		for (list<ActionRect*>::const_iterator i = actionrects.begin(); i != actionrects.end(); i++)
+		{
+			(*i)->headerColor = get_random_color();
+			attribute_header_colors((*i)->ActionRects);
+		}
+}
+
+void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
+{
+
+	// clean tabs
+	string tab("\t");
+	string doublespace("  ");
+	findAndReplace(action, tab, doublespace);
+
+	ofRectangle rect(bounds.x, bounds.y, 0, 0);
+	// extract data
+	if (e->gfwd) {
+		ActionRect *ar = new ActionRect("", beatnum, e->gfwd, e, rect);
+
+		for (vector<Action*>::const_iterator i = e->gfwd->actions().begin(); i != e->gfwd->actions().end(); i++)
+		{
+			cout << "ofxTLAntescofoAction::add_action: adding : " << endl << action<< endl;
+			Cfwd* c = dynamic_cast<Cfwd*>(*i);
+			if (c) 
+				add_action_curves(beatnum, ar, c);
+		}
+
+		// store for future use
+		mActionRects.push_back(ar);
+	}
 
 	// TODO add nested event
 	if (mActionRects.size()) {
@@ -225,6 +256,7 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 		getTimeline()->bringTrackToTop(getTimeline()->getZoomer());
 	} else
 		disable();
+	attribute_header_colors(mActionRects);
 }
 
 
@@ -252,6 +284,8 @@ void ofxTLAntescofoAction::load()
 void ofxTLAntescofoAction::update()
 {
 
+
+#ifdef OLDWIDTH_CALCULATION
 	for (list<ActionRect*>::const_iterator i = mActionRects.begin(); i != mActionRects.end(); i++)
 		(*i)->w = 0;
 	if (mScore && bounds.height > 6) {
@@ -319,6 +353,7 @@ void ofxTLAntescofoAction::update()
 			}
 		}
 	}
+#endif
 
 
 }
@@ -328,31 +363,53 @@ void ofxTLAntescofoAction::windowResized(int w, int h){
 
 }
 
+bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, list<ActionRect*> actionrects) {
+	for (list<ActionRect*>::const_iterator i = actionrects.begin(); i != actionrects.end(); i++) {
+		cout << "mousePressed: rect: x:" << (*i)->rect.x << " y:" << (*i)->rect.y << " w:"<< (*i)->rect.width << " h:" << (*i)->rect.height << endl; 
+		if ((*i)->rect.inside(args.x, args.y)) {
+			if ((*i)->hidden) {
+				(*i)->hidden = false;
+				cout << "mousePressed: setting action '"<< (*i)->realtitle <<"' hidden:"<< (*i)->hidden << endl;
+				Event *e = (*i)->e;
+				mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
+				break;
+			} else if ((*i)->is_in_arrow(args.x, args.y)) {
+				(*i)->hidden = true;
+				Event *e = (*i)->e;
+				mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
+				break;
+			}
+		} else {
+			mousePressed_In_Arrow(args, (*i)->ActionRects);
+		}
+	}
+	return false;
+}
+
 bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 {
-	for (list<ActionRect*>::const_iterator i = mActionRects.begin(); i != mActionRects.end(); i++)
-	{
-		int x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
+	mousePressed_In_Arrow(args, mActionRects);
+	//for (list<ActionRect*>::const_iterator i = mActionRects.begin(); i != mActionRects.end(); i++) {
+		/*
 		if ((*i)->rect.inside(args.x, args.y)) {
-			string str = (*i)->action.substr(0, 20);
+			if ((*i)->hidden) {
+				(*i)->hidden = false;
+				cout << "mousePressed: setting action '"<< (*i)->realtitle <<"' hidden:"<< (*i)->hidden << endl;
+				break;
+			} else if ((*i)->is_in_arrow(args.x, args.y)) {
+				(*i)->hidden = true;
+				break;
+			}
+			*/
 			//if (mAntescofog->bEditorShow)
-			Event *e = (*i)->e;
-			mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
-				//mAntescofog->editor->searchText(str);
-			/*ofstream f;
+						/*ofstream f;
 			  f.open(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 			  f << (*i)->action;
 			  f.close();
 			  bEditorShow = true;
 			  mAntescofog->setEditorMode(bEditorShow, (*i)->beatnum);
 			  */
-		} /*else {
-		    if (bEditorShow) {
-		    bEditorShow = false;
-		    mAntescofog->setEditorMode(bEditorShow, r, (*i)->beatnum);
-		    }
-		    }*/
-	}
+		//} 	}
 	return false;
 }
 

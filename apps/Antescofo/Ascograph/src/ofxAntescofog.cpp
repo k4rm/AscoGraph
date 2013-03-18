@@ -839,9 +839,9 @@ void ofxAntescofog::load()
         colorString2var["colors:modalBackground"] = &ofxAntescofoNote->color_modalBg;
         
         // timeline outline color
-        red		= settings.getValue("colors:outline:r", 240);
-        green	= settings.getValue("colors:outline:g", 99);
-        blue	= settings.getValue("colors:outline:b", 103);
+        red		= settings.getValue("colors:outline:r", 0);
+        green	= settings.getValue("colors:outline:g", 0);
+        blue	= settings.getValue("colors:outline:b", 243);
         alpha	= settings.getValue("colors:outline:a", 200);
         ofxAntescofoNote->color_outline.set(red, green, blue, alpha);
         colorString2var["colors:outline"] = &ofxAntescofoNote->color_outline;
@@ -878,7 +878,7 @@ void ofxAntescofog::load()
 
 void ofxAntescofog::save()
 {
-    string xmlFileName = "GUI/Antescofog.xml";
+    string xmlFileName = "GUI/Ascograph.xml";
 	ofxXmlSettings settings;
    
     int red, green, blue, alpha;
@@ -1107,7 +1107,7 @@ void ofxAntescofog::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseMoved( int x, int y){
-	bShouldRedraw = true;
+	//bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
@@ -1312,6 +1312,10 @@ int ofxAntescofog::loadScore(string filename) {
 		n = ofxAntescofoNote->loadscoreAntescofo(antescore);
 	}
 	if (n) {
+		bShowError = false;
+		guiError->disable();
+		timeline.enable();
+		guiBottom->enable();
 		ofxAntescofoNote->setZoomBounds(z);
 		timeline.getZoomer()->setViewRange(z);
 		bpm = timeline.getBPM();
@@ -1328,7 +1332,7 @@ int ofxAntescofog::loadScore(string filename) {
 		cout << "Sending OSC \"read "<< mScore_filename << "\" to Antescofo Patch." << endl;
 		mOSCsender.sendMessage(m);
 	} else {
-		mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
+		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 		display_error();
 	}
 

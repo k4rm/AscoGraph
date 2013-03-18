@@ -13,6 +13,8 @@ static ofxUICanvas *_guiContent, *_guiSlider;
 static map<string, pair<string,bool> > radios_val; // map : button name and value/state
 static float _maxy = 0;
 static list<ofxUIWidget*> _widgets;
+bool _notenames = true;
+bool _shouldLoad = false;
 
 string intToString(int i)
 {
@@ -219,6 +221,23 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	if (_shouldLoad) {
+		clear();
+		ofFileDialogResult openFileResult = ofSystemLoadDialog(TEXT_CONSTANT_TITLE_LOAD_SCORE);
+		if (openFileResult.bSuccess){
+			string f = openFileResult.filePath;
+			ofLogVerbose("Selected file: " + f);
+			loadScore(f, TEXT_CONSTANT_TEMP_FILENAME);
+			((ofxUILabelButton*)guiContent->getWidget(TEXT_CONSTANT_BUTTON_LOAD))->setValue(false);
+			//ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+			//b->setValue(false);
+		} else {
+			ofLogVerbose("Cancel load score hit.");
+		}
+		_shouldLoad = false;
+
+	}
+
     ofFill();
     ofBackground(0, 0, 0, 255);
     //ofSetColor(0, 0, 0, 255);
@@ -407,6 +426,10 @@ int testApp::loadScore(string filename, string outfilename) {
 		e = static_measures;
 		widgets.push_back(e);
 		guiContent->addWidgetRight(static_measures);
+
+		ofxUIToggle *t = new ofxUIToggle(20, 20, true, TEXT_CONSTANT_TOGGLE_NOTENAME, OFX_UI_FONT_SMALL);
+		guiContent->addWidgetDown(t);
+
 		mWConvert->setVisible(true);
 		mWConvert->setLabelVisible(true);
 
@@ -510,6 +533,7 @@ int testApp::convertScore(string filename, string outfilename) {
 					  AntescofoWriter->setSelectedVoices(getVoicesVect(radios_val));
 					  AntescofoWriter->setSelectedStaves(getStavesVect(radios_val));
 					  AntescofoWriter->setSelectedMeasures(getMeasuresVect());
+						AntescofoWriter->print_notes_names = _notenames;
 
             xml2antescofovisitor v(*AntescofoWriter, true, true, false);
             Santescofoelement as = v.convert(st);
@@ -559,17 +583,8 @@ void testApp::guiEvent(ofxUIEventArgs &e)
     // load score
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_LOAD)
 	{
-        ofFileDialogResult openFileResult = ofSystemLoadDialog(TEXT_CONSTANT_TITLE_LOAD_SCORE);
-        if (openFileResult.bSuccess){
-			string f = openFileResult.filePath;
-			ofLogVerbose("Selected file: " + f);
-			clear();
-            loadScore(f, TEXT_CONSTANT_TEMP_FILENAME);
-            ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
-            b->setValue(false);
-		} else {
-			ofLogVerbose("Cancel load score hit.");
-		}
+		_shouldLoad = true;
+		return;
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_SAVE)
     {
@@ -592,6 +607,13 @@ void testApp::guiEvent(ofxUIEventArgs &e)
             ofLogVerbose("Cancel load score hit.");
         }
     }
+    if(e.widget->getName() == TEXT_CONSTANT_TOGGLE_NOTENAME)
+		{
+				ofxUIToggle *t = (ofxUIToggle*)e.widget;
+				t->update();
+				cout << "Toggle notes name hit" << endl;
+				_notenames = !_notenames;
+		}
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_CANCEL)
 	{
         bShowError = false;

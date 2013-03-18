@@ -1,0 +1,117 @@
+; HW m2 macros
+
+@MACRO_DEF TREMOLO($NUM, $PER, $AMIN, $AMAX)
+{
+	LOOP h$NUM/* */_tremolo $PER
+	{
+		harm$NUM $AMIN	@beat2msec( ($PER/2) )
+		($PER/2)	harm$NUM $AMAX	@beat2msec( ($PER/2) )
+	}
+}
+
+; Linear increasing 
+@MACRO_DEF linear_jump($first, $last, $steps, $this)
+{
+	( $first + $this*($last-$first)/$steps )
+}
+
+; process name, initial delay, period, low gain (db), high gain (db)
+@MACRO_DEF harm_gain( $NUM, $INIT_DELAY, $pnum , $PERIOD, $INTERNAL_PER, $LOWG, $HIGHG )
+{
+	;print allo
+	$INIT_DELAY LOOP h$NUM/* */_$PERIOD/* */_$INTERNAL_PER/* */_p	$PERIOD
+	{
+		;print toto
+		harm$NUM $HIGHG	@beat2msec( $INTERNAL_PER )	@name h$NUM/* */_p_1
+		$INTERNAL_PER	harm$NUM	$LOWG	@beat2msec( $INTERNAL_PER )	@name h$NUM/* */_p_2
+	}
+	print $NUM gain global $PERIOD local $INTERNAL_PER  
+	KILL ( $pnum*$PERIOD - $PERIOD/50.0 ) h$NUM/* */_$PERIOD/* */_$INTERNAL_PER/* */_p    ; was hNUM-PERIOD-INTERNAL_PER_p 
+
+}
+
+; gliss macro
+@MACRO_DEF harm_notes( $NUM, $INIT_DELAY, $pnum, $PERIOD, $INT1, $INT2 )
+{
+	$INIT_DELAY LOOP	h$NUM/* */_$PERIOD/* */_$INT2/* */_g	$PERIOD
+	{
+		harm$NUM transpose	$INT1
+		( $PERIOD/2.0 )	harm$NUM transpose $INT2
+	}
+	print $NUM notes period: $PERIOD $INT2
+	KILL ( $pnum*$PERIOD - $PERIOD/50.0 ) h$NUM/* */_$PERIOD/* */_$INT2/* */_g       ; was hNUM-PERIOD-INT2-g
+
+}	
+
+; NUM= harmonizer number, INIT_PERIOD= initial global period, FINAL_PERIOD=global 
+@MACRO_DEF harm_hob_gain( $NUM, $INIT_PERIOD, $FINAL_PERIOD, $INTERNAL_PERIOD, $INTERNAL_P_FIN )
+{
+	GFWD harm_nob$NUM
+	{
+		; In 10 steps global period goes from initial to final
+		@harm_gain( $NUM, 0.0, 5.0, $INIT_PERIOD, $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 5.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,1.0), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 5.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,2.0), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 4.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,3.0), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 4.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,4.0), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 3.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,4.5), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 2.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,5.0), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 1.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,6.2), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 1.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,7.5), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 1.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,9.0), $INTERNAL_PERIOD, -30.0, 3.0 )
+		@harm_gain( $NUM, ( $INIT_PERIOD/50.0 ), 1.0, @linear_jump($INIT_PERIOD,$FINAL_PERIOD,10.0,10.0), $INTERNAL_PERIOD, -30.0, 3.0 )
+		; in 5 steps, increase internal period to the final internal period
+		@harm_gain( NUM, ($INIT_PERIOD/50.0), 1.0, $FINAL_PERIOD, @linear_jump($INTERNAL_PERIOD,$INTERNAL_P_FIN,5.0,1.0), -30.0, 3.0 )
+		@harm_gain( NUM, ($INIT_PERIOD/50.0), 1.0, $FINAL_PERIOD, @linear_jump($INTERNAL_PERIOD,$INTERNAL_P_FIN,5.0,2.0), -35.0, 3.0 )
+		@harm_gain( NUM, ($INIT_PERIOD/50.0), 1.0, $FINAL_PERIOD, @linear_jump($INTERNAL_PERIOD,$INTERNAL_P_FIN,5.0,3.0), -40.0, 3.0 )
+		@harm_gain( NUM, ($INIT_PERIOD/50.0), 1.0, $FINAL_PERIOD, @linear_jump($INTERNAL_PERIOD,$INTERNAL_P_FIN,5.0,4.0), -45.0, 3.0 )
+		@harm_gain( NUM, ($INIT_PERIOD/50.0), 5.0, $FINAL_PERIOD, @linear_jump($INTERNAL_PERIOD,$INTERNAL_P_FIN,5.0,5.0), -50.0, 3.0 )
+		@TREMOLO($NUM, $INIT_PERIOD, -5.0, -25)
+	}
+}
+
+@MACRO_DEF harm_hob_note($NUM, $PERIOD1, $PERIOD2, $INT1, $INT2, $INT3 )
+{
+	GFWD harm_hob_note$NUM
+	{
+		; in 10 steps increase the period
+		@harm_notes( $NUM, 0.0, 1.0, $PERIOD1, $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,0.5), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,1.0), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,1.6), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,2.3), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,3.1), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,4.1), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,5.4), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,7.0), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,8.8), $INT1, $INT2)
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,10.0), $INT1, $INT2)
+		; in 10 steps move the interval
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,1.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,2.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,3.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,4.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,5.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,6.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,7.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,8.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,9.0))
+		@harm_notes( $NUM, ( $PERIOD1/50.0), 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,10.0))
+	}
+}
+
+@MACRO_DEF expans_var( $NUM )
+{
+	print h$NUM
+}
+
+NOTE a2 2
+
+	;@harm_hob_gain(1, 0.4, 1.6, 0.2, 0.8)
+	GFWD harm_nob2
+	{
+		; In 10 steps global period goes from initial to final
+		;@expans_var( 33 )
+		@harm_gain(11,0.0,5.0,22,33,-30.0,3.0)
+	}
+	;@harm_hob_note(1, 0.666, 2.5, 100, -35.0, 1300)

@@ -67,7 +67,7 @@ class antescofowriter {
 	public:
 		enum pedalType { kDamperPedal, kSoftpedal, kSostenutoPedal };
 
-		antescofowriter() : fLastBPM("0"), fBPM("120"), nBeats(4), print_notes_names(false) { }
+		antescofowriter() : fLastBPM("0"), fBPM("120"), nBeats(4), print_notes_names(true) { }
 		~antescofowriter() {}
 
 		map<rational, measure_elt> v_Notes;

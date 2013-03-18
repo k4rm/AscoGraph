@@ -69,6 +69,8 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 #if 1
 	rational abs_curBeat(0);
 	if (nmeasure > 1 && curBeat.toFloat() == 1.) {
+		if (pitch == 0.)
+			return;
 		cerr << "AntescofoWriter: something went wrong with note beats, trying to figure out current beat from measure number." << endl;
 		for (map<rational, measure_elt>::const_iterator i = v_Notes.begin(); i != v_Notes.end(); i++) {
 			if (i->second.nMeasure == nmeasure) {
@@ -233,7 +235,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 					cout << "=============== ADDING NOTE: "<< *c << " b:"<< (new_beat - new_dur).toFloat()<< endl;
 					rational tmpcurbeat = new_beat - new_dur;
 					new_dur.rationalise();
-					AddNote(ANTESCOFO_CHORD, *c, new_dur, new_measure, tmpcurbeat);
+					AddNote(ANTESCOFO_CHORD, -(*c), new_dur, new_measure, tmpcurbeat);
 				}
 			} else { // new note is longer than already present one, so copy present pitches into new note with new_dur duration
 				new_dur = rational(0) - new_dur;
@@ -277,8 +279,8 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 					e->duration = new_dur;
 					rational tmpbeat = curBeat + i->second.duration; tmpbeat.rationalise();
 					for (vector<int>::iterator c = v_Notes[tmpbeat].pitches.begin(); c != v_Notes[tmpbeat].pitches.end(); c++)
-						e->pitches.push_back(*c);
-					e->pitches.push_back(pitch);
+						e->pitches.push_back(-(*c));
+					e->pitches.push_back(-pitch);
 					e->nMeasure = nmeasure;
 					e->m_pos = tmpbeat;
 					e->flags = flag_;
@@ -412,6 +414,11 @@ void antescofowriter::writenote(ostream &out, int pitch) {
 	if (!print_notes_names) {// || pitch % 100 != 0) {
 		out << pitch << "00";
 	} else {
+		string prefix = "";
+		if (pitch < 0) {
+			prefix = "-";
+			pitch = -pitch;
+		}
 		if (pitch > 1000) pitch /= 100;
 		int p = pitch % 12;
 		int o = 0;
@@ -437,7 +444,7 @@ void antescofowriter::writenote(ostream &out, int pitch) {
 		if (p == 9) c = "A";
 		if (p == 10) c = "A#";
 		if (p == 11) c = "B";
-		out << c << o;
+		out << prefix << c << o;
 	}
 }
 
@@ -465,19 +472,19 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 	for (map<rational, measure_elt>::iterator i = v_Notes.begin(); i != v_Notes.end(); i++) { 
 		if (i->second.nMeasure == 0 && i->second.m_pos.getNumerator() == 0 && i->second.duration.getNumerator() == 0)
 			continue;
+
+		// check we want to write this measure
+		bool bad = write_measures.empty() ? false : true;
+		for (vector<int>::const_iterator v = write_measures.begin(); v != write_measures.end(); v++) {
+			if (*v == i->second.nMeasure)
+				bad = false;
+		}
+		if (bad) continue;
+
 		// display measure comment
 		if (cur_meas != i->second.nMeasure) {
 			bNewMeasure = true;
 			cur_meas = i->second.nMeasure;
-
-			// check we want to write this measure
-			bool bad = write_measures.empty() ? false : true;
-			for (vector<int>::const_iterator v = write_measures.begin(); v != write_measures.end(); v++) {
-				if (*v == cur_meas)
-					bad = false;
-			}
-			if (bad) continue;
-
 			out << endl << "; ----------- measure " << cur_meas << " --- beat " << i->first.getNumerator();
 			if (i->first.getDenominator() != 1)
 				out << "/" << i->first.getDenominator()<< " ------";

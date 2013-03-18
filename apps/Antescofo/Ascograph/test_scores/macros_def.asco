@@ -1,0 +1,130 @@
+; additive_macros.asco macros and functions
+
+; This is an example file for the new MACRO and FUNCTION definition features in Antescofo.
+; The purpose of this example is to demonstrate these features!
+;		!!!NOTE!!!  Macros and Functions are "in progress" and "experimental" features of
+;					Antescofo! Use them with care and report problems to cont@ircam.fr
+
+; ******************** FUNCTIONS IN ANTESCOFO **************************
+; A function is a mathematical expression that is evaluted in REALTIME.
+; It can be defined such the following example. 
+
+; The function defined below uses the internal variable RT_TEMPO, the  tempo
+; decoded by Antescofo in real-time. So this function evalutes beat values to seconds in realtime.
+; Mathematical functions that are available are limited to all available functions in standard C!
+@FUN_DEF beat2sec($X) {
+	$X*60.0/$RT_TEMPO
+}
+
+; second to beat
+@FUN_DEF s2b(X) {
+	$RT_TEMPO*$X/60.
+}
+
+; millisecond to beat
+@FUN_DEF ms2b($X) {
+	$RT_TEMPO*$X/60000.
+}
+
+@FUN_DEF b2s($X) {
+	$X*60.0/$RT_TEMPO
+}
+
+@FUN_DEF beat2msec($X) {
+	1000*$X*60.0/$RT_TEMPO
+}
+
+@FUN_DEF b2ms($X) {
+	1000*$X*60.0/$RT_TEMPO
+}
+
+/*
+@FUN_DEF bpm($X) {
+	1000*$X*60.0/$RT_TEMPO
+}
+*/
+
+@FUN_DEF b($X) {
+	1000*$X*60.0/$RT_TEMPO
+}
+
+@FUN_DEF B($X) {
+	1000*$X*60.0/$RT_TEMPO
+}
+
+/*
+@FUN_DEF tempo($BIDON) {
+	$RT_TEMPO
+}
+*/
+
+; ******************** MACROS IN ANTESCOFO **************************
+; In contrast to Functions, MACROs are series of command that are evaluted during parse-time.
+; The role of Macros is to make writing of motifs or motif-like commands that appear repeatedly in
+; the score easier. They can be given arguments, making them modular.
+; You can use Functions within Macros. Or for simple math operations, you can put them within expr{...}.
+; Once a macro is called within the main score, its messages are evaluted by the given arguments and 
+; results are simply replaced at the place of the call.
+
+; The following Macros are helper mathematical expressions to calculate various parameters for the
+; incoming additive synthesis modules. Note that since they are Macros (and not functions), they area
+; replaced/evaluted inline and during score parsing.
+; The "expr{...}" is a way to evalute mathematical expressions in Macros. "expr{}" is ONLY allowed in
+; Macros and evaluted immediately upon parsing. Note that here they will be used to calculate static
+; values in messages. If they had to depend on a dynamic value (like tempo) they would've been defined 
+; as macros.
+;		!!!NOTE!!!  expressions are ONLY allowed (for now) within macros.
+@MACRO_DEF exp_gain($X)
+{
+	exp(-0.2*$X)
+}
+
+; A classic midi to hz convertor
+@MACRO_DEF midi2hz($X)
+{
+	440.0 * exp(($X-69) * log(2) / 12 )
+}
+
+; voix,note,velocité,durée en beat,volume start,volume end, expression start, expression end, pour cent
+@MACRO_DEF cresc($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT) 
+{	
+	GFWD cresc_VOIX_NOTE ; cresc_VOIX 
+	{
+	syn_voices $VOIX	vol 1 expr 1 ; initial volume and vibrato bug
+	0.02s syn_voices $VOIX	vol $VOL1 expr $EXPR1 ; initial volume and vibrato
+	syn_voices $VOIX	$NOTE $VEL @b($DUR) ; play note
+	syn_voices $VOIX	vol VOL1
+	; print   wait percent of beat before crescendo
+	;expr{0.01*$PCENT*$DUR} syn_voices $VOIX	vol $VOL2 @b(expr{ 0.01*(100-$PCENT)*$DUR}) expr $EXPR2 @b(expr{0.01*(100-$PCENT)*$DUR})
+	(0.01*$PCENT*$DUR) syn_voices $VOIX	vol $VOL2 @b(0.01*(100- $PCENT)*$DUR) expr $EXPR2 @b(0.01*(100- $PCENT)*$DUR)
+	}
+}
+
+@MACRO_DEF cresc2($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT) 
+{	
+	GFWD cresc_VOIX_NOTE ; nom dynamique !! cresc_VOIX 
+	{
+	syn_voices $VOIX	vol 1 expr 1 ; initial volume and vibrato bug
+	0.02s syn_voices $VOIX	vol $VOL1 expr $EXPR1 ; initial volume and vibrato
+	syn_voices $VOIX	$NOTE $VEL @b($DUR) ; play note
+	syn_voices $VOIX	vol $VOL1
+	; print   wait percent of beat before crescendo
+	(0.01*$PCENT*$DUR) syn_voices $VOIX	vol $VOL2 @b( 0.01*(100- $PCENT)*$DUR) expr $EXPR2 @b(0.01*(100- $PCENT)*$DUR)
+	}
+}
+
+@MACRO_DEF Bcresc($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT)
+{
+	GFWD Bcresc_VOIX
+	{
+	 Bsyn_voices $VOIX	vol 1 expr 1 ; initial volume and vibrato bug
+	 0.02s Bsyn_voices $VOIX	vol $VOL1 expr $EXPR1 ; initial volume and vibrato-expression
+	 Bsyn_voices $VOIX	$NOTE $VEL @b($DUR)	; play note
+	 Bsyn_voices $VOIX	vol $VOL1 
+	 ;   wait percent of beat before crescendo
+	 (0.01*$PCENT*$DUR)  Bsyn_voices $VOIX	vol $VOL2 @b(100- 53) //0.01*(100-$PCENT)) //)*$DUR) ; expr $EXPR2 @b(0.01*(100-$PCENT)*$DUR) 
+	}
+}
+
+
+

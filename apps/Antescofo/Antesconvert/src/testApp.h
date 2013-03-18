@@ -31,6 +31,7 @@
 #define TEXT_CONSTANT_BUTTON_CONVERT            "Convert"
 #define TEXT_CONSTANT_BUTTON_QUIT               "Quit"
 #define TEXT_CONSTANT_TEXTINPUT_MEASURES				"measures:"
+#define TEXT_CONSTANT_TOGGLE_NOTENAME						"Convert midicents to note names."
 #define TEXT_CONSTANT_PARSE_ERROR               " /!\\ Score parsing error /!\\  "
 #define TEXT_CONSTANT_BUTTON_CANCEL             "Cancel"
 #define TEXT_CONSTANT_TEMP_FILENAME             "/tmp/tmpfile-antescofog.txt"

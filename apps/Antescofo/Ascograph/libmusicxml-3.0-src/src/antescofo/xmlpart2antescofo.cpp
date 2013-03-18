@@ -194,16 +194,24 @@ void xmlpart2antescofo::visitStart ( S_backup& elt )
     fInBackup = true;
 	stackClean();	// closes pending chords, cue and grace
 	int duration = elt->getIntValue(k_duration, 0);
-    cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat.toFloat() << endl;
+  cout << "BACKUP ----------------< " << duration <<  " fCurBeat:" << fCurBeat.toFloat() << endl;
 
 	if (duration) {
 		// backup is supposed to be used only for moving between voices
 		// thus we don't move the voice time (which is supposed to be 0)
+
+    bool scanElement = (elt->getIntValue(k_voice, 0) == fTargetVoice) && (elt->getIntValue(k_staff, 0) == fTargetStaff);
 		moveMeasureTime (rational(-duration), false);
-		//fCurBeat -= noteDuration(*this); 
-		//fCurBeat -= rational(duration, fCurrentDivision);
+		if (scanElement) 
+		{
+			//fCurBeat -= rational(duration, fCurrentDivision);
+			cout << "BACKUP -----> going back of "<<noteDuration(*this).toFloat() << endl;
+			fCurBeat -= noteDuration(*this); 
+			cout << "BACKUP ---------------- fCurBeat:" << fCurBeat.toFloat() << endl;
+			if (fCurBeat.toFloat() <= 0)
+				fCurBeat = rational(1);
+		}
   }
-  cout << "BACKUP----------------< " << duration <<  " fCurBeat:" << fCurBeat.toFloat() << endl;
 }
 
 //______________________________________________________________________________
@@ -213,7 +221,9 @@ void xmlpart2antescofo::visitStart ( S_forward& elt )
     bool scanElement = (elt->getIntValue(k_voice, 0) == fTargetVoice)
         && (elt->getIntValue(k_staff, 0) == fTargetStaff);
     int duration = elt->getIntValue(k_duration, 0);
-    cout << "FORWARD("<<scanElement<<") ----------------> " << duration << endl;
+    cout << "FORWARD("<<scanElement<<") ----------------> " << rational(duration, fCurrentDivision).toFloat() << endl;
+
+			//noteDuration(*this).toFloat() /*duration*/ << endl;
     if (fCurBeat.toFloat() == 1 && fMeasNum > 1)
         moveMeasureTime(rational(duration), true);
     else 
@@ -226,15 +236,17 @@ void xmlpart2antescofo::visitStart ( S_forward& elt )
         r.rationalise();
         //antescofonoteduration dur (r.getNumerator(), r.getDenominator());
         //Santescofoelement note = antescofonote::create(fTargetVoice, "empty", 0, dur, "");
-				cout << "forward: not adding rest, maybe wrong?" << endl;
+				cout << "forward: adding rest, maybe wrong?" << endl;
         w.AddNote(ANTESCOFO_REST, 0, r, fMeasNum, fCurBeat, 0);
         //add (note);
         fMeasureEmpty = false;
     }
 		
-		if (scanElement)
-		  //fCurBeat += rational(duration, fCurrentDivision);
-		  fCurBeat += noteDuration(*this);//rational(duration, fCurrentDivision);
+		if (scanElement) {
+		  fCurBeat += rational(duration, fCurrentDivision);
+			fCurBeat.rationalise();
+		}
+		  //fCurBeat += noteDuration(*this);//rational(duration, fCurrentDivision);
 
 }
 
@@ -1058,8 +1070,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
     if (fRepeatForward)     flag = ANTESCOFO_FLAG_REPEAT_FORWARD;
     if (fRepeatBackward)    flag = ANTESCOFO_FLAG_REPEAT_BACKWARD;
 
-    if (!checkWriteMeasure())
-        return;
+    //if (!checkWriteMeasure()) return;
 
     // check we want to convert this staff
     bool badstaff = w.write_staves.empty() ? false : true;
@@ -1075,6 +1086,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
         return;
     }
 
+		assert(fCurBeat.toFloat() > 0);
 		fCurBeat.rationalise();
     if (nv.inChord() && !fTrill && !fGlissandoStart && !fGlissandoStop) {
 				cout << "newNote: isInChord so removing "<< fLastDur.toFloat() << " to curBeat: " << fCurBeat.toFloat() << endl;
