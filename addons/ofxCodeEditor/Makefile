@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/local/Cellar/cmake/2.8.9/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor/cmake
+CMAKE_SOURCE_DIR = /Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor/cmake
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor
+CMAKE_BINARY_DIR = /Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -72,9 +72,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor/CMakeFiles /Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor/CMakeFiles /Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -114,1541 +114,1541 @@ ofxCodeEditorExample/fast:
 	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/build
 .PHONY : ofxCodeEditorExample/fast
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.o: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.o: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.o
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.i: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.i: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.i
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.s: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.s: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.mm.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.mm.s
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.o: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.o: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.o
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.i: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.i: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.i
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.s: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.s: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.mm.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.mm.s
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.o: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.o: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.o
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.i: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.i: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.i
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.s: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.s: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.mm.s
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.o: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.o: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.o
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.i: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.i: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.i
 
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.s: Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.s: Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s
+Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.mm.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.mm.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.mm.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.m.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.mm.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.mm.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.cpp.s
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.o: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.o: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.o
 
 # target to build an object file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.o:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.o
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.o
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.o
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.o
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.i: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.i: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.i
 
 # target to preprocess a source file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.i:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.i
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.i
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.i
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.i
 
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.s: Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.s: Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.s
 
 # target to generate assembly for a file
-Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.s:
-	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.s
-.PHONY : Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.cpp.s
+Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.s
+.PHONY : Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.cpp.s
 
 example/main.o: example/main.mm.o
 .PHONY : example/main.o
@@ -2009,6 +2009,30 @@ src/scintilla/lexers/LexAda.s: src/scintilla/lexers/LexAda.cxx.s
 src/scintilla/lexers/LexAda.cxx.s:
 	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/src/scintilla/lexers/LexAda.cxx.s
 .PHONY : src/scintilla/lexers/LexAda.cxx.s
+
+src/scintilla/lexers/LexAntescofo.o: src/scintilla/lexers/LexAntescofo.cxx.o
+.PHONY : src/scintilla/lexers/LexAntescofo.o
+
+# target to build an object file
+src/scintilla/lexers/LexAntescofo.cxx.o:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/src/scintilla/lexers/LexAntescofo.cxx.o
+.PHONY : src/scintilla/lexers/LexAntescofo.cxx.o
+
+src/scintilla/lexers/LexAntescofo.i: src/scintilla/lexers/LexAntescofo.cxx.i
+.PHONY : src/scintilla/lexers/LexAntescofo.i
+
+# target to preprocess a source file
+src/scintilla/lexers/LexAntescofo.cxx.i:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/src/scintilla/lexers/LexAntescofo.cxx.i
+.PHONY : src/scintilla/lexers/LexAntescofo.cxx.i
+
+src/scintilla/lexers/LexAntescofo.s: src/scintilla/lexers/LexAntescofo.cxx.s
+.PHONY : src/scintilla/lexers/LexAntescofo.s
+
+# target to generate assembly for a file
+src/scintilla/lexers/LexAntescofo.cxx.s:
+	$(MAKE) -f CMakeFiles/ofxCodeEditorExample.dir/build.make CMakeFiles/ofxCodeEditorExample.dir/src/scintilla/lexers/LexAntescofo.cxx.s
+.PHONY : src/scintilla/lexers/LexAntescofo.cxx.s
 
 src/scintilla/lexers/LexAsm.o: src/scintilla/lexers/LexAsm.cxx.o
 .PHONY : src/scintilla/lexers/LexAsm.o
@@ -4707,198 +4731,198 @@ help:
 	@echo "... edit_cache"
 	@echo "... ofxCodeEditorExample"
 	@echo "... rebuild_cache"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.o"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.i"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLView.s"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.o"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.i"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/GLWindow.s"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.o"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.i"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaDelegate.s"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.o"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.i"
-	@echo "... Volumes/Data/Coffy/git/fog/addons/ofxCocoaWindow/src/ofxCocoaWindow.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/of3dUtils.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofCamera.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofEasyCam.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofMesh.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/3d/ofNode.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppGlutWindow.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/app/ofAppRunner.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofArduino.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/communication/ofSerial.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/events/ofEvents.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofFbo.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofGLRenderer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofLight.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofMaterial.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofShader.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofTexture.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVbo.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/gl/ofVboMesh.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofBitmapFont.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofCairoRenderer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofGraphics.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofImage.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPath.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPixels.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofPolyline.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTessellator.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/graphics/ofTrueTypeFont.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMath.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix3x3.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofMatrix4x4.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofQuaternion.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec2f.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/math/ofVec4f.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundPlayer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofBaseSoundStream.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofFmodSoundPlayer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofOpenALSoundPlayer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofPASoundStream.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofRtAudioSoundStream.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundPlayer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/sound/ofSoundStream.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofBaseTypes.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofColor.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofPoint.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/types/ofRectangle.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofFileUtils.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofLog.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofSystemUtils.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofThread.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofURLFileLoader.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/utils/ofUtils.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofDirectShowGrabber.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitGrabber.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitMovieRenderer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQTKitPlayer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQtUtils.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimeGrabber.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofQuickTimePlayer.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoGrabber.s"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.o"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.i"
-	@echo "... Volumes/Data/Coffy/git/fog/libs/openFrameworks/video/ofVideoPlayer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLView.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/GLWindow.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaDelegate.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/addons/ofxCocoaWindow/src/ofxCocoaWindow.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/of3dUtils.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofCamera.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofEasyCam.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofMesh.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/3d/ofNode.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppGlutWindow.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/app/ofAppRunner.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofArduino.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/communication/ofSerial.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/events/ofEvents.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofFbo.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofGLRenderer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofLight.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofMaterial.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofShader.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofTexture.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVbo.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/gl/ofVboMesh.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofBitmapFont.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofCairoRenderer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofGraphics.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofImage.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPath.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPixels.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofPolyline.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTessellator.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/graphics/ofTrueTypeFont.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMath.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix3x3.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofMatrix4x4.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofQuaternion.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec2f.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/math/ofVec4f.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundPlayer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofBaseSoundStream.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofFmodSoundPlayer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofOpenALSoundPlayer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofPASoundStream.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofRtAudioSoundStream.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundPlayer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/sound/ofSoundStream.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofBaseTypes.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofColor.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofPoint.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/types/ofRectangle.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofFileUtils.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofLog.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofSystemUtils.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofThread.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofURLFileLoader.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/utils/ofUtils.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofDirectShowGrabber.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitGrabber.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitMovieRenderer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQTKitPlayer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQtUtils.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimeGrabber.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofQuickTimePlayer.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoGrabber.s"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.o"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.i"
+	@echo "... Volumes/Data/Coffy/git/ascograph/libs/openFrameworks/video/ofVideoPlayer.s"
 	@echo "... example/main.o"
 	@echo "... example/main.i"
 	@echo "... example/main.s"
@@ -4944,6 +4968,9 @@ help:
 	@echo "... src/scintilla/lexers/LexAda.o"
 	@echo "... src/scintilla/lexers/LexAda.i"
 	@echo "... src/scintilla/lexers/LexAda.s"
+	@echo "... src/scintilla/lexers/LexAntescofo.o"
+	@echo "... src/scintilla/lexers/LexAntescofo.i"
+	@echo "... src/scintilla/lexers/LexAntescofo.s"
 	@echo "... src/scintilla/lexers/LexAsm.o"
 	@echo "... src/scintilla/lexers/LexAsm.i"
 	@echo "... src/scintilla/lexers/LexAsm.s"

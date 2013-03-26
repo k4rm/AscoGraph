@@ -1,4 +1,4 @@
-# Install script for directory: /Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor/cmake
+# Install script for directory: /Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor/cmake
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,7 +33,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/Volumes/Data/Coffy/git/fog/addons/ofxCodeEditor/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/Volumes/Data/Coffy/git/ascograph/addons/ofxCodeEditor/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

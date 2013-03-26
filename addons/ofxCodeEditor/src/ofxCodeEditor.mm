@@ -3,16 +3,6 @@
 #import "ScintillaView.h"
 #import "ScintillaCocoa.h"
 #import "InfoBar.h"
-const char *procedure_keywords[] = { "GFWD", "" } ;//, "LFWD", "CFWD"};
-
-const char client_keywords[] = 
-""
-
-;
-
-const char user_keywords[] = 
-""
-;
 
 static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
@@ -36,10 +26,6 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 }
 
 
-
-
-
-//void ofxCodeEditor::setup(NSWindow* window, NSView* glview, ofRectangle& rect) {
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect {
 	NSLog(@"ofxCodeEditor: setup: %.1f, %.1f : %.1fx%.1f", rect.x, rect.y, rect.width, rect.height);
 	NSRect r;
@@ -62,17 +48,12 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	//[mEditor setHasVerticalScroller:YES];
 	//[mEditor setHasHorizontalScroller:NO];
 	[mEditor setAutoresizingMask:NSViewWidthSizable];
-	//[mEditor setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 	[glview setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 
 
 	NSRect s;
-	//s = [ [window contentView] frame]; s.size.width -= 400; [ [window contentView] setFrame:s];
-	//[glview addSubview:scrollview ];//positioned:NSWindowBelow relativeTo:nil];
-	//[glview frame].size.width -= 300; [glview bounds:].size.width -= 300;
 	[window setContentView:nil];
-	s = [glview frame]; s.size.width -= rect.width/*400*/; [ glview setFrame:s];
-	//s = [glview bounds];s.size.width -= 400; [ glview setBounds:s];
+	s = [glview frame]; s.size.width -= rect.width; [ glview setFrame:s];
 
 
 	s = [glview bounds];
@@ -80,7 +61,6 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	s = [glview frame];
 	NSLog(@"ofxEditor: setup: GLView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 	s = [mEditor bounds];
-	// NSRect f(s); f.origin.x = 500; [mEditor setFrame:f];
 	NSLog(@"ofxEditor: setup: ScintillaView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 	s = [mEditor frame];
 	NSLog(@"ofxEditor: setup: ScintillaView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
@@ -92,7 +72,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	NSLog(@"ofxEditor: setup: window frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 
 
-	/*NSSplitView **/splitView = [[NSSplitView alloc] initWithFrame:[[window contentView] frame]];
+	splitView = [[NSSplitView alloc] initWithFrame:[[window contentView] frame]];
 	SplitViewDelegate *splitViewDelegate = [[SplitViewDelegate alloc] init];
 	[splitView setVertical:true];
 
@@ -109,8 +89,6 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	s = [splitView bounds];
 	NSLog(@"ofxEditor: setup: splitView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 
-	//[[window contentView] addSubview:splitView];
-	//[window setContentView:glview];
 	NSLog(@"ofxEditor: setup: splitviews subviews count %d, setting splitview to window contentView", [[splitView subviews] count]);
 	[window setContentView:splitView];
 	NSLog(@"ofxEditor: setup: window subviews count %d", [[[window contentView] subviews] count]);
@@ -121,18 +99,14 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
 
+
 /**
  * Initialize scintilla editor (styles, colors, markers, folding etc.].
  */
-//void ofxCodeEditor::setupEditor()
 - (void) setupEditor
 {  
 	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: 0];
 	// alternatively: [mEditor setEditorProperty: SCI_SETLEXERLANGUAGE parameter: nil value: (sptr_t) "mysql"];
-
-  //[mEditor RegisterNotifyCallback(intptr_t windowid, SciNotifyFunc callback);
-	//mEditor.RegisterNotifyCallback(, );
-
 
 	// Number of styles we use with this lexer.
 	[mEditor setGeneralProperty: SCI_SETSTYLEBITS value: [mEditor getGeneralProperty: SCI_GETSTYLEBITSNEEDED]];
@@ -281,10 +255,10 @@ static const char * box_xpm[] = {
 	".   .   ..  ",
 	".........   "};
 
-
+/*
 - (void) showAutocompletion
 {
-	const char *words = "NOTE CHORD TRILL BPM MULTI CFWD LFWD GFWD";
+	const char *words = normal_keywords;
 	[mEditor setGeneralProperty: SCI_AUTOCSETIGNORECASE parameter: 1 value:0];
 	[mEditor setGeneralProperty: SCI_REGISTERIMAGE parameter: 1 value:(sptr_t)box_xpm];
 	const int imSize = 12;
@@ -303,11 +277,11 @@ static const char * box_xpm[] = {
 	[mEditor setGeneralProperty: SCI_REGISTERRGBAIMAGE parameter: 2 value:(sptr_t)image];
 	[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter: 0 value:(sptr_t)words];
 }
+*/
 
 
 - (void) searchText: (string) str
 {
-	//NSSearchField* searchField = (NSSearchField*) sender;
 	NSString *text = [NSString stringWithUTF8String:str.c_str() ];
 	[mEditor findAndHighlightText: text
 		matchCase: NO
@@ -371,16 +345,11 @@ static const char * box_xpm[] = {
 	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:0];
 	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:linea];
 
-	//[mEditor setGeneralProperty: SCI_SETSEL parameter:lineb value: linea];
 	[mEditor setGeneralProperty: SCI_CLEARSELECTIONS value:0];
 
 	[mEditor setGeneralProperty: SCI_SETSEL 
 		parameter: [mEditor getGeneralProperty: SCI_FINDCOLUMN parameter:lineb]
 		value: [mEditor getGeneralProperty: SCI_FINDCOLUMN parameter:linea]];
-
-	//[mEditor setGeneralProperty: SCI_SETSELECTIONSTART value: [mEditor getGeneralProperty: SCI_POSITIONFROMLINE parameter:linea]];
-	//[mEditor setGeneralProperty: SCI_SETSELECTIONEND value:(lineb-linea)];
-
 }
 
 - (int) getNbLines
@@ -411,48 +380,11 @@ static const char * box_xpm[] = {
 }
 
 @end
-/* 
-   void ofxCodeEditor::crossFadeWithOld(NSWindow* window, NSView *oldView, NSView* newView)
-   {
-//[window setContentView:newView];
-[window setContentView:oldView];
 
-NSDictionary *oldFadeOut = nil;
-if (oldView != nil) {
-oldFadeOut = [NSDictionary dictionaryWithObjectsAndKeys:
-oldView, NSViewAnimationTargetKey,
-NSViewAnimationFadeOutEffect,
-NSViewAnimationEffectKey, nil];
-}
-NSDictionary *newFadeIn;
-newFadeIn = [NSDictionary dictionaryWithObjectsAndKeys:
-newView, NSViewAnimationTargetKey,
-NSViewAnimationFadeInEffect,
-NSViewAnimationEffectKey, nil];
-
-NSArray *animations;
-animations = [NSArray arrayWithObjects:
-newFadeIn, oldFadeOut, nil];
-
-NSViewAnimation *animation;
-animation = [[NSViewAnimation alloc]
-initWithViewAnimations: animations];
-
-[animation setAnimationBlockingMode: NSAnimationBlocking];
-[animation setDuration: 0.5]; // or however long you want it for
-
-[animation startAnimation]; // because it's blocking, once it returns, we're done
-
-[animation release];    
-
-}
-*/
 
 @implementation SplitViewDelegate
 
 #define kMinOutlineViewSplit    120.0f
-
-//- (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)subview { return NO; }
 
 // -------------------------------------------------------------------------------
 //  splitView:constrainMinCoordinate:
@@ -461,7 +393,6 @@ initWithViewAnimations: animations];
 // -------------------------------------------------------------------------------
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedCoordinate ofSubviewAt:(int)index
 {
-	//NSLog(@"constrainMinCoordinate");
 	return proposedCoordinate + kMinOutlineViewSplit;
 }
 
@@ -470,7 +401,6 @@ initWithViewAnimations: animations];
 // -------------------------------------------------------------------------------
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedCoordinate ofSubviewAt:(int)index
 {
-	//NSLog(@"constrainMaxCoordinate");
 	return proposedCoordinate - kMinOutlineViewSplit;
 }
 

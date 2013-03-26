@@ -16,10 +16,8 @@
     NSView*		mGLview;
     NSWindow*		mWindow;
     ScintillaView*	mEditor;
-		const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords;
+    const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords, *client_keywords, *user_keywords;
 };
-
-//- (void) setColorProperty: (int) property parameter: (long) parameter fromHTML: (NSString*) fromHTML;
 
 
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect;
@@ -29,10 +27,9 @@
 - (void) scrollLine: (int) line;
 - (int) getNbLines;
 - (int) getLenght;
-- (void) showAutocompletion;
+//- (void) showAutocompletion;
 - (void) loadFile: (string) filename;
 - (void) getEditorContent: (string&) content;
-//- (void) crossFadeWithOld(NSWindow* window, NSView *oldView, NSView* newView);
 - (void) searchText:(string) str;
 - (void) set_normal_keywords: (const char*)normal_keywords_;
 - (void) set_major_keywords: (const char*)major_keywords_;
@@ -45,13 +42,3 @@
 {
 }
 @end
-/*
-@property (retain) NSTextStorage *textStorage;
-@property (retain) NSLayoutManager *layoutManager;
-@property (retain) NSTextContainer *textContainer;
-
-
-
-- (void) setup;
-- (void) die;*/
-

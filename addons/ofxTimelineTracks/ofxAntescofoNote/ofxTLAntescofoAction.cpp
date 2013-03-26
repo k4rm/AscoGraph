@@ -318,7 +318,7 @@ void ofxTLAntescofoAction::update()
 // for updating subgroups
 int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 {
-	cout << "update_sub: " << ag->header->realtitle << endl;
+	cout << "update_sub: " << ag->header->title << endl;
 	int toth = 0, curh = 0; // find max h
 	list<ActionGroup*>::const_iterator g;
 	int cury = ag->header->rect.y;
@@ -329,9 +329,12 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 			m->x = ag->header->rect.x;
 			if (m->delay)
 				m->x += normalizedXtoScreenX( timeline->beatToNormalizedX(m->delay), zoomBounds);
-			m->y = cury;
 			cury += ag->header->LINE_HEIGHT;
-			//cout << "________________ x:"<< m->x << " y:" << m->y <<  "cury:" << cury << endl;
+			m->y = cury;
+			curh += ag->header->LINE_HEIGHT;
+			toth += curh;
+			cout << "________________ x:"<< m->x << " y:" << m->y <<  "cury:" << cury << endl;
+			cout << "update_sub: in msg: y=" << m->y << endl;
 		}
 		ActionGroup *gr;
 		if ((gr = dynamic_cast<ActionGroup*>(*g))) {
@@ -340,23 +343,22 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 				if (gr->header->delay)
 					gr->header->rect.x += normalizedXtoScreenX( timeline->beatToNormalizedX(gr->header->delay), zoomBounds);
 				cout << "update_sub: cury:" << cury << " recty:" << ag->header->rect.y << endl;
-				gr->header->rect.y = cury;
+				gr->header->rect.y = ag->header->rect.y; //cury;
 				//cury += ag->header->LINE_HEIGHT;
 			}
+			curh = update_sub(*g);
 		}
-		curh = update_sub(*g);
 		ag->header->rect.height = curh;
-		//if (curh > toth)
-		toth += curh;
+		if (curh > toth)
+			toth += curh;
 	}
 	//cout << "update sub: toth="<<toth << endl;
 	cout << "update_sub: return " << toth << endl;
 	if (ag->header->hidden) return ag->header->HEADER_HEIGHT;
 	if (!toth) { // leaf elmt -> message
-		if (!ag->header->top_level_group)
-			return ag->header->LINE_HEIGHT;
-		else
-			return 0;
+		//if (!ag->header->top_level_group)
+			return ag->header->HEADER_HEIGHT; //ag->header->LINE_HEIGHT;
+		//else return 0;
 	}
 	
 	return toth;
@@ -374,7 +376,7 @@ void ofxTLAntescofoAction::update_groups()
 		else
 			(*i)->rect.width = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->duration), zoomBounds );
 		if (!(*i)->hidden && (*i)->group) {
-			(*i)->rect.height = (*i)->HEADER_HEIGHT + update_sub((*i)->group);
+			(*i)->rect.height = update_sub((*i)->group);
 		}
 	}
 
@@ -463,7 +465,7 @@ bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionG
 	if (header->rect.inside(args.x, args.y)) {
 		if (header->hidden) {
 			header->hidden = false;
-			cout << "mousePressed: setting action '"<< header->realtitle <<"' hidden:"<< header->hidden << endl;
+			cout << "mousePressed: setting action '"<< header->title <<"' hidden:"<< header->hidden << endl;
 			if (header->group) {
 				Event *e = header->group->event;
 				mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
@@ -487,15 +489,18 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	bool res = false;
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		//if ((*i)->header) {
-			if (mousePressed_In_Arrow(args, *i))
+			if (!(*i)->top_level_group && mousePressed_In_Arrow(args, *i)) {
 				res = true;
-			else if ((*i)->group) { // look for subgroups
+				return res;
+			} else if ((*i)->group) { // look for subgroups
 
 				ActionGroup *a = (*i)->group;
 				if (a->sons.size()) {
 					for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
-						if ((*j)->header &&  mousePressed_In_Arrow(args, (*j)->header))
+						if ((*j)->header &&  mousePressed_In_Arrow(args, (*j)->header)) {
 							res = true;
+							return res;
+						}
 					}
 				}
 			}
@@ -616,7 +621,7 @@ void ActionMessage::print() {
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	cout << "Action message: DRAWING: " << action << " x:" << header->rect.x << " y:" << header->rect.y << endl;
 	//rect.width = sizec * c.size(); // TODO limiter la largeur en fct du suivant
-	tlAction->mFont.drawString(action, x, y + 15);
+	tlAction->mFont.drawString(action, x, y + header->LINE_HEIGHT);
 	//ofRect(rect);
 }
 
@@ -624,17 +629,17 @@ void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 ActionGroupHeader::ActionGroupHeader(float beatnum_, Action* a_, Event *e_) 
 	: beatnum(beatnum_), action(a_), event(e_), top_level_group(false), duration(0),
 	hidden(true), delay(0),
-	HEADER_HEIGHT(14), ARROW_LEN(15), LINE_HEIGHT(12), LINE_SPACE(12)
+	HEADER_HEIGHT(16), ARROW_LEN(15), LINE_HEIGHT(15), LINE_SPACE(12)
 {
 	if (action) {
 		string lab = action->label();
 		cout << "ActionGroupHeader: adding : " << lab << endl;
 		if (lab.size() && strncmp(lab.c_str(), "top_gfwd_", 9) == 0) {
-			title = action->label();
+			realtitle = action->label();
 			top_level_group = true;
 			hidden = false;
 		}
-		realtitle = action->label();
+		title = action->label();
 		rect.height = HEADER_HEIGHT;
 
 
@@ -676,7 +681,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 				ofNoFill();
 				ofSetColor(0, 0, 0, 255);
 				drawArrow(); // arrow
-				tlAction->mFont.drawString(realtitle, rect.x, rect.y + LINE_HEIGHT);
+				tlAction->mFont.drawString(title, rect.x, rect.y + LINE_HEIGHT);
 			}
 			cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
 			list<ActionGroup*>::const_iterator i;
@@ -697,7 +702,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		ofNoFill();
 		ofSetColor(0, 0, 0, 255);
 		drawArrow(); // arrow
-		tlAction->mFont.drawString(realtitle, rect.x, rect.y + LINE_HEIGHT);
+		tlAction->mFont.drawString(title, rect.x, rect.y + LINE_HEIGHT);
 		cout << "ActionGroupHeader.draw hidden: ("<<rect.x<<","<<rect.y<<") : " << title << endl;
 	}
 }
@@ -708,7 +713,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
    3
    */
 void ActionGroupHeader::drawArrow() {
-	//cout << "ActionRects.draw arrow ("<<rect.x<<","<<rect.y<<") : hidden:" << hidden << endl; 
+	cout << "ActionRects.draw arrow " << title << " ("<<rect.x<<","<<rect.y<<") : hidden:" << hidden << endl; 
 	ofFill();
 	int xlen = ARROW_LEN;
 	int space = 3;
@@ -758,7 +763,7 @@ void ActionGroupHeader::print() {
 
 bool ActionGroupHeader::is_in_arrow(int x, int y)
 {
-	cout << "is in arrow: " << x << " " << y << endl;
+	//cout << "is in arrow: " << x << " " << y << endl;
 	bool res = false;
 	if (x > rect.x + rect.width - ARROW_LEN && y < rect.y + HEADER_HEIGHT)
 		res = true;

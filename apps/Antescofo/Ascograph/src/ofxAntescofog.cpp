@@ -561,7 +561,7 @@ void ofxAntescofog::update() {
         mOSCreceiver.getNextMessage( &m );
         cout << "OSC received: '" << m.getAddress() <<" ";// << "' args:"<<m.getNumArgs()<< endl;
         for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
-		if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+	if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 			mOsc_tempo = m.getArgAsFloat(0);
             cout << "OSC received: tempo: "<< mOsc_tempo << endl;
             bpm = mOsc_tempo;
