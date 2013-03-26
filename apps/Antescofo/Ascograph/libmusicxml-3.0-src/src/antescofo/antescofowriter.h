@@ -22,9 +22,6 @@ using namespace std;
 namespace MusicXML2
 {
 
-
-
-// ----------
 // measure_elt_types
 #   define ANTESCOFO_REST           0
 #   define ANTESCOFO_CHORD          1
@@ -38,7 +35,7 @@ namespace MusicXML2
 #   define ANTESCOFO_FLAG_TIED_END          2
 #   define ANTESCOFO_FLAG_GLISSANDO_START   3
 #   define ANTESCOFO_FLAG_GLISSANDO_STOP    4
-#   define ANTESCOFO_FLAG_FERMATA			5
+#   define ANTESCOFO_FLAG_FERMATA	    5
 #   define ANTESCOFO_FLAG_REPEAT_BACKWARD   6
 #   define ANTESCOFO_FLAG_REPEAT_FORWARD    7
 
@@ -46,20 +43,21 @@ namespace MusicXML2
 class measure_elt {
 	public:
 		measure_elt() : bFermata(false), bpm(""), nMeasure(0), m_pos(rational(0)), type(0) { pitches.reserve(12); }
-		int 				type;
-		rational 			duration;
-		vector<int>         pitches;
-		vector<int>         grace_pitches;
-		int					nMeasure; // measure number
+		int 			type;
+		rational 		duration;
+		vector<int>		pitches;
+		vector<int>		grace_pitches;
+		int			nMeasure; // measure number
 		rational		m_pos; // position in part, in beats unit
-		int                 flags; // handles tied notes..
+		int                 	flags; // handles tied notes..
+		string			bpm;
+		string  		rehearsal;
+		bool			bFermata;
+		string			jump_dests;
+
 		bool operator<(const measure_elt& rhs) const { return (m_pos < rhs.m_pos); }
 		bool operator==(const measure_elt& rhs) { return (m_pos == rhs.m_pos); }
 		bool operator==(rational pos) { return (m_pos == pos); }
-		string              bpm;
-        string  rehearsal;
-		bool bFermata;
-        string jump_dests;
 };
 
 

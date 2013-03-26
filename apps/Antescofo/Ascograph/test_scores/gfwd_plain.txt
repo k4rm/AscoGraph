@@ -1,5 +1,5 @@
 BPM 60
-
+NOTE A4 4
 NOTE C4 8.0
 GFWD testgroup 
 {
