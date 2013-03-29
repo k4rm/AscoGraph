@@ -49,6 +49,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		virtual void update();
 		void update_groups();
 		int update_sub(ActionGroup *ag);
+		float update_sub_duration(ActionGroup *ag);
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
@@ -97,9 +98,9 @@ class ActionGroup {
 		ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_);
 		ActionGroup() {}
 		
-		virtual ~ActionGroup() {}
+		virtual ~ActionGroup();
 
-		float get_delay(Action* tmpa);
+		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 
@@ -107,6 +108,7 @@ class ActionGroup {
 		ActionGroupHeader *header;
 		Gfwd *gfwd;
 		Event *event;
+		string trackName;
 };
 
 
@@ -118,28 +120,47 @@ class ActionMessage : public ActionGroup {
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		string action;
-		float delay;
+		double delay;
 		int x, y;
 };
+
+class ActionCurve : public ActionGroup {
+	public:
+		ActionCurve(Cfwd *c, Event *e, ActionGroupHeader* header_);
+		virtual ~ActionCurve();
+
+		virtual void draw(ofxTLAntescofoAction *tlAction) {}
+		virtual void print() {}
+		string action;
+		double delay;
+
+		string label;
+		double grain;
+		string symb;
+		vector< vector<double> > values;
+		//std::vector<double> values; 
+		vector<double> delays;
+};
+
 
 class ActionGroupHeader {
 	public:
 		ActionGroupHeader(float beatnum_, Action* a_, Event *e_);
-		~ActionGroupHeader() {}
+		~ActionGroupHeader();
 
 		// display
 		ofColor headerColor;
 		string title, realtitle;
 		float duration;
 		float beatnum;
-		float delay;
+		double delay;
 		bool hidden;
 		ofRectangle rect;
 		ofPath arrow;
 		int ARROW_LEN, LINE_HEIGHT, LINE_SPACE;
 		int HEADER_HEIGHT;
 		bool top_level_group;
-		// float bpm tempo local a un groupe
+		// TODO float bpm tempo local a un groupe
 
 		ActionGroup *group;
 
@@ -148,11 +169,6 @@ class ActionGroupHeader {
 		Event *event;
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
-		/*
-		   2
-		   	1
-		   3
-		   */
 		void drawArrow(); 
 		void print();
 		bool is_in_arrow(int x, int y);
