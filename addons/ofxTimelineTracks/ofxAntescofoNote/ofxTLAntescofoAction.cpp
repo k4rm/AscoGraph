@@ -321,6 +321,7 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->header->rect.y;
 	//if (! ag->header->top_level_group) cury += ag->header->HEADER_HEIGHT;
+
 	list<ActionGroup*>::const_iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		ActionMessage *m;
@@ -363,12 +364,11 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 	return toth;
 }
 
-// for updating subgroups durations and witdh
+// for updating subgroups durations
 // return width in beats
 float ofxTLAntescofoAction::update_sub_duration(ActionGroup *ag)
 {
 	int maxw = 0, curw = 0;
-	list<ActionGroup*>::const_iterator g;
 	ag->header->duration = 0;
 
 	ActionMessage *m;
@@ -376,6 +376,7 @@ float ofxTLAntescofoAction::update_sub_duration(ActionGroup *ag)
 		if (m->delay) 
 			return m->delay;
 	} else {
+		list<ActionGroup*>::const_iterator g;
 		for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 			if ((*g)->header->delay)
 				ag->header->duration += (*g)->header->delay;
@@ -387,16 +388,63 @@ float ofxTLAntescofoAction::update_sub_duration(ActionGroup *ag)
 	return maxw;
 }
 
+// for updating subgroups width
+// return width in beats
+int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
+{
+	int maxw = 0, curw = 0;
+	ag->header->duration = 0;
+
+	ActionMessage *m;
+	if ((m = dynamic_cast<ActionMessage*>(ag))) {
+		int sizec = mFont.stringWidth(string("a"));
+		int len = sizec * m->action.size();
+		if (m->delay) 
+			len += get_x(m->delay);
+		maxw = len;
+		//cout << "update_sub_width: ismsg: " << maxw << endl;
+	} else {
+		list<ActionGroup*>::const_iterator g;
+		for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
+			//if ((*g)->header->delay) ag->header->duration += (*g)->header->delay;
+			(*g)->header->rect.width = curw = update_sub_width(*g);
+			if (curw > maxw)
+				maxw += curw;
+		}
+	}
+	cout << "update_sub_width: " << maxw << endl;
+	return maxw;
+}
+
+// for updating subgroups width
+// return width in beats
+int ofxTLAntescofoAction::update_sub_y(ActionGroup *ag)
+{
+	// go deep and assign each header rect.y
+	list<ActionGroup*>::const_iterator g;
+	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
+		if (! ag->header->top_level_group) {
+			(*g)->header->rect.y += ag->header->HEADER_HEIGHT;
+			break;
+		}
+	}
+	// loop rec ?
+}
+
+
+
 void ofxTLAntescofoAction::update_groups()
 {
 	// update actions' rect
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		(*i)->rect.x = bounds.x + normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
 		(*i)->rect.y = bounds.y + 3;
-		(*i)->rect.width = get_x(update_sub_duration((*i)->group));
+		//update_sub_y((*i)->group);
+		update_sub_duration((*i)->group);
+		(*i)->rect.width = update_sub_width((*i)->group);
 		
 		//if ((*i)->duration == 0) (*i)->rect.width = 200; // TODO else
-		(*i)->rect.width = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->duration), zoomBounds );
+		//(*i)->rect.width = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->duration), zoomBounds );
 
 		if (!(*i)->hidden && (*i)->group) {
 			(*i)->rect.height = update_sub((*i)->group);
@@ -557,14 +605,6 @@ void ofxTLAntescofoAction::setScore(Score* score)
 }
 
 ////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 
 ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_) 
 			: header(header_), gfwd(g), event(e)
@@ -842,9 +882,11 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 			if (!top_level_group) {
 				ofFill(); // rect color filled
 				ofSetColor(headerColor);
+				/*
 				if (duration == 0) // groups with no delay
 					rect.width = 200; // TODO
 				else rect.width = tlAction->get_x(duration);
+				*/
 				ofRectangle recthead = rect;
 				recthead.height = HEADER_HEIGHT;
 				ofRect(recthead);
@@ -852,7 +894,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 				ofNoFill();
 				ofSetColor(0, 0, 0, 255);
 				drawArrow(); // arrow
-				tlAction->mFont.drawString(title, rect.x, rect.y + LINE_HEIGHT);
+				tlAction->mFont.drawString(title, rect.x, rect.y + LINE_HEIGHT - 2);
 			}
 			//cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
 			list<ActionGroup*>::const_iterator i;
@@ -865,9 +907,11 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		ofSetColor(headerColor);
 		int savedh = rect.height;
 		rect.height = HEADER_HEIGHT;
+		/*
 		if (duration == 0) // groups with no delay
 			rect.width = 200; // TODO
 		else rect.width = tlAction->get_x(beatnum) - tlAction->get_x(duration);
+		*/
 		ofRect(rect);
 		rect.height = savedh;
 		ofNoFill();
