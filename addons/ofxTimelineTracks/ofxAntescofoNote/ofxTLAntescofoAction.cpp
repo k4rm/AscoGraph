@@ -73,7 +73,7 @@ void ofxTLAntescofoAction::draw()
 				//act->rect.width = normalizedXtoScreenX( timeline->beatToNormalizedX(act->duration), zoomBounds);
 				//cout << "ofxTLAntescofoAction: beat:" << act->beatnum <<" duration:" << act->duration<< " w:"<< act->rect.width << endl;
 				act->draw(this);
-				act->print();
+				//act->print();
 			}
 		}
 	}
@@ -415,11 +415,35 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	cout << "update_sub_width: " << maxw << endl;
 	return maxw;
 }
+// avoid x overlapping
+void ofxTLAntescofoAction::update_avoid_overlap()
+{
+	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		list<ActionGroupHeader*>::const_iterator j = i;
+		if (++j != mActionGroups.end() && zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum))) {
+			if ( ((*i)->rect.x + (*i)->rect.width) + 1 >= (*j)->rect.x) {
+				(*i)->rect.width = (*j)->rect.x - (*i)->rect.x - 3;
+			}
+		}
+
+	}
+#if 0 //TODO should do 
+	list<ActionGroup*>::const_iterator g;
+	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
+		if (! ag->header->top_level_group) {
+			(*g)->header->rect.y += ag->header->HEADER_HEIGHT;
+			break;
+		}
+	}
+	// loop rec ?
+#endif
+}
 
 // for updating subgroups width
 // return width in beats
 int ofxTLAntescofoAction::update_sub_y(ActionGroup *ag)
 {
+
 	// go deep and assign each header rect.y
 	list<ActionGroup*>::const_iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
@@ -451,6 +475,7 @@ void ofxTLAntescofoAction::update_groups()
 		}
 	}
 
+	update_avoid_overlap();
 
 #ifdef OLDWIDTH_CALCULATION
 	for (list<ActionRect*>::const_iterator i = mActionRects.begin(); i != mActionRects.end(); i++)
@@ -831,9 +856,15 @@ void ActionMessage::print() {
 }
 
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
-	cout << "Action message: DRAWING: " << action << " x:" << x << " y:" << y << endl;
+	int sizec = tlAction->mFont.stringWidth(string("a"));
+	string str = action;
+	if (header->rect.width < action.size() * sizec) {
+		int nc = header->rect.width / sizec - 2;
+		str = action.substr(0, nc);
+	}
+	cout << "Action message: DRAWING: " << str << " x:" << x << " y:" << y << endl;
 	//rect.width = sizec * c.size(); // TODO limiter la largeur en fct du suivant
-	tlAction->mFont.drawString(action, x, y + header->LINE_HEIGHT);
+	tlAction->mFont.drawString(str, x, y + header->LINE_HEIGHT);
 	//ofRect(rect);
 }
 

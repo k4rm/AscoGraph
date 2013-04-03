@@ -134,6 +134,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual int loadscoreMusicXML(string filename, string outfilename);
 	virtual int loadscoreAntescofo(string filename);
 	string get_error();
+	void set_error(string e);
 	void clear_error();
 	virtual void clear();
 

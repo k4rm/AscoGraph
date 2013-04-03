@@ -52,6 +52,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		float update_sub_duration(ActionGroup *ag);
 		int update_sub_width(ActionGroup *ag);
 		int update_sub_y(ActionGroup *ag);
+		void update_avoid_overlap();
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);

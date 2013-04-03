@@ -414,7 +414,21 @@ void ofxAntescofog::setupOSC(){
 		mOsc_port = "3002";
 	}
 	std::cout << "Listening on OSC port " << port << endl;
-	mOSCreceiver.setup(atoi(mOsc_port.c_str()));
+	try {
+		mOSCreceiver.setup(atoi(mOsc_port.c_str()));
+	} catch(exception& e) { 
+		ofSetColor(0, 0, 0, 100);
+		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+		ofSetColor(255, 255, 255, 240);
+
+		string err = "Error can not listen on port ";
+		err += port + " ! Please verify port is available (is another application blocking this UDP port ?";
+		cout << err << endl;
+		ofDrawBitmapString(err, 100, 300);
+		ofxAntescofoNote->set_error(err);
+		guiError->draw();
+		display_error();
+	}
 
 	//mOsc_port_MAX = 3003;
 	is.str(mOsc_port_MAX);
@@ -559,7 +573,7 @@ void ofxAntescofog::update() {
         // get the next message
         ofxOscMessage m;
         mOSCreceiver.getNextMessage( &m );
-        cout << "OSC received: '" << m.getAddress() <<" ";// << "' args:"<<m.getNumArgs()<< endl;
+        cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
         for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
 	if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 			mOsc_tempo = m.getArgAsFloat(0);
@@ -1211,7 +1225,7 @@ void ofxAntescofog::display_error()
          //guiError->addWidgetDown(new ofxUILabel(ofGetWidth()/3, 200, score_w - ofGetWidth()/3, err, OFX_UI_FONT_MEDIUM));
 
          */
-         ofDrawBitmapString(ofxAntescofoNote->get_error(), 100, 100);
+        ofDrawBitmapString(ofxAntescofoNote->get_error(), 100, 100);
         bErrorInitDone = true;
         guiError->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_CANCEL, OFX_UI_FONT_SMALL));
     } else {

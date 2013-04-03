@@ -819,7 +819,9 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 			clickedSwitchA->endSelected   = true;
 
 		} else {
+#if 0 // not yet
 			shouldCreateNewSwitch = true;
+#endif
 		}
 
 		//don't create new switches when shift is held down, and don't deselect anything
@@ -873,6 +875,7 @@ void ofxTLAntescofoNote::mouseMoved(ofMouseEventArgs& args, long millis){
 
 //TODO: account for snapping
 void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //bool snapped){
+#if 0
 	//cout << "mouseDragged: "<< args.x<<", "<<args.y << ", millis:"<< millis << endl ;
 
 	bool oneSwitchSelected = howManySwitchesAreSelected() == 1;
@@ -942,6 +945,7 @@ void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //b
 		noteRange.max = ofClamp(noteRange.max, noteRange.min+5, 126); // -5 because we don't want to zoom to close
 		drawRectChanged();
 	}
+#endif
 }
 
 void ofxTLAntescofoNote::mouseReleased(ofMouseEventArgs& args, long millis){
@@ -1101,6 +1105,10 @@ string ofxTLAntescofoNote::get_error()
 void ofxTLAntescofoNote::clear_error()
 {
 	str_error.clear();
+}
+
+void ofxTLAntescofoNote::set_error(string e) {
+	str_error = e;
 }
 
 
