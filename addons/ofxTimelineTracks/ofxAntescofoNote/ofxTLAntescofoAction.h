@@ -69,9 +69,9 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		/*
 		float normalizedXtoScreenX_(float x, ofRange z) { return normalizedXtoScreenX(x, z); }
-		ofRange getZoomBounds() { return zoomBounds; }
 		ofRectangle getBounds() { return bounds; }
 		*/
+		ofRange getZoomBounds() { return zoomBounds; }
 
 
 		void setNoteTrack(ofxTLAntescofoNote* o) { ofxAntescofoNote = o; }
@@ -106,6 +106,7 @@ class ActionGroup {
 		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
+		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
 
 		list<ActionGroup*> sons;
 		ActionGroupHeader *header;
