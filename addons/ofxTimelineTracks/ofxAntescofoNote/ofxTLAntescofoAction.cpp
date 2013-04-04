@@ -318,13 +318,16 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 	int cury = ag->header->rect.y;
 	//if (! ag->header->top_level_group) cury += ag->header->HEADER_HEIGHT;
 
+	if (ag->header->hidden) {
+		return ag->header->HEADER_HEIGHT;
+	}
 	list<ActionGroup*>::const_iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		ActionMessage *m;
 		if ((m = dynamic_cast<ActionMessage*>(*g))) {
 			m->x = ag->header->rect.x;
 			if (m->delay) {
-				m->x += normalizedXtoScreenX( timeline->beatToNormalizedX(m->delay), zoomBounds);
+				m->x = normalizedXtoScreenX( timeline->beatToNormalizedX(m->header->beatnum + m->delay), zoomBounds);
 			}
 			if (!ag->header->top_level_group || g != ag->sons.begin()) { // increment y and h 
 				cury += ag->header->LINE_HEIGHT;
@@ -335,6 +338,7 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 			//cout << "________________ x:"<< m->x << " y:" << m->y <<  "cury:" << cury << endl;
 			if (debugsub) 	cout << "update_sub: in msg: y=" << m->y << endl;
 		}
+
 		if (!(*g)->header->top_level_group) {
 				(*g)->header->rect.x = ag->header->rect.x;
 				if ((*g)->header->delay)
@@ -352,7 +356,6 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 			toth += curh;
 	}
 	//cout << "update_sub: return " << toth << endl;
-	if (ag->header->hidden) return ag->header->HEADER_HEIGHT;
 	if (!toth) { // leaf elmt -> message
 		//if (!ag->header->top_level_group)
 			return ag->header->HEADER_HEIGHT; //ag->header->LINE_HEIGHT;
@@ -398,7 +401,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 		int sizec = mFont.stringWidth(string("a"));
 		int len = sizec * (m->action.size() + 3);
 		if (m->delay) 
-			len += get_x(m->delay);
+			len += get_x(m->header->beatnum + m->delay) - get_x(m->delay);
 		maxw = len;
 		//cout << "update_sub_width: ismsg: " << maxw << endl;
 	} else {
@@ -449,6 +452,7 @@ int ofxTLAntescofoAction::update_sub_y(ActionGroup *ag)
 		}
 	}
 	// loop rec ?
+	return 0;
 }
 
 
@@ -662,6 +666,7 @@ ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_)
 		}
 	}
 }
+
 ActionGroup::~ActionGroup()
 {
 	if (trackName.size()) {
@@ -694,8 +699,11 @@ void ActionGroup::print() {
 
 bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction)
 {
-	return (tlAction->getZoomBounds().max >= _timeline->beatToNormalizedX(header->beatnum)
-			&& tlAction->getZoomBounds().min <= _timeline->beatToNormalizedX(header->beatnum + header->duration));
+	ofRange r( _timeline->beatToNormalizedX(header->beatnum), _timeline->beatToNormalizedX(header->beatnum + header->duration));
+	return tlAction->getZoomBounds().intersects(r);
+
+	//return (tlAction->getZoomBounds().max >= _timeline->beatToNormalizedX(header->beatnum)
+			//&& tlAction->getZoomBounds().min <= _timeline->beatToNormalizedX(header->beatnum + header->duration));
 }
 
 void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
@@ -868,7 +876,7 @@ void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 		//if (header->rect.width == header->group->header->rect.width)
 			//header->group->header->rect.width = 
 	}
-	//cout << "Action message: DRAWING: " << str << " x:" << x << " y:" << y << endl;
+	cout << "Action message: DRAWING: " << str << " x:" << x << " y:" << y << endl;
 	//rect.width = sizec * c.size(); // TODO limiter la largeur en fct du suivant
 	tlAction->mFont.drawString(str, x, y + header->LINE_HEIGHT - 6);
 	//ofRect(rect);
