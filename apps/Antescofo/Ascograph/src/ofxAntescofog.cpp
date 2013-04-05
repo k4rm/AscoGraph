@@ -127,6 +127,8 @@ void ofxAntescofog::menu_item_hit(int n)
 						break;
         }
     }
+
+   bShouldRedraw = true;
 }
 
 static ofxAntescofog *fog;

@@ -1,4 +1,5 @@
 BPM 60
+NOTE C4 8.0
 
 NOTE C4 8.0
 GFWD testgroup 
@@ -9,4 +10,7 @@ GFWD testgroup
 		an_action2 1
 		1 an_action3 3
 	}
+	action4 
+	action5
 }
+NOTE C3 17

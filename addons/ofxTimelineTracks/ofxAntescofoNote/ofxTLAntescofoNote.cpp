@@ -1393,8 +1393,25 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	unselectAll();
 	sort(switches.begin(), switches.end(), switchsort);
 
+	update_duration();
 	return switches.size();
 }
+
+void ofxTLAntescofoNote::update_duration() {
+	int maxdur = ofxAntescofoAction->get_max_note_beat();
+
+	cout << "Maximum note beat calculated : " << maxdur << " beats." << endl;
+	float dur_in_beats = mDur_in_secs * timeline->getBPM() / 60;
+	if (maxdur > dur_in_beats) {
+		dur_in_beats = maxdur + 1;
+		mDur_in_secs = 60 / timeline->getBPM() * dur_in_beats;
+		cout << "Duration ------------------ " << dur_in_beats << " beats."<< endl;
+		cout << "Duration ------------------ " << mDur_in_secs << " seconds.";
+		mDur_in_secs++; // add one beat for better display
+		timeline->setDurationInSeconds(mDur_in_secs);
+	}
+}
+
 
 void ofxTLAntescofoNote::load() {}
 

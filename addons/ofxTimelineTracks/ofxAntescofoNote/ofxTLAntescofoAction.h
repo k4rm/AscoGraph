@@ -53,6 +53,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		int update_sub_width(ActionGroup *ag);
 		int update_sub_y(ActionGroup *ag);
 		void update_avoid_overlap();
+		void update_avoid_overlap_rec(ActionGroup* g, int w);
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
@@ -78,9 +79,10 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		ofxTLAntescofoNote *ofxAntescofoNote;
 		void setScore(Score* s);
 		//bool mousePressed_In_Arrow(ofMouseEventArgs& args, list<ActionRect*> actionrects);
-		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroupHeader* header);
+		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
 		void add_action(float beatnum, string action, Event *e);
 		void add_action_curves(float beatnum, ActionGroup *ar, Cfwd *c);
+		int get_max_note_beat();
 		void clear_actions();
 		void attribute_header_colors(list<ActionGroupHeader*> actiongroups);
 		ofColor get_random_color();
@@ -118,7 +120,7 @@ class ActionGroup {
 
 class ActionMessage : public ActionGroup {
 	public:
-		ActionMessage(Message* g, Event *e, ActionGroupHeader* header_);
+		ActionMessage(Message* g, float delay_, Event *e, ActionGroupHeader* header_);
 		virtual ~ActionMessage() {}
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
@@ -130,7 +132,7 @@ class ActionMessage : public ActionGroup {
 
 class ActionCurve : public ActionGroup {
 	public:
-		ActionCurve(Cfwd *c, Event *e, ActionGroupHeader* header_);
+		ActionCurve(Cfwd *c, float delay_, Event *e, ActionGroupHeader* header_);
 		virtual ~ActionCurve();
 
 		virtual void draw(ofxTLAntescofoAction *tlAction) {}
@@ -146,10 +148,25 @@ class ActionCurve : public ActionGroup {
 		vector<double> delays;
 };
 
+/*
+class ActionLoop : public ActionGroup {
+	public:
+		ActionLoop(Lfwd *l, float delay_, Event *e, ActionGroupHeader* header_);
+		virtual ~ActionLoop();
+
+		virtual void draw(ofxTLAntescofoAction *tlAction) {}
+		virtual void print() {}
+		string action;
+		double delay;
+
+		float period;
+};
+*/
+
 
 class ActionGroupHeader {
 	public:
-		ActionGroupHeader(float beatnum_, Action* a_, Event *e_);
+		ActionGroupHeader(float beatnum_, float delay_, Action* a_, Event *e_);
 		~ActionGroupHeader();
 
 		// display
