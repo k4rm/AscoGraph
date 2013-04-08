@@ -105,6 +105,7 @@ class ActionGroup {
 		
 		virtual ~ActionGroup();
 
+		string get_period();
 		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
@@ -115,6 +116,7 @@ class ActionGroup {
 		Gfwd *gfwd;
 		Event *event;
 		string trackName;
+		float period;
 };
 
 
@@ -152,17 +154,19 @@ class ActionCurve : public ActionGroup {
 class ActionLoop : public ActionGroup {
 	public:
 		ActionLoop(Lfwd *l, float delay_, Event *e, ActionGroupHeader* header_);
-		virtual ~ActionLoop();
+		virtual ~ActionLoop() {}
 
-		virtual void draw(ofxTLAntescofoAction *tlAction) {}
-		virtual void print() {}
+		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual void print();
 		string action;
 		double delay;
+		ActionGroup *group;
+		Lfwd *lfwd;
 
+		string label;
 		float period;
 };
 */
-
 
 class ActionGroupHeader {
 	public:
@@ -193,7 +197,6 @@ class ActionGroupHeader {
 		void drawArrow(); 
 		void print();
 		bool is_in_arrow(int x, int y);
-
 };
 
 

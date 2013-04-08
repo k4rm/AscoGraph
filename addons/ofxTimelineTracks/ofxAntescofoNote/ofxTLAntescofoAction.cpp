@@ -311,7 +311,7 @@ int ofxTLAntescofoAction::get_max_note_beat()
 
 
 // for updating subgroups
-// return heigh of ActionGroup in px
+// return height of ActionGroup in px
 int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 {
 	int debugsub = 0;
@@ -606,7 +606,7 @@ void ofxTLAntescofoAction::setScore(Score* score)
 ////////////////////////////////////////////////////
 
 ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_) 
-			: header(header_), gfwd(g), event(e)
+			: header(header_), gfwd(g), event(e), period(0)
 {
 	if (g) {
 		vector<Action*>::const_iterator i;
@@ -640,16 +640,20 @@ ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_)
 				continue;
 			}
 
-			/*
 			// can be a loop
 			Lfwd* l = dynamic_cast<Lfwd*>(tmpa);
-			if (l) {
-				ActionLoop *lu = new ActionLoop(l, d, event, header); 
-				sons.push_back((ActionGroup*)lu);
+			if (l && l->_group) {
+				//ActionLoop *lu = new ActionLoop(l, d, event, header); 
+				//sons.push_back((ActionGroup*)lu);
+				ActionGroupHeader* nh = new ActionGroupHeader(header->beatnum, d, l->_group, event);//, false);
+				if (nh->group) {
+					if (l->_period)
+						nh->group->period = l->_period->eval();
+					nh->realtitle = nh->title = l->label();
+					sons.push_back(nh->group);
+				}
 				continue;
 			}
-			*/
-
 
 			header->duration += get_delay(tmpa);
 		}
@@ -679,6 +683,7 @@ double ActionGroup::get_delay(Action* tmpa)
 }
 
 void ActionGroup::print() {
+	if (period) cout << "ActionGroup loop period: " << period << endl;
 	if (header && !header->top_level_group)
 		header->print();
 	for (list<ActionGroup*>::iterator i = sons.begin(); i != sons.end(); i++) {
@@ -898,7 +903,18 @@ ActionGroupHeader::~ActionGroupHeader()
 	if (group)
 		delete group;
 }
-				
+
+#include <sstream>
+string ActionGroup::get_period()
+{
+	string ret;
+	std::ostringstream oss;
+	oss << period;
+
+	ret = oss.str();
+	return ret;
+}
+
 void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction) 
 {
 	ofNoFill(); // border
@@ -923,9 +939,12 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 				ofNoFill();
 				ofSetColor(0, 0, 0, 255);
 				drawArrow(); // arrow
-				tlAction->mFont.drawString(title, rect.x, rect.y + HEADER_HEIGHT - 2);
+
+				string name = title;
+				if (group && group->period > 0) { name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
+				tlAction->mFont.drawString(name, rect.x, rect.y + HEADER_HEIGHT - 2);
 				ofRect(rect);
-			} 
+			}
 			//cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
 			list<ActionGroup*>::const_iterator i;
 			for (i = group->sons.begin(); i != group->sons.end(); i++) {
@@ -941,7 +960,9 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		ofNoFill();
 		ofSetColor(0, 0, 0, 255);
 		drawArrow(); // arrow
-		tlAction->mFont.drawString(title, rect.x, rect.y + HEADER_HEIGHT - 2);
+		string name = title;
+		if (group && group->period > 0) {name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
+		tlAction->mFont.drawString(name, rect.x, rect.y + HEADER_HEIGHT - 2);
 		ofNoFill();
 		ofRect(rect);
 		//cout << "ActionGroupHeader.draw hidden: ("<<rect.x<<","<<rect.y<<") : " << title << endl;
@@ -1003,3 +1024,37 @@ bool ActionGroupHeader::is_in_arrow(int x, int y)
 	return res;
 }
 
+
+/*
+ActionLoop::ActionLoop(Lfwd *l, float delay_, Event *e, ActionGroupHeader* header_)
+	: lfwd(l)
+{
+	delay = delay_;
+	header = header_;
+	if (l) {
+		cout << "got Loop: " << l->label() << endl; 
+		label = l->label();
+		double dou = 0.;
+
+		if (l->_period) {
+			period = l->_period->eval();
+		}
+		if (l->_group)
+			ActionGroup *g = new ActionGroup(l->_group, event, header);
+	}
+}
+
+
+void ActionLoop::draw(ofxTLAntescofoAction *tlAction)
+{
+
+
+}
+
+void ActionLoop::print()
+{
+	cout << "**** Action Loop: " << label << " period:" << period<< endl;
+}
+
+
+*/
