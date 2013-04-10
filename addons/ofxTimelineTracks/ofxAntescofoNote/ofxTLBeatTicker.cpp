@@ -24,6 +24,7 @@ void ofxTLBeatTicker::setup() {
 	getTimeline()->setTicker(this);
 	setBPM(getTimeline()->getBPM());
 	isSetup = true;
+	refreshTickMarks();
 }
 
 void ofxTLBeatTicker::draw(){
@@ -42,11 +43,7 @@ void ofxTLBeatTicker::draw(){
 	drawBPMGrid = true;
 	tickerMarks.setStrokeColor( ofColor(0, 0, 240) );
 	tickerMarks.setStrokeWidth(1);
-	//tickerMarks.draw(bounds.x, bounds.y);
 	tickerMarks.draw(bounds.x, bounds.y);
-	/*for(int i = bounds.getMinX()+step; i < bounds.getMaxX(); i+=step){
-		text = tostr(mAntescofog->ofxAntescofoNote->millisecToBeat(hoverTime));
-		}*/
 
 	if(drawBPMGrid){
 		if(viewIsDirty){
@@ -66,7 +63,6 @@ void ofxTLBeatTicker::draw(){
 						text = tostr(bi);
 						textW = timeline->getFont().stringWidth(text);
 						timeline->getFont().drawString(text, bpmScreenPoints[i].screenX - textW/2, getBottomEdge()-20);
-						//cout << "------------------------------------ " << tostr(bi+1)<< endl;
 				}
 			}
 		}
@@ -104,9 +100,6 @@ void ofxTLBeatTicker::draw(){
 
 }
 
-//250 bpm = 250/60 beats per second
-//1 beat = 1/(250/60) seconds
-//1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
 void ofxTLBeatTicker::getSnappingPoints(set<unsigned long>& points){
 
 	if(!drawBPMGrid){

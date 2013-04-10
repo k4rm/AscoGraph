@@ -89,6 +89,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void drawBitmapStringHighlight(string text, int x, int y, const ofColor& background, const ofColor& foreground);
 
 		int get_x(float beat);
+		string cut_str(int w, string in);
 
 		ofTrueTypeFont mFont;
 		Score *mScore;
@@ -96,6 +97,11 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		list<ActionGroupHeader*> mActionGroups;
 		bool bEditorShow;
+		bool draggingSelectionRange;
+		ofPoint selectionRangeAnchor;
+		ofRectangle dragSelection;
+		ActionGroup* groupFromScreenPoint(int x, int y);
+		void regionSelected(ofLongRange timeRange, ofRange valueRange);
 };
 
 class ActionGroup {
@@ -117,6 +123,7 @@ class ActionGroup {
 		Event *event;
 		string trackName;
 		float period;
+		bool selected;
 };
 
 

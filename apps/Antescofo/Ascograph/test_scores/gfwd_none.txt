@@ -3,5 +3,18 @@ BPM 60
 NOTE C4 8.0
 
 NOTE C4 8.0
+
 	action_one
 	2 action_two 12
+
+	
+NOTE 60 1.0	e2035
+	KILL spat1_ym
+		
+		spat1_cyc	stop 
+		spat2_cyc	stop 
+		spat3_cyc	stop 
+	antescofo-mess analysis 4096 128, pedal 0
+NOTE 60 10.0	e2035
+	msg
+NOTE 160 100.0	e2035

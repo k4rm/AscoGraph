@@ -935,6 +935,7 @@ void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //b
 			}
 		}
 	}
+#endif
 	// Drag Note Range
 	if(changingRangeMin) {
 		noteRange.min += floor((changingRangeAnchor - args.y) * 0.1f);
@@ -945,7 +946,6 @@ void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //b
 		noteRange.max = ofClamp(noteRange.max, noteRange.min+5, 126); // -5 because we don't want to zoom to close
 		drawRectChanged();
 	}
-#endif
 }
 
 void ofxTLAntescofoNote::mouseReleased(ofMouseEventArgs& args, long millis){
@@ -1178,7 +1178,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	clear();
 	//str_error.erase();
 	Score *score;
-	mParseDriver->setVerbosity(2);
+	mParseDriver->setVerbosity(0);
 	if (NULL == (score = mParseDriver->parse(filename))) {
 		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
 		return 0;

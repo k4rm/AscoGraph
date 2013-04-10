@@ -69,9 +69,23 @@ void ofxTLAntescofoAction::draw()
 
 				ActionGroupHeader *act = *i;
 				act->draw(this);
-				act->print();
+				//act->print();
 			}
 		}
+
+#if 0
+		// draw selection
+		ofSetLineWidth(2.0);
+		if(draggingSelectionRange){
+			ofFill();
+			ofSetColor(timeline->getColors().keyColor);
+			ofLine(dragSelection.min, bounds.y, dragSelection.min, bounds.y+bounds.height);
+			ofLine(dragSelection.max, bounds.y, dragSelection.max, bounds.y+bounds.height);
+			ofSetColor(timeline->getColors().keyColor, 30);
+			ofFill();
+			ofRect(dragSelection.min, bounds.y, dragSelection.span(), bounds.height);
+		}
+#endif
 	}
 
 }
@@ -322,7 +336,26 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 
 	if (ag->header->hidden) {
 		return ag->header->HEADER_HEIGHT;
+	} else if (!ag->header->top_level_group) {
+		cury += ag->header->HEADER_HEIGHT;
+		curh += ag->header->HEADER_HEIGHT;
+		toth += curh;
 	}
+	
+	/*
+	ActionGroup* sg;
+	if (!m && (sg = dynamic_cast<ActionGroup*>(*g))) {
+		curh += HEADER_HEIGHT;
+		sg->header->rect.x = get_x(sg->header->beatnum + sg->header->delay); // normalizedXtoScreenX( timeline->beatToNormalizedX(sg->header->beatnum), zoomBounds);
+		if (!sg->header->top_level_group)// && g != ag->sons.begin()) { // increment y and h 
+			cury += sg->header->LINE_HEIGHT;
+		}
+		sg->header->rect.y = cury;
+		cury += sg->header->rect.height;
+		toth += curh + 2;
+
+	}*/
+
 	list<ActionGroup*>::const_iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		ActionMessage *m = 0;
@@ -330,56 +363,25 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 			m->x = ag->header->rect.x;
 			if (m->delay)
 				m->x = get_x(ag->header->beatnum + ag->header->delay + m->delay);
-				//m->x += normalizedXtoScreenX( timeline->beatToNormalizedX(m->delay), zoomBounds);
-				//m->x = normalizedXtoScreenX( timeline->beatToNormalizedX(m->header->beatnum + m->delay), zoomBounds);
-			if (!ag->header->top_level_group || g != ag->sons.begin()) { // increment y and h 
-				cury += ag->header->LINE_HEIGHT;
-				curh += ag->header->LINE_HEIGHT;
-			}
 			m->y = cury;
-			toth += curh;
-			//cout << "________________ x:"<< m->x << " y:" << m->y <<  "cury:" << cury << endl;
-			if (debugsub) 	cout << "update_sub: in msg: y=" << m->y << endl;
+			if (debugsub) cout << "m->y=" << m->y << " curh:" << curh << " toth:" << toth << endl;
 		}
-
 		if (!m && !(*g)->header->top_level_group) {
-				(*g)->header->rect.x = ag->header->rect.x;
-				if ((*g)->header->delay)
-					(*g)->header->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*g)->header->beatnum + (*g)->header->delay), zoomBounds);
-					//(*g)->header->rect.x += normalizedXtoScreenX( timeline->beatToNormalizedX((*g)->header->delay), zoomBounds);
-				if (debugsub) cout << "update_sub: cury:" << cury << " recty:" << ag->header->rect.y << endl;
-				(*g)->header->rect.y = ag->header->rect.y; //cury;
-				//cury += ag->header->LINE_HEIGHT;
-				//if (!ag->header->top_level_group) { // if parent group is not top level group add HEADER HEIGHT
-					//gr->header->rect.y += gr->header->HEADER_HEIGHT;
-				//}
-		}
-		ActionGroup* sg;
-		if (!m && (sg = dynamic_cast<ActionGroup*>(*g))) {
-			//if (sg->header->hidden) curh += HEADER_HEIGHT;
-			sg->header->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX(sg->header->beatnum), zoomBounds);
-			if (sg->header->delay)
-				sg->header->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX(sg->header->beatnum + sg->header->delay), zoomBounds);
-
-			if (!sg->header->top_level_group && g != ag->sons.begin()) { // increment y and h 
-				cury += sg->header->LINE_HEIGHT;
-				//curh += sg->header->LINE_HEIGHT;
-			}
-			sg->header->rect.y = cury;
-			if (!sg->header->hidden)
-				cury += sg->header->rect.height;
-			if (curh)
-				toth += curh + 2;
+			(*g)->header->rect.x = ag->header->rect.x;
+			if ((*g)->header->delay)
+				(*g)->header->rect.x = get_x((*g)->header->beatnum + (*g)->header->delay);// normalizedXtoScreenX( timeline->beatToNormalizedX((*g)->header->beatnum + (*g)->header->delay), zoomBounds);
+			//(*g)->header->rect.x += normalizedXtoScreenX( timeline->beatToNormalizedX((*g)->header->delay), zoomBounds);
+			(*g)->header->rect.y = cury;
 		}
 	 	curh = update_sub(*g);
-		ag->header->rect.height = curh;
+		if (debugsub) cout << " curh from upadte_sub:" << curh << endl;
+		//ag->header->rect.height += curh;
+		toth += curh;
+		cury += curh;
 	}
 	//cout << "update_sub: return " << toth << endl;
-	if (!toth) { // leaf elmt -> message
-		//if (!ag->header->top_level_group)
-			return ag->header->HEADER_HEIGHT; //ag->header->LINE_HEIGHT;
-		//else return 0;
-	}
+	if (!toth) // leaf elmt -> message 
+		toth = ag->header->LINE_HEIGHT;
 	
 	ag->header->rect.height = toth;
 	return toth;
@@ -414,36 +416,51 @@ float ofxTLAntescofoAction::update_sub_duration(ActionGroup *ag)
 int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 {
 	int maxw = 0, curw = 0;
+	int del = 0; float beatdel = 0.;
 	ag->header->duration = 0;
 
+	int debugsub = 0;
+	if (debugsub) cout << "update_width: " << ag->header->title << endl;
 	ActionMessage *m;
 	if ((m = dynamic_cast<ActionMessage*>(ag))) {
-		int sizec = mFont.stringWidth(string("a"));
-		int len = sizec * (m->action.size() + 2);
+		int sizec = mFont.stringWidth(string("_"));
+		int len = sizec * (m->action.size());
 		if (m->delay)
-			len += get_x(m->header->beatnum + m->delay) - get_x(m->header->beatnum);// +  get_x(m->header->delay);
+			len += get_x(m->header->beatnum + m->delay) - get_x(m->header->beatnum);
 		maxw = len;
-		//cout << "update_sub_width: ismsg: " << maxw << endl;
+		if (debugsub) cout << "\tupdate_width: msg maxw:" << maxw << endl;
 
 	} else {
+		/*
 		ActionGroup* sg;
 		if ((sg = dynamic_cast<ActionGroup*>(ag))) {
 			if (sg->header->delay)
 				maxw += get_x(sg->header->delay);
 		}
+		*/
 		list<ActionGroup*>::const_iterator g;
 		for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
-			(*g)->header->rect.width = curw = update_sub_width(*g);
-			if (curw > maxw)
-				maxw += curw;
+			curw = update_sub_width(*g);
+			if ((*g)->header->delay) {
+				beatdel = (*g)->header->delay;
+				del = get_x((*g)->header->beatnum + beatdel) - get_x((*g)->header->beatnum); // get_x((*g)->header->delay);
+			}
+			if (curw + del > maxw)
+				maxw = curw + del;
 		}
+		if (debugsub) cout << "\tupdate_width: maxw:" << maxw << endl;
+		ag->header->rect.width = maxw;
+		//maxw = del + maxw;
 	}
 	return maxw;
 }
+
+
 // avoid x overlapping
 void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w)
 {
-	g->header->rect.width = w;
+	if (g->header->rect.width > w)
+		g->header->rect.width = w;
 	for (list<ActionGroup*>::const_iterator i = g->sons.begin(); i != g->sons.end(); i++) {
 		update_avoid_overlap_rec(*i, w);
 	}
@@ -456,11 +473,9 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 		list<ActionGroupHeader*>::const_iterator j = i;
 		if (++j != mActionGroups.end() && zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum))) {
 			if ( ((*i)->rect.x + (*i)->rect.width) + 1 >= (*j)->rect.x) {
-				//(*i)->rect.width = (*j)->rect.x - (*i)->rect.x - 3;
-				update_avoid_overlap_rec((*i)->group, (*j)->rect.x - (*i)->rect.x - 3);// (*i)->rect.width);
+				update_avoid_overlap_rec((*i)->group, (*j)->rect.x - (*i)->rect.x - 3);
 			}
 		}
-
 	}
 #if 0 //TODO should do 
 	list<ActionGroup*>::const_iterator g;
@@ -553,42 +568,93 @@ bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionG
 	return res;
 }
 
+ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint(int x, int y) {
+	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		if ((*i)->rect.inside(x, y)) {
+			cout << "groupFromScreenPoint: got group! : " << (*i)->realtitle << endl; 
+			return (*i)->group;
+		}
+	}
+	return 0;
+}
+
+void ofxTLAntescofoAction::regionSelected(ofLongRange timeRange, ofRange valueRange) {
+	cout << "regionSelected:" << timeRange.min << " " << timeRange.max << " y: " << valueRange.min << " " << valueRange.max << endl;
+}
+
 bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 {
+	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
+		(*i)->group->selected = false;
+
+
 	cout << "mousePressed: x:"<< args.x << " y:" << args.y << endl; 
 	bool res = false;
+	// selection
+	ActionGroup* clickedGroup = groupFromScreenPoint(args.x, args.y);
+	if (clickedGroup) {
+		clickedGroup->selected = true;
+	}
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		//if ((*i)->header) {
-			if (!(*i)->top_level_group && mousePressed_In_Arrow(args, (*i)->group)) {
-				res = true;
-				return res;
-			} else if ((*i)->group) { // look for subgroups
 
-				ActionGroup *a = (*i)->group;
-				if (a->sons.size()) {
-					for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
-						if ((*j)->header &&  mousePressed_In_Arrow(args, (*j)->header->group)) {
-							res = true;
-							return res;
-						}
+		if (!(*i)->top_level_group && mousePressed_In_Arrow(args, (*i)->group)) {
+			res = true;
+			return res;
+		} else if ((*i)->group) { // look for subgroups
+			ActionGroup *a = (*i)->group;
+			if (a->sons.size()) {
+				for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+					if ((*j)->header &&  mousePressed_In_Arrow(args, (*j)->header->group)) {
+						res = true;
+						return res;
 					}
 				}
 			}
-		//}
+		}// else if (header->rect.inside(args.x, args.y)) { }
 	}
+
+#if 0
+	else { // selecting
+		draggingSelectionRange = true;
+		selectionRangeAnchor.x = args.x;
+		selectionRangeAnchor.y = args.y;
+		dragSelection.x = selectionRangeAnchor.x;
+		dragSelection.y = selectionRangeAnchor.y;
+		dragSelection.width = 0;
+		dragSelection.height = 0;
+	}
+#endif
 	return res;
 }
 
 void ofxTLAntescofoAction::mouseMoved(ofMouseEventArgs& args, long millis)
-{}
+{
+}
 
 
 void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)//bool snapped);
-{}
+{
+	if(draggingSelectionRange){
+		//dragSelection.min = MIN(args.x, selectionRangeAnchor);
+		//dragSelection.max = MAX(args.x, selectionRangeAnchor);
+		dragSelection.x = MIN(args.x, selectionRangeAnchor.x);
+		dragSelection.y = MIN(args.y, selectionRangeAnchor.y);
+	}
+}
 
 void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 {
-
+	if (!bounds.inside(args.x, args.y)) return;
+	/*
+	if(draggingSelectionRange){
+		for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+			//normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds)) 
+			if((*i)->group && (dragSelection.contains( (*i)->rect.x) || dragSelection.contains( (*i)->rect.x + (*i)->rect.width)))
+				(*i)->group->selected = true;
+		}
+		draggingSelectionRange = false;
+	}
+	*/
 }
 
 void ofxTLAntescofoAction::keyPressed(int key){
@@ -603,10 +669,24 @@ void ofxTLAntescofoAction::setScore(Score* score)
 	mScore = score;
 }
 
+string ofxTLAntescofoAction::cut_str(int w, string in)
+{
+	int sizec = mFont.stringWidth(string("_"));
+	//cout << "ActionGroup: cur_str: w:"<< w << " in:" << in << " nc=" << in.size() * sizec  << endl;
+	if (w < sizec)
+		return string("");
+	if (w < in.size() * sizec) {
+		int nc = w / sizec - 1;
+		//cout << "ActionGroup: cur_str: cutting action msg :nc = " << nc << endl;
+		return in.substr(0, nc);
+	}
+	return in;
+}
+
 ////////////////////////////////////////////////////
 
 ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_) 
-			: header(header_), gfwd(g), event(e), period(0)
+			: header(header_), gfwd(g), event(e), period(0), selected(false)
 {
 	if (g) {
 		vector<Action*>::const_iterator i;
@@ -840,7 +920,7 @@ ActionCurve::~ActionCurve()
 ActionMessage::ActionMessage(Message* m, float delay_, Event *e, ActionGroupHeader* header_) 
 {
 	header = header_;
-
+	selected = false;
 	ostringstream oss;
 	oss << *m;
 	action = oss.str();
@@ -856,21 +936,18 @@ ActionMessage::ActionMessage(Message* m, float delay_, Event *e, ActionGroupHead
 }
 
 void ActionMessage::print() {
-	cout << "**** Action Message: " << action << " x:" << x << " y:" << y<< endl;
+	cout << "**** Action Message: " << " x:" << x << " y:" << y << " " <<  action;// << endl;
 }
+
 
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	//if (!is_in_bounds(tlAction)) return;
-	int sizec = tlAction->mFont.stringWidth(string("a"));
-	string str = action;
-	if (header->rect.width < action.size() * sizec + 2) {
-		int nc = header->rect.width / sizec - 1;
-		//cout << "ActionMessage: draw: cutting action msg :nc = " << nc << endl;
-		str = action.substr(0, nc);
-	}
-	//cout << "Action message: DRAWING: " << str << " x:" << x << " y:" << y << endl;
-	tlAction->mFont.drawString(str, x, y + header->LINE_HEIGHT - 6);
+	ofNoFill();
+	ofSetColor(0, 0, 0, 255);
+	tlAction->mFont.drawString(tlAction->cut_str(header->rect.width, action), x + 1, y + header->LINE_HEIGHT - 6);
+	if (selected) { ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 	ofRect(header->rect);
+	//if (selected) ofPopStyle();
 }
 
 
@@ -917,21 +994,36 @@ string ActionGroup::get_period()
 
 void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction) 
 {
-	ofNoFill(); // border
-	ofSetColor(0, 0, 0, 255);
-
+	ofSetLineWidth(1);
 	//cout << "ActionRects.draw: label:"<< realtitle<< " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
-	if (top_level_group || !hidden) {
-		int sizec = tlAction->mFont.stringWidth(string("a"));
+	if (top_level_group && group && group->is_in_bounds(tlAction)) {
+		ofFill();
+		ofSetColor(200, 200, 200, 255);
+		ofRectangle inrect = rect;
+		inrect.x += 1; inrect.y = rect.y + 1;
+		inrect.height = inrect.height - 2;
+		inrect.width = inrect.width - 2;
+		ofRect(inrect); // draw white body
+
+		list<ActionGroup*>::const_iterator i;
+		for (i = group->sons.begin(); i != group->sons.end(); i++) {
+			if ((*i)->is_in_bounds(tlAction))
+				(*i)->draw(tlAction);
+		}
+	} else if (!hidden) {
+		int sizec = tlAction->mFont.stringWidth(string("_"));
 		if (group && group->is_in_bounds(tlAction)) {
+			ofFill();
+			ofSetColor(200, 200, 200, 255);
+			ofRectangle inrect = rect;
+			inrect.x += 1; inrect.y = rect.y + 1;
+			inrect.height = inrect.height - 2;
+			if (!top_level_group) { inrect.height -= HEADER_HEIGHT; inrect.y += HEADER_HEIGHT; }
+			inrect.width = inrect.width - 2;
+			ofRect(inrect);
 			if (!top_level_group) {
 				ofFill(); // rect color filled
 				ofSetColor(headerColor);
-				/*
-				if (duration == 0) // groups with no delay
-					rect.width = 200; // TODO
-				else rect.width = tlAction->get_x(duration);
-				*/
 				ofRectangle recthead = rect;
 				recthead.height = HEADER_HEIGHT;
 				ofRect(recthead);
@@ -942,9 +1034,11 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 
 				string name = title;
 				if (group && group->period > 0) { name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
-				tlAction->mFont.drawString(name, rect.x, rect.y + HEADER_HEIGHT - 2);
+				tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 2);
+				ofNoFill(); // black border
+				if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 				ofRect(rect);
-			}
+			} 
 			//cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
 			list<ActionGroup*>::const_iterator i;
 			for (i = group->sons.begin(); i != group->sons.end(); i++) {
@@ -956,15 +1050,16 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		ofFill(); // rect color filled
 		ofSetColor(headerColor);
 		rect.height = HEADER_HEIGHT;
-		ofRect(rect);
+		ofRect(rect); // header filled rect
 		ofNoFill();
 		ofSetColor(0, 0, 0, 255);
 		drawArrow(); // arrow
 		string name = title;
 		if (group && group->period > 0) {name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
-		tlAction->mFont.drawString(name, rect.x, rect.y + HEADER_HEIGHT - 2);
+		tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 2);
 		ofNoFill();
-		ofRect(rect);
+		if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
+		ofRect(rect); // black border rect
 		//cout << "ActionGroupHeader.draw hidden: ("<<rect.x<<","<<rect.y<<") : " << title << endl;
 	}
 }
