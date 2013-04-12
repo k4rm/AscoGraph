@@ -38,6 +38,8 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 {
 	mAntescofog = Antescofog;
 	bEditorShow = false;
+	movingAction = false;
+	movingActionRect = ofRectangle(0, 0, 40, 20);
 }
 
 
@@ -69,7 +71,18 @@ void ofxTLAntescofoAction::draw()
 
 				ActionGroupHeader *act = *i;
 				act->draw(this);
-				//act->print();
+				
+				act->print();
+				
+				if (0 && movingAction) {
+					ofPushStyle();
+					ofFill();
+					//ofSetColor(123, 13, 13, 140);
+					ofSetColor(200, 200, 200, 255);
+					ofRect(movingActionRect);
+					ofPopStyle();
+				}
+					
 			}
 		}
 
@@ -328,7 +341,7 @@ int ofxTLAntescofoAction::get_max_note_beat()
 // return height of ActionGroup in px
 int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 {
-	int debugsub = 0;
+	int debugsub = 1;
 	if (debugsub) cout << "update_sub: " << ag->header->title << endl;
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->header->rect.y;
@@ -360,11 +373,12 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		ActionMessage *m = 0;
 		if ((m = dynamic_cast<ActionMessage*>(*g))) {
+			cout << "ag->header-> " << ag->header->realtitle << endl;
 			m->x = ag->header->rect.x;
 			if (m->delay)
 				m->x = get_x(ag->header->beatnum + ag->header->delay + m->delay);
 			m->y = cury;
-			if (debugsub) cout << "m->y=" << m->y << " curh:" << curh << " toth:" << toth << endl;
+			if (debugsub) cout << m->action << "m->x=" << m->x << " m->y=" << m->y << " curh:" << curh << " toth:" << toth << endl;
 		}
 		if (!m && !(*g)->header->top_level_group) {
 			(*g)->header->rect.x = ag->header->rect.x;
@@ -513,6 +527,7 @@ void ofxTLAntescofoAction::update_groups()
 {
 	// update actions' rect
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
 		(*i)->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
 		(*i)->rect.y = bounds.y + 3;
 		//update_sub_y((*i)->group);
@@ -594,6 +609,9 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	ActionGroup* clickedGroup = groupFromScreenPoint(args.x, args.y);
 	if (clickedGroup) {
 		clickedGroup->selected = true;
+		movingAction = true;
+		movingActionRect.x = args.x;
+		movingActionRect.y = args.y;
 	}
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 
@@ -634,6 +652,11 @@ void ofxTLAntescofoAction::mouseMoved(ofMouseEventArgs& args, long millis)
 
 void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)//bool snapped);
 {
+	if (movingAction) {
+		movingActionRect.x = args.x;
+		movingActionRect.y = args.y;
+	}
+
 	if(draggingSelectionRange){
 		//dragSelection.min = MIN(args.x, selectionRangeAnchor);
 		//dragSelection.max = MAX(args.x, selectionRangeAnchor);
@@ -642,9 +665,67 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)//bo
 	}
 }
 
+// move action from action->selected beatnum 
+// to moveActionRect. x y
+void ofxTLAntescofoAction::move_action() {
+	list<ActionGroupHeader*>::iterator from;
+	for (from = mActionGroups.begin(); from != mActionGroups.end(); from++) {
+		if ((*from)->group && (*from)->group->selected) {
+			(*from)->group->selected = false;
+			break;
+		}
+	}
+	if (from == mActionGroups.end() || !(*from)->group)
+		return;
+	bool doneMoving = false;
+	ActionGroup* dest = groupFromScreenPoint(movingActionRect.x, movingActionRect.y);
+	// if dest ActionGroup exists : simply add it
+	if (dest) {
+		cout << "move_action: dest found" << endl;
+		dest->sons.push_back((*from)->group);
+		doneMoving = true;
+	} else { // else find the event and plug it to it
+		cout << "move_action: dest not found" << endl;
+		for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+			if ((*i)->rect.x <= movingActionRect.x && (*i)->rect.x + (*i)->rect.width >= movingActionRect.x) {
+				cout << "move_action: dest finally found" << endl;
+				if (!(*i)->group)
+					(*i)->group = (*from)->group;
+				else (*i)->group->sons.push_back((*from)->group);
+				//(*from)->group->header = *i;
+				dest = (*i)->group;
+				doneMoving = true;
+				break;
+			}
+		}
+	}
+
+	if (doneMoving) {// remove from from
+		// assign dest header to from subgroups
+		for (list<ActionGroup*>::const_iterator j = (*from)->group->sons.begin(); j != (*from)->group->sons.end(); j++) {
+			(*j)->header = dest->header;
+		}
+		//(*from)->group->header = dest->header;
+		(*from)->group = 0;
+		mActionGroups.erase(from);
+		delete *from;
+		//update_groups();
+	}
+
+
+	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		(*i)->print();
+
+	}
+}
+
 void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 {
 	if (!bounds.inside(args.x, args.y)) return;
+	if (movingAction) {
+		//move_action();
+	}
+	movingAction = false;
 	/*
 	if(draggingSelectionRange){
 		for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {

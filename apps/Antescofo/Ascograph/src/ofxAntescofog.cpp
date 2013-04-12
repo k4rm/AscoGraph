@@ -326,30 +326,27 @@ void ofxAntescofog::setupUI() {
 #if NO_UIBUTTONS
     guiBottom->addWidgetRight(new ofxUILabelToggle(bSnapToGrid, TEXT_CONSTANT_BUTTON_SNAP, OFX_UI_FONT_SMALL));
     guiBottom->addWidgetRight(new ofxUILabelToggle(bAutoScroll, TEXT_CONSTANT_BUTTON_AUTOSCROLL, OFX_UI_FONT_SMALL));
-    guiBottom->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL));
-    guiBottom->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL));
-    guiBottom->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL));
 #endif
     //guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
     ofxUIButton *b = new ofxUIButton("NOTE", false, 30, 15);
     guiBottom->addWidgetRight(b);
-		b->setColorBack(ofxAntescofoNote->color_note);
+    b->setColorBack(ofxAntescofoNote->color_note);
 
     b = new ofxUIButton(30, 15, false, "CHORD");
     guiBottom->addWidgetRight(b);
-		b->setColorBack(ofxAntescofoNote->color_note_chord);
-    
+    b->setColorBack(ofxAntescofoNote->color_note_chord);
+
     b = new ofxUIButton(30, 15, false, "MULTI"); 
     guiBottom->addWidgetRight(b);
-		b->setColorBack(ofxAntescofoNote->color_note_multi);
+    b->setColorBack(ofxAntescofoNote->color_note_multi);
 
     b = new ofxUIButton(30, 15, false, "TRILL"); 
     guiBottom->addWidgetRight(b);
-		b->setColorBack(ofxAntescofoNote->color_note_trill);
- 
-		ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
-		space->setVisible(false);
-		guiBottom->addWidgetDown(space);
+    b->setColorBack(ofxAntescofoNote->color_note_trill);
+
+    ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
+    space->setVisible(false);
+    guiBottom->addWidgetDown(space);
     mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, OFX_UI_FONT_SMALL);
     guiBottom->addWidgetDown(mLabelBeat);
     mLabelBeat = new ofxUILabel("0", OFX_UI_FONT_SMALL);
@@ -359,8 +356,18 @@ void ofxAntescofog::setupUI() {
     mLabelPitch = new ofxUILabel("0", OFX_UI_FONT_SMALL);
     guiBottom->addWidgetRight(mLabelPitch);
  
-   
-    
+    // event buttons
+    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
+    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+
     /*vector<string> items;
     items.push_back("Play to midi synth");
     items.push_back("Open MusicXML score");
@@ -1471,28 +1478,43 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         ofxAntescofoNote->setAutoScroll(bAutoScroll);
 	}
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_PLAY)
-	{
-		ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
-		cout << "Play button change: " << b->getValue() << endl;
-        if (b->getValue() == 1) {
-            ofxOscMessage m;
-            m.setAddress("/antescofo/command");
-            m.addStringArg("play");
-            mOSCsender.sendMessage(m);
-            b->setValue(false);
-        }
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Play button change: " << b->getValue() << endl;
+	    if (b->getValue() == 1) {
+		    ofxOscMessage m;
+		    m.setAddress("/antescofo/command");
+		    m.addStringArg("play");
+		    mOSCsender.sendMessage(m);
+		    b->setValue(false);
+	    }
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_START)
-	{
-		ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
-		cout << "Start button change: " << b->getValue() << endl;
-        if (b->getValue() == 1) {
-            ofxOscMessage m;
-            m.setAddress("/antescofo/command");
-            m.addStringArg("start");
-            mOSCsender.sendMessage(m);
-            b->setValue(false);
-        }
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Start button change: " << b->getValue() << endl;
+	    if (b->getValue() == 1) {
+		    ofxOscMessage m;
+		    m.setAddress("/antescofo/command");
+		    m.addStringArg("start");
+		    mOSCsender.sendMessage(m);
+		    b->setValue(false);
+	    }
+    }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT || e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Prev/next event button change: " << b->getValue() << endl;
+	    if (b->getValue() == 1) {
+		    ofxOscMessage m;
+		    m.setAddress("/antescofo/command");
+		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT)
+			    m.addStringArg("nextevent");
+		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
+			    m.addStringArg("prevevent");
+		    mOSCsender.sendMessage(m);
+		    b->setValue(false);
+	    }
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_STOP)
 	{

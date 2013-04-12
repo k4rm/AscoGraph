@@ -84,6 +84,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void add_action_curves(float beatnum, ActionGroup *ar, Cfwd *c);
 		int get_max_note_beat();
 		void clear_actions();
+		void move_action();
 		void attribute_header_colors(list<ActionGroupHeader*> actiongroups);
 		ofColor get_random_color();
 		void drawBitmapStringHighlight(string text, int x, int y, const ofColor& background, const ofColor& foreground);
@@ -97,7 +98,8 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		list<ActionGroupHeader*> mActionGroups;
 		bool bEditorShow;
-		bool draggingSelectionRange;
+		bool draggingSelectionRange, movingAction;
+		ofRectangle movingActionRect;
 		ofPoint selectionRangeAnchor;
 		ofRectangle dragSelection;
 		ActionGroup* groupFromScreenPoint(int x, int y);
