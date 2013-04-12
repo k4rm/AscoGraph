@@ -25,7 +25,7 @@
 	LFWD	$INIT_DELAY @UID(loop_harm_gain) $PERIOD
 	{
 		harm$NUM $HIGHG	@beat2msec( $INTERNAL_PER )	@name h$NUM_p_1
-		$INTERNAL_PER	harm$NUM	$LOWG	@beat2msec( $INTERNAL_PER )	@name h$NUM_p_2
+		$INTERNAL_PER	harm$NUM	($LOWG)	@beat2msec( $INTERNAL_PER )	@name h$NUM_p_2
 	}
 	print $NUM gain global $PERIOD local $INTERNAL_PER  
 	KILL expr{ $pnum*$PERIOD - $PERIOD/50.0}	@LID(loop_harm_gain)

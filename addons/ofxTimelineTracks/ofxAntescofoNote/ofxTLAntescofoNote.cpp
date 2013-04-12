@@ -46,8 +46,8 @@
 #define RT_TEMPO_VAR_OK
 
 #include <Action.h>
-#include <pre_antescofo.h>
 #include <FakeRunTime.h>
+#include <pre_antescofo.h>
 #include <parsedriver.h>
 #include <Score.h>
 #include <location.hh>
