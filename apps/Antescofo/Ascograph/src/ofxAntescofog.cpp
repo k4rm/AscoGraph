@@ -344,6 +344,19 @@ void ofxAntescofog::setupUI() {
     guiBottom->addWidgetRight(b);
     b->setColorBack(ofxAntescofoNote->color_note_trill);
 
+    // event buttons
+    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
+    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+
+
     ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
     space->setVisible(false);
     guiBottom->addWidgetDown(space);
@@ -356,17 +369,7 @@ void ofxAntescofog::setupUI() {
     mLabelPitch = new ofxUILabel("0", OFX_UI_FONT_SMALL);
     guiBottom->addWidgetRight(mLabelPitch);
  
-    // event buttons
-    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
-    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
-    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
-    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
-    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
+
 
     /*vector<string> items;
     items.push_back("Play to midi synth");

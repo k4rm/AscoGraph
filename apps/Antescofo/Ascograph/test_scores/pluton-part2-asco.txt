@@ -1,11 +1,44 @@
 
 BPM 54.00
 
+
 VARIANCE 0.2
 
 ; ---------- measure 1 beat 0.00 ---------
 
 antescofo-mess pedal 1, pedaltime 500, analysis 4096 256
+
+oscsend osc_pitch :3002 "/antescofo/pitch"
+oscsend osc_beatpos :3002 "/antescofo/beat"
+oscsend osc_tempo :3002 "/antescofo/tempo"
+oscrecv osc_cmds 3003 "/antescofo/command" $cmd
+
+whenever($PITCH)
+{
+	osc_pitch $PITCH	
+	osc_beatpos $RNOW
+	osc_tempo $RT_TEMPO
+}
+
+whenever($cmd = "nextevent") {
+	print innextevent
+	antescofo_nextevent
+}
+whenever($cmd = "prevevent") {
+	antescofo_prevevent 
+}
+whenever($cmd = "play") {
+	antescofo_play
+}
+whenever($cmd = "stop") {
+	antescofo_stop
+}
+
+whenever($cmd) {
+	print cmd: $cmd
+}
+
+EVENT 10
 
 NOTE 0 4.0
 

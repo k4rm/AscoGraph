@@ -72,7 +72,7 @@ void ofxTLAntescofoAction::draw()
 				ActionGroupHeader *act = *i;
 				act->draw(this);
 				
-				act->print();
+				//act->print();
 				
 				if (0 && movingAction) {
 					ofPushStyle();
@@ -714,7 +714,7 @@ void ofxTLAntescofoAction::move_action() {
 
 
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		(*i)->print();
+		//(*i)->print();
 
 	}
 }
