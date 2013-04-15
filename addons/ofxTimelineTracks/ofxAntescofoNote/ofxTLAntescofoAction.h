@@ -73,6 +73,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		ofRectangle getBounds() { return bounds; }
 		*/
 		ofRange getZoomBounds() { return zoomBounds; }
+		ofRectangle getBoundedRect(ofRectangle& r);
 
 
 		void setNoteTrack(ofxTLAntescofoNote* o) { ofxAntescofoNote = o; }

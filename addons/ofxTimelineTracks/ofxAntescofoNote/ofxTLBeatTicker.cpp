@@ -53,10 +53,19 @@ void ofxTLBeatTicker::draw(){
 
 		ofSetColor(0, 0, 0, 200);
 		ofSetLineWidth(1);
+
+		int siz = bpmScreenPoints.size();
+		int howmany;
+		if (siz > 20)
+			howmany = siz / 15;
+		else if (siz > 12)
+			howmany = 4;
+		else howmany = 4;
 		for(int i = 0; i < bpmScreenPoints.size(); i++) {
 			if (isOnScreen(bpmScreenPoints[i].screenX)) {
 				int bi = floor(bpmScreenPoints[i].beat);
-				if ((bi) % 4 == 1) { // draw bpms indices
+				//if ((bi) % 4 == 1) { // draw bpms indices
+				if ((bi) % howmany == 1) { // draw bpms indices
 #if DRAW_FXCKING_GRID
 						ofLine(bpmScreenPoints[i].screenX, getBottomEdge(), bpmScreenPoints[i].screenX, totalDrawRect.y+totalDrawRect.height);
 #endif

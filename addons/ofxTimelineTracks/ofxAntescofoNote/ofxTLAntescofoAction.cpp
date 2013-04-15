@@ -341,7 +341,7 @@ int ofxTLAntescofoAction::get_max_note_beat()
 // return height of ActionGroup in px
 int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 {
-	int debugsub = 1;
+	int debugsub = 0;
 	if (debugsub) cout << "update_sub: " << ag->header->title << endl;
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->header->rect.y;
@@ -527,7 +527,7 @@ void ofxTLAntescofoAction::update_groups()
 {
 	// update actions' rect
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
+		//if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
 		(*i)->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
 		(*i)->rect.y = bounds.y + 3;
 		//update_sub_y((*i)->group);
@@ -764,6 +764,20 @@ string ofxTLAntescofoAction::cut_str(int w, string in)
 	return in;
 }
 
+
+ofRectangle ofxTLAntescofoAction::getBoundedRect(ofRectangle& r)
+{
+	ofRectangle ret = r;
+	if (ret.x < bounds.x && ret.x + ret.width > bounds.x) {
+		ret.x = bounds.x;
+		ret.width = r.width - ret.x - abs(r.x);
+	}
+	if (ret.x + ret.width > bounds.x + bounds.width)
+		ret.width = bounds.width - ret.x + bounds.x;// + abs(r.x);
+
+	return ret;
+}
+
 ////////////////////////////////////////////////////
 
 ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_) 
@@ -852,10 +866,15 @@ void ActionGroup::print() {
 	}
 }
 
-bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction)
-{
-	ofRange r( _timeline->beatToNormalizedX(header->beatnum), _timeline->beatToNormalizedX(header->beatnum + header->duration));
+bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction) {
+	//ofRange r( _timeline->beatToNormalizedX(header->beatnum), _timeline->beatToNormalizedX(header->beatnum + header->duration));
+	ofRange r(_timeline->screenXtoNormalizedX(header->rect.x, tlAction->getZoomBounds()), _timeline->screenXtoNormalizedX(header->rect.x + header->rect.width, tlAction->getZoomBounds()));
+	cout << header->realtitle << " header x:" << header->rect.x << " rmin:" << r.min << " header xh:" << header->rect.x + header->rect.width << " rmax:" << r.max << endl;
+	//ofRange r(header->rect.x, header->rect.x + header->rect.width);
 	return tlAction->getZoomBounds().intersects(r);
+		/*|| (_timeline->normalizedXToBeat(tlAction->getZoomBounds().min) >= header->beatnum+header->duration
+				&& _timeline->normalizedXToBeat(tlAction->getZoomBounds().min) <= header->beatnum);
+				*/
 	//return (tlAction->getZoomBounds().max >= _timeline->beatToNormalizedX(header->beatnum)
 			//&& tlAction->getZoomBounds().min <= _timeline->beatToNormalizedX(header->beatnum + header->duration));
 }
@@ -1027,7 +1046,7 @@ void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	ofSetColor(0, 0, 0, 255);
 	tlAction->mFont.drawString(tlAction->cut_str(header->rect.width, action), x + 1, y + header->LINE_HEIGHT - 6);
 	if (selected) { ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
-	ofRect(header->rect);
+	ofRect(tlAction->getBoundedRect(header->rect));
 	//if (selected) ofPopStyle();
 }
 
@@ -1076,7 +1095,7 @@ string ActionGroup::get_period()
 void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction) 
 {
 	ofSetLineWidth(1);
-	//cout << "ActionRects.draw: label:"<< realtitle<< " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
+	cout << "ActionRects.draw: label:"<< realtitle<< " inbounds:" << group->is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
 	if (top_level_group && group && group->is_in_bounds(tlAction)) {
 		ofFill();
 		ofSetColor(200, 200, 200, 255);
@@ -1084,7 +1103,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		inrect.x += 1; inrect.y = rect.y + 1;
 		inrect.height = inrect.height - 2;
 		inrect.width = inrect.width - 2;
-		ofRect(inrect); // draw white body
+		ofRect(tlAction->getBoundedRect(inrect)); // draw white body
 
 		list<ActionGroup*>::const_iterator i;
 		for (i = group->sons.begin(); i != group->sons.end(); i++) {
@@ -1101,13 +1120,13 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 			inrect.height = inrect.height - 2;
 			if (!top_level_group) { inrect.height -= HEADER_HEIGHT; inrect.y += HEADER_HEIGHT; }
 			inrect.width = inrect.width - 2;
-			ofRect(inrect);
+			ofRect(tlAction->getBoundedRect(inrect));
 			if (!top_level_group) {
 				ofFill(); // rect color filled
 				ofSetColor(headerColor);
 				ofRectangle recthead = rect;
 				recthead.height = HEADER_HEIGHT;
-				ofRect(recthead);
+				ofRect(tlAction->getBoundedRect(recthead));
 
 				ofNoFill();
 				ofSetColor(0, 0, 0, 255);
@@ -1118,7 +1137,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 				tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 2);
 				ofNoFill(); // black border
 				if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
-				ofRect(rect);
+				ofRect(tlAction->getBoundedRect(rect));
 			} 
 			//cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
 			list<ActionGroup*>::const_iterator i;
@@ -1131,7 +1150,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		ofFill(); // rect color filled
 		ofSetColor(headerColor);
 		rect.height = HEADER_HEIGHT;
-		ofRect(rect); // header filled rect
+		ofRect(tlAction->getBoundedRect(rect)); // header filled rect
 		ofNoFill();
 		ofSetColor(0, 0, 0, 255);
 		drawArrow(); // arrow
@@ -1140,7 +1159,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 2);
 		ofNoFill();
 		if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
-		ofRect(rect); // black border rect
+		ofRect(tlAction->getBoundedRect(rect)); // black border rect
 		//cout << "ActionGroupHeader.draw hidden: ("<<rect.x<<","<<rect.y<<") : " << title << endl;
 	}
 }
