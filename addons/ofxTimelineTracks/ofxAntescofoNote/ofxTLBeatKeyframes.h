@@ -54,6 +54,7 @@ class ofxTLBeatKeyframes : public ofxTLKeyframes
 	virtual void draw();
 
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
+	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 
@@ -112,13 +113,14 @@ class ofxTLBeatKeyframes : public ofxTLKeyframes
 	bool isKeyframeSelected(ofxTLBeatKeyframe* k);
 	void selectKeyframe(ofxTLBeatKeyframe* k);
 	void deselectKeyframe(ofxTLBeatKeyframe* k);
+	void keyPressed(ofKeyEventArgs& args);
 
 	//don't override these in subclasses
-	void deleteSelectedKeyframes();
-	void deleteKeyframe(ofxTLBeatKeyframe* keyframe);
+	virtual void deleteSelectedKeyframes();
+	virtual void deleteKeyframe(ofxTLBeatKeyframe* keyframe);
 	//instead implement special behavior here:
 	//this is called before the keyframe is deleted and removed from the keyframes vector
-	virtual void willDeleteKeyframe(ofxTLBeatKeyframe* keyframe){};
+	virtual void willDeleteKeyframe(ofxTLKeyframe* keyframe);
 
 	vector<ofxTLBeatKeyframe*> selectedKeyframes;
 	ofxTLBeatKeyframe* selectedKeyframe;

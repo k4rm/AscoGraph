@@ -133,8 +133,10 @@ void ofxTLKeyframes::draw(){
                 ofCurveVertex(screenpoint.x, screenpoint.y);
             }
         }
-        ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[0]);
-        ofCurveVertex(screenpoint.x, screenpoint.y);
+	if (selectedKeyframes.size()) {
+		ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[0]);
+		ofCurveVertex(screenpoint.x, screenpoint.y);
+	}
         ofEndShape();
 	//***** DRAW KEYFRAME LINES
 	ofSetColor(timeline->getColors().keyColor);
@@ -762,6 +764,7 @@ void ofxTLKeyframes::loadFromBinaryFile(){
 
 void ofxTLKeyframes::keyPressed(ofKeyEventArgs& args){
 	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
+		cout << "ofxTLKeyframes::delete selected" << endl;
 		deleteSelectedKeyframes();
 	}
 }
@@ -777,13 +780,17 @@ void ofxTLKeyframes::nudgeBy(ofVec2f nudgePercent){
 }
 
 void ofxTLKeyframes::deleteSelectedKeyframes(){
+	cout << "ofxTLKeyframes::deleteSelectedKeyframes:: keyframes size:"<< keyframes.size() << endl;
+
 	vector<ofxTLKeyframe*>::iterator selectedIt = selectedKeyframes.end();
 	for(int i = keyframes.size() - 1; i >= 0; i--){
 		if(isKeyframeSelected(keyframes[i])){
+			cout << "ofxTLKeyframes::delete selected i : " << i << endl;
 			if(keyframes[i] != selectedKeyframes[selectedKeyframes.size()-1]){
 				ofLogError("ofxTLKeyframes::deleteSelectedKeyframes") << "keyframe delete inconsistency";
 			}
 			willDeleteKeyframe(keyframes[i]);
+			cout << "ofxTLKeyframes::delete selected i : " << i << " deleted"<< endl;
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
 			selectedKeyframes.erase(--selectedIt);

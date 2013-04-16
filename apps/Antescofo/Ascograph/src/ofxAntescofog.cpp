@@ -485,6 +485,7 @@ void ofxAntescofog::setupTimeline(){
 	timeline.setShowTicker(true);
 	timeline.setBPM(bpm);
 
+	//timeline.addCurves("test", "test.xml");
 	timeline.enable();
 	timeline.setFrameBased(false);
 	ofxAntescofoNote->enable();
@@ -497,7 +498,6 @@ void ofxAntescofog::setupTimeline(){
 	ra.height = ofGetHeight() - ra.y - rz.height - 200;
 	ofxAntescofoAction->setDrawRect(ra);
 	*/
-
 }
 
 

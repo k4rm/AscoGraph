@@ -5,6 +5,7 @@
 //  Created by Thomas Coffy on 06/12/12.
 //
 //
+#include <sstream>
 #include <algorithm>
 #include <string>
 #include "ofxTLAntescofoNote.h"
@@ -62,7 +63,7 @@ void ofxTLAntescofoAction::draw()
 		//bounds.height = 0;
 		disable();
 	}
-	if (mScore && bounds.height > 6) {
+	if (mScore && bounds.height > 1) {
 		update_groups();
 		for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
@@ -373,7 +374,7 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		ActionMessage *m = 0;
 		if ((m = dynamic_cast<ActionMessage*>(*g))) {
-			cout << "ag->header-> " << ag->header->realtitle << endl;
+			if (debugsub) cout << "ag->header-> " << ag->header->realtitle << endl;
 			m->x = ag->header->rect.x;
 			if (m->delay)
 				m->x = get_x(ag->header->beatnum + ag->header->delay + m->delay);
@@ -558,7 +559,7 @@ bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionG
 			//cout << "mousePressed: setting action '"<< header->title <<"' hidden:"<< header->hidden << endl;
 			if (group) {
 				Event *e = group->event;
-				mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
+				//mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
 				res = true;
 			}
 			return res;
@@ -567,7 +568,7 @@ bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionG
 		} else {
 			if (group) { // not hidden and click in group
 				Event *e = group->event;
-				mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
+				//mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
 				if (group->sons.size()) { // rec in subgroups
 					ActionGroup *a = group;
 					for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
@@ -583,12 +584,26 @@ bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionG
 	return res;
 }
 
+ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint_rec(ActionGroup* group, int x, int y) {
+	ActionGroup* rg = 0;
+	for (list<ActionGroup*>::const_iterator i = group->sons.begin(); i != group->sons.end(); i++) {
+		if ((*i)->header->rect.inside(x, y) && (*i)->header != group->header) {
+			if (!(rg = groupFromScreenPoint_rec(*i, x, y))) //&& *i == *(group->sons.end())) 
+				return *i;
+			else return rg;
+		}
+	}
+	if (group->header && group->header->rect.inside(x, y)) {
+		return group;
+	}
+	return 0;
+}
+
 ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint(int x, int y) {
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		if ((*i)->rect.inside(x, y)) {
-			cout << "groupFromScreenPoint: got group! : " << (*i)->realtitle << endl; 
-			return (*i)->group;
-		}
+		ActionGroup *gr = 0;
+		if ((*i)->rect.inside(x, y) && (gr = groupFromScreenPoint_rec((*i)->group, x, y)))
+			return gr;
 	}
 	return 0;
 }
@@ -608,14 +623,20 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	// selection
 	ActionGroup* clickedGroup = groupFromScreenPoint(args.x, args.y);
 	if (clickedGroup) {
+		cout << "clickedGroup: " << clickedGroup->header->realtitle << endl;
+		/*
 		clickedGroup->selected = true;
 		movingAction = true;
 		movingActionRect.x = args.x;
 		movingActionRect.y = args.y;
+		*/
+		if (clickedGroup->header)
+			mAntescofog->editorShowLine(clickedGroup->header->lineNum_begin, clickedGroup->header->lineNum_end);
 	}
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 
 		if (!(*i)->top_level_group && mousePressed_In_Arrow(args, (*i)->group)) {
+			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end);
 			res = true;
 			return res;
 		} else if ((*i)->group) { // look for subgroups
@@ -623,6 +644,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			if (a->sons.size()) {
 				for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					if ((*j)->header &&  mousePressed_In_Arrow(args, (*j)->header->group)) {
+						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end);
 						res = true;
 						return res;
 					}
@@ -867,16 +889,8 @@ void ActionGroup::print() {
 }
 
 bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction) {
-	//ofRange r( _timeline->beatToNormalizedX(header->beatnum), _timeline->beatToNormalizedX(header->beatnum + header->duration));
 	ofRange r(_timeline->screenXtoNormalizedX(header->rect.x, tlAction->getZoomBounds()), _timeline->screenXtoNormalizedX(header->rect.x + header->rect.width, tlAction->getZoomBounds()));
-	cout << header->realtitle << " header x:" << header->rect.x << " rmin:" << r.min << " header xh:" << header->rect.x + header->rect.width << " rmax:" << r.max << endl;
-	//ofRange r(header->rect.x, header->rect.x + header->rect.width);
 	return tlAction->getZoomBounds().intersects(r);
-		/*|| (_timeline->normalizedXToBeat(tlAction->getZoomBounds().min) >= header->beatnum+header->duration
-				&& _timeline->normalizedXToBeat(tlAction->getZoomBounds().min) <= header->beatnum);
-				*/
-	//return (tlAction->getZoomBounds().max >= _timeline->beatToNormalizedX(header->beatnum)
-			//&& tlAction->getZoomBounds().min <= _timeline->beatToNormalizedX(header->beatnum + header->duration));
 }
 
 void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
@@ -962,47 +976,80 @@ ActionCurve::ActionCurve(Cfwd* c, float delay_, Event *e, ActionGroupHeader* hea
 
 	// add track
 	if (values.size() && delays.size() && (*(values.begin())).size()) {
-		trackName = string("CFWD ") + label;
+		trackName = string("CURVE ") + label;
 		string uniqueName = _timeline->confirmedUniqueName(trackName);
 
 		int howmany = (*(values.begin())).size();
-		ofxTLMultiCurves* curves = new ofxTLMultiCurves();
-		curves->clear();
-		curves->disable();
-		_timeline->addTrack(trackName, curves);
-		curves->setHowmany(howmany);
+		if (howmany == 1) { // mono curves
+			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
+			_timeline->addTrack(trackName, curves);
 
-		// set values ranges
-		int j = 0; 
-		for (int j = 0; j < howmany; j++) {
-			float min = 0, max = 0;
-			for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
-				if (min > (*i)[j]) min = (*i)[j];
-				if (max < (*i)[j]) max = (*i)[j];
+			// set values ranges
+			int j = 0; 
+			for (int j = 0; j < howmany; j++) { // useless lazy copy-pasted loop from below
+				float min = 0, max = 0;
+				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
+					if (min > (*i)[j]) min = (*i)[j];
+					if (max < (*i)[j]) max = (*i)[j];
+				}
+				curves->setValueRangeMax(max);
+				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
+				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
+				curves->setValueRangeMin(min);
 			}
-			curves->setValueRangeMax(j, max);
-			cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
-			cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
-			curves->setValueRangeMin(j, min);
-		}
+			// set keyframes
+			for (int n = 0; n < howmany; n++) { // useless lazy copy-pasted loop from below
+				double dcumul = 0.;
+				for (int k = 0; k < delays.size(); k++) {
+					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
+					dcumul += delays[k];
+					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
+					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
+						<< " val=" <<  values[k][n] << endl;
 
-		// set keyframes
-		for (int n = 0; n < howmany; n++) {
-			double dcumul = 0.;
-			for (int k = 0; k < delays.size(); k++) {
-				//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
-				dcumul += delays[k];
-				//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-				cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
-					<< " val=" <<  values[k][n] << endl;
-
-				//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
-				curves->addKeyframeAtBeatAtCurveId(n, values[k][n], header->beatnum + dcumul);
-				// }
+					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
+					curves->addKeyframeAtBeat(values[k][n], header->beatnum + dcumul);
+					// }
+				}
+				curves->enable();
 			}
+		} else { // multicurves
+			ofxTLMultiCurves* multicurves = new ofxTLMultiCurves();
+			multicurves->clear();
+			multicurves->disable();
+			_timeline->addTrack(trackName, multicurves);
+			multicurves->setHowmany(howmany);
 
-			curves->enable();
-		}
+			// set values ranges
+			int j = 0; 
+			for (int j = 0; j < howmany; j++) {
+				float min = 0, max = 0;
+				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
+					if (min > (*i)[j]) min = (*i)[j];
+					if (max < (*i)[j]) max = (*i)[j];
+				}
+				multicurves->setValueRangeMax(j, max);
+				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
+				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
+				multicurves->setValueRangeMin(j, min);
+			}
+			// set keyframes
+			for (int n = 0; n < howmany; n++) {
+				double dcumul = 0.;
+				for (int k = 0; k < delays.size(); k++) {
+					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
+					dcumul += delays[k];
+					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
+					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
+						<< " val=" <<  values[k][n] << endl;
+
+					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
+					multicurves->addKeyframeAtBeatAtCurveId(n, values[k][n], header->beatnum + dcumul);
+					// }
+				}
+				multicurves->enable();
+			}
+		} // end multicurves
 	}
 
 }
@@ -1016,7 +1063,6 @@ ActionCurve::~ActionCurve()
 /*
 	Message
  */
-
 ActionMessage::ActionMessage(Message* m, float delay_, Event *e, ActionGroupHeader* header_) 
 {
 	header = header_;
@@ -1066,10 +1112,11 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 		}
 		title = "Group " + action->label();
 		rect.height = HEADER_HEIGHT;
-
-
 		Gfwd *g = dynamic_cast<Gfwd*>(action);
 		if (g) {
+			lineNum_begin = action->locate()->begin.line;
+			lineNum_end = action->locate()->end.line;
+
 			group = new ActionGroup(g, event, this);
 		}
 	}
@@ -1081,7 +1128,6 @@ ActionGroupHeader::~ActionGroupHeader()
 		delete group;
 }
 
-#include <sstream>
 string ActionGroup::get_period()
 {
 	string ret;
@@ -1095,7 +1141,7 @@ string ActionGroup::get_period()
 void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction) 
 {
 	ofSetLineWidth(1);
-	cout << "ActionRects.draw: label:"<< realtitle<< " inbounds:" << group->is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
+	//cout << "ActionRects.draw: label:"<< realtitle<< " inbounds:" << group->is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
 	if (top_level_group && group && group->is_in_bounds(tlAction)) {
 		ofFill();
 		ofSetColor(200, 200, 200, 255);
@@ -1204,7 +1250,7 @@ void ActionGroupHeader::drawArrow() {
 }
 
 void ActionGroupHeader::print() {
-	cout << "***** ActionGroup Header:" << realtitle << " beat:" << beatnum << " delay:"<< delay <<" dur:" << duration << " hidden:"<< hidden 
+	cout << "***** ActionGroup Header:" << realtitle << " line:" << lineNum_begin << ":"<< lineNum_end<< " beat:" << beatnum << " delay:"<< delay <<" dur:" << duration << " hidden:"<< hidden 
 	     << " x:" << rect.x << " y:" << rect.y << " w:" << rect.width << " h:" << rect.height << endl; //" height:" << get_height(tlAction);
 	if (top_level_group && group)
 		group->print();

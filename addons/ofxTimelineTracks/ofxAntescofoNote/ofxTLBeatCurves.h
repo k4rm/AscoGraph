@@ -57,6 +57,7 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 		//For selecting keyframe type only,
 		//the superclass controls keyframe placement
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
+		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 		virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 		virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 

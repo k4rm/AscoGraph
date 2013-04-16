@@ -104,6 +104,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		ofPoint selectionRangeAnchor;
 		ofRectangle dragSelection;
 		ActionGroup* groupFromScreenPoint(int x, int y);
+		ActionGroup* groupFromScreenPoint_rec(ActionGroup* group, int x, int y);
 		void regionSelected(ofLongRange timeRange, ofRange valueRange);
 };
 
@@ -183,6 +184,11 @@ class ActionGroupHeader {
 		ActionGroupHeader(float beatnum_, float delay_, Action* a_, Event *e_);
 		~ActionGroupHeader();
 
+		virtual void draw(ofxTLAntescofoAction *tlAction);
+		void drawArrow(); 
+		void print();
+		bool is_in_arrow(int x, int y);
+
 		// display
 		ofColor headerColor;
 		string title, realtitle;
@@ -202,11 +208,8 @@ class ActionGroupHeader {
 		// antescofo internal
 		Action *action;
 		Event *event;
-
-		virtual void draw(ofxTLAntescofoAction *tlAction);
-		void drawArrow(); 
-		void print();
-		bool is_in_arrow(int x, int y);
+		unsigned int lineNum_begin;
+		unsigned int lineNum_end;
 };
 
 

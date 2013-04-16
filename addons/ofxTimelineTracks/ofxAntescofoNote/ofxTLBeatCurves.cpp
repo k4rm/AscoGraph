@@ -162,6 +162,11 @@ bool ofxTLBeatCurves::mousePressed(ofMouseEventArgs& args, long millis){
 	}
 }
 
+void ofxTLBeatCurves::mouseMoved(ofMouseEventArgs& args, long millis){
+	if(!drawingEasingWindow){
+        ofxTLBeatKeyframes::mouseMoved(args, millis);
+    }
+}
 void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(!drawingEasingWindow){
         ofxTLBeatKeyframes::mouseDragged(args, millis);
@@ -403,9 +408,11 @@ void ofxTLBeatCurves::draw(){
 		//ofSetColor(timeline->getColors().highlightColor);
 		ofSetColor(highlightColor);
 		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
+		cout << "ofxTLBeatCurves::highlight my ass: " << hoverKeyPoint.x << " : " << hoverKeyPoint.y << endl;
 		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
 		ofPopStyle();
-	}
+	} else 
+		cout << "ofxTLBeatCurves:: DONT highlight my ass"<<endl;
 
 	//**** ALL CACHED VISIBLE KEYS
 	ofSetColor(timeline->getColors().textColor);
@@ -432,4 +439,3 @@ void ofxTLBeatCurves::draw(){
 
 	ofPopStyle();
 }
-
