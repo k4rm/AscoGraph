@@ -35,9 +35,8 @@
 #include "ofxTimeline.h"
 
 ofxTLBeatCurves::ofxTLBeatCurves()
-	: ofxTLBeatKeyframes()
+: ofxTLBeatKeyframes()
 {
-	hoverKeyframe = NULL;
 	initializeEasings();
 	valueRange = ofRange(0.0, 1.0);
 	drawingEasingWindow = false;
@@ -47,7 +46,7 @@ float ofxTLBeatCurves::interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBe
 	ofxTLTweenBeatKeyframe* tweenKeyStart = (ofxTLTweenBeatKeyframe*)start;
 	ofxTLTweenBeatKeyframe* tweenKeyEnd = (ofxTLTweenBeatKeyframe*)end;
 	return ofxTween::map(sampleBeat, tweenKeyStart->beat, tweenKeyEnd->beat, tweenKeyStart->value, tweenKeyEnd->value,
-						 false, *tweenKeyStart->easeFunc->easing, tweenKeyStart->easeType->type);
+			false, *tweenKeyStart->easeFunc->easing, tweenKeyStart->easeType->type);
 }
 
 string ofxTLBeatCurves::getTrackType(){
@@ -65,75 +64,76 @@ ofxTLBeatKeyframe* ofxTLBeatCurves::newKeyframe(){
 #if 0
 //easetype: ofSetColor(150, 100, 10);
 void ofxTLCurves::setColor_EasetypeSel(ofColor &col) {
-    mColor_easeTypeSel = col;
+	mColor_easeTypeSel = col;
 }
- //ofSetColor(80, 80, 80);
+//ofSetColor(80, 80, 80);
 void ofxTLCurves::setColor_EasetypeDefault(ofColor &col) {
-    mColor_easeTypeDefault = col;
+	mColor_easeTypeDefault = col;
 }
 #endif
 
 
 void ofxTLBeatCurves::drawModalContent(){
-	
+	cout << "ofxTLBeatCurves::drawModalContent() " << endl;
+
 	//****** DRAW EASING CONTROLS
 	if(!drawingEasingWindow){
-    	return;
-    }
-	
-    ofxTLTweenBeatKeyframe* tweenFrame = (ofxTLTweenBeatKeyframe*) selectedKeyframe;
+		return;
+	}
+
+	ofxTLTweenBeatKeyframe* tweenFrame = (ofxTLTweenBeatKeyframe*) selectedKeyframe;
 	if(tweenFrame == NULL){
 		if(selectedKeyframes.size() == 0){
 			return;
 		}
 		tweenFrame = (ofxTLTweenBeatKeyframe*)selectedKeyframes[0];
 	}
-	
-	for(int i = 0; i < easingTypes.size(); i++){
-        //TODO turn into something like selectionContainsEaseType();
-        //so that we can show the multi-selected easies
-        if(easingTypes[i] ==  ((ofxTLTweenBeatKeyframe*)selectedKeyframes[0])->easeType){
-            //ofSetColor(mColor_easeTypeSel);
-            ofSetColor(150, 100, 10);
-        }
-        else{
-            //ofSetColor(mColor_easeTypeDefault); 
-            ofSetColor(80, 80, 80);
-        }
-        ofFill();
-        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y,
-               easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
-        ofSetColor(200, 200, 200);
-        timeline->getFont().drawString(easingTypes[i]->name,
-									   easingWindowPosition.x + easingTypes[i]->bounds.x+11,
-									   easingWindowPosition.y + easingTypes[i]->bounds.y+10);
-        ofNoFill();
-        ofSetColor(40, 40, 40);
-        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x,
-               easingWindowPosition.y + easingTypes[i]->bounds.y,
-               easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
-    }
 
-    for(int i = 0; i < easingFunctions.size(); i++){
-        //TODO: turn into something like selectionContainsEaseFunc();
-        if(easingFunctions[i] == tweenFrame->easeFunc){
-            //ofSetColor(mColor_easeTypeSel);
-            ofSetColor(150, 100, 10);
-        }
-        else{
-            //ofSetColor(mColor_easeTypeDefault);
-            ofSetColor(80, 80, 80);
-        }
-        ofFill();
-        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
-        ofSetColor(200, 200, 200);
-//        timeline->getFont().drawString(easingFunctions[i]->name,
-//                           easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
-//                           easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
+	for(int i = 0; i < easingTypes.size(); i++){
+		//TODO turn into something like selectionContainsEaseType();
+		//so that we can show the multi-selected easies
+		if(easingTypes[i] ==  ((ofxTLTweenBeatKeyframe*)selectedKeyframes[0])->easeType){
+			//ofSetColor(mColor_easeTypeSel);
+			ofSetColor(150, 100, 10);
+		}
+		else{
+			//ofSetColor(mColor_easeTypeDefault); 
+			ofSetColor(80, 80, 80);
+		}
+		ofFill();
+		ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y,
+				easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
+		ofSetColor(200, 200, 200);
+		timeline->getFont().drawString(easingTypes[i]->name,
+				easingWindowPosition.x + easingTypes[i]->bounds.x+11,
+				easingWindowPosition.y + easingTypes[i]->bounds.y+10);
+		ofNoFill();
+		ofSetColor(40, 40, 40);
+		ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x,
+				easingWindowPosition.y + easingTypes[i]->bounds.y,
+				easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
+	}
+
+	for(int i = 0; i < easingFunctions.size(); i++){
+		//TODO: turn into something like selectionContainsEaseFunc();
+		if(easingFunctions[i] == tweenFrame->easeFunc){
+			//ofSetColor(mColor_easeTypeSel);
+			ofSetColor(150, 100, 10);
+		}
+		else{
+			//ofSetColor(mColor_easeTypeDefault);
+			ofSetColor(80, 80, 80);
+		}
+		ofFill();
+		ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
+				easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
+		ofSetColor(200, 200, 200);
+		//        timeline->getFont().drawString(easingFunctions[i]->name,
+		//                           easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
+		//                           easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
 		ofPushMatrix();
 		ofTranslate(easingWindowPosition.x + easingFunctions[i]->bounds.x,
-					easingWindowPosition.y + easingFunctions[i]->bounds.y);
+				easingWindowPosition.y + easingFunctions[i]->bounds.y);
 		if(tweenFrame->easeType->type == ofxTween::easeIn){
 			easingFunctions[i]->easeInPreview.draw();
 		}
@@ -143,14 +143,14 @@ void ofxTLBeatCurves::drawModalContent(){
 		else {
 			easingFunctions[i]->easeInOutPreview.draw();
 		}
-		
+
 		ofPopMatrix();
-        ofNoFill();
-        ofSetColor(40, 40, 40);
-        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
-    }
-    
+		ofNoFill();
+		ofSetColor(40, 40, 40);
+		ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
+				easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
+	}
+
 }
 
 bool ofxTLBeatCurves::mousePressed(ofMouseEventArgs& args, long millis){
@@ -164,13 +164,13 @@ bool ofxTLBeatCurves::mousePressed(ofMouseEventArgs& args, long millis){
 
 void ofxTLBeatCurves::mouseMoved(ofMouseEventArgs& args, long millis){
 	if(!drawingEasingWindow){
-        ofxTLBeatKeyframes::mouseMoved(args, millis);
-    }
+		ofxTLBeatKeyframes::mouseMoved(args, millis);
+	}
 }
 void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(!drawingEasingWindow){
-        ofxTLBeatKeyframes::mouseDragged(args, millis);
-    }
+		ofxTLBeatKeyframes::mouseDragged(args, millis);
+	}
 }
 
 void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
@@ -188,7 +188,7 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 				return;
 			}
 		}
-		
+
 		for(int i = 0; i < easingTypes.size(); i++){
 			if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
 				for(int k = 0; k < selectedKeyframes.size(); k++){
@@ -206,108 +206,108 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLBeatCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
-    easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
-                                   MIN(args.y, timeline->getBottomLeft().y - (tweenBoxHeight*easingFunctions.size())));
-    
-    drawingEasingWindow = true;
-    timeline->presentedModalContent(this);
+	easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
+			MIN(args.y, timeline->getBottomLeft().y - (tweenBoxHeight*easingFunctions.size())));
+
+	drawingEasingWindow = true;
+	timeline->presentedModalContent(this);
 }
 
 void ofxTLBeatCurves::restoreKeyframe(ofxTLBeatKeyframe* key, ofxXmlSettings& xmlStore){
-    ofxTLTweenBeatKeyframe* tweenKey =  (ofxTLTweenBeatKeyframe*)key;    
-    tweenKey->easeFunc = easingFunctions[ofClamp(xmlStore.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
-    tweenKey->easeType = easingTypes[ofClamp(xmlStore.getValue("easetype", 0), 0, easingTypes.size()-1)];
+	ofxTLTweenBeatKeyframe* tweenKey =  (ofxTLTweenBeatKeyframe*)key;    
+	tweenKey->easeFunc = easingFunctions[ofClamp(xmlStore.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
+	tweenKey->easeType = easingTypes[ofClamp(xmlStore.getValue("easetype", 0), 0, easingTypes.size()-1)];
 }
 
 void ofxTLBeatCurves::storeKeyframe(ofxTLBeatKeyframe* key, ofxXmlSettings& xmlStore){
-    ofxTLTweenBeatKeyframe* tweenKey =  (ofxTLTweenBeatKeyframe*)key;
-    xmlStore.addValue("easefunc", tweenKey->easeFunc->id);
-    xmlStore.addValue("easetype", tweenKey->easeType->id);
+	ofxTLTweenBeatKeyframe* tweenKey =  (ofxTLTweenBeatKeyframe*)key;
+	xmlStore.addValue("easefunc", tweenKey->easeFunc->id);
+	xmlStore.addValue("easetype", tweenKey->easeType->id);
 }
 
 void ofxTLBeatCurves::initializeEasings(){
-    
+
 	//FUNCTIONS ----
 	EasingFunction* ef;
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingLinear();
 	ef->name = "linear";
 	easingFunctions.push_back(ef);
-	
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingSine();
 	ef->name = "sine";
 	easingFunctions.push_back(ef);
-    
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingCirc();
 	ef->name = "circular";
 	easingFunctions.push_back(ef);
-    
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingQuad();
 	ef->name = "quadratic";
 	easingFunctions.push_back(ef);
-	
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingCubic();
 	ef->name = "cubic";
 	easingFunctions.push_back(ef);
-    
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingQuart();
 	ef->name = "quartic";
 	easingFunctions.push_back(ef);
-	
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingQuint();
 	ef->name = "quintic";
 	easingFunctions.push_back(ef);
-    
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingExpo();
 	ef->name = "exponential";
 	easingFunctions.push_back(ef);
-	
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingBack();
 	ef->name = "back";
 	easingFunctions.push_back(ef);
-    
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingBounce();
 	ef->name = "bounce";
 	easingFunctions.push_back(ef);
-    
+
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingElastic();
 	ef->name = "elastic";
 	easingFunctions.push_back(ef);
-    
+
 	///TYPES -------
 	EasingType* et;
 	et = new EasingType();
 	et->type = ofxTween::easeIn;
 	et->name = "ease in";
 	easingTypes.push_back(et);
-    
+
 	et = new EasingType();
 	et->type = ofxTween::easeOut;
 	et->name = "ease out";
 	easingTypes.push_back(et);
-    
+
 	et = new EasingType();
 	et->type = ofxTween::easeInOut;
 	et->name = "ease in-out";
 	easingTypes.push_back(et);
-	
+
 
 	tweenBoxWidth = 40;
 	tweenBoxHeight = 30;
 	easingBoxWidth  = 80;
 	easingBoxHeight = 15;
 
-//	easingWindowSeperatorHeight = 4;
+	//	easingWindowSeperatorHeight = 4;
 
 	for(int i = 0; i < easingTypes.size(); i++){
 		easingTypes[i]->bounds = ofRectangle(0, i*easingBoxHeight, easingBoxWidth, easingBoxHeight);
@@ -327,17 +327,18 @@ void ofxTLBeatCurves::initializeEasings(){
 			percent = ofxTween::map(1.0*p/tweenBoxWidth, 0, 1.0, tweenBoxHeight-5, 5, false, *easingFunctions[i]->easing, ofxTween::easeInOut);
 			easingFunctions[i]->easeInOutPreview.addVertex(ofPoint(p, percent));
 		}
-		
+
 		easingFunctions[i]->easeInPreview.simplify();
 		easingFunctions[i]->easeOutPreview.simplify();
 		easingFunctions[i]->easeInOutPreview.simplify();
-		
+
 	}
-	
+
 }
 
 
 void ofxTLBeatCurves::draw(){
+	cout << "ofxTLBeatCurves::draw" << endl;
 
 	//cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height  << endl;
 	if(bounds.width == 0 || bounds.height < 2 || keyframes.empty()){
@@ -373,8 +374,8 @@ void ofxTLBeatCurves::draw(){
 			ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
 			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
 			if(keysAreDraggable){
-				string frameString = timeline->formatTime(keyframes[i]->time);
-				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+				//string frameString = timeline->formatTime(keyframes[i]->beat);
+				timeline->getFont().drawString(ofToString(keysValue, 2), screenpoint.x+5, screenpoint.y-5);
 			}
 			//ofCircle(screenpoint.x, screenpoint.y, 200);
 			//cout << "x:" <<screenpoint.x << " y:" << screenpoint.y << endl;
@@ -397,7 +398,7 @@ void ofxTLBeatCurves::draw(){
 	ofSetColor(keyColor);
 	ofNoFill();
 
-	// preview.draw();
+	preview.draw();
 
 	//**** DRAW KEYFRAME DOTS
 
@@ -408,11 +409,10 @@ void ofxTLBeatCurves::draw(){
 		//ofSetColor(timeline->getColors().highlightColor);
 		ofSetColor(highlightColor);
 		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
-		cout << "ofxTLBeatCurves::highlight my ass: " << hoverKeyPoint.x << " : " << hoverKeyPoint.y << endl;
+		cout << "ofxTLBeatCurves::highlight: " << hoverKeyPoint.x << " : " << hoverKeyPoint.y << endl;
 		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
 		ofPopStyle();
-	} else 
-		cout << "ofxTLBeatCurves:: DONT highlight my ass"<<endl;
+	}
 
 	//**** ALL CACHED VISIBLE KEYS
 	ofSetColor(timeline->getColors().textColor);
@@ -429,8 +429,8 @@ void ofxTLBeatCurves::draw(){
 			ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[i]);
 			float keysValue = ofMap(selectedKeyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
 			if(keysAreDraggable){
-				string frameString = timeline->formatTime(selectedKeyframes[i]->time);
-				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+				//string frameString = timeline->formatTime(selectedKeyframes[i]->time);
+				timeline->getFont().drawString(ofToString(keysValue, 2), screenpoint.x+5, screenpoint.y-5);
 			}
 			ofCircle(screenpoint.x, screenpoint.y, 4);
 			//cout << "ofxTLKeyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;

@@ -687,9 +687,10 @@ void ofxAntescofog::draw() {
 		draw_error();
 	} else {
 
+		/*
 		if (!bShouldRedraw) {
 			drawCache.draw(0, 0);
-		} else {
+		} else */{
 			ofSetColor(255, 255, 255, 255);
 			drawCache.begin();
 			ofClear(255,255,255, 0);

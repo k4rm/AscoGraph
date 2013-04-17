@@ -38,7 +38,7 @@ bool beatkeyframesort(ofxTLBeatKeyframe* a, ofxTLBeatKeyframe* b){
 	return a->beat < b->beat;
 }
 
-	ofxTLBeatKeyframes::ofxTLBeatKeyframes()
+ofxTLBeatKeyframes::ofxTLBeatKeyframes()
 : ofxTLKeyframes()
 {
 }
@@ -49,7 +49,7 @@ ofxTLBeatKeyframes::~ofxTLBeatKeyframes(){
 void ofxTLBeatKeyframes::recomputePreviews(){
 	preview.clear();
 
-	//	cout << "ofxTLKeyframes::recomputePreviews " << endl;
+	//cout << "ofxTLBeatKeyframes::recomputePreviews " << endl;
 
 	//	if(keyframes.size() == 0 || keyframes.size() == 1){
 	//		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
@@ -83,6 +83,7 @@ void ofxTLBeatKeyframes::recomputePreviews(){
 }
 
 void ofxTLBeatKeyframes::draw(){
+	cout << "ofxTLBeatKeyframes::draw" << endl;
 	if(bounds.width == 0 || bounds.height < 2){
 		return;
 	}
@@ -98,8 +99,8 @@ void ofxTLBeatKeyframes::draw(){
 	ofSetColor(timeline->getColors().disabledColor, 30);
 	//jg play solo change
 	//float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
-	float currentPercent = sampleAtTime(currentTrackTime());
-	ofFill();
+	//float currentPercent = sampleAtTime(currentTrackTime());
+	//ofFill();
 	//ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
 
 
@@ -400,6 +401,7 @@ void ofxTLBeatKeyframes::updateDragOffsets(ofVec2f screenpoint, float grabMillis
 }
 
 void ofxTLBeatKeyframes::mouseMoved(ofMouseEventArgs& args, long millis){
+
 	ofxTLTrack::mouseMoved(args, millis);
 	hoverKeyframe = keyframeAtScreenpoint( ofVec2f(args.x, args.y));
 }
@@ -543,11 +545,12 @@ void ofxTLBeatKeyframes::addKeyframeAtBeat(float beat){
 
 void ofxTLBeatKeyframes::addKeyframeAtBeat(float value, float beat){
 	ofxTLBeatKeyframe* key = newKeyframe();
+	key->time = 0;
 	key->beat = key->previousBeat = beat;
 	key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
 	keyframes.push_back(key);
 	//smart sort, only sort if not added to end
-	if(keyframes.size() > 2 && keyframes[keyframes.size()-2]->time > keyframes[keyframes.size()-1]->time){
+	if(keyframes.size() > 2 && keyframes[keyframes.size()-2]->beat > keyframes[keyframes.size()-1]->beat){
 		updateKeyframeSort();
 	}
 	lastKeyframeIndex = 1;
