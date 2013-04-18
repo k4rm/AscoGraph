@@ -130,12 +130,14 @@ void ofxTLKeyframes::draw(){
                     timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
                 }
                 //ofCircle(screenpoint.x, screenpoint.y, 4);
-                ofCurveVertex(screenpoint.x, screenpoint.y);
+                //ofCurveVertex(screenpoint.x, screenpoint.y);
+                ofVertex(screenpoint.x, screenpoint.y);
             }
         }
 	if (selectedKeyframes.size()) {
 		ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[0]);
-		ofCurveVertex(screenpoint.x, screenpoint.y);
+		//ofCurveVertex(screenpoint.x, screenpoint.y);
+                ofVertex(screenpoint.x, screenpoint.y);
 	}
         ofEndShape();
 	//***** DRAW KEYFRAME LINES

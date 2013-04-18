@@ -84,6 +84,7 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 		float easingBoxHeight;
 		float tweenBoxWidth;
 		float tweenBoxHeight;
+		ofPoint	cursor;
 
 		//	float easingWindowSeperatorHeight;
 

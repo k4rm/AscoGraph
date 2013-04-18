@@ -150,10 +150,10 @@ void ofxTLBeatCurves::drawModalContent(){
 		ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
 				easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
 	}
-
 }
 
 bool ofxTLBeatCurves::mousePressed(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return false;
 	if(drawingEasingWindow){
 		return true;
 	}
@@ -163,9 +163,10 @@ bool ofxTLBeatCurves::mousePressed(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLBeatCurves::mouseMoved(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return;
 	if(!drawingEasingWindow){
 		ofxTLBeatKeyframes::mouseMoved(args, millis);
-	}
+	} else cursor.set(args.x, args.y);
 }
 void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(!drawingEasingWindow){
@@ -174,7 +175,8 @@ void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
-	if(drawingEasingWindow && args.button == 0){
+	cout << "ofxTLBeatCurves::mouseReleased: button:" << args.button <<endl;
+	if (drawingEasingWindow && args.button == 0){
 		drawingEasingWindow = false;
 		timeline->dismissedModalContent();
 		ofVec2f screenpoint(args.x,args.y);
@@ -336,9 +338,9 @@ void ofxTLBeatCurves::initializeEasings(){
 
 }
 
-
+#if 0
 void ofxTLBeatCurves::draw(){
-	cout << "ofxTLBeatCurves::draw" << endl;
+	//cout << "ofxTLBeatCurves::draw" << endl;
 
 	//cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height  << endl;
 	if(bounds.width == 0 || bounds.height < 2 || keyframes.empty()){
@@ -439,3 +441,110 @@ void ofxTLBeatCurves::draw(){
 
 	ofPopStyle();
 }
+#else
+
+void ofxTLBeatCurves::draw(){
+	
+        //cout << "ofxTLKeyframes::draw(): bw:"<< bounds.width << " bh:" << bounds.height  << endl;
+	if(bounds.width == 0 || bounds.height < 2){
+		return;
+	}
+	
+	if(shouldRecomputePreviews || viewIsDirty){
+		recomputePreviews();
+	}
+	
+	ofPushStyle();
+	
+
+        //draw current value indicator as a big transparent rectangle
+	//ofSetColor(timeline->getColors().disabledColor, 30);
+	ofSetColor(timeline->getColors().disabledColor, 130);
+	//jg play solo change
+	//float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
+	//float currentPercent = sampleAtTime(currentTrackTime());
+	ofFill();
+	//ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
+	
+
+        //******* DRAW FILL CURVES
+        ofSetPolyMode(OF_POLY_WINDING_NONZERO);
+
+
+	cout << "keyframe size:" << keyframes.size() << endl;
+	cout << "selectedKeyframe size:" << selectedKeyframes.size() << endl;
+        ofFill();
+        ofBeginShape();
+        for (int i = 0; i < keyframes.size(); i++) {
+            if (isKeyframeIsInBounds(keyframes[i])){
+                ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
+                float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
+                if(keysAreDraggable){
+                    //string frameString = timeline->formatTime(keyframes[i]->time);
+                    timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+                }
+                //ofCircle(screenpoint.x, screenpoint.y, 4);
+                ofCurveVertex(screenpoint.x, screenpoint.y);
+            }
+        }
+	/*if (keyframes.size()) {
+		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[0]);
+		ofCurveVertex(screenpoint.x, screenpoint.y);
+	}*/
+	// draw edges
+	if (keyframes.size()) {
+		// last point
+		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[keyframes.size()-1]);
+		ofVertex(screenpoint.x, bounds.getMaxY()); // right low corner of rect
+		// first point
+		screenpoint = screenPositionForKeyframe(keyframes[0]);
+		ofVertex(screenpoint.x, bounds.getMaxY()); // right low corner of rect
+		ofVertex(screenpoint.x, screenpoint.y);  
+	}
+
+        ofEndShape();
+	//***** DRAW KEYFRAME LINES
+	ofSetColor(timeline->getColors().keyColor);
+	ofNoFill();
+	
+	preview.draw();
+	
+	//**** DRAW KEYFRAME DOTS
+	
+	//**** HOVER FRAME
+	if(hoverKeyframe != NULL){
+		ofPushStyle();
+		ofFill();
+		ofSetColor(timeline->getColors().highlightColor);
+		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
+		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
+		ofPopStyle();
+	}
+
+	//**** ALL CACHED VISIBLE KEYS
+	ofSetColor(timeline->getColors().textColor);
+	ofNoFill();
+	for(int i = 0; i < keyPoints.size(); i++){
+		ofRect(keyPoints[i].x-1, keyPoints[i].y-1, 3, 3);
+	}
+	
+	//**** SELECTED KEYS
+	ofSetColor(timeline->getColors().textColor);
+	ofFill();
+        //cout << "ofxTLKeyframes::draw(): selectedKeyframes.size:"<< selectedKeyframes.size() << endl;
+	for(int i = 0; i < selectedKeyframes.size(); i++){
+		if(isKeyframeIsInBounds(selectedKeyframes[i])){
+			ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[i]);
+			float keysValue = ofMap(selectedKeyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
+			if(keysAreDraggable){
+				//string frameString = timeline->formatTime(selectedKeyframes[i]->time);
+				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+			}
+			ofCircle(screenpoint.x, screenpoint.y, 4);
+                        // cout << "ofxTLKeyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
+		}
+	}
+
+	ofPopStyle();
+}
+#endif

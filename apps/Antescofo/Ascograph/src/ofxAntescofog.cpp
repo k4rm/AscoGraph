@@ -7,6 +7,7 @@
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
 
+int _debug = 0;
 static string str_error; // filled by our error()
 
 extern ofxConsole* console;
@@ -23,7 +24,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[], ofxCocoaWindow* window) {
 #else
 ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 #endif
-		console = new ofxConsole(4, 500, 800, 300, 10);
+    console = new ofxConsole(4, 500, 800, 300, 10);
     bShowColorSetup = false;
     bShowOSCSetup = false;
     bSnapToGrid = true;
@@ -585,11 +586,11 @@ void ofxAntescofog::update() {
         // get the next message
         ofxOscMessage m;
         mOSCreceiver.getNextMessage( &m );
-        cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
+        if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
         for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
 	if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 			mOsc_tempo = m.getArgAsFloat(0);
-            cout << "OSC received: tempo: "<< mOsc_tempo << endl;
+            if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
             bpm = mOsc_tempo;
             //timeline.setBPM(bpm);
             mSliderBPM->setValue(bpm);
@@ -597,12 +598,12 @@ void ofxAntescofog::update() {
         } else if(m.getAddress() == "/antescofo/beat" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_beat = m.getArgAsFloat(0);
             mLabelBeat->setLabel(ofToString(mOsc_beat));
-            cout << "OSC received: beat: "<< mOsc_beat << endl;
+            if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
             mHasReadMessages = true;
         } else if(m.getAddress() == "/antescofo/pitch"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_pitch = m.getArgAsFloat(0);
             mLabelPitch->setLabel(ofToString(mOsc_pitch));
-            cout << "OSC received: pitch: "<< mOsc_pitch << endl;
+            if (_debug) cout << "OSC received: pitch: "<< mOsc_pitch << endl;
             mHasReadMessages = true;
         } else {
             mHasReadMessages = false;
@@ -645,14 +646,14 @@ void ofxAntescofog::update() {
 
         fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
         
-        cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
+        if (_debug) cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
         //timeline.setCurrentTimeSeconds(fAntescofoTimeSeconds);
         //ofNotifyEvent(playbackStarted, )
         mHasReadMessages = false;
         //timeline.play();
-				bShouldRedraw = true;
+	bShouldRedraw = true;
     }
-    guiBottom->update();
+    //guiBottom->update();
 }
 
 //--------------------------------------------------------------
@@ -686,11 +687,9 @@ void ofxAntescofog::draw() {
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_error();
 	} else {
-
-		/*
 		if (!bShouldRedraw) {
 			drawCache.draw(0, 0);
-		} else */{
+		} else {
 			ofSetColor(255, 255, 255, 255);
 			drawCache.begin();
 			ofClear(255,255,255, 0);

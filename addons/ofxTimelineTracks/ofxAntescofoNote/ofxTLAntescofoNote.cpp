@@ -632,7 +632,7 @@ void ofxTLAntescofoNote::autoscroll() {
 
 		ofRange z = zoom->getViewRange();
 		ofRange oldz = z;
-		cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
+		//cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
 		// continuous scrolling : keep playhead on center
 		if (pos) {
 			float c = z.center(); 
@@ -645,7 +645,7 @@ void ofxTLAntescofoNote::autoscroll() {
 				z.min = z.max - oldz.max + oldz.min;
 
 
-			cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
 			zoom->setViewRange(z);
 			//zoom->setSelectedRange(z);
 #if 0
@@ -1557,7 +1557,7 @@ void ofxTLAntescofoNote::showNote(int line)
 			ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
 			ofRange z = zoom->getViewRange();
 			ofRange oldz = z;
-			cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
+			//cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
 			float c = z.center(); 
 			float d = pos - c;
 
@@ -1567,7 +1567,7 @@ void ofxTLAntescofoNote::showNote(int line)
 			if (z.max == 1. && z.span() < oldz.span())
 				z.min = z.max - oldz.max + oldz.min;
 
-			cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
 			zoom->setViewRange(z);
 
 		}

@@ -41,6 +41,7 @@ bool beatkeyframesort(ofxTLBeatKeyframe* a, ofxTLBeatKeyframe* b){
 ofxTLBeatKeyframes::ofxTLBeatKeyframes()
 : ofxTLKeyframes()
 {
+	hoverKeyframe = NULL; 
 }
 
 ofxTLBeatKeyframes::~ofxTLBeatKeyframes(){

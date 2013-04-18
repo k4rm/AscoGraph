@@ -25,10 +25,28 @@ set(OPENFRAMEWORKS_ADDONS_ROOT ${OPENFRAMEWORKS_ROOT}/addons/)
 
 set (ANTESCOFO_PARSER_PATH ${OPENFRAMEWORKS_ROOT}/../antescofo_New )
 
+# oscpack
+get_filename_component(OSCPACK_DIR ${ANTESCOFO_PARSER_PATH}/../musync-libs/oscpack_1_1_0_RC2/ ABSOLUTE)
+set (OSCPACK_INCLUDES_DIR 
+		${OSCPACK_DIR}/ip
+		${OSCPACK_DIR}/osc
+		)
+set (OSCPACK_SOURCES
+		${OSCPACK_DIR}/osc/OscOutboundPacketStream.cpp
+		${OSCPACK_DIR}/osc/OscPrintReceivedElements.cpp
+		${OSCPACK_DIR}/osc/OscReceivedElements.cpp
+		${OSCPACK_DIR}/osc/OscTypes.cpp
+		${OSCPACK_DIR}/ip/IpEndpointName.cpp
+		${OSCPACK_DIR}/ip/posix/NetworkingUtils.cpp
+		${OSCPACK_DIR}/ip/posix/UdpSocket.cpp
+)
+
+
 set (ANTESCOFO_PARSER_INCL_PATH 
 	${ANTESCOFO_PARSER_PATH}/minimal/
 	${ANTESCOFO_PARSER_PATH}/includes
 	${ANTESCOFO_PARSER_PATH}/parser
+	${OSCPACK_INCLUDES_DIR}
 )
 
 bison_target(anteyacc ${ANTESCOFO_PARSER_PATH}/parser/parser.yy ${ANTESCOFO_PARSER_PATH}/parser/parser.cpp
@@ -42,9 +60,11 @@ add_flex_bison_dependency(anteflex anteyacc)
 message(STATUS "Using bison flags: ${BISON_anteyacc_COMPILE_FLAGS} ; outputs: ${BISON_anteyacc_OUTPUTS} ")
 message(STATUS "Using flex flags: ${FLEX_anteflex_COMPILE_FLAGS} ; outputs: ${FLEX_anteflex_OUTPUTS} ")
 
+
 set (ANTESCOFO_PARSER_SOURCES
 	${BISON_anteyacc_OUTPUTS}
 	${FLEX_anteflex_OUTPUTS}
+	${OSCPACK_SOURCES}
 	${ANTESCOFO_PARSER_PATH}/sources/Attributes.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/duration.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Event.cpp
@@ -61,6 +81,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/parser/scanner.lll
 	${ANTESCOFO_PARSER_PATH}/parser/parser.yy
 )
+
 
 set (OFX_LIB_PATH ../../../../libs/openFrameworks)
 set (OFX_LIB_INCL_PATH ../../../../libs/openFrameworks)
