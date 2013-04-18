@@ -40,6 +40,7 @@ ofxTLCurves::ofxTLCurves(){
 }
 
 float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){
+	cout << "ofxTLCurves:: interpolateValueForKeys: " << sampleTime << endl;
 	ofxTLTweenKeyframe* tweenKeyStart = (ofxTLTweenKeyframe*)start;
 	ofxTLTweenKeyframe* tweenKeyEnd = (ofxTLTweenKeyframe*)end;
 	return ofxTween::map(sampleTime, tweenKeyStart->time, tweenKeyEnd->time,

@@ -179,10 +179,11 @@ float ofxTLBeatKeyframes::getValueAtBeat(float sampleBeat){
 }
 
 float ofxTLBeatKeyframes::sampleAtPercent(float percent){
-	return sampleAtTime(percent * timeline->getDurationInMilliseconds());
+	return sampleAtBeat(percent * timeline->millisecToBeat(timeline->getDurationInMilliseconds()));//*timeline->getBPM());
 }
 
 float ofxTLBeatKeyframes::sampleAtBeat(float sampleBeat){
+	//cout << "ofxTLBeatKeyframes:: sampleAtBeat:" << sampleBeat << endl;
 	//sampleBeat = ofClamp(sampleBeat, 0, timeline->getDurationInMilliseconds());
 
 	//edge cases

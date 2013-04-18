@@ -43,6 +43,7 @@ ofxTLBeatCurves::ofxTLBeatCurves()
 }
 
 float ofxTLBeatCurves::interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBeatKeyframe* end, float sampleBeat){
+	cout << "interpolate: " << sampleBeat << endl;; 
 	ofxTLTweenBeatKeyframe* tweenKeyStart = (ofxTLTweenBeatKeyframe*)start;
 	ofxTLTweenBeatKeyframe* tweenKeyEnd = (ofxTLTweenBeatKeyframe*)end;
 	return ofxTween::map(sampleBeat, tweenKeyStart->beat, tweenKeyEnd->beat, tweenKeyStart->value, tweenKeyEnd->value,
@@ -444,8 +445,8 @@ void ofxTLBeatCurves::draw(){
 #else
 
 void ofxTLBeatCurves::draw(){
-	
-        //cout << "ofxTLKeyframes::draw(): bw:"<< bounds.width << " bh:" << bounds.height  << endl;
+
+        cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height  << endl;
 	if(bounds.width == 0 || bounds.height < 2){
 		return;
 	}
@@ -455,7 +456,7 @@ void ofxTLBeatCurves::draw(){
 	}
 	
 	ofPushStyle();
-	
+
 
         //draw current value indicator as a big transparent rectangle
 	//ofSetColor(timeline->getColors().disabledColor, 30);
@@ -465,7 +466,6 @@ void ofxTLBeatCurves::draw(){
 	//float currentPercent = sampleAtTime(currentTrackTime());
 	ofFill();
 	//ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
-	
 
         //******* DRAW FILL CURVES
         ofSetPolyMode(OF_POLY_WINDING_NONZERO);
@@ -484,7 +484,8 @@ void ofxTLBeatCurves::draw(){
                     timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
                 }
                 //ofCircle(screenpoint.x, screenpoint.y, 4);
-                ofCurveVertex(screenpoint.x, screenpoint.y);
+                //ofCurveVertex(screenpoint.x, screenpoint.y);
+                ofVertex(screenpoint.x, screenpoint.y);
             }
         }
 	/*if (keyframes.size()) {

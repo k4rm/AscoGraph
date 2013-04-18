@@ -817,7 +817,6 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 			}
 			clickedSwitchA->startSelected = true;
 			clickedSwitchA->endSelected   = true;
-
 		} else {
 #if 0 // not yet
 			shouldCreateNewSwitch = true;
@@ -954,13 +953,13 @@ void ofxTLAntescofoNote::mouseReleased(ofMouseEventArgs& args, long millis){
 	changingRangeMin = false;
 	changingRangeMax = false;
 
+#if 0
 	if(draggingSelectionRange){
 		for(int i = 0; i < switches.size(); i++){
 			//TIME if(dragSelection.contains( normalizedXtoScreenX(switches[i]->time.min, zoomBounds)))
 			if(dragSelection.contains( normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds)) ){
 				switches[i]->startSelected = true;
 			}
-
 
 			if(dragSelection.contains( normalizedXtoScreenX(timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds)) ){
 				switches[i]->endSelected = true;
@@ -1004,7 +1003,7 @@ void ofxTLAntescofoNote::mouseReleased(ofMouseEventArgs& args, long millis){
 			}
 		}
 
-
+#endif
 		for(int i = switches.size()-1; i >= 0; i--){
 			// deselect all switches if we're not dragging and we haven't released over a note
 			//TIME if(!draggingSelectionRange && !switches[i]->time.contains(screenXtoNormalizedX(args.x)))
@@ -1543,14 +1542,23 @@ void ofxTLAntescofoNote::showNote(int line)
 	// find note to highlight
 	map<int, int>::iterator b;
 
+	unselectAll();
 	if ((b = line2note.find(line)) != line2note.end()) {
-		unselectAll();
 
 		// select corresponding note
 		int n = b->second;
+		cout << "found note " << n << " for line " << line << endl;
 		if (n < switches.size() && switches[n]) {
 			switches[n]->startSelected = true;
 			switches[n]->endSelected = true;
+
+			int m = n-1;
+			cout << "Testing: note " << m << " with beat:" << switches[m]->beat.min  << " is " << switches[m]->beat.contains(switches[n]->beat.center()) << " for line " << line << endl;
+			while (m < switches.size() && switches[m] && switches[m]->beat.contains(switches[n]->beat.center())) {
+				switches[m]->startSelected = true;
+				switches[m]->endSelected = true;
+				m--;
+			}
 
 			// move zoom to show note
 			float pos = timeline->beatToNormalizedX(switches[n]->beat.center());
