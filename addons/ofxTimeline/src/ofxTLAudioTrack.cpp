@@ -33,6 +33,16 @@
 #include "ofxTLAudioTrack.h"
 #include "ofxTimeline.h"
 
+
+class AlignMarker {
+public:
+	AlignMarker(long ms_) : ms(ms_), selected(false) {}
+	long ms;
+	ofRectangle rect;
+	bool selected;
+};
+vector<AlignMarker> markers;
+
 ofxTLAudioTrack::ofxTLAudioTrack(){
 	shouldRecomputePreview = false;
     soundLoaded = false;
@@ -81,6 +91,7 @@ void ofxTLAudioTrack::update(ofEventArgs& args){
 	else if(lastPercent > timeline->getInOutRange().max){
 		if(timeline->getLoopType() == OF_LOOP_NONE){
 			player.setPosition(timeline->getInOutRange().max);
+			cout << "ofxTLAudioTrack::update stop()" << endl;
 			stop();
 		}
 		else{
@@ -138,10 +149,29 @@ void ofxTLAudioTrack::draw(){
 		for(int i = 0; i < bins.size(); i++){
 			float height = bounds.height * bins[i]/maxBinReceived;
 			float y = bounds.y + bounds.height - height;
-			ofRect(i*binWidth, y, binWidth, height);
+			ofRect(bounds.x + i*binWidth, y, binWidth, height);
 		}
 		
 		ofPopStyle();
+	}
+
+	// draw markers:
+	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
+		float xn = screenXtoNormalizedX(millisToScreenX(m->ms));
+		if (zoomBounds.contains(xn)) {
+			float x = timeline->normalizedXtoScreenX(xn, zoomBounds);
+			if (m->selected)
+				ofSetColor(255, 0, 0, 255);
+			else 
+				ofSetColor(0, 0, 0, 255);
+			ofLine(x, bounds.y, x, bounds.y+bounds.height);
+			m->rect = ofRectangle(x - 5, bounds.y + bounds.height - 12, 10, 10);
+			ofSetColor(10, 0, 200, 100);
+			ofFill();
+			ofRect(m->rect);
+
+			timeline->getFont().drawString(ofToString(m->ms), x, bounds.y + 30);
+		}
 	}
 	
 }
@@ -208,19 +238,48 @@ int ofxTLAudioTrack::getDefaultBinCount(){
 }
 
 bool ofxTLAudioTrack::mousePressed(ofMouseEventArgs& args, long millis){
+	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
+		if (m->rect.inside(args.x, args.y)) {
+			cout << "ms selected:" << m->ms << endl;
+			m->selected = true;
+			return true;
+		}
+	}
 	return false;
 }
 
 void ofxTLAudioTrack::mouseMoved(ofMouseEventArgs& args, long millis){
+	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
+		if (m->selected) {
+			cout << "ms selected changin from " << m->ms << endl;
+			m->ms = screenXToMillis(normalizedXtoScreenX(screenXtoNormalizedX(args.x, zoomBounds)));
+			cout << " to: " << m->ms << endl;
+		}
+	}
 }
 
 void ofxTLAudioTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLAudioTrack::mouseReleased(ofMouseEventArgs& args, long millis){
+	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
+		if (m->selected) {
+			cout << "ms selected changin from " << m->ms << endl;
+			m->ms = screenXToMillis(normalizedXtoScreenX(screenXtoNormalizedX(args.x, zoomBounds)));
+			cout << " to: " << m->ms << endl;
+			m->selected = false;
+		}
+	}
 }
 
 void ofxTLAudioTrack::keyPressed(ofKeyEventArgs& args){
+	if (args.key == OF_KEY_RETURN) {
+		long ms = timeline->getCurrentTimeMillis();
+		cout << "Marker taken:"<< ms << "ms" << endl;
+		markers.push_back(AlignMarker(ms));
+	} else if (args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE) {
+		markers.clear();
+	}
 }
 
 void ofxTLAudioTrack::zoomStarted(ofxTLZoomEventArgs& args){
@@ -243,17 +302,20 @@ void ofxTLAudioTrack::boundsChanged(ofEventArgs& args){
 }
 
 void ofxTLAudioTrack::play(){
+	cout << "ofxTLAudioTrack:: play " << endl;
 	if(!player.getIsPlaying()){
 		
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
-//		cout << "calling play on track " << endl;
+		cout << "ofxTLAudioTrack:: calling play on track " << endl;
 		player.play();
 		player.setPosition(timeline->getPercentComplete());
 		ofAddListener(ofEvents().update, this, &ofxTLAudioTrack::update);
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackStarted, args);		
-	}	   
+	} else {
+		cout << "ofxTLAudioTrack:: calling NOT play on track " << endl;
+	}
 }
 
 void ofxTLAudioTrack::stop(){
@@ -269,6 +331,7 @@ void ofxTLAudioTrack::stop(){
 }
 
 bool ofxTLAudioTrack::togglePlay(){
+	cout << "ofxTLAudioTrack::togglePlay" << endl;
 	if(getIsPlaying()){
 		stop();
 	}

@@ -108,7 +108,7 @@ void ofxTLAntescofoAction::draw()
 void ofxTLAntescofoAction::drawBitmapStringHighlight(string text, int x, int y, const ofColor& background, const ofColor& foreground) {
 }
 
-void ofxTLAntescofoAction::add_action_curves(float beatnum, ActionGroup *ar, Cfwd *c) 
+void ofxTLAntescofoAction::add_action_curves(float beatnum, ActionGroup *ar, Curve *c) 
 { 
 #if 0
 	if (c) {
@@ -830,9 +830,9 @@ ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_)
 			}
 
 			// can be a curve
-			Cfwd* c = dynamic_cast<Cfwd*>(tmpa);
+			Curve* c = dynamic_cast<Curve*>(tmpa);
 			if (c) {
-				ActionCurve *cu = new ActionCurve(c, d, event, header); 
+				ActionMultiCurves *cu = new ActionMultiCurves(c, d, event, header); 
 				sons.push_back((ActionGroup*)cu);
 				continue;
 			}
@@ -899,164 +899,240 @@ void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 		header->draw(tlAction);
 }
 
-
 /* 
    Curve
  */
-ActionCurve::ActionCurve(Cfwd* c, float delay_, Event *e, ActionGroupHeader* header_)
+ActionMultiCurves::ActionMultiCurves(Curve* c, float delay_, Event *e, ActionGroupHeader* header_)
 {
 	delay = delay_;
 	header = header_;
-	if (c) {
-		cout << "got Cfwd: " << c->label() << endl; 
-		label = c->label();
-		CfwdStep* s = c->_continuous_step;
-		double dou = 0.;
+	curve = c;
+	if (curve) {
+		cout << "got MultiCurve: " << curve->label() << endl; 
+		label = curve->label();
+		// TODO get attributes..
 
-		// TODO get _beta
+		howmany = curve->seq_vect.size();
 
-		// get grain
-		if (s->_grain) {
-			FloatValue *fgrain = dynamic_cast<FloatValue*>(s->_grain->value());
-			if (fgrain) {
-				dou = fgrain->get_double();
-				cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
-				grain = dou;
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>(s->_grain->value());
-				if (in) {
-					dou = fgrain->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
-					grain = dou;
-				}
+		for (uint i = 0; i < howmany; i++)
+		{
+			SeqContFunction* s = curve->seq_vect[i];
+			list<Var*>::iterator it_var = s->var_list->begin();
+			for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
+			{
+				string var = (*it_var)->name();
+				cout << "ActionMultiCurves: adding sub curve for var:"<< var << endl;
+
+				// TODO grain
+				ActionCurve* newc = new ActionCurve(var, &s->s_vect[j], &s->dur_vect, 0, e, header, this);
+				sons.push_back(newc);
 			}
 		}
+	}
+}
+
+ActionMultiCurves::~ActionMultiCurves()
+{
+}
+
+void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
+}
+
+void ActionMultiCurves::print() {
+}
+
+
+
+
+ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_)
+	: parentCurve(parentCurve_)
+{
+	delay = delay_;
+	header = header_;
+	event = e;
+	varname = var;
+	simple_vect = simple_vect_;
+	dur_vect = dur_vect_;
+	if (e) {
+		cout << "ofxTLAntescofoAction::add_action: ActionCurve: got "<< dur_vect->size() << " delays" << endl;// << seq->label() << endl; 
 		// get values
-		vector< vector <double> >::iterator vvalues = values.begin();
-		for (std::vector< std::vector<Expression*>* >::const_iterator j = c->_values_vector.begin(); j != c->_values_vector.end(); j++) {
-			vector<double> hvalues;// = d->values.begin();
-			for (std::vector<Expression* >::const_iterator k = (*j)->begin(); k != (*j)->end(); k++) {
-				FloatValue* f = dynamic_cast<FloatValue*>(*k);
-				if (f) {
-					dou = f->get_double();
-					cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
-					hvalues.push_back(dou);
-				} else {
-					IntValue* in = dynamic_cast<IntValue*>(*k);
-					if (in) {
-						dou = in->get_int();
-						cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
-						hvalues.push_back(dou);
-					}
+		vector<double> hvalues;
+		for (uint j = 0; j != dur_vect->size() - 1; j++) {
+			FloatValue* f = dynamic_cast<FloatValue*>((*simple_vect)[j].y0);
+			if (f) {
+				double dou = f->get_double();
+				cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
+				hvalues.push_back(dou);
+			} else {
+				IntValue* in = dynamic_cast<IntValue*>((*simple_vect)[j].y0);
+				if (in) {
+					int ii = in->get_int();
+					cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
+					hvalues.push_back(ii);
 				}
 			}
-			//cout << "ofxTLAntescofoAction::add_action: push values:" << endl;
-			values.push_back(hvalues);
+			//cout << "ActionCurve : got y0:" << s_vect[j].y0->get_double() << " y1:" << s_vect[j].y1->get_double() << " type:"<< s_vect[j].type << endl;
+		} 
+		// get last y1
+		FloatValue* f = dynamic_cast<FloatValue*>((*simple_vect)[simple_vect->size()-1].y1);
+		if (f) {
+			double dou = f->get_double();
+			cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
+			hvalues.push_back(dou);
+		} else {
+			IntValue* in = dynamic_cast<IntValue*>((*simple_vect)[simple_vect->size()-1].y1);
+			if (in) {
+				int ii = in->get_int();
+				cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
+				hvalues.push_back(ii);
+			}
 		}
+		values.push_back(hvalues);
 		// get delays
-		for (std::vector<AnteDuration*>::const_iterator j = c->_delays_vector.begin(); j != c->_delays_vector.end(); j++) {
+		for (std::vector<AnteDuration*>::const_iterator j = dur_vect->begin(); j != dur_vect->end(); j++) {
 			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
 			if (f) {
-				dou = f->get_double();
+				double dou = f->get_double();
 				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
 				delays.push_back(dou);
 			} else {
 				IntValue* in = dynamic_cast<IntValue*>((*j)->value());
 				if (in) {
-					dou = in->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
-					delays.push_back(dou);
+					int ii = in->get_int();
+					cout << "ofxTLAntescofoAction::add_action: got delay:" << ii << endl;
+					delays.push_back(ii);
 				}
 			}
 		}
-		cout << "ofxTLAntescofoAction::add_action: delays size:" << delays.size() << endl;
-	}
+		//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
+		// add track
+		if (values.size() && delays.size() && (*(values.begin())).size()) {
+			trackName = string("CURVE ") + varname;
+			string uniqueName = _timeline->confirmedUniqueName(trackName);
 
-	//for (int n = 0; n < ar->cfwd->delays.size(); n++) { cout << " ------- delays " << ar->cfwd->delays[n] << endl; }
-
-	// add track
-	if (values.size() && delays.size() && (*(values.begin())).size()) {
-		trackName = string("CURVE ") + label;
-		string uniqueName = _timeline->confirmedUniqueName(trackName);
-
-		int howmany = (*(values.begin())).size();
-		if (howmany == 1) { // mono curves
 			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
 			_timeline->addTrack(trackName, curves);
-
+			curves->ref = this;
 			// set values ranges
 			int j = 0; 
-			for (int j = 0; j < howmany; j++) { // useless lazy copy-pasted loop from below
-				float min = 0, max = 0;
-				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
-					if (min > (*i)[j]) min = (*i)[j];
-					if (max < (*i)[j]) max = (*i)[j];
-				}
-				curves->setValueRangeMax(max);
-				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
-				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
-				curves->setValueRangeMin(min);
+			float min = 0, max = 0;
+			for (vector<double>::iterator i = values[0].begin(); i != values[0].end(); i++) {
+				if (min > (*i)) min = (*i);
+				if (max < (*i)) max = (*i);
 			}
+			curves->setValueRangeMax(max);
+			cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
+			cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
+			curves->setValueRangeMin(min);
 			// set keyframes
-			for (int n = 0; n < howmany; n++) { // useless lazy copy-pasted loop from below
-				double dcumul = 0.;
-				for (int k = 0; k < delays.size(); k++) {
-					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
-					dcumul += delays[k];
-					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
-						<< " val=" <<  values[k][n] << endl;
+			double dcumul = 0.;
+			for (int k = 0; k < delays.size(); k++) {
+				//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
+				dcumul += delays[k];
+				//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
+				cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << 0 << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
+					<< " val=" <<  values[0][k] << endl;
 
-					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
-					curves->addKeyframeAtBeat(values[k][n], header->beatnum + dcumul);
-					// }
-				}
+				//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
+				curves->addKeyframeAtBeat(values[0][k], header->beatnum + dcumul);
+				// }
 				curves->enable();
 			}
-		} else { // multicurves
-			ofxTLMultiCurves* multicurves = new ofxTLMultiCurves();
-			multicurves->clear();
-			multicurves->disable();
-			_timeline->addTrack(trackName, multicurves);
-			multicurves->setHowmany(howmany);
-
-			// set values ranges
-			int j = 0; 
-			for (int j = 0; j < howmany; j++) {
-				float min = 0, max = 0;
-				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
-					if (min > (*i)[j]) min = (*i)[j];
-					if (max < (*i)[j]) max = (*i)[j];
-				}
-				multicurves->setValueRangeMax(j, max);
-				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
-				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
-				multicurves->setValueRangeMin(j, min);
-			}
-			// set keyframes
-			for (int n = 0; n < howmany; n++) {
-				double dcumul = 0.;
-				for (int k = 0; k < delays.size(); k++) {
-					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
-					dcumul += delays[k];
-					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
-						<< " val=" <<  values[k][n] << endl;
-
-					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
-					multicurves->addKeyframeAtBeatAtCurveId(n, values[k][n], header->beatnum + dcumul);
-					// }
-				}
-				multicurves->enable();
-			}
-		} // end multicurves
+		}
 	}
-
 }
-
 
 ActionCurve::~ActionCurve()
 {
+}
+
+bool ActionCurve::set_dur_val(double d, AnteDuration* a)
+{
+	if (Value* v = (Value*)a->value()->is_value()) {
+		if (v) {
+			*v = FloatValue(d);
+			return true;
+		} else cerr << "value print: " << a->value() << endl; 
+	}
+	return false;
+}
+
+// when new breakpoint is created, we should reduce prev breakpoint duration, before adding
+void ActionCurve::addKeyframeAtBeat(float beat, float val)
+{
+	cout << "ofxTLAntescofoAction:: add keyframe at beat: " << beat << " val: " << val << endl;
+	if (beat == 0) {
+		//set_dur_val(val, simple_vect->begin());
+		return;
+	}
+
+	float dcumul = 0;
+	int i = 0;
+
+	vector<SimpleContFunction>::iterator s = simple_vect->begin();
+	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
+		cout << "ofxTLAntescofoAction:: add keyframe at beat: looping : " << i << " dcumul:" << dcumul<< endl;
+
+		dcumul += (*k)->eval();
+
+		if (dcumul < beat)
+			continue;
+		else {
+			// substract (dcumul - beat) on prev point
+			vector<AnteDuration*>::iterator p = k;
+			p--;
+			if (set_dur_val(dcumul - beat, *p)) {
+				// add new point to simple_vect[]
+				double d = beat - (*k)->eval();
+				cout << "New point duration : " << d << endl;
+				if (i < simple_vect->size()) {
+					SimpleContFunction* sfnext = &((*simple_vect)[i+1]);
+					AnteDuration* ad = new AnteDuration(d);
+					simple_vect->insert(s, SimpleContFunction(sfnext->antesc, new StringValue("linear"), ad, new FloatValue(val), sfnext->y1, 0));
+					dur_vect->insert(k, ad);
+					cout << "looping stopped, inserted: " << i << endl;
+				}
+			} else { cout << "Can not convert to Value." << endl; }
+			break;
+		}
+	}
+	parentCurve->curve->show(cout);
+}
+
+// 
+void ActionCurve::moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val)
+{
+	cout << "ofxTLAntescofoAction:: move keyframe from beat: " << from_beat << " (val:" << from_val << ") to beat: " << to_beat << "(val:" << to_val <<")"<< endl;
+	if (from_beat == 0) {
+		// TODO set val
+		return;
+	}
+
+	float dcumul = 0;
+	int i = 0;
+
+	vector<SimpleContFunction>::iterator s = simple_vect->begin();
+	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
+		cout << "ofxTLAntescofoAction:: move keyframe at beat: looping : " << i << endl;
+
+		dcumul += (*k)->eval();
+
+		if (dcumul < from_beat)
+			continue;
+		else if (dcumul == from_beat) {
+			// prev dur -= (from_beat - to_beat)
+			vector<AnteDuration*>::iterator p = k;
+			p--;
+			if (set_dur_val(from_beat - to_beat, *k)) {
+				// change current delay
+				double d = to_beat - (*p)->eval();
+				cout << "New point duration : " << d << endl;
+			}
+			break;
+		} else { cout << "An error append with curves beats..." << endl; abort(); }
+	}
+
+	parentCurve->curve->show(cout);
 }
 
 
@@ -1299,3 +1375,158 @@ void ActionLoop::print()
 
 
 */
+
+
+
+
+/* old cfwd:
+ActionCurve::ActionCurve(Cfwd* c, float delay_, Event *e, ActionGroupHeader* header_)
+{
+	delay = delay_;
+	header = header_;
+	if (c) {
+		cout << "got Curve: " << c->label() << endl; 
+		label = c->label();
+		CfwdStep* s = c->_continuous_step;
+		double dou = 0.;
+
+		// TODO get _beta
+
+		// get grain
+		if (s->_grain) {
+			FloatValue *fgrain = dynamic_cast<FloatValue*>(s->_grain->value());
+			if (fgrain) {
+				dou = fgrain->get_double();
+				cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
+				grain = dou;
+			} else {
+				IntValue* in = dynamic_cast<IntValue*>(s->_grain->value());
+				if (in) {
+					dou = fgrain->get_int();
+					cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
+					grain = dou;
+				}
+			}
+		}
+		// get values
+		vector< vector <double> >::iterator vvalues = values.begin();
+		for (std::vector< std::vector<Expression*>* >::const_iterator j = c->_values_vector.begin(); j != c->_values_vector.end(); j++) {
+			vector<double> hvalues;// = d->values.begin();
+			for (std::vector<Expression* >::const_iterator k = (*j)->begin(); k != (*j)->end(); k++) {
+				FloatValue* f = dynamic_cast<FloatValue*>(*k);
+				if (f) {
+					dou = f->get_double();
+					cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
+					hvalues.push_back(dou);
+				} else {
+					IntValue* in = dynamic_cast<IntValue*>(*k);
+					if (in) {
+						dou = in->get_int();
+						cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
+						hvalues.push_back(dou);
+					}
+				}
+			}
+			//cout << "ofxTLAntescofoAction::add_action: push values:" << endl;
+			values.push_back(hvalues);
+		}
+		// get delays
+		for (std::vector<AnteDuration*>::const_iterator j = c->_delays_vector.begin(); j != c->_delays_vector.end(); j++) {
+			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
+			if (f) {
+				dou = f->get_double();
+				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
+				delays.push_back(dou);
+			} else {
+				IntValue* in = dynamic_cast<IntValue*>((*j)->value());
+				if (in) {
+					dou = in->get_int();
+					cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
+					delays.push_back(dou);
+				}
+			}
+		}
+		cout << "ofxTLAntescofoAction::add_action: delays size:" << delays.size() << endl;
+	}
+
+	//for (int n = 0; n < ar->cfwd->delays.size(); n++) { cout << " ------- delays " << ar->cfwd->delays[n] << endl; }
+
+	// add track
+	if (values.size() && delays.size() && (*(values.begin())).size()) {
+		trackName = string("CURVE ") + label;
+		string uniqueName = _timeline->confirmedUniqueName(trackName);
+
+		int howmany = (*(values.begin())).size();
+		if (howmany == 1) { // mono curves
+			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
+			_timeline->addTrack(trackName, curves);
+
+			// set values ranges
+			int j = 0; 
+			for (int j = 0; j < howmany; j++) { // useless lazy copy-pasted loop from below
+				float min = 0, max = 0;
+				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
+					if (min > (*i)[j]) min = (*i)[j];
+					if (max < (*i)[j]) max = (*i)[j];
+				}
+				curves->setValueRangeMax(max);
+				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
+				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
+				curves->setValueRangeMin(min);
+			}
+			// set keyframes
+			for (int n = 0; n < howmany; n++) { // useless lazy copy-pasted loop from below
+				double dcumul = 0.;
+				for (int k = 0; k < delays.size(); k++) {
+					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
+					dcumul += delays[k];
+					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
+					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
+						<< " val=" <<  values[k][n] << endl;
+
+					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
+					curves->addKeyframeAtBeat(values[k][n], header->beatnum + dcumul);
+					// }
+				}
+				curves->enable();
+			}
+		} else { // multicurves
+			ofxTLMultiCurves* multicurves = new ofxTLMultiCurves();
+			multicurves->clear();
+			multicurves->disable();
+			_timeline->addTrack(trackName, multicurves);
+			multicurves->setHowmany(howmany);
+
+			// set values ranges
+			int j = 0; 
+			for (int j = 0; j < howmany; j++) {
+				float min = 0, max = 0;
+				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
+					if (min > (*i)[j]) min = (*i)[j];
+					if (max < (*i)[j]) max = (*i)[j];
+				}
+				multicurves->setValueRangeMax(j, max);
+				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
+				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
+				multicurves->setValueRangeMin(j, min);
+			}
+			// set keyframes
+			for (int n = 0; n < howmany; n++) {
+				double dcumul = 0.;
+				for (int k = 0; k < delays.size(); k++) {
+					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
+					dcumul += delays[k];
+					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
+					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
+						<< " val=" <<  values[k][n] << endl;
+
+					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
+					multicurves->addKeyframeAtBeatAtCurveId(n, values[k][n], header->beatnum + dcumul);
+					// }
+				}
+				multicurves->enable();
+			}
+		} // end multicurves
+	}
+
+}*/

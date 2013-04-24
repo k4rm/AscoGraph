@@ -18,7 +18,7 @@ class ofxAntescofog;
 class Score;
 //class Event;
 class ofxTLAntescofoNote;
-class Cfwd;
+class Curve;
 class ActionRect;
 
 using namespace std;
@@ -82,7 +82,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		//bool mousePressed_In_Arrow(ofMouseEventArgs& args, list<ActionRect*> actionrects);
 		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
 		void add_action(float beatnum, string action, Event *e);
-		void add_action_curves(float beatnum, ActionGroup *ar, Cfwd *c);
+		void add_action_curves(float beatnum, ActionGroup *ar, Curve *c);
 		int get_max_note_beat();
 		void clear_actions();
 		void move_action();
@@ -128,37 +128,61 @@ class ActionGroup {
 		string trackName;
 		float period;
 		bool selected;
+		float delay;
 };
 
 
 class ActionMessage : public ActionGroup {
 	public:
-		ActionMessage(Message* g, float delay_, Event *e, ActionGroupHeader* header_);
+		ActionMessage(Message* g, float delay_, Event* e, ActionGroupHeader* header_);
 		virtual ~ActionMessage() {}
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		string action;
-		double delay;
 		int x, y;
+};
+
+class ActionMultiCurves : public ActionGroup {
+	public:
+		ActionMultiCurves(Curve* c, float delay_, Event* e, ActionGroupHeader* header_);
+		virtual ~ActionMultiCurves();
+
+		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual void print();
+
+		int howmany;
+		string label;
+		Curve* curve;
 };
 
 class ActionCurve : public ActionGroup {
 	public:
-		ActionCurve(Cfwd *c, float delay_, Event *e, ActionGroupHeader* header_);
+		ActionCurve(string var, vector<SimpleContFunction>* s_vect, vector<AnteDuration*>* dur_vect, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_=NULL);
 		virtual ~ActionCurve();
 
 		virtual void draw(ofxTLAntescofoAction *tlAction) {}
 		virtual void print() {}
+		void addKeyframeAtBeat(float beat, float val);
+		void moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val);
+		bool set_dur_val(double d, AnteDuration* a);
+
 		string action;
-		double delay;
 
 		string label;
+		string varname;
 		double grain;
 		string symb;
+		ActionMultiCurves* parentCurve;
 		vector< vector<double> > values;
+		SeqContFunction* seq;
 		//std::vector<double> values; 
 		vector<double> delays;
+		
+		// parser strucs:
+		vector<SimpleContFunction>* simple_vect;
+		vector<AnteDuration*>* dur_vect;
+
 };
 
 /*

@@ -43,7 +43,7 @@ ofxTLBeatCurves::ofxTLBeatCurves()
 }
 
 float ofxTLBeatCurves::interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBeatKeyframe* end, float sampleBeat){
-	cout << "interpolate: " << sampleBeat << endl;; 
+	//cout << "interpolate: " << sampleBeat << endl;; 
 	ofxTLTweenBeatKeyframe* tweenKeyStart = (ofxTLTweenBeatKeyframe*)start;
 	ofxTLTweenBeatKeyframe* tweenKeyEnd = (ofxTLTweenBeatKeyframe*)end;
 	return ofxTween::map(sampleBeat, tweenKeyStart->beat, tweenKeyEnd->beat, tweenKeyStart->value, tweenKeyEnd->value,
@@ -75,7 +75,7 @@ void ofxTLCurves::setColor_EasetypeDefault(ofColor &col) {
 
 
 void ofxTLBeatCurves::drawModalContent(){
-	cout << "ofxTLBeatCurves::drawModalContent() " << endl;
+	//cout << "ofxTLBeatCurves::drawModalContent() " << endl;
 
 	//****** DRAW EASING CONTROLS
 	if(!drawingEasingWindow){
@@ -170,12 +170,14 @@ void ofxTLBeatCurves::mouseMoved(ofMouseEventArgs& args, long millis){
 	} else cursor.set(args.x, args.y);
 }
 void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return;
 	if(!drawingEasingWindow){
 		ofxTLBeatKeyframes::mouseDragged(args, millis);
 	}
 }
 
 void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return;
 	cout << "ofxTLBeatCurves::mouseReleased: button:" << args.button <<endl;
 	if (drawingEasingWindow && args.button == 0){
 		drawingEasingWindow = false;
@@ -204,9 +206,22 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 		}
 	}
 	else{
+
+		//bool hastoupdate = createNewOnMouseup || keysDidDrag;
 		ofxTLBeatKeyframes::mouseReleased(args, millis);
+		//if (hastoupdate) updateEditorContent();
 	}
 }
+
+// called when a keyframe is mouse moved, : this fct should:
+// 1/ re-fill the Curve antescofo parser object,
+// 2/ pretty print the action
+// 3/ eplace it in the text score
+/*
+void ofxTLBeatCurves::updateEditorContent()
+{
+}
+*/
 
 void ofxTLBeatCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
 	easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
@@ -445,8 +460,7 @@ void ofxTLBeatCurves::draw(){
 #else
 
 void ofxTLBeatCurves::draw(){
-
-        cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height  << endl;
+        cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
 	if(bounds.width == 0 || bounds.height < 2){
 		return;
 	}
@@ -460,7 +474,7 @@ void ofxTLBeatCurves::draw(){
 
         //draw current value indicator as a big transparent rectangle
 	//ofSetColor(timeline->getColors().disabledColor, 30);
-	ofSetColor(timeline->getColors().disabledColor, 130);
+	ofSetColor(timeline->getColors().disabledColor, 70);
 	//jg play solo change
 	//float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
 	//float currentPercent = sampleAtTime(currentTrackTime());
@@ -471,8 +485,8 @@ void ofxTLBeatCurves::draw(){
         ofSetPolyMode(OF_POLY_WINDING_NONZERO);
 
 
-	cout << "keyframe size:" << keyframes.size() << endl;
-	cout << "selectedKeyframe size:" << selectedKeyframes.size() << endl;
+	//cout << "keyframe size:" << keyframes.size() << endl;
+	//cout << "selectedKeyframe size:" << selectedKeyframes.size() << endl;
         ofFill();
         ofBeginShape();
         for (int i = 0; i < keyframes.size(); i++) {
@@ -480,8 +494,8 @@ void ofxTLBeatCurves::draw(){
                 ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
                 float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
                 if(keysAreDraggable){
-                    //string frameString = timeline->formatTime(keyframes[i]->time);
-                    timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+                    //timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+                    timeline->getFont().drawString(ofToString(keyframes[i]->orig_value, 4), screenpoint.x+5, screenpoint.y-5);
                 }
                 //ofCircle(screenpoint.x, screenpoint.y, 4);
                 //ofCurveVertex(screenpoint.x, screenpoint.y);
@@ -538,8 +552,11 @@ void ofxTLBeatCurves::draw(){
 			ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[i]);
 			float keysValue = ofMap(selectedKeyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
 			if(keysAreDraggable){
-				//string frameString = timeline->formatTime(selectedKeyframes[i]->time);
-				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+				//timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+				if (selectedKeyframes[i]->tmp_value)
+					timeline->getFont().drawString(ofToString(selectedKeyframes[i]->tmp_value, 4), screenpoint.x+5, screenpoint.y-5);
+				else
+					timeline->getFont().drawString(ofToString(selectedKeyframes[i]->orig_value, 4), screenpoint.x+5, screenpoint.y-5);
 			}
 			ofCircle(screenpoint.x, screenpoint.y, 4);
                         // cout << "ofxTLKeyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
@@ -549,3 +566,7 @@ void ofxTLBeatCurves::draw(){
 	ofPopStyle();
 }
 #endif
+
+
+// save
+

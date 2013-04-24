@@ -461,6 +461,7 @@ void ofxTimeline::play(){
 //			ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 //		}
 		if(timeControl != NULL){
+			cout << "timecontrol not null" << endl;
 			timeControl->play();
 			return;
 		}
@@ -474,6 +475,7 @@ void ofxTimeline::play(){
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);        
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
+		cout << "ofxTimeline::play: notify" << endl;
 		ofNotifyEvent(timelineEvents.playbackStarted, args);
 	}
 }

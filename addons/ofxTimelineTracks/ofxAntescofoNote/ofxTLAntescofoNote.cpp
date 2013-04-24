@@ -1177,7 +1177,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	clear();
 	//str_error.erase();
 	Score *score;
-	mParseDriver->setVerbosity(0);
+	mParseDriver->setVerbosity(2);
 	if (NULL == (score = mParseDriver->parse(filename))) {
 		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
 		return 0;
@@ -1552,6 +1552,8 @@ void ofxTLAntescofoNote::showNote(int line)
 			switches[n]->startSelected = true;
 			switches[n]->endSelected = true;
 
+			if (n == 0)
+				return;
 			int m = n-1;
 			cout << "Testing: note " << m << " with beat:" << switches[m]->beat.min  << " is " << switches[m]->beat.contains(switches[n]->beat.center()) << " for line " << line << endl;
 			while (m < switches.size() && switches[m] && switches[m]->beat.contains(switches[n]->beat.center())) {

@@ -141,7 +141,6 @@ void ofxTLBeatKeyframes::draw(){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor);
 		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
-		cout << "ofxTLBeatKeyframes::highlight my ass: " << hoverKeyPoint.x << " : " << hoverKeyPoint.y << endl;
 		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
 		ofPopStyle();
 	}
@@ -357,6 +356,7 @@ bool ofxTLBeatKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 		//add the keyframe to the selection, whether it was just generated or not
 		if(!isKeyframeSelected(selectedKeyframe)){
 			selectedKeyframes.push_back(selectedKeyframe);
+			selectedKeyframe->orig_beat = selectedKeyframe->beat;
 			updateKeyframeSort();
 			//			selectKeyframe(selectedKeyframe);
 		}
@@ -433,7 +433,10 @@ void ofxTLBeatKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
 						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
 						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))));
 			selectedKeyframes[k]->value = screenYToValue(args.y - selectedKeyframes[k]->grabValueOffset);
+			//selectedKeyframes[k]->orig_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true);
+			selectedKeyframes[k]->tmp_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true);
 			selectedKeyframes[k]->screenPosition = screenPositionForKeyframe(selectedKeyframes[k]);
+			//selectedKeyframes[k]->beat = 
 		}
 		if(selectedKeyframe != NULL && timeline->getMovePlayheadOnDrag()){
 			timeline->setCurrentTimeMillis(timeline->beatToMillisec(selectedKeyframe->beat));
@@ -476,6 +479,13 @@ void ofxTLBeatKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 		lastKeyframeIndex = 1;
 		lastSampleBeat = 0;
 		timeline->flagTrackModified(this);
+		for(int i = 0; i < selectedKeyframes.size(); i++){
+			ref->moveKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->orig_beat, selectedKeyframes[i]->tmp_value, selectedKeyframe->orig_value);
+			selectedKeyframes[i]->orig_value = selectedKeyframes[i]->tmp_value;
+			selectedKeyframes[i]->tmp_value = 0;
+			selectedKeyframes[i]->value = ofMap(selectedKeyframes[i]->orig_value, valueRange.min, valueRange.max, 0, 1.0, true);
+		}
+
 	}
 
 	if(createNewOnMouseup){
@@ -484,11 +494,17 @@ void ofxTLBeatKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 		selectedKeyframe = newKeyframe();
 		setKeyframeBeat(selectedKeyframe, beat);
 		selectedKeyframe->value = screenYToValue(args.y);
+		selectedKeyframe->orig_value = ofMap(selectedKeyframe->value, 0, 1.0, valueRange.min, valueRange.max, true);
 		keyframes.push_back(selectedKeyframe);
 		selectedKeyframes.push_back(selectedKeyframe);
 		updateKeyframeSort();
 		timeline->flagTrackModified(this);
+
+		// when new breakpoint is created, we should reduce next breakpoint duration, before adding
+		ref->addKeyframeAtBeat(beat, selectedKeyframe->orig_value);
 	}
+
+
 	createNewOnMouseup = false;
 }
 
@@ -550,6 +566,7 @@ void ofxTLBeatKeyframes::addKeyframeAtBeat(float value, float beat){
 	key->time = 0;
 	key->beat = key->previousBeat = beat;
 	key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
+	key->orig_value = value;
 	keyframes.push_back(key);
 	//smart sort, only sort if not added to end
 	if(keyframes.size() > 2 && keyframes[keyframes.size()-2]->beat > keyframes[keyframes.size()-1]->beat){

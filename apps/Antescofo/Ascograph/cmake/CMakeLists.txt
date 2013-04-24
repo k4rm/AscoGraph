@@ -54,6 +54,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/FakeRuntime.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Expression.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Function_map.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Score.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Environment.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Statements.cpp
@@ -256,6 +257,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLTrackHeader.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLZoomer.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLAudioTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTimeline.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLKeyframes.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLFlags.cpp
@@ -317,6 +319,9 @@ set (app_sources_files ${app_sources_files}
 
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxCodeEditor.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/ofxConsole.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/ofOpenALSoundPlayer_TimelineAdditions/ofOpenALSoundPlayer_TimelineAdditions.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fft.c
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
 
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
@@ -372,6 +377,9 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTween/src/Easings
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTextInputField/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/ofOpenALSoundPlayer_TimelineAdditions/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/include
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/sndfile/include
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidi/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidi/src/desktop/rtmidi/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxColorPicker
@@ -425,6 +433,7 @@ if(APPLE)
                                      ${OPENFRAMEWORKS_ROOT}/libs/rtAudio/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/unicap/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/videoInput/lib/osx
+                                     ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/sndfile/lib/osx/${SUBLIBDIRSUFFIX}
 
                                      CACHE STRING "OpenFrameworks library search paths")
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
@@ -463,7 +472,7 @@ endif ()
 set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} /usr/lib /usr/local/lib )
 set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /usr/include /usr/local/include )
 
-#message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
+message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
 #message(STATUS "Looking for includes in  :" ${CMAKE_INCLUDE_PATH})
 #message(STATUS "Looking for Scintilla in : ${SCINTILLA_SOURCES}")
 
@@ -566,6 +575,8 @@ if ( APPLE )
     of_find_library("glew")
     of_find_library("glut")
     of_find_library("rtAudio")
+    of_find_library("sndfile")
+    of_find_library("openal")
     #of_find_library("openFrameWorksDebug")
 endif(APPLE)
 

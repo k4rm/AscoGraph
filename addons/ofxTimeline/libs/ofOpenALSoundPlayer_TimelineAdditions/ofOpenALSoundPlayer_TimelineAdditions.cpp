@@ -737,7 +737,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::setMultiPlay(bool bMp){
 
 // ----------------------------------------------------------------------------
 void ofOpenALSoundPlayer_TimelineAdditions::play(){
-
+	cout << "ofxOpenALSoundPlayer:: play" << endl;
 	// if the sound is set to multiplay, then create new sources,
 	// do not multiplay on loop or we won't be able to stop it
 	if (bMultiPlay && !bLoop){

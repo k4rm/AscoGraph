@@ -37,12 +37,16 @@
 #include "ofxTLTrack.h"
 #include "ofxTLKeyframes.h"
 #include "ofxXmlSettings.h"
+#include "ofxTLAntescofoAction.h"
+
 
 class ofxTLBeatKeyframe : public ofxTLKeyframe {
   public:
 		float previousBeat;
-		float beat;
+		float beat, orig_beat;
 		float grabBeatOffset;
+		float orig_value;
+		float tmp_value; // when dragging
 };
 
 class ofxTLBeatKeyframes : public ofxTLKeyframes
@@ -86,6 +90,8 @@ class ofxTLBeatKeyframes : public ofxTLKeyframes
 	void loadFromBinaryFile();
 	bool useBinarySave;
 
+	ActionCurve* ref;
+
 	protected:
 	virtual ofxTLBeatKeyframe* newKeyframe();
 	vector<ofxTLBeatKeyframe*> keyframes;
@@ -102,8 +108,7 @@ class ofxTLBeatKeyframes : public ofxTLKeyframes
 	virtual float interpolateValueForKeys(ofxTLBeatKeyframe* start,ofxTLBeatKeyframe* end, float sampleBeat);
 	virtual float evaluateKeyframeAtBeat(ofxTLBeatKeyframe* key, float sampleBeat);
 
-	ofRange valueRange;
-	float defaultValue;
+	//ofRange valueRange; float defaultValue;
 
 	//keep these stored for efficient search through the keyframe array
 	int lastKeyframeIndex;

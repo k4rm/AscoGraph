@@ -37,8 +37,10 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
     bErrorInitDone = false;
     bEditorShow = true;
     bSetupDone = false;
-		editor = 0;
-		bShouldRedraw = true;
+    editor = 0;
+    bShouldRedraw = true;
+    audioTrack = NULL;
+	
     if (argc > 1) mScore_filename = argv[1];
 
 		gettimeofday(&last_draw_time, 0);
@@ -470,7 +472,7 @@ void ofxAntescofog::setupTimeline(){
 	timeline.setDurationInSeconds(60);
 	//timeline.moveToThread(); //increases accuracy of bang call backs
 
-	timeline.setLoopType(OF_LOOP_NONE); ///NORMAL); //turns the timeline to loop
+	timeline.setLoopType(OF_LOOP_NORMAL);//LOOP_NONE); ///NORMAL); //turns the timeline to loop
 	timeline.setBPM(bpm);
 	timeline.setLockWidthToWindow(false);
 	//timeline.setWidth(ofGetWidth());
@@ -687,7 +689,7 @@ void ofxAntescofog::draw() {
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_error();
 	} else {
-		if (!bShouldRedraw) {
+		if (!timeline.getIsPlaying() && !bShouldRedraw) {
 			drawCache.draw(0, 0);
 		} else {
 			ofSetColor(255, 255, 255, 255);
@@ -1100,13 +1102,16 @@ void ofxAntescofog::draw_OSCSetup() {
 //--------------------------------------------------------------
 void ofxAntescofog::keyPressed(int key){
     // space key is cancel on error window
-    if(key == ' ' && bShowError){
-        bShowError = false;
-        guiError->disable();
-        timeline.enable();
-        guiBottom->enable();
+    if(key == ' ') {
+	    if (bShowError) {
+		    bShowError = false;
+		    guiError->disable();
+		    timeline.enable();
+		    guiBottom->enable();
+	    } else {
+		    timeline.togglePlay();
+	    }
     }
-     //timeline.togglePlay();d
     if(key == OF_KEY_TAB /*&& !bEditorShow*/) {
         ofxAntescofoNote->toggleView();
     }
@@ -1252,6 +1257,18 @@ void ofxAntescofog::display_error()
 void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 	if( dragInfo.files.size() > 0 ){
 		for(int i = 0; i < dragInfo.files.size(); i++){
+			// try audio files
+			if (!audioTrack) {
+				audioTrack = new ofxTLAudioTrack();
+				if (audioTrack->loadSoundfile(dragInfo.files[i])) {
+					timeline.addTrack(dragInfo.files[i], audioTrack);
+					timeline.setTimecontrolTrack(audioTrack);
+					timeline.setDurationInSeconds(audioTrack->getDuration());
+					
+				 	break;
+				}
+			}
+			
 			//.addPatch( dragInfo.files[i], dragInfo.position );
 			ofxAntescofoNote->clear(); // TODO ask for Saving file
 			string str = "ofxAntescofog: trying to load Music XML file :" + dragInfo.files[i];

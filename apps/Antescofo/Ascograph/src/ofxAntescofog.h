@@ -10,6 +10,7 @@
 #include "ofxCocoaDelegate.h"
 #include "ofxTimeline.h"
 #include "ofxTLZoomer2D.h"
+#include "ofxTLAudioTrack.h"
 #include "ofxTLBeatTicker.h"
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
@@ -126,6 +127,7 @@ class ofxAntescofog : public ofBaseApp{
 		ofxTLAntescofoAction* ofxAntescofoAction;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker;
 		ofxTLZoomer2D *ofxAntescofoZoom;
+		ofxTLAudioTrack* audioTrack;
 
 	protected:
 		// display properties
