@@ -1256,27 +1256,30 @@ void ofxAntescofog::display_error()
 void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 	if( dragInfo.files.size() > 0 ){
 		for(int i = 0; i < dragInfo.files.size(); i++){
+			// try audio files
+			string audiofile = dragInfo.files[i];
+			string ext = ofFilePath::getFileExt(audiofile);
+			if (ext == "aif" || ext == "aiff" || ext == "wav") {
+				if (!audioTrack)
+					audioTrack = new ofxTLAudioTrack();
+				if (audioTrack->loadSoundfile(audiofile)) {
+					ofxAntescofoNote->clear_error();
+					bShowError = false;
+					timeline.addTrack(dragInfo.files[i], audioTrack);
+					timeline.setTimecontrolTrack(audioTrack);
+					timeline.setDurationInSeconds(audioTrack->getDuration());
+					break;
+				}
+			}
+
 			//.addPatch( dragInfo.files[i], dragInfo.position );
 			ofxAntescofoNote->clear(); // TODO ask for Saving file
 			string str = "ofxAntescofog: trying to load Music XML file :" + dragInfo.files[i];
 			console->addln(str);
 			int n = loadScore(string(dragInfo.files[i]));
 
-			if (!n) {
-				// try audio files
-				if (!audioTrack) {
-					audioTrack = new ofxTLAudioTrack();
-					if (audioTrack->loadSoundfile(dragInfo.files[i])) {
-						timeline.addTrack(dragInfo.files[i], audioTrack);
-						timeline.setTimecontrolTrack(audioTrack);
-						timeline.setDurationInSeconds(audioTrack->getDuration());
-
-						break;
-					}
-				}
+			if (!n)
 				return;
-			}
-			break; // only one file supported yet
 		}
 	}
 	bShouldRedraw = true;

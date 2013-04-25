@@ -116,9 +116,11 @@ void ofxTLAudioTrack::draw(){
 		recomputePreview();
 	}
 
+	//cout << "ofxTLAudioTrack::draw" << endl;
 
     ofPushStyle();
-    ofSetColor(timeline->getColors().keyColor);
+    //ofSetColor(timeline->getColors().keyColor);
+    ofSetColor(215, 0 , 0, 200);
     ofNoFill();
     
     for(int i = 0; i < previews.size(); i++){
@@ -170,7 +172,9 @@ void ofxTLAudioTrack::draw(){
 			ofFill();
 			ofRect(m->rect);
 
-			timeline->getFont().drawString(ofToString(m->ms), x, bounds.y + 30);
+			cout << "m:" << m->ms << endl;
+			ofSetColor(0, 0, 0, 255);
+			timeline->getFont().drawString(ofToString(m->ms), x+1, bounds.y + 30);
 		}
 	}
 	
@@ -180,7 +184,7 @@ void ofxTLAudioTrack::recomputePreview(){
 	
 	previews.clear();
 	
-//	cout << "recomputing view with zoom bounds of " << zoomBounds << endl;
+	//cout << "recomputing view with zoom bounds of " << zoomBounds << endl;
 	
 	float normalizationRatio = timeline->getDurationInSeconds() / player.getDuration(); //need to figure this out for framebased...but for now we are doing time based
 	float trackHeight = bounds.height/(1+player.getNumChannels());
@@ -238,6 +242,8 @@ int ofxTLAudioTrack::getDefaultBinCount(){
 }
 
 bool ofxTLAudioTrack::mousePressed(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return false;
+	
 	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
 		if (m->rect.inside(args.x, args.y)) {
 			cout << "ms selected:" << m->ms << endl;
@@ -245,10 +251,15 @@ bool ofxTLAudioTrack::mousePressed(ofMouseEventArgs& args, long millis){
 			return true;
 		}
 	}
+	// change playhead position
+	timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+
 	return false;
 }
 
 void ofxTLAudioTrack::mouseMoved(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return;
+
 	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
 		if (m->selected) {
 			cout << "ms selected changin from " << m->ms << endl;
@@ -262,6 +273,8 @@ void ofxTLAudioTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLAudioTrack::mouseReleased(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return;
+
 	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
 		if (m->selected) {
 			cout << "ms selected changin from " << m->ms << endl;
@@ -283,12 +296,12 @@ void ofxTLAudioTrack::keyPressed(ofKeyEventArgs& args){
 }
 
 void ofxTLAudioTrack::zoomStarted(ofxTLZoomEventArgs& args){
-	ofxTLTrack::zoomStarted(args);
+	//ofxTLTrack::zoomStarted(args);
 //	shouldRecomputePreview = true;
 }
 
 void ofxTLAudioTrack::zoomDragged(ofxTLZoomEventArgs& args){
-	ofxTLTrack::zoomDragged(args);
+	//ofxTLTrack::zoomDragged(args);
 	//shouldRecomputePreview = true;
 }
 
@@ -298,6 +311,7 @@ void ofxTLAudioTrack::zoomEnded(ofxTLZoomEventArgs& args){
 }
 
 void ofxTLAudioTrack::boundsChanged(ofEventArgs& args){
+	cout << "ofxTLAudioTrack::boundsChanged" << endl;
 	shouldRecomputePreview = true;
 }
 

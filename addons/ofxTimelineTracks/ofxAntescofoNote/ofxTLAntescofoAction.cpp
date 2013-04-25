@@ -873,7 +873,7 @@ ActionGroup::~ActionGroup()
 double ActionGroup::get_delay(Action* tmpa) 
 {
 	double d = 0.;
-	if (tmpa && tmpa->delay() && tmpa->delay()->value()) {
+	if (tmpa && tmpa->delay() && tmpa->delay()->value() && tmpa->delay()->value()->is_value()) {
 		d = (double)tmpa->delay()->eval();
 	}
 	return d;
