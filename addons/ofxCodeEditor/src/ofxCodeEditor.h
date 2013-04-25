@@ -24,7 +24,9 @@
 - (void) die;
 - (void) setupEditor;
 - (void) showLine: (int) linea lineb: (int) lineb;
+- (int) getCurrentPos;
 - (void) scrollLine: (int) line;
+- (void) gotoPos:(int) pos;
 - (int) getNbLines;
 - (int) getLenght;
 //- (void) showAutocompletion;

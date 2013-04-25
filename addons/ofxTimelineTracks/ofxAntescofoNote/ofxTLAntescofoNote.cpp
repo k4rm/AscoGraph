@@ -1177,7 +1177,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	clear();
 	//str_error.erase();
 	Score *score;
-	mParseDriver->setVerbosity(2);
+	mParseDriver->setVerbosity(0);//2);
 	if (NULL == (score = mParseDriver->parse(filename))) {
 		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
 		return 0;

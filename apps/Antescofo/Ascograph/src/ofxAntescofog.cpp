@@ -660,7 +660,6 @@ void ofxAntescofog::update() {
 
 //--------------------------------------------------------------
 void ofxAntescofog::draw() {
-
 	//ofRectangle r = timeline.getDrawRect();
 	//cout << "ofxAntescofog: draw: total draw rect:" << r.x << ", " << r.y << " : " << r.width << "x" << r.height << endl;
 	if (!bSetupDone)
@@ -1257,25 +1256,26 @@ void ofxAntescofog::display_error()
 void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 	if( dragInfo.files.size() > 0 ){
 		for(int i = 0; i < dragInfo.files.size(); i++){
-			// try audio files
-			if (!audioTrack) {
-				audioTrack = new ofxTLAudioTrack();
-				if (audioTrack->loadSoundfile(dragInfo.files[i])) {
-					timeline.addTrack(dragInfo.files[i], audioTrack);
-					timeline.setTimecontrolTrack(audioTrack);
-					timeline.setDurationInSeconds(audioTrack->getDuration());
-					
-				 	break;
-				}
-			}
-			
 			//.addPatch( dragInfo.files[i], dragInfo.position );
 			ofxAntescofoNote->clear(); // TODO ask for Saving file
 			string str = "ofxAntescofog: trying to load Music XML file :" + dragInfo.files[i];
 			console->addln(str);
 			int n = loadScore(string(dragInfo.files[i]));
-			if (!n)
+
+			if (!n) {
+				// try audio files
+				if (!audioTrack) {
+					audioTrack = new ofxTLAudioTrack();
+					if (audioTrack->loadSoundfile(dragInfo.files[i])) {
+						timeline.addTrack(dragInfo.files[i], audioTrack);
+						timeline.setTimecontrolTrack(audioTrack);
+						timeline.setDurationInSeconds(audioTrack->getDuration());
+
+						break;
+					}
+				}
 				return;
+			}
 			break; // only one file supported yet
 		}
 	}
@@ -1344,7 +1344,12 @@ int ofxAntescofog::loadScore(string filename) {
 	ofxAntescofoNote->clear_error();
 	cout << "Trying to load score : " << filename << endl;
 	// save zoom view range
-	ofRange z = timeline.getZoomer()->getViewRange(); // cout << "zm: " << z.min << " zma:" << z.max << endl;
+	ofRange z = ofxAntescofoZoom->getViewRange(); 
+
+	// save editor position
+	int lineEditor = [ editor getCurrentPos];
+	cout << "Editor cur line: " << lineEditor << endl;
+
 	string antescore = filename;
 	ofxAntescofoNote->clear_actions();
 	int n = ofxAntescofoNote->loadscoreMusicXML(filename, TEXT_CONSTANT_TEMP_FILENAME);
@@ -1359,11 +1364,9 @@ int ofxAntescofog::loadScore(string filename) {
 		guiError->disable();
 		timeline.enable();
 		guiBottom->enable();
-		ofxAntescofoNote->setZoomBounds(z);
-		timeline.getZoomer()->setViewRange(z);
+		ofxAntescofoNote->setZoomBounds(z); //timeline.getZoomer()->setViewRange(z);
 		bpm = timeline.getBPM();
 		mSliderBPM->setValue(bpm);
-		//timeline.setDurationInSeconds(60*ofxAntescofoNote); //sets time
 		update();
 
 		// send OSC read msg to Antescofo
@@ -1380,8 +1383,14 @@ int ofxAntescofog::loadScore(string filename) {
 	}
 
 	// update editor if opened
-	if (bEditorShow)
+	if (bEditorShow) {
 		[ editor loadFile:mScore_filename ];
+		cout << "Editor scrolling to pos: " << lineEditor << endl;
+		[ editor gotoPos:lineEditor]; //[ editor scrollLine:lineEditor];
+		int n = [ editor getNbLines ];
+		[ editor scrollLine:(30) ];
+
+	}
 
 	bShouldRedraw = true;
 	return n;

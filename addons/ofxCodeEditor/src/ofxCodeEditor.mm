@@ -335,6 +335,25 @@ static const char * box_xpm[] = {
 	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:line];
 }
 
+- (int) getCurrentPos
+{
+	return [mEditor getGeneralProperty:SCI_GETCURRENTPOS];
+
+}
+
+
+- (void) gotoPos: (int) pos
+{
+	[mEditor setGeneralProperty:SCI_GOTOPOS parameter:pos value:pos];
+	/*
+	[mEditor setGeneralProperty:SCI_SETANCHOR parameter:pos value:pos];
+	[mEditor setGeneralProperty:SCI_SETCURRENTPOS parameter:pos value:pos];
+	[mEditor setGeneralProperty:SCI_SETSEL parameter:pos value:pos];
+	*/
+
+
+}
+
 //void ofxCodeEditor::showLine(int linea, int lineb)
 - (void) showLine: (int) linea lineb: (int) lineb
 {
