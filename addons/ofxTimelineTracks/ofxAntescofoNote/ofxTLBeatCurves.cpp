@@ -459,6 +459,43 @@ void ofxTLBeatCurves::draw(){
 }
 #else
 
+
+void ofxTLBeatCurves::recomputePreviews(){
+	preview.clear();
+
+	cout << "ofxTLBeatCurves::recomputePreviews " << endl;
+
+	//	if(keyframes.size() == 0 || keyframes.size() == 1){
+	//		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+	//		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+	//	}
+	//	else{
+	for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p++){
+		preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
+	}
+	//	}
+	//	int size = preview.getVertices().size();
+	preview.simplify();
+	//cout << "simplify pre " << size << " post: " << preview.getVertices().size() << " dif: " << (size - preview.getVertices().size()) << endl;
+
+	ofVec2f lastPoint;
+	keyPoints.clear();
+	for(int i = 0; i < keyframes.size(); i++){
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
+		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
+		if(lastPoint.squareDistance(screenpoint) > 5*5){
+			keyPoints.push_back(screenpoint);
+		}
+
+		lastPoint = screenpoint;
+	}
+
+	shouldRecomputePreviews = false;
+
+}
+
 void ofxTLBeatCurves::draw(){
         cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
 	if(bounds.width == 0 || bounds.height < 2){

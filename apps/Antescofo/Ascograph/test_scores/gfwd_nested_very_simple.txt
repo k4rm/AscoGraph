@@ -1,0 +1,10 @@
+BPM 60
+
+NOTE C4 8.0
+GFWD testgroup 
+{
+	GFWD nestedgrp {
+		action2_one 1
+		1 action2_two 3
+	}
+}

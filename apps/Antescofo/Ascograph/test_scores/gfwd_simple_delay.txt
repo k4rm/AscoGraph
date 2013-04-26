@@ -1,0 +1,9 @@
+BPM 60
+NOTE A4 1
+GFWD 1 testgroup 
+{
+	action_one
+	2 action_two 12
+}
+NOTE A2 5
+NOTE A3 1

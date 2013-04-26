@@ -1,0 +1,24 @@
+	oscrecv hey 3007 "/" $var1 
+
+	oscsend osc_pitch "129.102.64.181" :3002 "/antescofo/pitch"
+	oscsend osc_beatpos "129.102.64.181" :3002 "/antescofo/beat"
+	oscsend osc_tempo "129.102.64.181" :3002 "/antescofo/tempo"
+
+	oscsend test "localhost" :3004 "/antescofo/hello2"
+
+	test $PITCH $RNOW $RT_TEMPO
+
+whenever($var1)
+{
+	print yes $var1
+}
+
+whenever($PITCH)
+{
+	osc_pitch $PITCH	
+	osc_beatpos $RNOW
+	osc_tempo $RT_TEMPO
+	test $PITCH $RNOW $RT_TEMPO
+}
+
+NOTE A2 2
