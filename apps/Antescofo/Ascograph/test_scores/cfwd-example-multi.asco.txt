@@ -4,7 +4,7 @@ BPM 60
 NOTE C4 4.0
 CURVE multislider grain:=0.05s action:=print $x $y; the grain size is 50 milliseconds
 {
-	:$x,$y:
+	$x,$y
 	{ 0 0.4}
 	1.0 { 0.5 1}
 	0.5 { 1.0 0.3} 

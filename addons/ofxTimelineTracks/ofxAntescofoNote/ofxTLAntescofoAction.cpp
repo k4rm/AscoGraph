@@ -502,6 +502,14 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 	}
 	// loop rec ?
 #endif
+	// check maximum height, and set track height
+	float maxh = 0;
+	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
+		if (maxh < (*i)->rect.height) 
+			maxh = (*i)->rect.height;
+
+	if (maxh > bounds.height)
+		bounds.height = maxh;
 }
 
 // for updating subgroups y
