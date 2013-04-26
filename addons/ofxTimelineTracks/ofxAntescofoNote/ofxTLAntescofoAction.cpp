@@ -484,6 +484,7 @@ void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w)
 // avoid x overlapping
 void ofxTLAntescofoAction::update_avoid_overlap()
 {
+	bounds.height = 0;
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		list<ActionGroupHeader*>::const_iterator j = i;
 		if (++j != mActionGroups.end() && zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum))) {
@@ -491,6 +492,7 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 				update_avoid_overlap_rec((*i)->group, (*j)->rect.x - (*i)->rect.x - 3);
 			}
 		}
+		//cout << "Action hearder height:"  << (*i)->rect.height <<" x:" << bounds.x << endl;
 	}
 #if 0 //TODO should do 
 	list<ActionGroup*>::const_iterator g;
@@ -505,11 +507,13 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 	// check maximum height, and set track height
 	float maxh = 0;
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
-		if (maxh < (*i)->rect.height) 
+		if (maxh < (*i)->rect.height)
 			maxh = (*i)->rect.height;
 
-	if (maxh > bounds.height)
+	if (maxh > bounds.height) {
 		bounds.height = maxh;
+		//cout << "ofxTLAntescofoAction update_avoid_overlap: changing action track size:" << maxh << endl;
+	}
 }
 
 // for updating subgroups y

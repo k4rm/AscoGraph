@@ -464,6 +464,7 @@ void ofxTLBeatCurves::recomputePreviews(){
 	preview.clear();
 
 	cout << "ofxTLBeatCurves::recomputePreviews " << endl;
+	cout << "bounds.getMinX:" << bounds.getMinX() << " maxx::"<< bounds.getMaxX() << endl;
 
 	//	if(keyframes.size() == 0 || keyframes.size() == 1){
 	//		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
@@ -471,7 +472,7 @@ void ofxTLBeatCurves::recomputePreviews(){
 	//	}
 	//	else{
 	for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p++){
-		preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
+		preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p, zoomBounds)) * bounds.height);
 	}
 	//	}
 	//	int size = preview.getVertices().size();

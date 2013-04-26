@@ -58,7 +58,7 @@ void ofxTLBeatKeyframes::recomputePreviews(){
 	//	}
 	//	else{
 	for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p++){
-		preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
+		preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p, zoomBounds)) * bounds.height);
 	}
 	//	}
 	//	int size = preview.getVertices().size();
