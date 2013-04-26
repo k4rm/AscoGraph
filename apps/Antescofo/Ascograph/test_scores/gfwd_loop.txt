@@ -1,0 +1,17 @@
+BPM 60
+NOTE A4 4
+NOTE C4 0.5
+GFWD testgroup 
+{
+	action_one
+	action_two 12
+	loop h2_p 2.666
+	{
+			harm2	-50.0	1.333
+		1.333	harm2	3.0	(1.333)
+	}
+	msg1
+	2 msg2
+}
+NOTE A2 4
+	msg4

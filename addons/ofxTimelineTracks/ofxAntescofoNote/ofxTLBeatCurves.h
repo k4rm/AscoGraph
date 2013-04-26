@@ -52,6 +52,7 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 		virtual ~ofxTLBeatCurves() {}
 
 		virtual void draw();
+		virtual void recomputePreviews();
 		virtual void drawModalContent();
 
 		//For selecting keyframe type only,
