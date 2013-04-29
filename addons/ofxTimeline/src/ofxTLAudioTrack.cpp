@@ -33,6 +33,7 @@
 #include "ofxTLAudioTrack.h"
 #include "ofxTimeline.h"
 
+float oldpos = 0;
 
 class AlignMarker {
 public:
@@ -77,12 +78,22 @@ float ofxTLAudioTrack::getDuration(){
 	return player.getDuration();
 }
 
+void ofxTLAudioTrack::update()
+{
+	//cout << "ofxTLAudioTrack:: update" <<  player.getPosition() << endl;
+	float pos = player.getPosition();
+	if (!zoomBounds.contains(pos) || oldpos != pos) {
+		recomputePreview();
+		oldpos = pos;
+	}
+}
 void ofxTLAudioTrack::update(ofEventArgs& args){
 	if(player.getPosition() < lastPercent){
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackLooped, args);
 	}
 	lastPercent = player.getPosition();
+	/*
 	
     //currently only supports timelines with duration == duration of player
 	if(lastPercent < timeline->getInOutRange().min){
@@ -98,8 +109,9 @@ void ofxTLAudioTrack::update(ofEventArgs& args){
 			player.setPosition(timeline->getInOutRange().min);
 		}
 	}
+	*/
 	
-    timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
+    //timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
 }
  
 void ofxTLAudioTrack::draw(){
@@ -118,9 +130,12 @@ void ofxTLAudioTrack::draw(){
 
 	//cout << "ofxTLAudioTrack::draw" << endl;
 
+    ofSetColor(255, 255, 255, 205);
+    ofFill();
+    ofRect(bounds);
     ofPushStyle();
     //ofSetColor(timeline->getColors().keyColor);
-    ofSetColor(215, 0 , 0, 200);
+    ofSetColor(0, 0 , 0, 255);
     ofNoFill();
     
     for(int i = 0; i < previews.size(); i++){
@@ -157,6 +172,33 @@ void ofxTLAudioTrack::draw(){
 		ofPopStyle();
 	}
 
+	// playhead 
+	ofPushStyle();
+	ofSetColor(0, 0, 0, 255);
+	float x = normalizedXtoScreenX( oldpos, zoomBounds);
+	ofLine(x, bounds.y, x, bounds.y + bounds.height);
+	ofSetLineWidth(3);
+	ofPopStyle();
+
+	/*
+	float pos = player.getPosition();
+	if (pos) {
+		ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
+		ofRange z = zoom->getViewRange();
+		ofRange oldz = z;
+		float c = z.center(); 
+		float d = pos - c;
+
+		z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+		if (z.min == .0 && z.span() < oldz.span())
+			z.max = oldz.max - oldz.min;
+		if (z.max == 1. && z.span() < oldz.span())
+			z.min = z.max - oldz.max + oldz.min;
+	}*/
+
+
+
+
 	// draw markers:
 	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
 		float xn = screenXtoNormalizedX(millisToScreenX(m->ms));
@@ -172,12 +214,18 @@ void ofxTLAudioTrack::draw(){
 			ofFill();
 			ofRect(m->rect);
 
-			cout << "m:" << m->ms << endl;
+			//cout << "m:" << m->ms << endl;
 			ofSetColor(0, 0, 0, 255);
 			timeline->getFont().drawString(ofToString(m->ms), x+1, bounds.y + 30);
 		}
 	}
 	
+}
+
+void ofxTLAudioTrack::setMarkers(vector<float>& map_index, vector<float>& map_markers) {
+	for (vector<float>:: iterator i = map_markers.begin(); i != map_markers.end(); i++) {
+		markers.push_back(*i * 1000);
+	}
 }
 
 void ofxTLAudioTrack::recomputePreview(){
@@ -320,15 +368,20 @@ void ofxTLAudioTrack::play(){
 	if(!player.getIsPlaying()){
 		
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
-		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
+		//player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
+		player.setLoop(timeline->getLoopType() == OF_LOOP_NONE);
 		cout << "ofxTLAudioTrack:: calling play on track " << endl;
+		player.setPosition(0);//XXX timeline->getPercentComplete());
 		player.play();
-		player.setPosition(timeline->getPercentComplete());
 		ofAddListener(ofEvents().update, this, &ofxTLAudioTrack::update);
+		/* XXX
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackStarted, args);		
+		*/
 	} else {
-		cout << "ofxTLAudioTrack:: calling NOT play on track " << endl;
+		//cout << "ofxTLAudioTrack:: calling NOT play on track " << endl;
+		player.stop();
+		play();
 	}
 }
 

@@ -34,6 +34,7 @@
 #include "ofxTLBeatCurves.h"
 #include "ofxTimeline.h"
 
+
 ofxTLBeatCurves::ofxTLBeatCurves()
 : ofxTLBeatKeyframes()
 {
@@ -198,6 +199,9 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 			if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
 				for(int k = 0; k < selectedKeyframes.size(); k++){
 					((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
+					// modify easing type in curve
+					float beat = selectedKeyframes[k]->beat;
+					ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
 				}
 				timeline->flagTrackModified(this);
 				shouldRecomputePreviews = true;

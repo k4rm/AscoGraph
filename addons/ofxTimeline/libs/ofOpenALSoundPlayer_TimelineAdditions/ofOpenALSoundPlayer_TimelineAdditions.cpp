@@ -631,6 +631,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::setPositionMS(int ms){
 //------------------------------------------------------------
 float ofOpenALSoundPlayer_TimelineAdditions::getPosition(){
 	if(duration==0) return 0;
+
 	if(sources.empty()) return 0;
 	float pos;
 #ifdef OF_USING_MPG123
@@ -643,6 +644,7 @@ float ofOpenALSoundPlayer_TimelineAdditions::getPosition(){
 		return pos/duration;
 	}else{
 		alGetSourcef(sources[sources.size()-1],AL_SAMPLE_OFFSET,&pos);
+		//cout << "getPosition2: chans:" << channels << " pos:" << pos <<" bufsiz:" << buffer.size() << endl;
 		return channels*(pos/buffer.size());
 	}
 }
@@ -703,6 +705,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::setPaused(bool bP){
 
 //------------------------------------------------------------
 void ofOpenALSoundPlayer_TimelineAdditions::setSpeed(float spd){
+	cout << "setspeed: " << spd << endl;
 	for(int i=0;i<channels;i++){
 		alSourcef(sources[sources.size()-channels+i],AL_PITCH,spd);
 	}
@@ -737,7 +740,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::setMultiPlay(bool bMp){
 
 // ----------------------------------------------------------------------------
 void ofOpenALSoundPlayer_TimelineAdditions::play(){
-	cout << "ofxOpenALSoundPlayer:: play" << endl;
+	cout << "ofxOpenALSoundPlayer:: play : " << channels << " channels" << endl;
 	// if the sound is set to multiplay, then create new sources,
 	// do not multiplay on loop or we won't be able to stop it
 	if (bMultiPlay && !bLoop){

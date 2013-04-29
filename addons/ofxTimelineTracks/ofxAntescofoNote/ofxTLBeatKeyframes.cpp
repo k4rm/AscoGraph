@@ -488,7 +488,7 @@ void ofxTLBeatKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 
 	}
 
-	if(createNewOnMouseup){
+	if(createNewOnMouseup) {
 		float beat = timeline->millisecToBeat(millis);
 		//add a new one
 		selectedKeyframe = newKeyframe();

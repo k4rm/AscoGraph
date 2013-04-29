@@ -626,7 +626,8 @@ void ofxTLAntescofoNote::draw_showStaves() {
 void ofxTLAntescofoNote::autoscroll() {
 	static float lastpos = 0;
 //#ifdef AUTOSCROLL_BROKEN
-	float pos = timeline->getPercentComplete();
+	// was : float pos = timeline->getPercentComplete();
+	float pos = mCurSecs / mDur_in_secs;
 	if (bAutoScroll && mDur_in_secs && lastpos != pos) {
 		ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
 
@@ -688,6 +689,15 @@ void ofxTLAntescofoNote::autoscroll() {
 
 }
 
+void ofxTLAntescofoNote::draw_playhead() {
+	ofPushStyle();
+	ofSetColor(0, 0, 0, 255);
+	float x = normalizedXtoScreenX( mCurSecs/mDur_in_secs, zoomBounds);
+	ofLine(x, bounds.y, x, bounds.y + bounds.height);
+	ofSetLineWidth(3);
+	ofPopStyle();
+}
+
 void ofxTLAntescofoNote::draw() {
 	ofPushStyle();
 	//**** DRAW BORDER
@@ -703,12 +713,13 @@ void ofxTLAntescofoNote::draw() {
 	}	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
-	autoscroll();
+	if (bAutoScroll) autoscroll();
 	if (bShowPianoRoll) {
 		draw_showPianoRoll();
 	} else
 		draw_showStaves();
 
+	draw_playhead();
 	ofPopStyle();
 }
 
@@ -1172,6 +1183,76 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 }
 
 
+bool ofxTLAntescofoNote::getAccompanimentMarkers_rec_group(Gfwd *g, vector<float>& map_index, vector<float>& map_markers) {
+	bool res = false;
+	bool debug = false;
+
+	vector<Action*>::const_iterator i;
+	for (i = g->actions().begin(); i != g->actions().end(); i++) {
+		if (debug) cout << "getAccompanimentMarkers in event in action" << endl;
+		Action *a = *i;
+		AssignmentAction *assign = dynamic_cast<AssignmentAction*>(a);
+		if (assign) {
+			if (debug) cout << "getAccompanimentMarkers in event in action in assign: name:"  << assign->var().name() << endl;
+			if (assign->var().name().size() && assign->var().name() == string("$map_rel")) {
+				if (debug) cout << "getAccompanimentMarkers in event in action in assign: name:"  << assign->value() << " OK" << endl;
+				Expression* rhs = assign->value();
+				MapDefinition* md = dynamic_cast<MapDefinition*>(rhs);
+				if (md && md->map_list) {
+					const MapList *ml = md->map_list;
+					for(MapList::const_iterator it = ml->begin(); it!=ml->end(); it++) {
+						if (debug) cout << "map: rel: " << (*it)->first << ", " << (*it)->second << endl;
+						const Value *k = (*it)->first->is_value();
+						const Value *n = (*it)->second->is_value();
+						float l, o;
+						if (k && k->is_numeric() && n && n->is_numeric()) {
+							l = eval_double(k);
+							o = eval_double(n);
+							map_index.push_back(o);
+						}
+					}
+				}
+			}
+			if (assign->var().name().size() && assign->var().name() == string("$map_abs")) {
+				if (debug) cout << "getAccompanimentMarkers in event in action in assign: name:"  << assign->value() << " OK" << endl;
+				Expression* rhs = assign->value();
+				MapDefinition* md = dynamic_cast<MapDefinition*>(rhs);
+				if (md && md->map_list) {
+					const MapList *ml = md->map_list;
+					for(MapList::const_iterator it = ml->begin(); it!=ml->end(); it++) {
+						if (debug) cout << "map: abs: " << (*it)->first << ", " << (*it)->second << endl;
+						const Value *k = (*it)->first->is_value();
+						const Value *n = (*it)->second->is_value();
+						float l, o;
+						if (k && k->is_numeric() && n && n->is_numeric()) {
+							l = eval_double(k);
+							o = eval_double(n);
+							map_markers.push_back(o);
+						}
+					}
+				}
+			}
+
+
+		}
+	}
+	return res;
+
+}
+
+// look for a variable containing a map with marker in the score
+bool ofxTLAntescofoNote::getAccompanimentMarkers(vector<float>& map_index, vector<float>& map_markers) {
+	bool res = false;
+	if (!mNetscore) return res;
+	for (vector<Event *>::iterator e = mNetscore->begin(); e != mNetscore->end(); e++) {
+		if ((*e)->gfwd) {
+			res = getAccompanimentMarkers_rec_group((*e)->gfwd, map_index, map_markers);
+			if (res)
+				break;
+		}
+	}
+	return res;
+}
 
 int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	clear();
@@ -1384,8 +1465,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		}
 
 	}
-	if (ofxAntescofoAction)
-		ofxAntescofoAction->setScore(score);
+	setScore(score);
 	str << "Score tempo : " << 60/score->tempo;
 	console->addln(str.str()); str.str("");
 	trimRange();
@@ -1422,6 +1502,7 @@ void ofxTLAntescofoNote::add_action(float beatnum, string action, Event *e) {
 }
 
 void ofxTLAntescofoNote::setScore(Score* s) {
+	mNetscore = s;
 	if (ofxAntescofoAction) 
 		ofxAntescofoAction->setScore(s);
 }
@@ -1438,7 +1519,8 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 	float r = (mOsc_beat ) * oneMeasure;// * mDur_in_secs / 1000;
 	*/
 	float r = timeline->beatToMillisec(mOsc_beat) / 1000;
-	timeline->setCurrentTimeSeconds(r);
+	//timeline->setCurrentTimeSeconds(r);
+	mCurSecs = r;
 
 
 	// display followed event in editor
@@ -1448,7 +1530,7 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 			switchA = switches[i];
 	}
 
-	if(switchA != NULL)
+	if(switchA != NULL && bAutoScroll)
 		mAntescofog->editorShowLine(switchA->lineNum_begin, switchA->lineNum_end);
 
 	// TODO : save detectedPitch = mOsc_pitch; in order to display it in a purple color in draw()

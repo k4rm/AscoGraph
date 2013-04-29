@@ -28,8 +28,8 @@
 #define INT_CONSTANT_BUTTON_TOGGLEEDIT  6    
 #define INT_CONSTANT_BUTTON_QUIT        7
 #define INT_CONSTANT_BUTTON_SELECTALL   8
-#define INT_CONSTANT_BUTTON_SNAP        9
-#define INT_CONSTANT_BUTTON_AUTOSCROLL  10
+#define INT_CONSTANT_BUTTON_AUTOSCROLL  9
+#define INT_CONSTANT_BUTTON_SNAP        10
 #define INT_CONSTANT_BUTTON_PLAY        11
 #define INT_CONSTANT_BUTTON_START       12
 #define INT_CONSTANT_BUTTON_STOP        13
@@ -49,6 +49,7 @@
 #define TEXT_CONSTANT_BUTTON_TOGGLE_EDITOR      "Toggle Editor"
 #define TEXT_CONSTANT_BUTTON_BEAT               "Position in score (in beats): "
 #define TEXT_CONSTANT_BUTTON_PITCH              "Detected Pitch : "
+#define TEXT_CONSTANT_BUTTON_SPEED              "Accompaniment speed : "
 #define TEXT_CONSTANT_BUTTON_SNAP               "Snap to grid"
 #define TEXT_CONSTANT_BUTTON_AUTOSCROLL         "Auto Scroll"
 #define TEXT_CONSTANT_BUTTON_PLAY               "Play"
@@ -142,6 +143,7 @@ class ofxAntescofog : public ofBaseApp{
 		string mScore_filename;
 
 
+		vector<float> accomp_map_index, accomp_map_markers;
 
 #ifdef TARGET_OSX
 		ofxCocoaWindow*	cocoaWindow;
@@ -152,7 +154,7 @@ class ofxAntescofog : public ofBaseApp{
 		ofxUICanvas *guiSetup_Colors;
 		ofxUIScrollableCanvas *guiError;
 		ofxUISlider *mSliderBPM;
-		ofxUILabel  *mLabelBeat, *mLabelPitch;
+		ofxUILabel  *mLabelBeat, *mLabelPitch, *mLabelAccompSpeed;
 		ofxUILabelButton *mSaveColorButton;
 		void exit();
 		void guiEvent(ofxUIEventArgs &e);
@@ -166,7 +168,7 @@ class ofxAntescofog : public ofBaseApp{
 		bool            mHasReadMessages;
 		string          mOsc_host, mOsc_port, mOsc_port_MAX;
 		char            mOSCmsg_string[20];
-		float           mOsc_beat, mOsc_tempo, mOsc_pitch;
+		float           mOsc_beat, mOsc_tempo, mOsc_pitch, mOsc_accomp_speed;
 		float           fAntescofoTimeSeconds;
 
 		// color chooser

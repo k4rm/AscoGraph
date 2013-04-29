@@ -96,13 +96,14 @@ void ofxAntescofog::menu_item_hit(int n)
             setEditorMode(!bEditorShow, 0);
             break;
         case INT_CONSTANT_BUTTON_SNAP:
-						bSnapToGrid = !bSnapToGrid;
-						cout << "Setting SnapToGrid to : " << bSnapToGrid << endl;
+	    bSnapToGrid = !bSnapToGrid;
+	    cout << "Setting SnapToGrid to : " << bSnapToGrid << endl;
             timeline.setShowBPMGrid(bSnapToGrid);
             timeline.enableSnapToBPM(bSnapToGrid);
             break;
         case INT_CONSTANT_BUTTON_AUTOSCROLL:
-						bAutoScroll = !bAutoScroll;
+	    bAutoScroll = !bAutoScroll;
+	    cout << "Setting autoscroll mode:" << bAutoScroll << endl; 
             ofxAntescofoNote->setAutoScroll(bAutoScroll);
             break;
         case INT_CONSTANT_BUTTON_PLAY:
@@ -371,7 +372,12 @@ void ofxAntescofog::setupUI() {
     guiBottom->addWidgetDown(mLabelPitch);
     mLabelPitch = new ofxUILabel("0", OFX_UI_FONT_SMALL);
     guiBottom->addWidgetRight(mLabelPitch);
+    mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetDown(mLabelAccompSpeed);
+    mLabelAccompSpeed = new ofxUILabel("0", OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetRight(mLabelAccompSpeed);
  
+
 
 
     /*vector<string> items;
@@ -437,8 +443,9 @@ void ofxAntescofog::setupOSC(){
 		ofSetColor(255, 255, 255, 240);
 
 		string err = "Error can not listen on port ";
-		err += port + " ! Please verify port is available (is another application blocking this UDP port ?";
-		cout << err << endl;
+		err += port;
+		err += " ! Please verify port is available (is another application blocking this UDP port ?";
+		cerr << err << endl;
 		ofDrawBitmapString(err, 100, 300);
 		ofxAntescofoNote->set_error(err);
 		guiError->draw();
@@ -591,7 +598,7 @@ void ofxAntescofog::update() {
         if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
         for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
 	if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
-			mOsc_tempo = m.getArgAsFloat(0);
+	    mOsc_tempo = m.getArgAsFloat(0);
             if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
             bpm = mOsc_tempo;
             //timeline.setBPM(bpm);
@@ -607,6 +614,17 @@ void ofxAntescofog::update() {
             mLabelPitch->setLabel(ofToString(mOsc_pitch));
             if (_debug) cout << "OSC received: pitch: "<< mOsc_pitch << endl;
             mHasReadMessages = true;
+	} else if(m.getAddress() == "/antescofo/accomp_pos") { // && m.getArgType(0) == OFXOSC_TYPE_FLOAT)
+            if (_debug) cout << "OSC received: accomp_pos: "<<  m.getArgAsFloat(0) << endl;
+            mHasReadMessages = true;
+	    if (audioTrack) audioTrack->play();
+	} else if(m.getAddress() == "/antescofo/accomp_speed"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+            mOsc_accomp_speed= m.getArgAsFloat(0);
+            mLabelAccompSpeed->setLabel(ofToString(mOsc_accomp_speed));
+            if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
+            mHasReadMessages = true;
+	    if (audioTrack) audioTrack->setSpeed(mOsc_accomp_speed);
+	    bShouldRedraw = true;
         } else {
             mHasReadMessages = false;
 			// unrecognized message: display on the bottom of the screen
@@ -1266,8 +1284,13 @@ void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 					ofxAntescofoNote->clear_error();
 					bShowError = false;
 					timeline.addTrack(dragInfo.files[i], audioTrack);
-					timeline.setTimecontrolTrack(audioTrack);
-					timeline.setDurationInSeconds(audioTrack->getDuration());
+					//timeline.setDurationInSeconds(audioTrack->getDuration());
+					// the 2 following 2 lines should not be done if editing markers 
+					//timeline.setTimecontrolTrack(audioTrack);
+					ofxAntescofoNote->getAccompanimentMarkers(accomp_map_index, accomp_map_markers);
+					audioTrack->setVolume(.0);
+					audioTrack->setMarkers(accomp_map_index, accomp_map_markers);
+					timeline.setPercentComplete(0);
 					break;
 				}
 			}

@@ -43,6 +43,7 @@ class ofxTLAudioTrack : public ofxTLTrack
 	virtual ~ofxTLAudioTrack();
 	
 	virtual void draw();
+	virtual void update();
 	
 	virtual bool loadSoundfile(string filepath);
 	virtual bool isSoundLoaded();
@@ -77,6 +78,7 @@ class ofxTLAudioTrack : public ofxTLTrack
 	virtual void setPan(float pan);
     
 	virtual string getTrackType();
+	void setMarkers(vector<float>& map_index, vector<float>& map_markers);
 	
   protected:	
     bool soundLoaded;

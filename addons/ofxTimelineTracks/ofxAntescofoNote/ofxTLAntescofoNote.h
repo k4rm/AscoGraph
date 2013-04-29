@@ -119,6 +119,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	virtual void setup();
 	virtual void draw();
+	void draw_playhead();
 
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
@@ -133,6 +134,9 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual void load();
 	virtual int loadscoreMusicXML(string filename, string outfilename);
 	virtual int loadscoreAntescofo(string filename);
+	bool getAccompanimentMarkers(vector<float>& map_index, vector<float>& map_markers);
+	bool getAccompanimentMarkers_rec_group(Gfwd *g, vector<float>& map_index, vector<float>& map_markers);
+
 	void update_duration();
 	string get_error();
 	void set_error(string e);
@@ -250,7 +254,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	bool hoveringHandle;
 
 	MusicXML2::antescofowriter* AntescofoWriter;
-	float mDur_in_secs;
+	float mDur_in_secs, mCurSecs;
 	int getNoteType(Event *e);
 
 	void draw_showPianoRoll();

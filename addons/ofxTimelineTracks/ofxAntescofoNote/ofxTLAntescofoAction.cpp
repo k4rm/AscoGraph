@@ -271,7 +271,7 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 	// extract data
 	if (e->gfwd) {
 		double delay = 0;
-		if (e->gfwd && e->gfwd->delay() && e->gfwd->delay()->value())
+		if (e->gfwd && e->gfwd->delay() && e->gfwd->delay()->value() && e->gfwd->delay()->value()->is_value())
 			delay = (double)e->gfwd->delay()->eval();
 		ActionGroupHeader *header = new ActionGroupHeader(beatnum, delay, e->gfwd, e);
 		/*
@@ -856,7 +856,7 @@ ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_)
 				//sons.push_back((ActionGroup*)lu);
 				ActionGroupHeader* nh = new ActionGroupHeader(header->beatnum, d, l->_group, event);//, false);
 				if (nh->group) {
-					if (l->_period)
+					if (l->_period && l->_period->value()->is_value())
 						nh->group->period = l->_period->eval();
 					nh->realtitle = nh->title = l->label();
 					sons.push_back(nh->group);
@@ -1110,6 +1110,14 @@ void ActionCurve::addKeyframeAtBeat(float beat, float val)
 	}
 	parentCurve->curve->show(cout);
 }
+
+
+void ActionCurve::changeKeyframeEasing(float beat, string type) {
+	cout << "ActionCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << endl;
+	//if (type == "sine")
+	
+}
+
 
 // 
 void ActionCurve::moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val)

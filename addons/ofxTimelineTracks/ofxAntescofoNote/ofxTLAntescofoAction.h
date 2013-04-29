@@ -74,8 +74,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		*/
 		ofRange getZoomBounds() { return zoomBounds; }
 		ofRectangle getBoundedRect(ofRectangle& r);
-
-
+		
 		void setNoteTrack(ofxTLAntescofoNote* o) { ofxAntescofoNote = o; }
 		ofxTLAntescofoNote *ofxAntescofoNote;
 		void setScore(Score* s);
@@ -83,6 +82,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
 		void add_action(float beatnum, string action, Event *e);
 		void add_action_curves(float beatnum, ActionGroup *ar, Curve *c);
+
 		int get_max_note_beat();
 		void clear_actions();
 		void move_action();
@@ -165,6 +165,7 @@ class ActionCurve : public ActionGroup {
 		virtual void print() {}
 		void addKeyframeAtBeat(float beat, float val);
 		void moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val);
+		void changeKeyframeEasing(float beat, string type);
 		bool set_dur_val(double d, AnteDuration* a);
 
 		string action;
