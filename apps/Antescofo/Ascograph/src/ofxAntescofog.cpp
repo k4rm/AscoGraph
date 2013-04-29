@@ -617,13 +617,13 @@ void ofxAntescofog::update() {
 	} else if(m.getAddress() == "/antescofo/accomp_pos") { // && m.getArgType(0) == OFXOSC_TYPE_FLOAT)
             if (_debug) cout << "OSC received: accomp_pos: "<<  m.getArgAsFloat(0) << endl;
             mHasReadMessages = true;
-	    if (audioTrack) audioTrack->play();
+	    if (audioTrack) audioTrack->fakePlay();
 	} else if(m.getAddress() == "/antescofo/accomp_speed"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_accomp_speed= m.getArgAsFloat(0);
             mLabelAccompSpeed->setLabel(ofToString(mOsc_accomp_speed));
             if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
             mHasReadMessages = true;
-	    if (audioTrack) audioTrack->setSpeed(mOsc_accomp_speed);
+	    if (audioTrack) audioTrack->setFakeSpeed(mOsc_accomp_speed);
 	    bShouldRedraw = true;
         } else {
             mHasReadMessages = false;
@@ -706,7 +706,7 @@ void ofxAntescofog::draw() {
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_error();
 	} else {
-		if (!timeline.getIsPlaying() && !bShouldRedraw) {
+		if (0 && !timeline.getIsPlaying() && !bShouldRedraw) {
 			drawCache.draw(0, 0);
 		} else {
 			ofSetColor(255, 255, 255, 255);
@@ -1279,7 +1279,7 @@ void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 			string ext = ofFilePath::getFileExt(audiofile);
 			if (ext == "aif" || ext == "aiff" || ext == "wav") {
 				if (!audioTrack)
-					audioTrack = new ofxTLAudioTrack();
+					audioTrack = new ofxTLAccompAudioTrack();
 				if (audioTrack->loadSoundfile(audiofile)) {
 					ofxAntescofoNote->clear_error();
 					bShowError = false;

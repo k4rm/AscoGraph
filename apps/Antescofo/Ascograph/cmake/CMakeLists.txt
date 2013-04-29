@@ -258,7 +258,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLTrackHeader.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLZoomer.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLAudioTrack.cpp
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLAudioTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTimeline.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLKeyframes.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLFlags.cpp
@@ -269,6 +269,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatCurves.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLMultiCurves.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLZoomer2D.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAccompAudioTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src/ofxModifierKeys_impl_mac.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTextInputField/src/ofxTextInputField.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMSAInteractiveObject/ofxMSAInteractiveObject.cpp
