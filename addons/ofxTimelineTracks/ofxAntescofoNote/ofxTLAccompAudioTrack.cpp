@@ -294,8 +294,8 @@ void ofxTLAccompAudioTrack::draw(){
 			ofRect(m->rect);
 
 			//cout << "m:" << m->ms << endl;
-			ofSetColor(0, 0, 0, 255);
-			timeline->getFont().drawString(ofToString(m->ms), x+1, bounds.y + 30);
+			//ofSetColor(0, 0, 0, 255);
+			//timeline->getFont().drawString(ofToString(m->ms), x+1, bounds.y + 30);
 		}
 	}
 	
