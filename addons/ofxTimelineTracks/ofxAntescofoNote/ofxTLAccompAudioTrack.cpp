@@ -323,7 +323,7 @@ void ofxTLAccompAudioTrack::computePreview(){
 		int lastFrameIndex = 0;
 		ofRange fullBounds(0, 1);
 		//for(float i = bounds.x; i < bounds.x+bounds.width; i++){
-		for(float i = 0; i < millisToScreenX(player.getDuration()*1000); i += 0.1){
+		for(float i = 0; i < millisToScreenX(player.getDuration()*1000); i += 0.04){
 			//float pointInTrack = screenXtoNormalizedX( i, zoomBounds ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
 			float pointInTrack = screenXtoNormalizedX( i, fullBounds ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
 			float trackCenter = bounds.y + trackHeight * (c+1);
