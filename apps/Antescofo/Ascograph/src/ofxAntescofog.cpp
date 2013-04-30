@@ -600,8 +600,7 @@ timeline.setWidth(score_w);
         if(m.getAddress() == "/antescofo/stop"){
 		if (audioTrack) audioTrack->fakeStop();
 		mHasReadMessages = true;
-	}
-	if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+	}else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 	    mOsc_tempo = m.getArgAsFloat(0);
             if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
             bpm = mOsc_tempo;
