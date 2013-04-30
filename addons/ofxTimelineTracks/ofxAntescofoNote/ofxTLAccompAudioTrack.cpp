@@ -215,7 +215,7 @@ void ofxTLAccompAudioTrack::draw(){
         ofTranslate( normalizedXtoScreenX(0, playheadBounds)  - normalizedXtoScreenX(playheadBounds.min, playheadBounds), 0, 0);
         //ofScale(computedZoomBounds.span()/zoomBounds.span(), 1, 1);
         ofScale(1/playheadBounds.span(), 1, 1);
-	if (i >= bounds.x || i <= bounds.x + bounds.width)
+	//if (i >= bounds.x || i <= bounds.x + bounds.width)
 		previews[i].draw();
         previews[i +(previews.size()/2)*(player.getNumChannels()-1)].draw();
         ofPopMatrix();
