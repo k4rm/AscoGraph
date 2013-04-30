@@ -36,9 +36,9 @@
 float playHeadX = 0.;
 float fakeSpeed = 0;
 float fakeEndIndex = 0;
-unsigned int fakeStart = 0;
+unsigned long long fakeStart = 0;
 float fakeRateMS = 1;
-float lastInstant = 0;
+unsigned long long lastInstant = 0;
 float boundsy = 0;
 float boundsh = 0;
 
@@ -99,12 +99,12 @@ void ofxTLAccompAudioTrack::update()
 
 	// assign playHeadX
 	//measure time elapsed since last update which will give us where we are
-	unsigned int nownow = ofGetSystemTime();
-	unsigned int dif = nownow - lastInstant;
+	unsigned long long nownow = ofGetSystemTime();
+	unsigned long long dif = nownow - lastInstant;
+	if (debug) cout << "update: dif=" << dif << " fakeSpeed:" << fakeSpeed << " fakeRateMS:" << fakeRateMS << " playHeadX:" << playHeadX << endl;
 	if (!dif) return;
 	playHeadX += dif * fakeSpeed * fakeRateMS;
 	lastInstant = nownow;
-	if (debug) cout << "update: dif=" << dif << " fakeSpeed:" << fakeSpeed << " fakeRateMS:" << fakeRateMS << " playHeadX:" << playHeadX << endl;
 	if (!playHeadX)
 		playheadBounds = zoomBounds;
 	else {
@@ -508,6 +508,13 @@ void ofxTLAccompAudioTrack::boundsChanged(ofEventArgs& args){
 	cout << "ofxTLAccompAudioTrack::boundsChanged" << endl;
 	computePreview();
 	//shouldRecomputePreview = true;
+}
+
+
+void ofxTLAccompAudioTrack::fakeStop(){
+	cout << "ofxTLAccompAudioTrack:: fakeStop"  << endl;
+	fakeSpeed = 0.;
+
 }
 
 void ofxTLAccompAudioTrack::fakePlay(){

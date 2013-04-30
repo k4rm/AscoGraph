@@ -185,6 +185,7 @@ class ofxAntescofog : public ofBaseApp{
 		void draw_OSCSetup();
 		bool bShowOSCSetup, bOSCSetupInitDone;
 		map<string, string *> oscString2var;
+		unsigned long long mLastOSCmsgDate;
 
 		// error handling
 		void display_error();
