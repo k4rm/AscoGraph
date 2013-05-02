@@ -188,6 +188,10 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 			if(easingFunctions[i]->bounds.inside(screenpoint-easingWindowPosition)){
 				for(int k = 0; k < selectedKeyframes.size(); k++){
 					((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
+					// modify easing type in curve
+					float beat = selectedKeyframes[k]->beat;
+					ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
+
 				}
 				timeline->flagTrackModified(this);
 				shouldRecomputePreviews = true;
@@ -502,7 +506,7 @@ void ofxTLBeatCurves::recomputePreviews(){
 }
 
 void ofxTLBeatCurves::draw(){
-        cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
+        //cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
 	if(bounds.width == 0 || bounds.height < 2){
 		return;
 	}

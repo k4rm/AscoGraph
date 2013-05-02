@@ -61,6 +61,7 @@ class ofxTLAccompAudioTrack : public ofxTLTrack
     virtual bool togglePlay();
     virtual void play();
     void fakePlay();
+    void fakeStop();
     virtual void stop();
     virtual bool getIsPlaying();
 	

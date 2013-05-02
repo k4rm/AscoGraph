@@ -571,7 +571,7 @@ void ofxAntescofog::update() {
         return;
 	//if (!bEditorShow) score_w = ofGetWindowWidth() - score_x;
 	//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
-	timeline.setWidth(score_w);
+timeline.setWidth(score_w);
   timeline.setOffset(ofVec2f(score_x, score_y));
 
 #if 0
@@ -597,7 +597,10 @@ void ofxAntescofog::update() {
         mOSCreceiver.getNextMessage( &m );
         if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
         for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
-	if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+        if(m.getAddress() == "/antescofo/stop"){
+		if (audioTrack) audioTrack->fakeStop();
+		mHasReadMessages = true;
+	}else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 	    mOsc_tempo = m.getArgAsFloat(0);
             if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
             bpm = mOsc_tempo;
@@ -664,6 +667,7 @@ void ofxAntescofog::update() {
     // if we read something, advance playhead
     if (mHasReadMessages) {
 
+	mLastOSCmsgDate = ofGetSystemTime();
         fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
         
         if (_debug) cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
@@ -692,6 +696,12 @@ void ofxAntescofog::draw() {
 	}
 	*/
 
+	bool bMayUseCache = false;
+	//cout << "---- " << ofGetSystemTime() - mLastOSCmsgDate << endl;
+	if (ofGetSystemTime() - mLastOSCmsgDate > 15000) 
+		bMayUseCache = true;
+
+
 	ofFill();
 	if (bShowColorSetup) {
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
@@ -706,7 +716,7 @@ void ofxAntescofog::draw() {
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_error();
 	} else {
-		if (0 && !timeline.getIsPlaying() && !bShouldRedraw) {
+		if (bMayUseCache && !timeline.getIsPlaying() && !bShouldRedraw) {
 			drawCache.draw(0, 0);
 		} else {
 			ofSetColor(255, 255, 255, 255);

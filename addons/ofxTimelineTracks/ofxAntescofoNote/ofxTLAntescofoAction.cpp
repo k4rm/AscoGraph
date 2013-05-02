@@ -1064,7 +1064,7 @@ bool ActionCurve::set_dur_val(double d, AnteDuration* a)
 		if (v) {
 			*v = FloatValue(d);
 			return true;
-		} else cerr << "value print: " << a->value() << endl; 
+		} else cerr << "ActionCurve: ERROR : set_dur_val: can not convert to FloatValue" << a->value() << endl; 
 	}
 	return false;
 }
@@ -1082,27 +1082,38 @@ void ActionCurve::addKeyframeAtBeat(float beat, float val)
 	int i = 0;
 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
-	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
-		cout << "ofxTLAntescofoAction:: add keyframe at beat: looping : " << i << " dcumul:" << dcumul<< endl;
+	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end() && s != simple_vect->end(); k++, i++, s++) {
+		cout << "ofxTLAntescofoAction:: add keyframe at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
 
 		dcumul += (*k)->eval();
 
+		cout << "------ y0 " << (*s).y0 << endl;
+		cout << " y1:" << (*s).y1 << endl;
 		if (dcumul < beat)
 			continue;
 		else {
-			// substract (dcumul - beat) on prev point
 			vector<AnteDuration*>::iterator p = k;
 			p--;
-			if (set_dur_val(dcumul - beat, *p)) {
+			// insert point between p and k 
+			// substract (dcumul - beat) on prev point
+			double d = beat - (*p)->eval();
+			if (set_dur_val(dcumul - beat, *k)) {
 				// add new point to simple_vect[]
-				double d = beat - (*k)->eval();
-				cout << "New point duration : " << d << endl;
-				if (i < simple_vect->size()) {
-					SimpleContFunction* sfnext = &((*simple_vect)[i+1]);
+				cout << "New point duration : beat:"<< beat << " k:"<< (*k)->eval() << " duration:" << d << endl;
+				cout << "simple vect size: " << simple_vect->size() << " i:" << i << endl;
+				if (i <= simple_vect->size()) {
+					SimpleContFunction* sfnext = &(*s);// = &((*simple_vect)[i+1]);
+					//if (s != simple_vect->end()) sfnext = &(*(++s));
+					//else sfnext = &(*s);
 					AnteDuration* ad = new AnteDuration(d);
-					simple_vect->insert(s, SimpleContFunction(sfnext->antesc, new StringValue("linear"), ad, new FloatValue(val), sfnext->y1, 0));
-					dur_vect->insert(k, ad);
-					cout << "looping stopped, inserted: " << i << endl;
+					if (sfnext->y1 && sfnext->y1->is_value() && sfnext->y1->is_value()->is_numeric()) {
+						FloatValue *ny1 = new FloatValue(eval_double(sfnext->y1->is_value()));
+						simple_vect->insert(s, SimpleContFunction(sfnext->antesc, new StringValue("linear"), ad, new FloatValue(val), ny1, sfnext->var));
+						dur_vect->insert(k, ad);
+						cout << "looping stopped, inserted: " << i << endl;
+					} else {
+						cerr << "Next y1 not a value." << endl;
+					}
 				}
 			} else { cout << "Can not convert to Value." << endl; }
 			break;
@@ -1116,6 +1127,34 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 	cout << "ActionCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << endl;
 	//if (type == "sine")
 	
+	float dcumul = 0;
+	int i = 0;
+	bool done = false;
+
+	vector<SimpleContFunction>::iterator s = simple_vect->begin();
+	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
+		cout << "ofxTLAntescofoAction:: change keyframe easing at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
+
+		dcumul += (*k)->eval();
+
+		if (dcumul < beat)
+			continue;
+		else {
+			cout << "change: is value:" << s->type->is_value() << endl;
+			if (s->type && s->type->is_value()) {
+				cout << "ofxTLAntescofoAction:: change keyframe" << endl;
+				Value* v = (Value*)s->type->is_value();
+				//StringValue *sv = dynamic_cast<StringValue*>(s->type);
+				*v = StringValue(type);
+				done = true;
+				break;
+			}
+		}
+		
+	}
+	if (done) {
+		parentCurve->curve->show(cout);
+	}
 }
 
 
@@ -1146,7 +1185,7 @@ void ActionCurve::moveKeyframeAtBeat(float to_beat, float from_beat, float to_va
 			if (set_dur_val(from_beat - to_beat, *k)) {
 				// change current delay
 				double d = to_beat - (*p)->eval();
-				cout << "New point duration : " << d << endl;
+				cout << "Changed point duration : " << d << endl;
 			}
 			break;
 		} else { cout << "An error append with curves beats..." << endl; abort(); }
