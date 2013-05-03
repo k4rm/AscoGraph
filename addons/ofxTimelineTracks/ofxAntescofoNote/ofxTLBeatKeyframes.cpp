@@ -429,6 +429,10 @@ void ofxTLBeatKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
 		ofVec2f screenpoint(args.x,args.y);
 		for(int k = 0; k < selectedKeyframes.size(); k++){
 			ofVec2f newScreenPosition;
+			cout << "mouseDragged: clamp: " <<   ofClamp(beat - selectedKeyframes[k]->grabBeatOffset,
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX())))
+							<< endl;
 			setKeyframeBeat(selectedKeyframes[k], ofClamp(beat - selectedKeyframes[k]->grabBeatOffset,
 						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
 						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))));
@@ -480,12 +484,14 @@ void ofxTLBeatKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 		lastSampleBeat = 0;
 		timeline->flagTrackModified(this);
 		for(int i = 0; i < selectedKeyframes.size(); i++){
+			cout << "mouseReleased: selectedkeyframe: origbeat: " <<  selectedKeyframes[i]->orig_beat << endl;
 			ref->moveKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->orig_beat, selectedKeyframes[i]->tmp_value, selectedKeyframe->orig_value);
 			selectedKeyframes[i]->orig_value = selectedKeyframes[i]->tmp_value;
 			selectedKeyframes[i]->tmp_value = 0;
 			selectedKeyframes[i]->value = ofMap(selectedKeyframes[i]->orig_value, valueRange.min, valueRange.max, 0, 1.0, true);
+			setKeyframeBeat(selectedKeyframes[i], selectedKeyframes[i]->beat);
+			selectedKeyframes[i]->orig_beat = selectedKeyframes[i]->beat;
 		}
-
 	}
 
 	if(createNewOnMouseup) {

@@ -1058,37 +1058,70 @@ ActionCurve::~ActionCurve()
 {
 }
 
+bool debug_edit_curve = true;
+
 bool ActionCurve::set_dur_val(double d, AnteDuration* a)
 {
 	if (Value* v = (Value*)a->value()->is_value()) {
-		if (v) {
-			*v = FloatValue(d);
-			return true;
-		} else cerr << "ActionCurve: ERROR : set_dur_val: can not convert to FloatValue" << a->value() << endl; 
+		*v = FloatValue(d);
+		return true;
+	} else {
+		cerr << "ActionCurve: ERROR : set_dur_val: can not convert to FloatValue" << a->value() << endl; 
+		return false;
 	}
-	return false;
+}
+
+bool ActionCurve::set_y(Expression* y, double val) {
+	Value* v = (Value*)y->is_value();
+	if (v) {
+		*v = FloatValue(val);
+		return true;
+	} else {
+		cerr << "ActionCurve: ERROR : set_y: can not convert to FloatValue" << endl; 
+		return false;
+	}
+}
+
+
+void ActionCurve::print()
+{
+	cout << "ActionCurve::print: "<< endl; 
+	vector<SimpleContFunction>::iterator s = simple_vect->begin();
+	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, s++) {
+		cout << "\tdelay: " << (*k)->eval();
+		if (s != simple_vect->end())
+			cout << "  y0: " << s->y0 << " y1: " << s->y1 << endl;
+	}
+	cout << endl;
+}
+
+FloatValue* ActionCurve::get_new_y(Expression* y) {
+	if (y && y->is_value() && y->is_value()->is_numeric()) {
+		if (debug_edit_curve) cout << "get_new_y: " << eval_double(y->is_value()) << endl;
+		return new FloatValue(eval_double(y->is_value()));
+	} else return NULL;
 }
 
 // when new breakpoint is created, we should reduce prev breakpoint duration, before adding
 void ActionCurve::addKeyframeAtBeat(float beat, float val)
 {
-	cout << "ofxTLAntescofoAction:: add keyframe at beat: " << beat << " val: " << val << endl;
+	print();
+	if (debug_edit_curve) cout << "ofxTLAntescofoAction:: add keyframe at beat: " << beat << " val: " << val << endl;
 	if (beat == 0) {
 		//set_dur_val(val, simple_vect->begin());
 		return;
 	}
 
-	float dcumul = 0;
+	double dcumul = 0.;
 	int i = 0;
+	bool done = false;
 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
-	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end() && s != simple_vect->end(); k++, i++, s++) {
-		cout << "ofxTLAntescofoAction:: add keyframe at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
+	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end() /* && s != simple_vect->end()*/; k++, i++, s++) {
+		if (debug_edit_curve) cout << "ofxTLAntescofoAction:: add keyframe at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
 
 		dcumul += (*k)->eval();
-
-		cout << "------ y0 " << (*s).y0 << endl;
-		cout << " y1:" << (*s).y1 << endl;
+		//cout << "------ y0 " << (*s).y0 << endl; cout << " y1:" << (*s).y1 << endl;
 		if (dcumul < beat)
 			continue;
 		else {
@@ -1099,32 +1132,42 @@ void ActionCurve::addKeyframeAtBeat(float beat, float val)
 			double d = beat - (*p)->eval();
 			if (set_dur_val(dcumul - beat, *k)) {
 				// add new point to simple_vect[]
-				cout << "New point duration : beat:"<< beat << " k:"<< (*k)->eval() << " duration:" << d << endl;
-				cout << "simple vect size: " << simple_vect->size() << " i:" << i << endl;
+				if (debug_edit_curve) cout << "New point duration : beat:"<< beat << " k:"<< (*k)->eval() << " duration:" << d << endl;
 				if (i <= simple_vect->size()) {
-					SimpleContFunction* sfnext = &(*s);// = &((*simple_vect)[i+1]);
-					//if (s != simple_vect->end()) sfnext = &(*(++s));
-					//else sfnext = &(*s);
+					vector<SimpleContFunction>::iterator sp = s; sp--;
 					AnteDuration* ad = new AnteDuration(d);
-					if (sfnext->y1 && sfnext->y1->is_value() && sfnext->y1->is_value()->is_numeric()) {
-						FloatValue *ny1 = new FloatValue(eval_double(sfnext->y1->is_value()));
-						simple_vect->insert(s, SimpleContFunction(sfnext->antesc, new StringValue("linear"), ad, new FloatValue(val), ny1, sfnext->var));
-						dur_vect->insert(k, ad);
-						cout << "looping stopped, inserted: " << i << endl;
-					} else {
-						cerr << "Next y1 not a value." << endl;
-					}
-				}
+					FloatValue* ny1 = get_new_y(sp->y1);
+					assert(ny1);
+					FloatValue* ny0 = new FloatValue(val);
+					s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var));
+					dur_vect->insert(k, ad);
+					// change prev y1
+					s--;
+					s->y1 = ny0;
+					done = true;
+					if (debug_edit_curve) cout << "looping stopped, inserted: " << i << endl;
+				} 
 			} else { cout << "Can not convert to Value." << endl; }
 			break;
-		}
+		} 
+	}
+	if (!done && dcumul < beat) { // insert beat after last point
+		vector<AnteDuration*>::iterator k = dur_vect->end();
+		k--;
+		vector<SimpleContFunction>::iterator s = simple_vect->end();
+		s--;
+		AnteDuration *ad = new AnteDuration(beat - (*k)->eval());
+		simple_vect->push_back(SimpleContFunction(s->antesc, new StringValue("linear"), ad, get_new_y(s->y1), new FloatValue(val), s->var));
+		dur_vect->push_back(ad);
+		//set_dur_val(dcumul - beat, *k)
 	}
 	parentCurve->curve->show(cout);
+	print();
 }
 
 
 void ActionCurve::changeKeyframeEasing(float beat, string type) {
-	cout << "ActionCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << endl;
+	if (debug_edit_curve) cout << "ActionCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << endl;
 	//if (type == "sine")
 	
 	float dcumul = 0;
@@ -1133,16 +1176,16 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
 	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
-		cout << "ofxTLAntescofoAction:: change keyframe easing at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
+		if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe easing at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
 
 		dcumul += (*k)->eval();
 
 		if (dcumul < beat)
 			continue;
 		else {
-			cout << "change: is value:" << s->type->is_value() << endl;
+			if (debug_edit_curve) cout << "change: is value:" << s->type->is_value() << endl;
 			if (s->type && s->type->is_value()) {
-				cout << "ofxTLAntescofoAction:: change keyframe" << endl;
+				if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe" << endl;
 				Value* v = (Value*)s->type->is_value();
 				//StringValue *sv = dynamic_cast<StringValue*>(s->type);
 				*v = StringValue(type);
@@ -1150,10 +1193,10 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 				break;
 			}
 		}
-		
 	}
 	if (done) {
 		parentCurve->curve->show(cout);
+		print();
 	}
 }
 
@@ -1161,37 +1204,56 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 // 
 void ActionCurve::moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val)
 {
-	cout << "ofxTLAntescofoAction:: move keyframe from beat: " << from_beat << " (val:" << from_val << ") to beat: " << to_beat << "(val:" << to_val <<")"<< endl;
-	if (from_beat == 0) {
-		// TODO set val
-		return;
+	if (debug_edit_curve) 
+	{
+		cout << "ofxTLAntescofoAction:: move keyframe from beat: " << from_beat << " (val:" << from_val << ") to beat: " << to_beat << "(val:" << to_val <<")"<< endl;
+		print();
 	}
+	//if (from_beat == 0) { // TODO set val return; }
 
-	float dcumul = 0;
+	double dcumul = 0.;
+	double dfrom_beat = from_beat;
 	int i = 0;
 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
 	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
-		cout << "ofxTLAntescofoAction:: move keyframe at beat: looping : " << i << endl;
+		if (debug_edit_curve) cout << "ofxTLAntescofoAction:: move keyframe at beat: looping : " << i << endl;
 
-		dcumul += (*k)->eval();
+		dcumul += (double)((*k)->eval());
 
-		if (dcumul < from_beat)
+		if (dcumul < dfrom_beat)
 			continue;
-		else if (dcumul == from_beat) {
+		else if ( dcumul > dfrom_beat - 0.01 && dcumul < dfrom_beat + 0.01) { //dcumul == dfrom_beat) 
+			if (debug_edit_curve) cout << "ofxTLAntescofoAction:: beat found" << endl;
 			// prev dur -= (from_beat - to_beat)
 			vector<AnteDuration*>::iterator p = k;
 			p--;
-			if (set_dur_val(from_beat - to_beat, *k)) {
+			AnteDuration *d = *k;
+			if (set_dur_val(d->value()->is_value()->get_double() - (from_beat - to_beat), *k)) {
 				// change current delay
 				double d = to_beat - (*p)->eval();
-				cout << "Changed point duration : " << d << endl;
+				if (debug_edit_curve) cout << "Changed point duration : " << d << endl;
+				// change next
+				if (k != dur_vect->end()) {
+					vector<AnteDuration*>::iterator n = k; n++;
+					AnteDuration *an = *n;
+					set_dur_val(an->value()->is_value()->get_double() + (from_beat - to_beat), *n);
+				}
+				vector<SimpleContFunction>::iterator sp = s;
+				//FloatValue* ny0 = new FloatValue(to_val);
+				set_y(s->y0, to_val);
+				s--;
+				set_y(s->y1, to_val);
 			}
 			break;
-		} else { cout << "An error append with curves beats..." << endl; abort(); }
+		} else {
+			cout << "An error moveKeyframeAtBeat...: dcumul:" << dcumul << " from_beat:"<< dfrom_beat << endl;
+			abort();
+		}
 	}
 
 	parentCurve->curve->show(cout);
+	print();
 }
 
 

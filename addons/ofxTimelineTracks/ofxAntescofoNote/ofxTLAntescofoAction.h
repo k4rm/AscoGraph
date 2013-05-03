@@ -162,11 +162,14 @@ class ActionCurve : public ActionGroup {
 		virtual ~ActionCurve();
 
 		virtual void draw(ofxTLAntescofoAction *tlAction) {}
-		virtual void print() {}
+		virtual void print();
 		void addKeyframeAtBeat(float beat, float val);
 		void moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val);
 		void changeKeyframeEasing(float beat, string type);
 		bool set_dur_val(double d, AnteDuration* a);
+		FloatValue* get_new_y(Expression* y);
+		bool set_y(Expression* y, double val);
+		
 
 		string action;
 

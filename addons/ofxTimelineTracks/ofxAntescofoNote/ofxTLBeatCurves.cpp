@@ -511,6 +511,12 @@ void ofxTLBeatCurves::draw(){
 		return;
 	}
 	
+
+	//print keyframes:
+	/*cout << "print keyframes:" << endl;
+	for(int i = 0; i < keyframes.size(); i++){
+		cout << "keyframes["<<i<<"] : beat:"<< keyframes[i]->beat << endl;
+	}*/
 	if(shouldRecomputePreviews || viewIsDirty){
 		recomputePreviews();
 	}
