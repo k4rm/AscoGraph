@@ -1,0 +1,13 @@
+BPM 60
+
+NOTE C4 4.0
+CURVE slider grain:=0.05s action:=print $x ; the grain size is 50 milliseconds
+{
+  $x 
+  {
+	{ 0 }
+	1.0 { 1 }
+	2. { 2 }
+  }
+}
+NOTE C2 10
