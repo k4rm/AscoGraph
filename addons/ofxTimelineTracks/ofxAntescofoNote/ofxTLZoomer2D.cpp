@@ -237,8 +237,10 @@ void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
 
 		// y
 		float yd = -(args.y - yGrabOffset)*6;
+		if (yd > 0) yd *= 10;
 		float nyd = screenXtoNormalizedX(yd, ofRange(0, 1.));
 		float d = screenXtoNormalizedX(xMinGrabOffset - currentViewRange.min);
+		//cout << "yd: " << yd << " nyd: " << nyd << endl;
 		xmin = currentViewRange.min - nyd * d;
 		//xmin = ofClamp( nyd, 0, currentViewRange.min - 0.1*d); // , 0, currentViewRange.min);
 
