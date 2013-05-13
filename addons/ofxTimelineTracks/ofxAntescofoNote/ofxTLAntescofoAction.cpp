@@ -434,6 +434,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	int del = 0; float beatdel = 0.;
 	ag->header->duration = 0;
 
+	//if (!ag->is_in_bounds(this)) { ag->header->rect.width = 0; return 0; }
 	int debugsub = 0;
 	if (debugsub) cout << "update_width: " << ag->header->title << endl;
 	ActionMessage *m;
@@ -474,8 +475,8 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 // avoid x overlapping
 void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w)
 {
-	if (g->header->rect.width > w)
-		g->header->rect.width = w;
+	if (g->header->rect.width + g->header->rect.x > w)
+		g->header->rect.width = w - g->header->rect.x;
 	for (list<ActionGroup*>::const_iterator i = g->sons.begin(); i != g->sons.end(); i++) {
 		update_avoid_overlap_rec(*i, w);
 	}
@@ -484,12 +485,16 @@ void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w)
 // avoid x overlapping
 void ofxTLAntescofoAction::update_avoid_overlap()
 {
-	bounds.height = 0;
+	//bounds.height = 0;
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		list<ActionGroupHeader*>::const_iterator j = i;
-		if (++j != mActionGroups.end() && zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum))) {
+
+		//ofRange r(_timeline->screenXtoNormalizedX(header->rect.x, tlAction->getZoomBounds()), _timeline->screenXtoNormalizedX(header->rect.x + header->rect.width, tlAction->getZoomBounds()));
+		//if (++j != mActionGroups.end() && (zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum)) || zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum) + (*j)->duration)) ) {
+		//if (++j != mActionGroups.end() && zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum))) {
+		if (++j != mActionGroups.end() && (*i)->group->is_in_bounds(this) ) {
 			if ( ((*i)->rect.x + (*i)->rect.width) + 1 >= (*j)->rect.x) {
-				update_avoid_overlap_rec((*i)->group, (*j)->rect.x - (*i)->rect.x - 3);
+				update_avoid_overlap_rec((*i)->group, (*j)->rect.x /*- (*i)->rect.x*/ - 2);
 			}
 		}
 		//cout << "Action hearder height:"  << (*i)->rect.height <<" x:" << bounds.x << endl;
@@ -504,6 +509,7 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 	}
 	// loop rec ?
 #endif
+#if 0
 	// check maximum height, and set track height
 	float maxh = 0;
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
@@ -514,6 +520,7 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 		bounds.height = maxh;
 		//cout << "ofxTLAntescofoAction update_avoid_overlap: changing action track size:" << maxh << endl;
 	}
+#endif
 }
 
 // for updating subgroups y
@@ -577,6 +584,7 @@ bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionG
 			return res;
 		} else if (header->is_in_arrow(args.x, args.y)) {
 			header->hidden = true;
+			res = true;
 		} else {
 			if (group) { // not hidden and click in group
 				Event *e = group->event;
@@ -630,7 +638,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		(*i)->group->selected = false;
 
 
-	cout << "mousePressed: x:"<< args.x << " y:" << args.y << endl; 
+	//cout << "mousePressed: x:"<< args.x << " y:" << args.y << endl; 
 	bool res = false;
 	// selection
 	ActionGroup* clickedGroup = groupFromScreenPoint(args.x, args.y);
@@ -885,8 +893,8 @@ ActionGroup::~ActionGroup()
 double ActionGroup::get_delay(Action* tmpa) 
 {
 	double d = 0.;
-	if (tmpa && tmpa->delay() && tmpa->delay()->value() && tmpa->delay()->value()->is_value()) {
-		d = (double)tmpa->delay()->eval();
+	if (tmpa && tmpa->delay() && tmpa->delay()->value()->is_constant()) { //->value() && tmpa->delay()->value()->is_value()) {
+		d = eval_double(tmpa->delay()->value());
 	}
 	return d;
 }
@@ -1235,9 +1243,16 @@ void ActionCurve::moveKeyframeAtBeat(float to_beat, float from_beat, float to_va
 				if (debug_edit_curve) cout << "Changed point duration : " << d << endl;
 				// change next
 				if (k != dur_vect->end()) {
+					double nextdur = 0.;
 					vector<AnteDuration*>::iterator n = k; n++;
 					AnteDuration *an = *n;
-					set_dur_val(an->value()->is_value()->get_double() + (from_beat - to_beat), *n);
+					if (an->value()->is_value()->get_double() + from_beat < to_beat) { // point dragged after next point 
+						cout << "!!!!!!!!!!!!!!!!!!!!!!! negative delay TODO" << endl;
+
+					} else {
+						nextdur = an->value()->is_value()->get_double() + (from_beat - to_beat);
+						set_dur_val(nextdur, *n);
+					}
 				}
 				vector<SimpleContFunction>::iterator sp = s;
 				//FloatValue* ny0 = new FloatValue(to_val);
@@ -1373,11 +1388,11 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 
 				ofNoFill();
 				ofSetColor(0, 0, 0, 255);
-				drawArrow(); // arrow
-
+				if (rect.width > ARROW_LEN + 4)
+					drawArrow(); // arrow
 				string name = title;
 				if (group && group->period > 0) { name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
-				tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 2);
+				tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + LINE_HEIGHT - 6);
 				ofNoFill(); // black border
 				if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 				ofRect(tlAction->getBoundedRect(rect));
@@ -1396,10 +1411,11 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		ofRect(tlAction->getBoundedRect(rect)); // header filled rect
 		ofNoFill();
 		ofSetColor(0, 0, 0, 255);
-		drawArrow(); // arrow
+		if (rect.width > ARROW_LEN + 4)
+			drawArrow(); // arrow
 		string name = title;
 		if (group && group->period > 0) {name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
-		tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 2);
+		tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + LINE_HEIGHT - 6);
 		ofNoFill();
 		if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 		ofRect(tlAction->getBoundedRect(rect)); // black border rect
@@ -1455,10 +1471,10 @@ void ActionGroupHeader::print() {
 
 bool ActionGroupHeader::is_in_arrow(int x, int y)
 {
-	cout << "is in arrow: " << x << " " << y << endl;
 	bool res = false;
 	if (x > rect.x + rect.width - ARROW_LEN && y < rect.y + HEADER_HEIGHT)
 		res = true;
+	cout << "is in arrow: " << x << " " << y << " return " << res << endl;
 	return res;
 }
 

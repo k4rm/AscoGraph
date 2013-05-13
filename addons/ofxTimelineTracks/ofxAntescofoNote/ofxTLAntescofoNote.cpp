@@ -318,15 +318,6 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 				float startX =  max(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds), zoomMinX);
 				float endX = min(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds), zoomMaxX);
 
-				// measure bar
-				if (!switches[i]->label.empty()) {
-					//cout << "ofxTLAntescofoNote: label:"<< switches[i]->label << endl;
-					ofSetColor(0, 0, 0, 75);
-					ofSetLineWidth(1);
-					ofLine(startX, bounds.y, startX, bounds.y + bounds.height);
-					ofDrawBitmapString(switches[i]->label, startX, bounds.y+10);
-				}
-
 				// manage rest notes
 				if (switches[i]->pitch != 0) {
 					if (abs(switches[i]->pitch) > noteRange.max || abs(switches[i]->pitch) < noteRange.min) continue; // don't draw note outside range
@@ -351,7 +342,18 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					ofRectangle r(startX, y, endX - startX, rowHeight);
 					ofRect(r);// et un rect entre les deux
 					ofNoFill();
-					ofSetColor(0, 0, 0, 200);
+#if 0 // not yet missed events
+					// missed events
+					if (mLastBeat >= switches[i]->beat.min && switches[i]->missed) {
+						cout << "Displaying missed event !" << endl;
+						ofSetColor(25, 40, 40, 100);
+						ofSphere(50,50,-10,40);
+						ofSetColor(255, 0, 0, 200);
+
+					} else
+#else
+						ofSetColor(0, 0, 0, 200);
+#endif
 					ofRectangle rb(startX, y, endX - startX, rowHeight); // black border around note
 					ofRect(rb);
 					ofFill();
@@ -418,6 +420,30 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 				}
 			}
 		} // end switch loop
+
+		// draw markers (separate loop used for calculate width
+		float lastX = bounds.x + bounds.width;
+		int sizec = mFont.stringWidth(string("_"));
+		for(int i = switches.size() - 1; i >= 0; i--){
+			if(isSwitchInBounds(switches[i])){
+				float startX =  max(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds), zoomMinX);
+				float endX = min(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds), zoomMaxX);
+
+				// measure bar
+				if (!switches[i]->label.empty()) {
+					ofSetColor(0, 0, 0, 85);
+					ofSetLineWidth(1);
+					ofLine(startX, bounds.y, startX, bounds.y + bounds.height);
+					float w = lastX - startX;
+					int l = floor( w / sizec + 1 );
+					int s = switches[i]->label.size();
+					if (l > s) l = s;
+					string str = switches[i]->label.substr(s-l, l);
+					ofDrawBitmapString( str, startX, bounds.y-5);
+					lastX = startX;
+				}
+			}
+		} 
 	} // end if has switches
 
 	//************************ Drag Selection
@@ -1469,6 +1495,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	str << "Score tempo : " << 60/score->tempo;
 	console->addln(str.str()); str.str("");
 	trimRange();
+	missedAll();
 	unselectAll();
 	sort(switches.begin(), switches.end(), switchsort);
 
@@ -1513,11 +1540,6 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 	if (mOsc_tempo == 0) cerr << "Error null tempo returned by Antescofo, skipping a division by zero..." << endl;
 	if (mOsc_beat == 0) return 0;
 
-	/*
-	//cout << "converting: beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " "<<endl;
-	double oneMeasure = 60 / mOsc_tempo; //timeline->getBPM();
-	float r = (mOsc_beat ) * oneMeasure;// * mDur_in_secs / 1000;
-	*/
 	float r = timeline->beatToMillisec(mOsc_beat) / 1000;
 	//timeline->setCurrentTimeSeconds(r);
 	mCurSecs = r;
@@ -1526,8 +1548,10 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 	// display followed event in editor
 	ofxTLAntescofoNoteOn* switchA = 0;
 	for (int i = 0; i < switches.size(); i++) {
-		if (switches[i]->beat.contains(mOsc_beat))
+		if (switches[i]->beat.contains(mOsc_beat)) {
 			switchA = switches[i];
+			switchA->missed = false;
+		}
 	}
 
 	if(switchA != NULL && bAutoScroll)
@@ -1808,6 +1832,12 @@ void ofxTLAntescofoNote::pasteSent(string pasteboard){
 	sort(switches.begin(), switches.end(), switchsort);
 	//	if(autosave) save();
 #endif
+}
+
+void ofxTLAntescofoNote::missedAll(){
+	for(int i = 0; i < switches.size(); i++){
+		switches[i]->missed = true;
+	}
 }
 
 void ofxTLAntescofoNote::selectAll(){

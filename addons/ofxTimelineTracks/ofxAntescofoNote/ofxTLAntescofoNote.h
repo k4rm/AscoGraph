@@ -96,6 +96,7 @@ typedef struct {
 	bool growing;
 	bool triggeredOn;
 	bool triggeredOff;
+	bool missed;
 	int type;
 
 	string label;
@@ -152,6 +153,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
 	virtual void unselectAll();
+	virtual void missedAll();
 	virtual int getSelectedItemCount();
 
 	void clear_actions();
@@ -262,6 +264,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	bool bShowPianoRoll;
 	bool bAutoScroll;
+	float mLastBeat;
 
 	ofxAntescofog *mAntescofog;
 	ofxTLAntescofoAction* ofxAntescofoAction;

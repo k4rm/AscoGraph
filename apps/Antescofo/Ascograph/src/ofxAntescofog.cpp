@@ -611,6 +611,9 @@ timeline.setWidth(score_w);
             mOsc_beat = m.getArgAsFloat(0);
             mLabelBeat->setLabel(ofToString(mOsc_beat));
             if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
+	    cout << "OSC : " << mOsc_beat << endl;
+	    if (mOsc_beat == 0)
+		    ofxAntescofoNote->missedAll();
             mHasReadMessages = true;
         } else if(m.getAddress() == "/antescofo/pitch"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_pitch = m.getArgAsFloat(0);

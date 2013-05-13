@@ -248,13 +248,15 @@ void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
 		xmax = currentViewRange.max + nyd * d;
 		//xmax = ofClamp( nyd, currentViewRange.max + d*0.1, 1.);
 
-		if (xmin < xmax) {
+		//cout << "before: "<< xmin << " - " << xmax << endl;
+		//if (xmin < xmax) {
 			currentViewRange.min = fmax(0., xmin);
 			currentViewRange.max = fmin(xmax, 1.);
-		}
+		//}
 
 		if (currentViewRange.max < currentViewRange.min)
-			currentViewRange.max = currentViewRange.min + 0.2;
+			currentViewRange.max = currentViewRange.min + 0.05;
+		//cout << "after:  "<< xmin << " - " << xmax << endl;
 		notify = true;
 	}
 
