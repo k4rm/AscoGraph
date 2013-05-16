@@ -105,6 +105,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		ofRectangle movingActionRect;
 		ofPoint selectionRangeAnchor;
 		ofRectangle dragSelection;
+		ofRectangle mRectCross;
 		ActionGroup* groupFromScreenPoint(int x, int y);
 		ActionGroup* groupFromScreenPoint_rec(ActionGroup* group, int x, int y);
 		void regionSelected(ofLongRange timeRange, ofRange valueRange);

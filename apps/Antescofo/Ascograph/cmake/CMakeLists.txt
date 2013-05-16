@@ -58,7 +58,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/Score.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Environment.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/IOfile.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Statements.cpp
+	# ${ANTESCOFO_PARSER_PATH}/sources/Statements.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Values.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/TemporalRegex.cpp
 	${ANTESCOFO_PARSER_PATH}/parser/parsedriver.cpp
@@ -619,6 +619,8 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSCI_NAMESPACE -DSCI_LEXER ")
 set( MACOSX_RESOURCE_FILES
 	${CMAKE_SOURCE_DIR}/../bin/data/info_bar_bg.png
 	${CMAKE_SOURCE_DIR}/../bin/data/note.png
+	${CMAKE_SOURCE_DIR}/../bin/data/logo_inria.png
+	${CMAKE_SOURCE_DIR}/../bin/data/logo_ircam.png
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
 	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
 )

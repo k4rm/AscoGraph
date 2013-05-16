@@ -65,6 +65,12 @@ void ofxTLAntescofoAction::draw()
 		disable();
 	}
 	if (mScore && bounds.height > 1) {
+		// draw close cross
+		ofSetColor(0, 0, 0, 255);
+		ofRect(mRectCross);
+		ofLine(mRectCross.x, mRectCross.y, mRectCross.x+mRectCross.width, mRectCross.y+mRectCross.height);
+		ofLine(mRectCross.x+mRectCross.width, mRectCross.y, mRectCross.x, mRectCross.y+mRectCross.height);
+
 		update_groups();
 		for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
@@ -322,6 +328,10 @@ void ofxTLAntescofoAction::load()
 
 void ofxTLAntescofoAction::update()
 {
+	mRectCross.x = bounds.x + bounds.width - 20;
+	mRectCross.y = bounds.y - 15;
+	mRectCross.width = 14;
+	mRectCross.height = 14;
 }
 
 
@@ -764,6 +774,13 @@ void ofxTLAntescofoAction::move_action() {
 
 void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 {
+
+	if (mRectCross.inside(args.x, args.y)) {
+		cout << "ofxTLAntescofoAction::mouseReleased: should close track" << endl;
+		disable();
+		timeline->removeTrack(this);
+		return;
+	}
 	if (!bounds.inside(args.x, args.y)) return;
 	if (movingAction) {
 		//move_action();

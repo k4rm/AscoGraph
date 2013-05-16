@@ -348,19 +348,6 @@ void ofxAntescofog::setupUI() {
     guiBottom->addWidgetRight(b);
     b->setColorBack(ofxAntescofoNote->color_note_trill);
 
-    // event buttons
-    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
-    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
-    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
-    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
-    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
-    guiBottom->addWidgetLeft(b);
-
-
     ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
     space->setVisible(false);
     guiBottom->addWidgetDown(space);
@@ -376,7 +363,24 @@ void ofxAntescofog::setupUI() {
     guiBottom->addWidgetDown(mLabelAccompSpeed);
     mLabelAccompSpeed = new ofxUILabel("0", OFX_UI_FONT_SMALL);
     guiBottom->addWidgetRight(mLabelAccompSpeed);
- 
+
+    // event buttons
+    space = new ofxUISpacer(3, 1);
+    space->setVisible(false);
+    guiBottom->addWidgetLeft(space, OFX_UI_ALIGN_RIGHT);
+
+    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
+    //guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+    b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
+    guiBottom->addWidgetLeft(b);
+
 
 
 
@@ -411,6 +415,15 @@ void ofxAntescofog::setupUI() {
    
     guiError->setVisible(false);
     guiError->disable();
+
+    mLogoInria.loadImage("logo_inria.png");
+    mLogoIrcam.loadImage("logo_ircam.png");
+    /*
+    logoInria = ofRectangle(600, 7, 150, 40);
+    ofSetColor(255);
+    ofFill();
+    ofRect(logoInria);
+    */
 
     //guiTop->disable(); guiBottom->disable(); guiTop->setVisible(false); guiBottom->setVisible(false);
 
@@ -527,13 +540,13 @@ void ofxAntescofog::setup(){
 		ofSetLogLevel(OF_LOG_VERBOSE);
     
 		fog = this;
-    score_x = 3;
+    score_x = 5;
     score_y = 81;
     mUIbottom_y = 40;
 
     bpm = 120; 
     
-    score_w = ofGetWindowWidth() - score_x - 2;
+    score_w = ofGetWindowWidth() - score_x - 5;
     score_h = ofGetWindowHeight()/3;
     
     ofAddListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
@@ -571,8 +584,8 @@ void ofxAntescofog::update() {
         return;
 	//if (!bEditorShow) score_w = ofGetWindowWidth() - score_x;
 	//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
-timeline.setWidth(score_w);
-  timeline.setOffset(ofVec2f(score_x, score_y));
+    timeline.setWidth(score_w);
+    timeline.setOffset(ofVec2f(score_x, score_y));
 
 #if 0
   // stick to the bottom of the window
@@ -744,8 +757,18 @@ void ofxAntescofog::draw() {
 			timeline.draw();
 			guiBottom->draw();
 			console->draw();
-
 			ofPopStyle();
+
+			// logos
+			mLogoInria.draw(score_w - 290, 2, 148, 54);
+			mLogoIrcam.draw(score_w - 120, 0, 109, 64);
+
+			/* logoInria = ofRectangle(600, 7, 150, 40);
+			ofSetColor(255);
+			ofFill();
+			ofRect(logoInria);
+			*/
+
 			drawCache.end();
 
 			//ofBackground(255, 255, 255, 255);

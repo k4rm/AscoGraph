@@ -258,6 +258,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 	*/
 	//************************ Range GUI
 	// draw label
+	/*
 	ofSetColor(0);
 	drawLabel("Range:", rangeLabelBounds);
 
@@ -279,6 +280,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 	drawGuiBG(rangeTrimButtonBounds);
 	ofSetColor(0);
 	drawLabel("Trim", rangeTrimButtonBounds);
+	*/
 	//************************
 	/*t
 	****** Port Out GUI
@@ -439,6 +441,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					int s = switches[i]->label.size();
 					if (l > s) l = s;
 					string str = switches[i]->label.substr(s-l, l);
+					ofSetColor(0, 0, 0, 255);
 					ofDrawBitmapString( str, startX, bounds.y-5);
 					lastX = startX;
 				}
@@ -548,6 +551,7 @@ void ofxTLAntescofoNote::draw_showStaves() {
 						ofLine(startX, yy, startX, bounds.y + hh);
 					}
 					//ofDrawBitmapString(switches[i]->label.substr(7, switches[i]->label.size()), startX, yy - 4);
+					ofSetColor(0, 0, 0, 255);//105);
 					ofDrawBitmapString(switches[i]->label, startX, yy - 4);
 					ofSetColor(0, 0, 0, 255);
 				}
@@ -1284,7 +1288,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	clear();
 	//str_error.erase();
 	Score *score;
-	mParseDriver->setVerbosity(2);
+	mParseDriver->setVerbosity(0);
 	if (NULL == (score = mParseDriver->parse(filename))) {
 		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
 		return 0;

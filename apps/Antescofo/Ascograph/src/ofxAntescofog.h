@@ -162,6 +162,8 @@ class ofxAntescofog : public ofBaseApp{
 		ofxUIDropDownList *mUImenu;
 		ofFbo	drawCache;
 		bool bShouldRedraw;
+		//ofRectangle logoInria;
+		ofImage mLogoInria, mLogoIrcam;
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;
