@@ -2,17 +2,22 @@ BPM 60
 
 NOTE C4 4.0
 Curve slider Grain := 0.05s, Action :=
-		{
-			print $x
-		}
+        {
+            print $x
+        }
 {
-	$x
-	{
-		  { 0 } type "linear"
-		0.593 { 1.62393 } type "linear"
-		1.407 { 2 } type "linear"
-		2.89 { 1.05128 } type "linear"
-		5.334 { 0.675214 }
-	}
+    $x
+    {
+          { 0 } type "linear"
+        0.593 { 1.62393 } type "linear"
+        2.216 { 1.0618 } type "linear"
+        3.507 { 1.2353 } type "linear"
+        5.576 { 0.277595 } type "linear"
+        1.188 { 0.478851 } type "linear"
+        8.234 { 0.610709 } type "linear"
+        4.191 { 1.34634 } type "linear"
+        2.675 { 1.24224 } type "linear"
+        1.798 { 0.881364 }
+    }
 }
 NOTE C2 10

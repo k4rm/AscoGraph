@@ -38,53 +38,54 @@
 
 class ofxTLAccompAudioTrack : public ofxTLTrack
 {
-  public:	
+public:	
 	ofxTLAccompAudioTrack();
 	virtual ~ofxTLAccompAudioTrack();
-	
+
 	virtual void draw();
 	virtual void update();
-	
+
 	virtual bool loadSoundfile(string filepath);
 	virtual bool isSoundLoaded();
 	virtual float getDuration(); //in seconds
 	virtual string getSoundfilePath();
-	
+
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
-	
+
 	virtual void keyPressed(ofKeyEventArgs& args);
-	
+
 	//this will play the timeline along to the audio
-    virtual bool togglePlay();
-    virtual void play();
-    void fakePlay();
-    void fakeStop();
-    virtual void stop();
-    virtual bool getIsPlaying();
-	
+	virtual bool togglePlay();
+	virtual void play();
+	void fakePlay();
+	void fakeStop();
+	virtual void stop();
+	virtual bool getIsPlaying();
+	virtual void setup();
+
 	vector<float>& getFFTSpectrum(int numBins);
 	int getDefaultBinCount();
 
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
-	
+
 	virtual void boundsChanged(ofEventArgs& args);
-	
+
 	virtual void setSpeed(float speed);
 	void setFakeSpeed(float speed);
-    virtual float getSpeed();
+	virtual float getSpeed();
 	virtual void setVolume(float volume);
 	virtual void setPan(float pan);
-    
+
 	virtual string getTrackType();
 	void setMarkers(vector<float>& map_index, vector<float>& map_markers);
-	
-  protected:	
-    bool soundLoaded;
+
+protected:	
+	bool soundLoaded;
 	bool shouldRecomputePreview;
 	vector<ofPolyline> previews;
 	void recomputePreview();

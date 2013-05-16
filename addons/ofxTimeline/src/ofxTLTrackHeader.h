@@ -65,6 +65,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	
 	//for the header, this returns the track's display name
     virtual string getDisplayName();
+    	bool isBeingDragged() { return draggingSize; }
 	
   protected:
 	ofxTLTrack* track;

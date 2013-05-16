@@ -7,7 +7,7 @@
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
 
-int _debug = 1;
+int _debug = 0;
 static string str_error; // filled by our error()
 
 extern ofxConsole* console;
@@ -445,7 +445,7 @@ void ofxAntescofog::setupOSC(){
 	if (! is.good())
 	{
 		//cerr << "Not a number, try again." << endl;
-		mOsc_port = "3002";
+		mOsc_port = "6789";
 	}
 	std::cout << "Listening on OSC port " << port << endl;
 	try {
@@ -471,7 +471,7 @@ void ofxAntescofog::setupOSC(){
 	if (! is.good())
 	{
 		//cerr << "Not a number, try again." << endl;
-		mOsc_port_MAX = "3003";
+		mOsc_port_MAX = "5678";
 	}
 	std::cout << "Connecting OSC on " << mOsc_host << ":"<< atoi(mOsc_port_MAX.c_str()) << endl;
 	mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
@@ -620,14 +620,14 @@ void ofxAntescofog::update() {
             //timeline.setBPM(bpm);
             mSliderBPM->setValue(bpm);
             mHasReadMessages = true;
-	} else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+	} /*else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 	    mOsc_rnow = m.getArgAsFloat(0);
             if (_debug) cout << "OSC received: rnow: "<< mOsc_rnow << endl;
             bpm = mOsc_rnow;
             //timeline.setBPM(bpm);
             //mSliderBPM->setValue(bpm);
             mHasReadMessages = true;
-	} else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+	} */else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_beat = m.getArgAsFloat(0);
             mLabelBeat->setLabel(ofToString(mOsc_beat));
             if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
@@ -654,6 +654,12 @@ void ofxAntescofog::update() {
             if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
             mHasReadMessages = true;
 	    if (audioTrack) audioTrack->setFakeSpeed(mOsc_accomp_speed);
+	    bShouldRedraw = true;
+	} else if(m.getAddress() == "/antescofo/loadscore"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
+            string scorefile = m.getArgAsString(0);
+            if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
+            mHasReadMessages = true;
+	    loadScore(scorefile);
 	    bShouldRedraw = true;
         } else {
             mHasReadMessages = false;
@@ -1445,9 +1451,8 @@ int ofxAntescofog::loadScore(string filename) {
 		// send OSC read msg to Antescofo
 		ofxOscMessage m;
 		m.setAddress("/antescofo/cmd");
-		string s("read ");
-		s.append(mScore_filename);
-		m.addStringArg(s);
+		m.addStringArg("read");
+		m.addStringArg(mScore_filename);
 		cout << "Sending OSC \"read "<< mScore_filename << "\" to Antescofo Patch." << endl;
 		mOSCsender.sendMessage(m);
 	} else {
