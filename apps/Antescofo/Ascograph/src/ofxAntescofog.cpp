@@ -1443,7 +1443,13 @@ int ofxAntescofog::loadScore(string filename) {
 		guiError->disable();
 		timeline.enable();
 		guiBottom->enable();
+
+		// ensure zoom is restored
 		ofxAntescofoNote->setZoomBounds(z); //timeline.getZoomer()->setViewRange(z);
+		ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
+		if (actiontrack) actiontrack->setZoomBounds(z);
+		timeline.getTicker()->setZoomBounds(z);
+
 		bpm = timeline.getBPM();
 		mSliderBPM->setValue(bpm);
 		update();

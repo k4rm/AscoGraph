@@ -126,7 +126,7 @@ class ofxAntescofog : public ofBaseApp{
 		void replaceEditorScore(int linebegin, int lineend, string actstr);
 
 		ofxTLAntescofoNote* ofxAntescofoNote;
-		ofxTLAntescofoAction* ofxAntescofoAction;
+		//ofxTLAntescofoAction* ofxAntescofoAction;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker;
 		ofxTLZoomer2D *ofxAntescofoZoom;
 		ofxTLAccompAudioTrack* audioTrack;

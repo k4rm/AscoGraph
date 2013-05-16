@@ -437,6 +437,7 @@ class ofxTimeline : ofThread {
 	//binary test hack
 	bool curvesUseBinary;
 	void setTicker(ofxTLTicker* t) { ticker = t; }
+	ofxTLTicker* getTicker() { return ticker; }
 	
   protected:
 

@@ -8,3 +8,4 @@ GFWD testgroup
 		1 action2_two 3
 	}
 }
+NOTE C2 8.0
