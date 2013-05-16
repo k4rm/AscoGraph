@@ -104,14 +104,19 @@ void ofxTLAccompAudioTrack::update()
 		cout << "ofxTLAccompAudioTrack:: trackHeader dragged, skipping update" << endl;
 		return;
 	}
-	if (boundsy != bounds.y || boundsh != bounds.height) {
+	// when boundsy changes => change_y_preview => oftranslate in draw()
+	if (boundsy != bounds.y) {
 		int dy = bounds.y - boundsy;
 		boundsy = bounds.y;
-		boundsh = bounds.height;
 		//computePreview();
 		cout << "ofxTLAccompAudioTrack:: bounds changed should recompute preview: dy:" << dy<< endl;
+		//shouldRecomputePreview = true;
+		// hack not yet ready 
+		if (previews.size() && dy) change_y_preview(dy);
+	}
+ 	if (boundsh != bounds.height) {
+		boundsh = bounds.height;
 		shouldRecomputePreview = true;
-		// hack not yet ready if (previews.size() && dy) change_y_preview(dy);
 	}
 
 	// assign playHeadX
@@ -234,7 +239,8 @@ void ofxTLAccompAudioTrack::draw(){
         //ofScale(computedZoomBounds.span()/zoomBounds.span(), 1, 1);
         ofScale(1/playheadBounds.span(), 1, 1);
 	//if (i >= bounds.x || i <= bounds.x + bounds.width)
-		previews[i].draw();
+	if (preview_dy) ofTranslate(0, preview_dy);
+	previews[i].draw();
         previews[i +(previews.size()/2)*(player.getNumChannels()-1)].draw();
         ofPopMatrix();
     }
@@ -330,7 +336,7 @@ void ofxTLAccompAudioTrack::setMarkers(vector<float>& map_index, vector<float>& 
 
 
 void ofxTLAccompAudioTrack::change_y_preview(int y){
-	preview_dy = y;
+	preview_dy += y;
 	/*
 	for (int i = 0; i < previews.size(); i++) {
 		previews[i].getVertices()[1] -= y;
@@ -395,6 +401,7 @@ void ofxTLAccompAudioTrack::computePreview(){
 	}
 	//computedZoomBounds = zoomBounds;
 	shouldRecomputePreview = false;
+	preview_dy = 0;
 	cout << "recomputing view with zoom bounds of " << zoomBounds << " done."<< endl;
 }
 
@@ -517,20 +524,20 @@ void ofxTLAccompAudioTrack::keyPressed(ofKeyEventArgs& args){
 }
 
 void ofxTLAccompAudioTrack::zoomStarted(ofxTLZoomEventArgs& args){
-	cout << "ofxTLAccompAudioTrack::zoomStarted"<< endl;
+	//cout << "ofxTLAccompAudioTrack::zoomStarted"<< endl;
 	//ofxTLTrack::zoomStarted(args);
 //	shouldRecomputePreview = true;
 	if (!playHeadX) playheadBounds = zoomBounds;
 }
 
 void ofxTLAccompAudioTrack::zoomDragged(ofxTLZoomEventArgs& args){
-	cout << "ofxTLAccompAudioTrack::zoomDragged"<< endl;
+	//cout << "ofxTLAccompAudioTrack::zoomDragged"<< endl;
 	//ofxTLTrack::zoomDragged(args);
 	//shouldRecomputePreview = true;
 }
 
 void ofxTLAccompAudioTrack::zoomEnded(ofxTLZoomEventArgs& args){
-	cout << "ofxTLAccompAudioTrack::zoomEnded should recompute preview" << endl;
+	//cout << "ofxTLAccompAudioTrack::zoomEnded" << endl;
 	ofxTLTrack::zoomEnded(args);
 	//shouldRecomputePreview = true;
 

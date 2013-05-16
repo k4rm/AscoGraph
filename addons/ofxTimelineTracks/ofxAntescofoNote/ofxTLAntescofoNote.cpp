@@ -185,6 +185,29 @@ void ofxTLAntescofoNote::setNoteColor(int n) {
 	ofSetColor(color_note);
 }
 
+void ofxTLAntescofoNote::roundedRect(float x, float y, float w, float h, float r) {
+	ofBeginShape();
+	ofVertex(x+r, y);
+	ofVertex(x+w-r, y);
+	quadraticBezierVertex(x+w, y, x+w, y+r, x+w-r, y);
+	ofVertex(x+w, y+h-r);
+	quadraticBezierVertex(x+w, y+h, x+w-r, y+h, x+w, y+h-r);
+	ofVertex(x+r, y+h);
+	quadraticBezierVertex(x, y+h, x, y+h-r, x+r, y+h);
+	ofVertex(x, y+r);
+	quadraticBezierVertex(x, y, x+r, y, x, y+r);
+	ofEndShape();
+}
+
+void ofxTLAntescofoNote::quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY) {
+	float cp1x = prevX + 2.0/3.0*(cpx - prevX);
+	float cp1y = prevY + 2.0/3.0*(cpy - prevY);
+	float cp2x = cp1x + (x - prevX)/3.0;
+	float cp2y = cp1y + (y - prevY)/3.0;
+	// finally call cubic Bezier curve function
+	ofBezierVertex(cp1x, cp1y, cp2x, cp2y, x, y);
+}
+
 
 void ofxTLAntescofoNote::draw_showPianoRoll() {
 	//cout << "ofxTLAntescofoNote::draw_showPianoRoll: "  << bounds.x <<"," << bounds.y << " " << bounds.width << "x" << bounds.height << endl;
@@ -340,6 +363,23 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					ofCircle(startX + h/2, y+ h/2, 1*h/2);// un cercle au debut
 					ofCircle(endX - h/2, y + h/2, 1*h/2); // un a la fin
 					ofRectangle r(startX + h/2, y, endX - startX - h, rowHeight);
+#endif
+#define ROUNDED_NOTE_HEADS
+#ifdef ROUNDED_NOTE_HEADS
+					int rr = 3;
+					if (endX - startX >= rr) { 
+						roundedRect(startX, y, endX - startX, rowHeight, rr);
+						ofNoFill();
+						ofSetColor(0, 0, 0, 200);
+						roundedRect(startX, y, endX - startX, rowHeight, rr); // black border around note
+					} else { // when note no small, just display rect
+						ofRectangle r(startX, y, endX - startX, rowHeight);
+						ofRect(r);// et un rect entre les deux
+						ofNoFill();
+						ofSetColor(0, 0, 0, 200);
+						ofRectangle rb(startX, y, endX - startX, rowHeight); // black border around note
+						ofRect(rb);
+					}
 #else
 					ofRectangle r(startX, y, endX - startX, rowHeight);
 					ofRect(r);// et un rect entre les deux

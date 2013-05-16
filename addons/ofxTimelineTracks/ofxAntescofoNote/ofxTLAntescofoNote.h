@@ -158,7 +158,8 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	void clear_actions();
 	void createActionTrack();
-
+	void roundedRect(float x, float y, float w, float h, float r);
+	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY);
 
 	// MIDI
 	void newMidiMessage(ofxMidiMessage& eventArgs) { /* TODO ? */ };
