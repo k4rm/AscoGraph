@@ -54,6 +54,7 @@ void ofxTLAntescofoAction::setup()
 
 	load();
 
+	update();
 	disable();
 }
 
@@ -820,6 +821,61 @@ ofRectangle ofxTLAntescofoAction::getBoundedRect(ofRectangle& r)
 	return ret;
 }
 
+void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
+	vector<Action*>::const_iterator i;
+	float d = 0;
+	string newscore;
+	ostringstream oss;
+	string actstr;
+
+
+	if (actioncurve) {
+		actioncurve->parentCurve->curve->show(oss);
+		actstr = oss.str();
+		mAntescofog->replaceEditorScore(actioncurve->header->lineNum_begin, actioncurve->header->lineNum_end, actstr);
+	}
+	
+	/*
+	for (list<ActionGroupHeader*>::const_iterator ahi = mActionGroups.begin(); ahi != mActionGroups.end(); ahi++) {
+		newscore += (*ahi)->dump();
+		
+	}
+	cout << "===================================================" << endl;
+	cout << "   Got new full score : " << endl;
+	cout << newscore << endl;
+	cout << "===================================================" << endl;
+	*/
+		/* parser structures way
+		if ((*ahi)->group && (*ahi)->group->gfwd) {
+			Gfwd *g = (*ahi)->group->gfwd;
+			for (i = g->actions().begin(); i != g->actions().end(); i++) {
+				Action *tmpa = *i;
+
+				// can be a curve
+				Curve* c = dynamic_cast<Curve*>(tmpa);
+				if (c && modifiedcurve) {
+					ActionMultiCurves *cu = new ActionMultiCurves(c, d, event, header); 
+					sons.push_back((ActionGroup*)cu);
+					continue;
+				} else { // use parser dump to dump 
+					oss.str(""); oss.clear();
+					list<Action*> l = g->bloc();
+					for (list<Action*>::iterator a = l.begin(); a != l.end(); a++) {
+						if (*a)
+							oss << *a;
+					}
+					actstr = oss.str();
+					newscore += actstr;
+					actstr.clear();
+				}
+			}
+		}
+	}
+		*/
+
+
+}
+
 ////////////////////////////////////////////////////
 
 ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_) 
@@ -890,6 +946,45 @@ ActionGroup::~ActionGroup()
 	}
 }
 
+
+string ActionGroup::dump()
+{
+	string groupdump;
+	ostringstream oss;
+
+	if (event) {
+		oss << *event;
+		groupdump += oss.str();
+	}
+
+	if (gfwd) {
+		string actstr;
+		vector<Action*>::const_iterator i;
+		for (i = gfwd->actions().begin(); i != gfwd->actions().end(); i++) {
+			Action *tmpa = *i;
+
+			oss.str(""); oss.clear();
+			//list<Action*> l = ->bloc();
+			//for (list<Action*>::iterator a = l.begin(); a != l.end(); a++) {
+				if (tmpa)
+					oss << *tmpa; //*a;
+			//}
+			actstr = oss.str();
+			groupdump += actstr;
+			actstr.clear();
+		}
+
+	}
+	if (header && !header->top_level_group) {
+		list<ActionGroup*>::const_iterator s;
+		for (s = sons.begin(); s != sons.end(); s++) {
+			groupdump += (*s)->dump();
+		}
+	}
+	return groupdump;
+}
+
+
 double ActionGroup::get_delay(Action* tmpa) 
 {
 	double d = 0.;
@@ -932,6 +1027,9 @@ ActionMultiCurves::ActionMultiCurves(Curve* c, float delay_, Event *e, ActionGro
 		label = curve->label();
 		// TODO get attributes..
 
+		header->lineNum_begin = curve->locate()->begin.line;
+		header->lineNum_end = curve->locate()->end.line;
+
 		howmany = curve->seq_vect.size();
 
 		for (uint i = 0; i < howmany; i++)
@@ -962,7 +1060,20 @@ void ActionMultiCurves::print() {
 }
 
 
+string ActionMultiCurves::dump()
+{
+	string groupdump;
+	if (curve) {
+		ostringstream oss;
+		string actstr;
 
+		oss.str(""); oss.clear();
+		curve->show(oss);
+		groupdump = oss.str();
+	}
+
+	return groupdump;
+}
 
 ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_)
 	: parentCurve(parentCurve_)
@@ -1031,7 +1142,9 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 			string uniqueName = _timeline->confirmedUniqueName(trackName);
 
 			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
+
 			_timeline->addTrack(trackName, curves);
+			curves->tlAction = (ofxTLAntescofoAction *)_timeline->getTrack("Actions");
 			curves->ref = this;
 			// set values ranges
 			int j = 0; 
@@ -1070,6 +1183,8 @@ bool debug_edit_curve = true;
 
 bool ActionCurve::set_dur_val(double d, AnteDuration* a)
 {
+	cout << "ActionCurve::set_dur_val: " << d << endl;
+	assert(d);
 	if (Value* v = (Value*)a->value()->is_value()) {
 		*v = FloatValue(d);
 		return true;
@@ -1110,11 +1225,78 @@ FloatValue* ActionCurve::get_new_y(Expression* y) {
 	} else return NULL;
 }
 
+void ActionCurve::deleteKeyframeAtBeat(float beat) {
+	if (beat == 0) {
+		//set_dur_val(val, simple_vect->begin());
+		abort();
+		return;
+	}
+
+	double dcumul = 0.;
+	int i = 0;
+	bool done = false;
+
+	if (dur_vect->size() == 2) {
+		cerr << "Can not delete point because curves need at least 2 points" << endl;
+		return;
+	}
+
+	if (debug_edit_curve) { cout << "Entering deleteKeyframeAtBeat: " << beat << endl; parentCurve->curve->show(cout); print(); }
+	vector<SimpleContFunction>::iterator s = simple_vect->begin();
+	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end() /* && s != simple_vect->end()*/; k++, i++, s++) {
+		if (debug_edit_curve) cout << "ofxTLAntescofoAction:: del keyframe  looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
+
+		dcumul += (*k)->eval();
+		//cout << "------ y0 " << (*s).y0 << endl; cout << " y1:" << (*s).y1 << endl;
+		if (dcumul < beat)
+			continue;
+		else {
+			vector<AnteDuration*>::iterator p = k;
+			p--;
+			// delete k, but change prev duration += k duration
+			if (s == simple_vect->end()) { //k == dur_vect->end()) {
+				cout << "------------------------------------ last elt ---------------" << endl;
+					dur_vect->erase(k);
+					simple_vect->erase(s);
+			} else {
+				vector<AnteDuration*>::iterator n = k;
+				n++;
+				if (set_dur_val((*n)->eval() + (*k)->eval(), *n)) {
+					// add new point to simple_vect[]
+					if (debug_edit_curve) cout << "Next point duration : "<< (*n)->eval() << endl;
+					dur_vect->erase(k);
+					vector<SimpleContFunction>::iterator sp = s;
+					sp--;
+					sp->y1 = get_new_y(s->y1);
+					simple_vect->erase(s);
+				} else { cout << "Can not convert to Value." << endl; }
+			}
+			break;
+		}
+	}
+	if (!done && dcumul < beat) { // delete last point
+		cout << "ofxTLAntescofoAction:: del keyframe: delete !done !!!!!!!!!!!!!!!!" << endl;
+		/*
+		vector<AnteDuration*>::iterator k = dur_vect->end();
+		k--;
+		vector<SimpleContFunction>::iterator s = simple_vect->end();
+		s--;
+		AnteDuration *ad = new AnteDuration(beat - (*k)->eval());
+		simple_vect->push_back(SimpleContFunction(s->antesc, new StringValue("linear"), ad, get_new_y(s->y1), new FloatValue(val), s->var));
+		dur_vect->push_back(ad);
+		//set_dur_val(dcumul - beat, *k)
+		*/
+	}
+	parentCurve->curve->show(cout);
+	print();
+
+
+}
+
 // when new breakpoint is created, we should reduce prev breakpoint duration, before adding
 void ActionCurve::addKeyframeAtBeat(float beat, float val)
 {
-	print();
-	if (debug_edit_curve) cout << "ofxTLAntescofoAction:: add keyframe at beat: " << beat << " val: " << val << endl;
+	if (debug_edit_curve) { cout << "ofxTLAntescofoAction:: add keyframe at beat: " << beat << " val: " << val << endl; print(); }
 	if (beat == 0) {
 		//set_dur_val(val, simple_vect->begin());
 		return;
@@ -1239,24 +1421,25 @@ void ActionCurve::moveKeyframeAtBeat(float to_beat, float from_beat, float to_va
 			AnteDuration *d = *k;
 			if (set_dur_val(d->value()->is_value()->get_double() - (from_beat - to_beat), *k)) {
 				// change current delay
-				double d = to_beat - (*p)->eval();
-				if (debug_edit_curve) cout << "Changed point duration : " << d << endl;
+				//if (debug_edit_curve) cout << "Changed point duration : " << to_beat - (*p)->eval() << endl;
 				// change next
 				if (k != dur_vect->end()) {
 					double nextdur = 0.;
 					vector<AnteDuration*>::iterator n = k; n++;
 					AnteDuration *an = *n;
-					if (an->value()->is_value()->get_double() + from_beat < to_beat) { // point dragged after next point 
-						cout << "!!!!!!!!!!!!!!!!!!!!!!! negative delay TODO" << endl;
+					if (an) {
+						if (an->value() && an->value()->is_value()->get_double() + from_beat < to_beat) { // point dragged after next point 
+							cout << "!!!!!!!!!!!!!!!!!!!!!!! negative delay TODO" << endl;
 
-					} else {
-						nextdur = an->value()->is_value()->get_double() + (from_beat - to_beat);
-						set_dur_val(nextdur, *n);
+						} else {
+							nextdur = an->value()->is_value()->get_double() + (from_beat - to_beat);
+							set_dur_val(nextdur, *n);
+						}
 					}
 				}
 				vector<SimpleContFunction>::iterator sp = s;
-				//FloatValue* ny0 = new FloatValue(to_val);
-				set_y(s->y0, to_val);
+				if (s != simple_vect->end())
+					set_y(s->y0, to_val);
 				s--;
 				set_y(s->y1, to_val);
 			}
@@ -1327,7 +1510,7 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 		Gfwd *g = dynamic_cast<Gfwd*>(action);
 		if (g) {
 			lineNum_begin = action->locate()->begin.line;
-			lineNum_end = action->locate()->end.line;
+			lineNum_end = action->locate()->end.line + 1;
 
 			group = new ActionGroup(g, event, this);
 		}
@@ -1468,6 +1651,18 @@ void ActionGroupHeader::print() {
 	if (top_level_group && group)
 		group->print();
 }
+
+
+string ActionGroupHeader::dump() {
+	string groupdump;
+
+	if (group) {
+		groupdump += group->dump();
+		
+	}
+	return groupdump;
+}
+
 
 bool ActionGroupHeader::is_in_arrow(int x, int y)
 {

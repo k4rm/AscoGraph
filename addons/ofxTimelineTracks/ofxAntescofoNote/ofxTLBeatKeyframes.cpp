@@ -429,10 +429,7 @@ void ofxTLBeatKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
 		ofVec2f screenpoint(args.x,args.y);
 		for(int k = 0; k < selectedKeyframes.size(); k++){
 			ofVec2f newScreenPosition;
-			cout << "mouseDragged: clamp: " <<   ofClamp(beat - selectedKeyframes[k]->grabBeatOffset,
-						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
-						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX())))
-							<< endl;
+			//cout << "mouseDragged: clamp: " <<   ofClamp(beat - selectedKeyframes[k]->grabBeatOffset, timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))) << endl;
 			setKeyframeBeat(selectedKeyframes[k], ofClamp(beat - selectedKeyframes[k]->grabBeatOffset,
 						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
 						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))));
@@ -484,8 +481,12 @@ void ofxTLBeatKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 		lastSampleBeat = 0;
 		timeline->flagTrackModified(this);
 		for(int i = 0; i < selectedKeyframes.size(); i++){
-			cout << "mouseReleased: selectedkeyframe: origbeat: " <<  selectedKeyframes[i]->orig_beat << endl;
-			ref->moveKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->orig_beat, selectedKeyframes[i]->tmp_value, selectedKeyframe->orig_value);
+			cout << "mouseReleased: selectedkeyframe: origbeat: " <<  selectedKeyframes[i]->orig_beat << " beat:" << selectedKeyframes[i]->beat << endl;
+
+			//ref->moveKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->orig_beat, selectedKeyframes[i]->tmp_value, selectedKeyframe->orig_value);
+			ref->deleteKeyframeAtBeat(selectedKeyframes[i]->orig_beat);
+			ref->addKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->tmp_value);
+
 			selectedKeyframes[i]->orig_value = selectedKeyframes[i]->tmp_value;
 			selectedKeyframes[i]->tmp_value = 0;
 			selectedKeyframes[i]->value = ofMap(selectedKeyframes[i]->orig_value, valueRange.min, valueRange.max, 0, 1.0, true);
@@ -699,17 +700,21 @@ void ofxTLBeatKeyframes::keyPressed(ofKeyEventArgs& args){
 	}
 }
 void ofxTLBeatKeyframes::deleteSelectedKeyframes(){
-	cout << "ofxTLKeyframes::deleteSelectedKeyframes:: keyframes size:"<< keyframes.size() << endl;
+	if (keyframes.size() == 2) {
+		cerr << "ofxTLBeatKeyframes::deleteSelectedKeyframes: can not delete keyframe because curves need minimum 2 points." << endl;
+		return;
+	}
+	cout << "ofxTLBeatKeyframes::deleteSelectedKeyframes:: keyframes size:"<< keyframes.size() << endl;
 
 	vector<ofxTLBeatKeyframe*>::iterator selectedIt = selectedKeyframes.end();
 	for(int i = keyframes.size() - 1; i >= 0; i--){
 		if(isKeyframeSelected(keyframes[i])){
-			cout << "ofxTLKeyframes::delete selected i : " << i << endl;
+			cout << "ofxTLBeatKeyframes::delete selected i : " << i << endl;
 			if(keyframes[i] != selectedKeyframes[selectedKeyframes.size()-1]){
 				ofLogError("ofxTLKeyframes::deleteSelectedKeyframes") << "keyframe delete inconsistency";
 			}
 			willDeleteKeyframe(keyframes[i]);
-			cout << "ofxTLKeyframes::delete selected i : " << i << " deleted"<< endl;
+			cout << "ofxTLBeatKeyframes::delete selected i : " << i << " deleted"<< endl;
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
 			selectedKeyframes.erase(--selectedIt);
@@ -735,8 +740,5 @@ void ofxTLBeatKeyframes::deleteKeyframe(ofxTLBeatKeyframe* keyframe){
 			return;
 		}
 	}
-}
-void ofxTLBeatKeyframes::willDeleteKeyframe(ofxTLKeyframe* keyframe){
-	cout << "ofxTLBeatKeyframes::willDeleteKeyframe" << endl;
 }
 

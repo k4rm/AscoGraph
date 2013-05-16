@@ -7,7 +7,7 @@
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
 
-int _debug = 0;
+int _debug = 1;
 static string str_error; // filled by our error()
 
 extern ofxConsole* console;
@@ -109,7 +109,7 @@ void ofxAntescofog::menu_item_hit(int n)
         case INT_CONSTANT_BUTTON_PLAY:
         {
             ofxOscMessage m;
-            m.setAddress("/antescofo/command");
+            m.setAddress("/antescofo/cmd");
             m.addStringArg("play");
             mOSCsender.sendMessage(m);
 						break;
@@ -117,7 +117,7 @@ void ofxAntescofog::menu_item_hit(int n)
         case INT_CONSTANT_BUTTON_START:
         {
             ofxOscMessage m;
-            m.setAddress("/antescofo/command");
+            m.setAddress("/antescofo/cmd");
             m.addStringArg("start");
             mOSCsender.sendMessage(m);
 						break;
@@ -125,7 +125,7 @@ void ofxAntescofog::menu_item_hit(int n)
         case INT_CONSTANT_BUTTON_STOP:
         {
             ofxOscMessage m;
-            m.setAddress("/antescofo/command");
+            m.setAddress("/antescofo/cmd");
             m.addStringArg("stop");
             mOSCsender.sendMessage(m);
 						break;
@@ -489,7 +489,7 @@ void ofxAntescofog::setupTimeline(){
 	timeline.setZoomer(ofxAntescofoZoom);
 
 	timeline.addTrack("Beats", ofxAntescofoBeatTicker);
-	timeline.addTrack("Antescofo Notes", ofxAntescofoNote);
+	timeline.addTrack("Notes", ofxAntescofoNote);
 	ofxAntescofoNote->setDrawRect(ofRectangle(0, 0, score_w, 300));
 	ofxAntescofoBeatTicker->setup();
 	timeline.setShowTicker(true);
@@ -527,13 +527,13 @@ void ofxAntescofog::setup(){
 		ofSetLogLevel(OF_LOG_VERBOSE);
     
 		fog = this;
-    score_x = 10;
+    score_x = 3;
     score_y = 81;
     mUIbottom_y = 40;
 
     bpm = 120; 
     
-    score_w = ofGetWindowWidth() - score_x - 10;
+    score_w = ofGetWindowWidth() - score_x - 2;
     score_h = ofGetWindowHeight()/3;
     
     ofAddListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
@@ -607,13 +607,24 @@ timeline.setWidth(score_w);
             //timeline.setBPM(bpm);
             mSliderBPM->setValue(bpm);
             mHasReadMessages = true;
-        } else if(m.getAddress() == "/antescofo/beat" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+	} else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+	    mOsc_rnow = m.getArgAsFloat(0);
+            if (_debug) cout << "OSC received: rnow: "<< mOsc_rnow << endl;
+            bpm = mOsc_rnow;
+            //timeline.setBPM(bpm);
+            //mSliderBPM->setValue(bpm);
+            mHasReadMessages = true;
+	} else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_beat = m.getArgAsFloat(0);
             mLabelBeat->setLabel(ofToString(mOsc_beat));
             if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
-	    cout << "OSC : " << mOsc_beat << endl;
 	    if (mOsc_beat == 0)
 		    ofxAntescofoNote->missedAll();
+            mHasReadMessages = true;
+	} else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+            mOsc_rnow = m.getArgAsFloat(0);
+            //mLabelBeat->setLabel(ofToString(mOsc_rnow));
+            if (_debug) cout << "OSC received: rnow: "<< mOsc_rnow << endl;
             mHasReadMessages = true;
         } else if(m.getAddress() == "/antescofo/pitch"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_pitch = m.getArgAsFloat(0);
@@ -1410,7 +1421,7 @@ int ofxAntescofog::loadScore(string filename) {
 
 		// send OSC read msg to Antescofo
 		ofxOscMessage m;
-		m.setAddress("/antescofo/command");
+		m.setAddress("/antescofo/cmd");
 		string s("read ");
 		s.append(mScore_filename);
 		m.addStringArg(s);
@@ -1551,7 +1562,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    cout << "Play button change: " << b->getValue() << endl;
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
-		    m.setAddress("/antescofo/command");
+		    m.setAddress("/antescofo/cmd");
 		    m.addStringArg("play");
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
@@ -1563,7 +1574,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    cout << "Start button change: " << b->getValue() << endl;
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
-		    m.setAddress("/antescofo/command");
+		    m.setAddress("/antescofo/cmd");
 		    m.addStringArg("start");
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
@@ -1575,7 +1586,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    cout << "Prev/next event button change: " << b->getValue() << endl;
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
-		    m.setAddress("/antescofo/command");
+		    m.setAddress("/antescofo/cmd");
 		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT)
 			    m.addStringArg("nextevent");
 		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
@@ -1590,7 +1601,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		cout << "Stop button change: " << b->getValue() << endl;
         if (b->getValue() == 1) {
             ofxOscMessage m;
-            m.setAddress("/antescofo/command");
+            m.setAddress("/antescofo/cmd");
             m.addStringArg("stop");
             mOSCsender.sendMessage(m);
             b->setValue(false);
@@ -1645,6 +1656,19 @@ void ofxAntescofog::editorShowLine(int linea, int lineb)
 		bShouldRedraw = true;
 	}
 }
+
+
+void ofxAntescofog::replaceEditorScore(int linebegin, int lineend, string actstr) {
+	if (bEditorShow && actstr.size() && linebegin <= lineend) {
+		cout << "ofxAntescofog::replaceEditorScore: replacing between line " << linebegin << " - " << lineend << " str:" << actstr << endl;
+		[ editor replaceString:linebegin-1 lineb:lineend str:actstr.c_str()];
+		//editorShowLine(linebegin, lineend);
+
+		bShouldRedraw = true;
+	}
+
+}
+
 
 void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 {

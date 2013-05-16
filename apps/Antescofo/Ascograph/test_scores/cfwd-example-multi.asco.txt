@@ -2,7 +2,7 @@ BPM 60
 NOTE C4 4
 BPM 60
 NOTE C4 4.0
-CURVE multislider grain:=0.05s action:=print $x $y; the grain size is 50 milliseconds
+CURVE multislider grain:=0.05s action:=print $x $y $z; the grain size is 50 milliseconds
 {
 	$x,$y {
 	{ 0 0.4}
@@ -13,6 +13,11 @@ CURVE multislider grain:=0.05s action:=print $x $y; the grain size is 50 millise
 	0.5 { 0.8 0.1}
 	0.5 { 2.0 1.0}
 	}
+	$z
+{
+	{ 5}
+	4.0 {10}
+}
 }
 
 

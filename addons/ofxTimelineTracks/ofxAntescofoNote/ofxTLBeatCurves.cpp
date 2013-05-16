@@ -33,6 +33,7 @@
 #include "ofxTLCurves.h"
 #include "ofxTLBeatCurves.h"
 #include "ofxTimeline.h"
+#include "ofxHotKeys.h"
 
 
 ofxTLBeatCurves::ofxTLBeatCurves()
@@ -41,6 +42,8 @@ ofxTLBeatCurves::ofxTLBeatCurves()
 	initializeEasings();
 	valueRange = ofRange(0.0, 1.0);
 	drawingEasingWindow = false;
+
+	bDrawApplyButton = false;
 }
 
 float ofxTLBeatCurves::interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBeatKeyframe* end, float sampleBeat){
@@ -160,7 +163,85 @@ bool ofxTLBeatCurves::mousePressed(ofMouseEventArgs& args, long millis){
 		return true;
 	}
 	else {
-		return ofxTLBeatKeyframes::mousePressed(args,millis);
+		//return ofxTLBeatKeyframes::mousePressed(args,millis);
+		cout <<"ofxTLBeatCurves: mousepressed inside" << endl;
+		ofVec2f screenpoint = ofVec2f(args.x, args.y);
+		keysAreStretchable = ofGetModifierShiftPressed() && ofGetModifierControlPressed();
+		keysDidDrag = false;
+		if(keysAreStretchable && timeline->getTotalSelectedItems() > 1){
+			unsigned long minSelected = timeline->getEarliestSelectedTime();
+			unsigned long maxSelected = timeline->getLatestSelectedTime();
+			if(minSelected == maxSelected){
+				keysAreStretchable = false;
+			}
+			else {
+				unsigned long midSelection = (maxSelected-minSelected)/2 + minSelected;
+				//the anchor is the selected key opposite to where we are stretching
+				stretchAnchor = midSelection <= millis ? minSelected : maxSelected;
+				//			cout << "Min selected " << ofxTimecode::timecodeForMillis(minSelected) << " Mid Selected " << ofxTimecode::timecodeForMillis(midSelection) << " Max selected " << ofxTimecode::timecodeForMillis(maxSelected) << " anchor "  << ofxTimecode::timecodeForMillis(stretchAnchor) << " millis down " << ofxTimecode::timecodeForMillis(millis) << endl;
+				stretchSelectPoint = millis;
+				//don't do anything else, like create or deselect keyframes
+				updateStretchOffsets(screenpoint, timeline->millisecToBeat(millis));
+			}
+			return true;
+		}
+
+		keysAreDraggable = !ofGetModifierShiftPressed();
+		selectedKeyframe =  keyframeAtScreenpoint(screenpoint);
+		//if we clicked OFF of a keyframe OR...
+		//if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
+		if(!ofGetModifierSelection() && (isActive() || selectedKeyframe != NULL) ){
+			bool didJustDeselect = false;
+			if( selectedKeyframe == NULL || !isKeyframeSelected(selectedKeyframe)){
+				//settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
+				didJustDeselect = timeline->getTotalSelectedItems() > 1;
+				timeline->unselectAll();
+			}
+
+			//if we didn't just deselect everything and clicked in an empty space add a new keyframe there
+			if(selectedKeyframe == NULL && !didJustDeselect){
+				createNewOnMouseup = args.button == 0 && !ofGetModifierControlPressed();
+			}
+		}
+
+		if(selectedKeyframe != NULL){
+			//add the keyframe to the selection, whether it was just generated or not
+			if(!isKeyframeSelected(selectedKeyframe)){
+				selectedKeyframes.push_back(selectedKeyframe);
+				selectedKeyframe->orig_beat = selectedKeyframe->beat;
+				selectedKeyframe->orig_value = selectedKeyframe->value;
+				updateKeyframeSort();
+				cout << "--------------------------------------- MOUSEDPRESSED origvalue:" << selectedKeyframe->orig_value << endl;
+				//			selectKeyframe(selectedKeyframe);
+			}
+			//unselect it if it's selected and we clicked the key with shift pressed
+			else if(ofGetModifierSelection()){
+				deselectKeyframe(selectedKeyframe);
+				selectedKeyframe = NULL;
+			}
+		}
+
+		//if we have any keyframes selected update the grab offsets and check for showing the modal window
+		if(selectedKeyframes.size() != 0){
+			updateDragOffsets(screenpoint, millis);
+			if(selectedKeyframe != NULL){
+				selectedKeyframe->orig_beat = selectedKeyframe->beat;
+				selectedKeyframe->orig_value = selectedKeyframe->value;
+				cout << "--------------------------------------- MOUSEDPRESSED 2 origvalue:" << selectedKeyframe->orig_value << endl;
+
+				if(args.button == 0 && !ofGetModifierSelection() && !ofGetModifierControlPressed()){
+					timeline->setDragTimeOffset(timeline->beatToMillisec(selectedKeyframe->grabBeatOffset));
+					//move the playhead
+					if(timeline->getMovePlayheadOnDrag()){
+						timeline->setCurrentTimeMillis(timeline->beatToMillisec(selectedKeyframe->beat));
+					}
+				}
+				if(args.button == 2 || ofGetModifierControlPressed()){
+					selectedKeySecondaryClick(args);
+				}
+			}
+		}
+		return selectedKeyframe != NULL;
 	}
 }
 
@@ -171,13 +252,99 @@ void ofxTLBeatCurves::mouseMoved(ofMouseEventArgs& args, long millis){
 	} else cursor.set(args.x, args.y);
 }
 void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
-	if (!bounds.inside(args.x, args.y)) return;
-	if(!drawingEasingWindow){
-		ofxTLBeatKeyframes::mouseDragged(args, millis);
+	//if (!bounds.inside(args.x, args.y)) return;
+	//if(!drawingEasingWindow){ ofxTLBeatKeyframes::mouseDragged(args, millis); }
+	float beat = timeline->millisecToBeat(millis);
+	if(keysAreStretchable){
+		//cast the stretch anchor to long so that it can be signed
+		float stretchRatio = 1.0*(beat-long(stretchAnchor)) / (1.0*stretchSelectPoint-stretchAnchor);
+
+		for(int k = 0; k < selectedKeyframes.size(); k++){
+			setKeyframeBeat(selectedKeyframes[k], ofClamp(stretchAnchor + (selectedKeyframes[k]->grabBeatOffset * stretchRatio),
+						0, timeline->millisecToBeat(timeline->getDurationInMilliseconds())));
+			selectedKeyframes[k]->screenPosition = screenPositionForKeyframe(selectedKeyframes[k]);
+		}
+		timeline->flagUserChangedValue();
+		keysDidDrag = true;
+		updateKeyframeSort();
 	}
+
+	if(keysAreDraggable && selectedKeyframes.size() != 0){
+		ofVec2f screenpoint(args.x,args.y);
+		for(int k = 0; k < selectedKeyframes.size(); k++){
+			ofVec2f newScreenPosition;
+			//cout << "mouseDragged: clamp: " <<   ofClamp(beat - selectedKeyframes[k]->grabBeatOffset, timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))) << endl;
+			setKeyframeBeat(selectedKeyframes[k], ofClamp(beat - selectedKeyframes[k]->grabBeatOffset,
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))));
+			selectedKeyframes[k]->value = screenYToValue(args.y - selectedKeyframes[k]->grabValueOffset);
+			//selectedKeyframes[k]->orig_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true); // ADDED
+			selectedKeyframes[k]->tmp_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true);
+			selectedKeyframes[k]->screenPosition = screenPositionForKeyframe(selectedKeyframes[k]);
+			//selectedKeyframes[k]->beat = 
+		}
+		if(selectedKeyframe != NULL && timeline->getMovePlayheadOnDrag()){
+			timeline->setCurrentTimeMillis(timeline->beatToMillisec(selectedKeyframe->beat));
+		}
+		timeline->flagUserChangedValue();
+		keysDidDrag = true;
+		updateKeyframeSort();
+	}
+	createNewOnMouseup = false;
+
 }
 
 void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
+		cout << "ofxTLBeatCurves::mouseReleased: should apply" << endl;
+	keysAreDraggable = false;
+	if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y)) {
+		cout << "ofxTLBeatCurves::mouseReleased: should apply" << endl;
+		cout << "-----> ligne " << ref->header->lineNum_begin << " - " << ref->header->lineNum_end << " <------" << endl;
+		if (tlAction) tlAction->replaceEditorScore(ref);
+		bDrawApplyButton = false;
+	}
+	if(keysDidDrag){
+		//reset these caches because they may no longer be valid
+		lastKeyframeIndex = 1;
+		lastSampleBeat = 0;
+		timeline->flagTrackModified(this);
+		for(int i = 0; i < selectedKeyframes.size(); i++){
+			cout << "ofxTLBeatCurves::mouseReleased: selectedkeyframe: origbeat: " <<  selectedKeyframes[i]->orig_beat << " beat:" << selectedKeyframes[i]->beat << endl;
+
+			//ref->moveKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->orig_beat, selectedKeyframes[i]->tmp_value, selectedKeyframe->orig_value);
+			ref->deleteKeyframeAtBeat(selectedKeyframes[i]->orig_beat);
+			ref->addKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->tmp_value);
+			bDrawApplyButton = true;
+
+			selectedKeyframes[i]->orig_value = selectedKeyframes[i]->tmp_value;
+			selectedKeyframes[i]->tmp_value = 0;
+			selectedKeyframes[i]->value = ofMap(selectedKeyframes[i]->orig_value, valueRange.min, valueRange.max, 0, 1.0, true);
+			setKeyframeBeat(selectedKeyframes[i], selectedKeyframes[i]->beat);
+			selectedKeyframes[i]->orig_beat = selectedKeyframes[i]->beat;
+		}
+	}
+
+	if(createNewOnMouseup) {
+		float beat = timeline->millisecToBeat(millis);
+		//add a new one
+		selectedKeyframe = newKeyframe();
+		setKeyframeBeat(selectedKeyframe, beat);
+		selectedKeyframe->value = screenYToValue(args.y);
+		selectedKeyframe->orig_value = ofMap(selectedKeyframe->value, 0, 1.0, valueRange.min, valueRange.max, true);
+		keyframes.push_back(selectedKeyframe);
+		selectedKeyframes.push_back(selectedKeyframe);
+		updateKeyframeSort();
+		timeline->flagTrackModified(this);
+
+		// when new breakpoint is created, we should reduce next breakpoint duration, before adding
+		ref->addKeyframeAtBeat(beat, selectedKeyframe->orig_value);
+		bDrawApplyButton = true;
+	}
+
+
+	createNewOnMouseup = false;
+
+#if OLDSHIT
 	if (!bounds.inside(args.x, args.y)) return;
 	cout << "ofxTLBeatCurves::mouseReleased: button:" << args.button <<endl;
 	if (drawingEasingWindow && args.button == 0){
@@ -219,6 +386,13 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 		ofxTLBeatKeyframes::mouseReleased(args, millis);
 		//if (hastoupdate) updateEditorContent();
 	}
+#endif
+}
+
+void ofxTLBeatCurves::willDeleteKeyframe(ofxTLBeatKeyframe* keyframe){
+	bDrawApplyButton = true;
+	ref->deleteKeyframeAtBeat(keyframe->beat);
+	cout << "ofxTLBeatKeyframes::willDeleteKeyframe" << endl;
 }
 
 // called when a keyframe is mouse moved, : this fct should:
@@ -471,8 +645,7 @@ void ofxTLBeatCurves::draw(){
 void ofxTLBeatCurves::recomputePreviews(){
 	preview.clear();
 
-	cout << "ofxTLBeatCurves::recomputePreviews " << endl;
-	cout << "bounds.getMinX:" << bounds.getMinX() << " maxx::"<< bounds.getMaxX() << endl;
+	//cout << "ofxTLBeatCurves::recomputePreviews " << endl; cout << "bounds.getMinX:" << bounds.getMinX() << " maxx::"<< bounds.getMaxX() << endl;
 
 	//	if(keyframes.size() == 0 || keyframes.size() == 1){
 	//		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
@@ -506,7 +679,7 @@ void ofxTLBeatCurves::recomputePreviews(){
 }
 
 void ofxTLBeatCurves::draw(){
-        //cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
+        cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
 	if(bounds.width == 0 || bounds.height < 2){
 		return;
 	}
@@ -521,12 +694,35 @@ void ofxTLBeatCurves::draw(){
 		recomputePreviews();
 	}
 	
+	// Draw Apply btn 
+	if (bDrawApplyButton) {
+		ofPushStyle();
+		ofFill();
+		ofSetColor(timeline->getColors().backgroundColor);
+		mApplyBtnRect.x = bounds.x + bounds.width - 80;
+		mApplyBtnRect.y = bounds.y - 13 - 4;
+		mApplyBtnRect.width = 70;
+		mApplyBtnRect.height = 14;
+		ofRect(mApplyBtnRect);
+		ofSetColor(0);
+		ofNoFill();
+		ofRect(mApplyBtnRect);
+
+		ofDrawBitmapString("Apply",  mApplyBtnRect.x + 4, mApplyBtnRect.y + 10);
+
+		// draw min bg
+		ofSetColor(200, 0, 0, 160);
+		ofFill();
+		ofRect(bounds);
+		ofPopStyle();
+	}
+
 	ofPushStyle();
 
 
         //draw current value indicator as a big transparent rectangle
 	//ofSetColor(timeline->getColors().disabledColor, 30);
-	ofSetColor(timeline->getColors().disabledColor, 70);
+	ofSetColor(timeline->getColors().outlineColor, 170);
 	//jg play solo change
 	//float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
 	//float currentPercent = sampleAtTime(currentTrackTime());
@@ -563,6 +759,8 @@ void ofxTLBeatCurves::draw(){
 		// last point
 		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[keyframes.size()-1]);
 		ofVertex(screenpoint.x, bounds.getMaxY()); // right low corner of rect
+		//ofVertex(bounds.getMaxX(), screenpoint.y); // right low corner of rect
+		//ofVertex(bounds.getMaxX(), bounds.getMaxY()); // right low corner of rect
 		// first point
 		screenpoint = screenPositionForKeyframe(keyframes[0]);
 		ofVertex(screenpoint.x, bounds.getMaxY()); // right low corner of rect

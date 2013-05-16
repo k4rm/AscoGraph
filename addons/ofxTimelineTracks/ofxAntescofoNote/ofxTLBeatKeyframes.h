@@ -125,7 +125,7 @@ class ofxTLBeatKeyframes : public ofxTLKeyframes
 	virtual void deleteKeyframe(ofxTLBeatKeyframe* keyframe);
 	//instead implement special behavior here:
 	//this is called before the keyframe is deleted and removed from the keyframes vector
-	virtual void willDeleteKeyframe(ofxTLKeyframe* keyframe);
+	virtual void willDeleteKeyframe(ofxTLBeatKeyframe* keyframe) {}
 
 	vector<ofxTLBeatKeyframe*> selectedKeyframes;
 	ofxTLBeatKeyframe* selectedKeyframe;

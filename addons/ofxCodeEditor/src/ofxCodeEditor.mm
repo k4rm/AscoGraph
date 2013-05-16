@@ -398,6 +398,13 @@ static const char * box_xpm[] = {
 	}
 }
 
+- (void) replaceString:(int)linea lineb:(int)lineb str:(const char*)str;
+{
+	[ self showLine:linea lineb:lineb ];
+	[ mEditor setGeneralProperty: SCI_REPLACESEL parameter:0 value:(long)str ];
+	//[ self showLine:linea lineb:lineb ];
+}
+
 @end
 
 

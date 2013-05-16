@@ -56,7 +56,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 int bitmapFontSize = 8;
-int guiXPadding = 20;
+int guiXPadding = 15;
 
 extern ofxConsole* console;
 
@@ -258,26 +258,26 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 	*/
 	//************************ Range GUI
 	// draw label
-	ofSetColor(255);
+	ofSetColor(0);
 	drawLabel("Range:", rangeLabelBounds);
 
 	// draw min bg
 	ofSetColor(color_gui_bg);
 	drawGuiBG(rangeMinSliderBounds);
 	// draw min text
-	ofSetColor(255);
+	ofSetColor(0);
 	drawLabel(ofToString(noteRange.min), rangeMinSliderBounds);
 
 	// draw max bg
 	ofSetColor(color_gui_bg);
 	drawGuiBG(rangeMaxSliderBounds);
 	// draw max text
-	ofSetColor(255);
+	ofSetColor(0);
 	drawLabel(ofToString(noteRange.max), rangeMaxSliderBounds);
 
 	ofSetColor(color_gui_bg);
 	drawGuiBG(rangeTrimButtonBounds);
-	ofSetColor(255);
+	ofSetColor(0);
 	drawLabel("Trim", rangeTrimButtonBounds);
 	//************************
 	/*t
@@ -1156,7 +1156,7 @@ void ofxTLAntescofoNote::clear_actions()
 
 
 int ofxTLAntescofoNote::getNoteType(Event *e)
-{       
+{
 	if (e) {
 		ostringstream str;
 		str << "getNoteType: isMArkov:"<< e->isMarkov << endl;
@@ -1284,7 +1284,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	clear();
 	//str_error.erase();
 	Score *score;
-	mParseDriver->setVerbosity(0);
+	mParseDriver->setVerbosity(2);
 	if (NULL == (score = mParseDriver->parse(filename))) {
 		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
 		return 0;
@@ -1608,7 +1608,7 @@ bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 
 void ofxTLAntescofoNote::createActionTrack() {
 	ofxAntescofoAction = new ofxTLAntescofoAction(mAntescofog);
-	getTimeline()->addTrack("Antescofo Actions", ofxAntescofoAction);
+	getTimeline()->addTrack("Actions", ofxAntescofoAction);
 	ofxAntescofoAction->setNoteTrack(this);
 }
 
@@ -2030,7 +2030,7 @@ void ofxTLAntescofoNote::trimRange() {
 void ofxTLAntescofoNote::drawRectChanged(){
 	guiHeaderHeight = 13;
 	//ofRectangle startRect = ofRectangle(bounds.x + 100 - guiXPadding, 0, 0, guiHeaderHeight);
-	ofRectangle startRect = ofRectangle(bounds.x + bounds.width - 220 - guiXPadding, 0, 0, guiHeaderHeight);
+	ofRectangle startRect = ofRectangle(bounds.x + bounds.width - /*220*/ 165 - guiXPadding, 0, 0, guiHeaderHeight);
 	//portInButtonBounds = getBoundsEastOf(startRect, "In: " + midiIn.getName());
 	//armInButtonBounds = getBoundsEastOf(portInButtonBounds, "Arm");
 	rangeLabelBounds = getBoundsEastOf(startRect, "Range");
@@ -2042,7 +2042,7 @@ void ofxTLAntescofoNote::drawRectChanged(){
 }
 
 ofRectangle ofxTLAntescofoNote::getBoundsEastOf(ofRectangle anchor, string label){
-	return ofRectangle(anchor.x + anchor.width + guiXPadding, bounds.y - guiHeaderHeight, label.size() * bitmapFontSize, guiHeaderHeight);
+	return ofRectangle(anchor.x + anchor.width + guiXPadding, bounds.y - guiHeaderHeight - 4, label.size() * bitmapFontSize, guiHeaderHeight);
 }
 
 

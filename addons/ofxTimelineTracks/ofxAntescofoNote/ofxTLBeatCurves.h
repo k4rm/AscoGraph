@@ -55,12 +55,11 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 		virtual void recomputePreviews();
 		virtual void drawModalContent();
 
-		//For selecting keyframe type only,
-		//the superclass controls keyframe placement
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 		virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 		virtual void mouseReleased(ofMouseEventArgs& args, long millis);
+		ofxTLAntescofoAction *tlAction;
 
 		virtual string getTrackType();
 
@@ -73,6 +72,7 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 
 		virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);	
 		virtual float interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBeatKeyframe* end, float sampleBeat);
+		virtual void willDeleteKeyframe(ofxTLBeatKeyframe* keyframe);
 
 		//easing dialog stuff
 		void initializeEasings();
@@ -89,4 +89,6 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 
 		//	float easingWindowSeperatorHeight;
 
+		ofRectangle mApplyBtnRect;
+		bool bDrawApplyButton;
 };

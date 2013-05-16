@@ -123,6 +123,7 @@ class ofxAntescofog : public ofBaseApp{
 		ofxCodeEditor* editor;
 		void editorShowLine(int linea, int lineb);
 		void editorDoubleclicked(int line);
+		void replaceEditorScore(int linebegin, int lineend, string actstr);
 
 		ofxTLAntescofoNote* ofxAntescofoNote;
 		ofxTLAntescofoAction* ofxAntescofoAction;
@@ -168,7 +169,7 @@ class ofxAntescofog : public ofBaseApp{
 		bool            mHasReadMessages;
 		string          mOsc_host, mOsc_port, mOsc_port_MAX;
 		char            mOSCmsg_string[20];
-		float           mOsc_beat, mOsc_tempo, mOsc_pitch, mOsc_accomp_speed;
+		float           mOsc_beat, mOsc_tempo, mOsc_pitch, mOsc_rnow, mOsc_accomp_speed;
 		float           fAntescofoTimeSeconds;
 
 		// color chooser

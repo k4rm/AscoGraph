@@ -35,6 +35,7 @@ class Display_cfwd {
 class ActionGroupHeader;
 class ActionGroup;
 class ActionMessage;
+class ActionCurve;
 
 class ofxTLAntescofoAction : public ofxTLTrack
 {
@@ -92,6 +93,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		int get_x(float beat);
 		string cut_str(int w, string in);
+		void replaceEditorScore(ActionCurve* actioncurve);
 
 		ofTrueTypeFont mFont;
 		Score *mScore;
@@ -119,6 +121,7 @@ class ActionGroup {
 		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
+		virtual string dump();
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
 
 		list<ActionGroup*> sons;
@@ -150,6 +153,7 @@ class ActionMultiCurves : public ActionGroup {
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
+		virtual string dump();
 
 		int howmany;
 		string label;
@@ -164,6 +168,7 @@ class ActionCurve : public ActionGroup {
 		virtual void draw(ofxTLAntescofoAction *tlAction) {}
 		virtual void print();
 		void addKeyframeAtBeat(float beat, float val);
+		void deleteKeyframeAtBeat(float beat);
 		void moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val);
 		void changeKeyframeEasing(float beat, string type);
 		bool set_dur_val(double d, AnteDuration* a);
@@ -215,6 +220,7 @@ class ActionGroupHeader {
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		void drawArrow(); 
 		void print();
+		virtual string dump();
 		bool is_in_arrow(int x, int y);
 
 		// display
