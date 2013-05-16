@@ -60,6 +60,7 @@ ofxTLAccompAudioTrack::ofxTLAccompAudioTrack() {
 	lastFFTPosition = 0;
 	defaultFFTBins = 256;
 	maxBinReceived = 0;
+	preview_dy = 0;
 }
 
 ofxTLAccompAudioTrack::~ofxTLAccompAudioTrack(){
@@ -99,16 +100,18 @@ void ofxTLAccompAudioTrack::update()
 {
 	bool debug = false;
 	//cout << "ofxTLAccompAudioTrack:: update" <<  player.getPosition() << endl;
-	/*
 	if (trackHeader && trackHeader->isBeingDragged()) {
 		cout << "ofxTLAccompAudioTrack:: trackHeader dragged, skipping update" << endl;
 		return;
 	}
-	*/
 	if (boundsy != bounds.y || boundsh != bounds.height) {
+		int dy = bounds.y - boundsy;
 		boundsy = bounds.y;
 		boundsh = bounds.height;
-		computePreview();
+		//computePreview();
+		cout << "ofxTLAccompAudioTrack:: bounds changed should recompute preview: dy:" << dy<< endl;
+		shouldRecomputePreview = true;
+		// hack not yet ready if (previews.size() && dy) change_y_preview(dy);
 	}
 
 	// assign playHeadX
@@ -185,8 +188,8 @@ void ofxTLAccompAudioTrack::update(ofEventArgs& args){
 }
  
 void ofxTLAccompAudioTrack::draw(){
-	cout << "ofxTLAccompAudioTrack::draw: zoomBounds:[ "<< zoomBounds.min << " - " << zoomBounds.max << " ] playheadBounds:[ "<< playheadBounds.min << " - " << playheadBounds.max << " ]" << endl << endl;
-	//if (trackHeader->isBeingDragged()) return;
+	//cout << "ofxTLAccompAudioTrack::draw: zoomBounds:[ "<< zoomBounds.min << " - " << zoomBounds.max << " ] playheadBounds:[ "<< playheadBounds.min << " - " << playheadBounds.max << " ]" << endl << endl;
+	if (trackHeader->isBeingDragged()) return;
 
 	if(!soundLoaded || player.getBuffer().size() == 0){
 		ofPushStyle();
@@ -325,6 +328,14 @@ void ofxTLAccompAudioTrack::setMarkers(vector<float>& map_index, vector<float>& 
 	}
 }
 
+
+void ofxTLAccompAudioTrack::change_y_preview(int y){
+	preview_dy = y;
+	/*
+	for (int i = 0; i < previews.size(); i++) {
+		previews[i].getVertices()[1] -= y;
+	}*/
+}
 
 void ofxTLAccompAudioTrack::computePreview(){
 	

@@ -74,6 +74,7 @@ public:
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 
 	virtual void boundsChanged(ofEventArgs& args);
+	void change_y_preview(int y);
 
 	virtual void setSpeed(float speed);
 	void setFakeSpeed(float speed);
@@ -99,4 +100,5 @@ protected:
 	ofOpenALSoundPlayer_TimelineAdditions player;
 	ofRange computedZoomBounds;
 	float maxBinReceived;
+	int preview_dy;
 };
