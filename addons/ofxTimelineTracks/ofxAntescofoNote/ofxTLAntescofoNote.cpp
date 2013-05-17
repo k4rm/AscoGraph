@@ -143,7 +143,7 @@ void ofxTLAntescofoNote::setup(){
 		abort();
 	}
 
-	mFont.loadFont ("DroidSansMono.ttf", 15);
+	mFont.loadFont ("DroidSansMono.ttf", 13); //15);
 
 
 	for (int i = 0; i < 127; i++) {
@@ -463,7 +463,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 			}
 		} // end switch loop
 
-		// draw markers (separate loop used for calculate width
+		// draw markers (separate loop used for calculate width)
 		float lastX = bounds.x + bounds.width;
 		int sizec = mFont.stringWidth(string("_"));
 		for(int i = switches.size() - 1; i >= 0; i--){
@@ -477,12 +477,13 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					ofSetLineWidth(1);
 					ofLine(startX, bounds.y, startX, bounds.y + bounds.height);
 					float w = lastX - startX;
-					int l = floor( w / sizec + 1 );
+					int l = floor( (w+1) / (sizec ));
 					int s = switches[i]->label.size();
 					if (l > s) l = s;
 					string str = switches[i]->label.substr(s-l, l);
 					ofSetColor(0, 0, 0, 255);
-					ofDrawBitmapString( str, startX, bounds.y-5);
+					//ofDrawBitmapString( str, startX, bounds.y-5);
+					mFont.drawString( str, startX, bounds.y-5);
 					lastX = startX;
 				}
 			}
@@ -592,7 +593,8 @@ void ofxTLAntescofoNote::draw_showStaves() {
 					}
 					//ofDrawBitmapString(switches[i]->label.substr(7, switches[i]->label.size()), startX, yy - 4);
 					ofSetColor(0, 0, 0, 255);//105);
-					ofDrawBitmapString(switches[i]->label, startX, yy - 4);
+					//ofDrawBitmapString(switches[i]->label, startX, yy - 4);
+					mFont.drawString(switches[i]->label, startX, yy - 4);
 					ofSetColor(0, 0, 0, 255);
 				}
 

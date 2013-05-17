@@ -10,6 +10,9 @@
 int _debug = 0;
 static string str_error; // filled by our error()
 
+//int fontsize = OFX_UI_FONT_SMALL;
+int fontsize = OFX_UI_FONT_MEDIUM;
+
 extern ofxConsole* console;
 
 #define CONSTANT_EDITOR_VIEW_WIDTH	400
@@ -351,17 +354,17 @@ void ofxAntescofog::setupUI() {
     ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
     space->setVisible(false);
     guiBottom->addWidgetDown(space);
-    mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, OFX_UI_FONT_SMALL);
+    mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, fontsize);
     guiBottom->addWidgetDown(mLabelBeat);
-    mLabelBeat = new ofxUILabel("0", OFX_UI_FONT_SMALL);
+    mLabelBeat = new ofxUILabel("0", fontsize);
     guiBottom->addWidgetRight(mLabelBeat);
-    mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, OFX_UI_FONT_SMALL);
+    mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, fontsize);
     guiBottom->addWidgetDown(mLabelPitch);
-    mLabelPitch = new ofxUILabel("0", OFX_UI_FONT_SMALL);
+    mLabelPitch = new ofxUILabel("0", fontsize);
     guiBottom->addWidgetRight(mLabelPitch);
-    mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, OFX_UI_FONT_SMALL);
+    mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
     guiBottom->addWidgetDown(mLabelAccompSpeed);
-    mLabelAccompSpeed = new ofxUILabel("0", OFX_UI_FONT_SMALL);
+    mLabelAccompSpeed = new ofxUILabel("0", fontsize);
     guiBottom->addWidgetRight(mLabelAccompSpeed);
 
     // event buttons
@@ -541,7 +544,7 @@ void ofxAntescofog::setup(){
     
 		fog = this;
     score_x = 5;
-    score_y = 81;
+    score_y = 81+10;
     mUIbottom_y = 40;
 
     bpm = 120; 
@@ -644,10 +647,10 @@ void ofxAntescofog::update() {
             mLabelPitch->setLabel(ofToString(mOsc_pitch));
             if (_debug) cout << "OSC received: pitch: "<< mOsc_pitch << endl;
             mHasReadMessages = true;
-	} else if(m.getAddress() == "/antescofo/accomp_pos") { // && m.getArgType(0) == OFXOSC_TYPE_FLOAT)
+	} else if(m.getAddress() == "/antescofo/accomp_pos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
             if (_debug) cout << "OSC received: accomp_pos: "<<  m.getArgAsFloat(0) << endl;
             mHasReadMessages = true;
-	    if (audioTrack) audioTrack->fakePlay();
+	    if (audioTrack) audioTrack->fakePlay(m.getArgAsFloat(0));
 	} else if(m.getAddress() == "/antescofo/accomp_speed"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
             mOsc_accomp_speed= m.getArgAsFloat(0);
             mLabelAccompSpeed->setLabel(ofToString(mOsc_accomp_speed));
@@ -766,15 +769,10 @@ void ofxAntescofog::draw() {
 			ofPopStyle();
 
 			// logos
-			mLogoInria.draw(score_w - 290, 2, 148, 54);
-			mLogoIrcam.draw(score_w - 120, 0, 109, 64);
-
-			/* logoInria = ofRectangle(600, 7, 150, 40);
-			ofSetColor(255);
-			ofFill();
-			ofRect(logoInria);
-			*/
-
+			//mLogoInria.draw(score_w - 290, 2, 148, 54);
+			//mLogoIrcam.draw(score_w - 120, 0, 109, 64);
+			mLogoIrcam.draw(score_w - 170, 0, 109, 64);
+		
 			drawCache.end();
 
 			//ofBackground(255, 255, 255, 255);
@@ -1127,7 +1125,7 @@ void ofxAntescofog::draw_ColorSetup()
     if (!bColorSetupInitDone) {// init and create buttons with color rect
 
         guiSetup_Colors->addWidgetDown(new ofxUILabel("Choose a color to change then press \"Save color\"", OFX_UI_FONT_LARGE));
-        guiSetup_Colors->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, OFX_UI_FONT_SMALL));
+        guiSetup_Colors->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
         for (map<string, ofColor*>::const_iterator c = colorString2var.begin(); c != colorString2var.end(); c++)
             draw_ColorAsset(c->first, c->second);
         
@@ -1149,7 +1147,7 @@ void ofxAntescofog::draw_OSCSetup() {
     ofRect(40, mUIbottom_y, score_w - 40, ofGetWindowHeight() - mUIbottom_y);
     if (!bOSCSetupInitDone) {// init and create buttons with color rect
         //guiSetup->addWidgetDown(new ofxUILabel("OSC local port", OFX_UI_FONT_MEDIUM));
-        guiSetup_OSC->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, OFX_UI_FONT_SMALL));
+        guiSetup_OSC->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
         for (map<string, string*>::const_iterator c = oscString2var.begin(); c != oscString2var.end(); c++) {
             guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
             guiSetup_OSC->addWidgetRight(new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM));
@@ -1314,7 +1312,7 @@ void ofxAntescofog::display_error()
          */
         ofDrawBitmapString(ofxAntescofoNote->get_error(), 100, 100);
         bErrorInitDone = true;
-        guiError->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_CANCEL, OFX_UI_FONT_SMALL));
+        guiError->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_CANCEL, fontsize));
     } else {
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setState(0);
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setVisible(true);

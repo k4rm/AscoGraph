@@ -557,7 +557,7 @@ void ofxTLAccompAudioTrack::fakeStop(){
 
 }
 
-void ofxTLAccompAudioTrack::fakePlay(){
+void ofxTLAccompAudioTrack::fakePlay(float pos){ // pos in seconds
 	float duration = player.getDuration();
 
 	playHeadX = 0;
@@ -568,6 +568,8 @@ void ofxTLAccompAudioTrack::fakePlay(){
 	fakeStart = ofGetSystemTime();
 	lastInstant = fakeStart;
 	playheadBounds = zoomBounds;
+	if (pos)
+		playHeadX = millisToScreenX(screenXtoNormalizedX( pos*1000, zoomBounds));
 	cout << "ofxTLAccompAudioTrack:: fakePlay: fakeEnd:" << fakeEndIndex << " fakeRateMS:" << fakeRateMS << " fakeStart:" << fakeStart << endl;
 }
 

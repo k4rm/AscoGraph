@@ -60,7 +60,7 @@ public:
 	//this will play the timeline along to the audio
 	virtual bool togglePlay();
 	virtual void play();
-	void fakePlay();
+	void fakePlay(float pos);
 	void fakeStop();
 	virtual void stop();
 	virtual bool getIsPlaying();

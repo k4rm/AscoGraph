@@ -57,7 +57,7 @@
 #define TEXT_CONSTANT_BUTTON_STOP               "Stop"
 #define TEXT_CONSTANT_BUTTON_NEXT_EVENT         "next event"
 #define TEXT_CONSTANT_BUTTON_PREV_EVENT         "prev event"
-#define TEXT_CONSTANT_BUTTON_BPM                "BPM"
+#define TEXT_CONSTANT_BUTTON_BPM                "Tempo: "
 #define TEXT_CONSTANT_BUTTON_SAVE_COLOR         "Save color"
 #define TEXT_CONSTANT_PARSE_ERROR               " /!\\ Antescofo Score parsing error /!\\  "
 #define TEXT_CONSTANT_BUTTON_CANCEL             "Cancel"
