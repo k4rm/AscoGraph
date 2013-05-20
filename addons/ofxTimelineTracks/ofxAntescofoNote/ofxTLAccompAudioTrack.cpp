@@ -34,6 +34,7 @@
 #include "ofxTimeline.h"
 
 float playHeadX = 0.;
+float firstpos = 0.;
 float fakeSpeed = 0;
 float fakeEndIndex = 0;
 unsigned long long fakeStart = 0;
@@ -61,6 +62,7 @@ ofxTLAccompAudioTrack::ofxTLAccompAudioTrack() {
 	defaultFFTBins = 256;
 	maxBinReceived = 0;
 	preview_dy = 0;
+	playHeadX = 0;
 }
 
 ofxTLAccompAudioTrack::~ofxTLAccompAudioTrack(){
@@ -123,16 +125,23 @@ void ofxTLAccompAudioTrack::update()
 	//measure time elapsed since last update which will give us where we are
 	unsigned long long nownow = ofGetSystemTime();
 	unsigned long long dif = nownow - lastInstant;
-	if (debug) cout << "update: dif=" << dif << " fakeSpeed:" << fakeSpeed << " fakeRateMS:" << fakeRateMS << " playHeadX:" << playHeadX << endl;
 	if (!dif) return;
-	playHeadX += dif * fakeSpeed * fakeRateMS;
+	if (debug) cout << "update: dif=" << dif << " fakeSpeed:" << fakeSpeed << " fakeRateMS:" << fakeRateMS << " playHeadX:" << playHeadX << endl;
+	float pos = playHeadX; //timeline->screenXtoNormalizedX(playHeadX, zoomBounds);
+	fakeEndIndex = 1;//screenXtoNormalizedX(millisToScreenX(player.getDuration()*1000), zoomBounds);;
+	fakeRateMS = fakeEndIndex / (player.getDuration() * 1000); // speed: screenx per ms
+
+	float normalizationRatio = timeline->getDurationInSeconds() / player.getDuration();
+	pos += dif * fakeSpeed * fakeRateMS / normalizationRatio;
+	playHeadX += dif * fakeSpeed * fakeRateMS / normalizationRatio;
+	//playHeadX = normalizedXtoScreenX(pos, zoomBounds);
 	lastInstant = nownow;
 	if (!playHeadX)
 		playheadBounds = zoomBounds;
 	else {
 		ofRange oldz = playheadBounds;
 		ofRange z = playheadBounds;
-		float pos = playHeadX / fakeEndIndex; //timeline->screenXtoNormalizedX(playHeadX);
+		//float pos = playHeadX / fakeEndIndex; //timeline->screenXtoNormalizedX(playHeadX);
 		//cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
 		// continuous scrolling : keep playhead on center
 		float c = z.center(); 
@@ -274,10 +283,10 @@ void ofxTLAccompAudioTrack::draw(){
 
 	// playhead 
 	ofPushStyle();
-	ofSetColor(0, 0, 0, 255);
+	ofSetColor(0, 0, 0, 200);
 	//float x = playHeadX - normalizedXtoScreenX(playheadBounds.min, zoomBounds);
-	float x = normalizedXtoScreenX(playHeadX / fakeEndIndex, playheadBounds);
-	ofSetLineWidth(2);
+	float x = normalizedXtoScreenX(playHeadX, playheadBounds);
+	ofSetLineWidth(1);
 	ofLine(x, bounds.y, x, bounds.y + bounds.height);
 	ofPopStyle();
 
@@ -554,23 +563,25 @@ void ofxTLAccompAudioTrack::boundsChanged(ofEventArgs& args){
 void ofxTLAccompAudioTrack::fakeStop(){
 	cout << "ofxTLAccompAudioTrack:: fakeStop"  << endl;
 	fakeSpeed = 0.;
-
 }
 
 void ofxTLAccompAudioTrack::fakePlay(float pos){ // pos in seconds
 	float duration = player.getDuration();
 
 	playHeadX = 0;
+	cout << "-----------------------------------------------" << endl;
 	cout << "ofxTLAccompAudioTrack:: fakePlay: duration:" << duration << endl;
 	fakeSpeed = 1.;
-	fakeEndIndex = millisToScreenX(player.getDuration()*1000);
-	fakeRateMS = fakeEndIndex / (player.getDuration() * 1000); // speed: screenx per ms
+	fakeEndIndex = 1;//screenXtoNormalizedX(millisToScreenX(player.getDuration()*1000; //), zoomBounds);;
+	fakeRateMS = fakeEndIndex / (player.getDuration() * 1000); // speed: norma per ms
 	fakeStart = ofGetSystemTime();
 	lastInstant = fakeStart;
 	playheadBounds = zoomBounds;
 	if (pos)
-		playHeadX = millisToScreenX(screenXtoNormalizedX( pos*1000, zoomBounds));
-	cout << "ofxTLAccompAudioTrack:: fakePlay: fakeEnd:" << fakeEndIndex << " fakeRateMS:" << fakeRateMS << " fakeStart:" << fakeStart << endl;
+		//playHeadX = millisToScreenX(screenXtoNormalizedX( pos*1000, zoomBounds));
+		playHeadX = screenXtoNormalizedX(millisToScreenX(pos*1000), playheadBounds);//zoomBounds);
+	firstpos = playHeadX;
+	cout << "ofxTLAccompAudioTrack:: fakePlay: fakeEnd:" << fakeEndIndex << " fakeRateMS:" << fakeRateMS << " pos:" << pos << " playheadX: "<<playHeadX<< endl;
 }
 
 void ofxTLAccompAudioTrack::play(){

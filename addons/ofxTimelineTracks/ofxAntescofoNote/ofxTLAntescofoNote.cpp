@@ -1583,7 +1583,7 @@ void ofxTLAntescofoNote::setScore(Score* s) {
 
 float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mOsc_tempo, float mOsc_pitch) {
 
-	if (mOsc_tempo == 0) cerr << "Error null tempo returned by Antescofo, skipping a division by zero..." << endl;
+	//if (mOsc_tempo == 0) cerr << "Error null tempo returned by Antescofo, skipping a division by zero..." << endl;
 	if (mOsc_beat == 0) return 0;
 
 	float r = timeline->beatToMillisec(mOsc_beat) / 1000;

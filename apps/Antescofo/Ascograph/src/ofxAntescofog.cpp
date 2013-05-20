@@ -620,8 +620,8 @@ void ofxAntescofog::update() {
 	    mOsc_tempo = m.getArgAsFloat(0);
             if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
             bpm = mOsc_tempo;
-            //timeline.setBPM(bpm);
-            mSliderBPM->setValue(bpm);
+            //if (bpm) timeline.setBPM(bpm);
+	    mSliderBPM->setValue(bpm);
             mHasReadMessages = true;
 	} /*else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 	    mOsc_rnow = m.getArgAsFloat(0);
