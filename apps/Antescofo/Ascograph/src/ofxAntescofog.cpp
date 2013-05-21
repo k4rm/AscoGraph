@@ -662,7 +662,7 @@ void ofxAntescofog::update() {
             string scorefile = m.getArgAsString(0);
             if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
             mHasReadMessages = true;
-	    loadScore(scorefile);
+	    loadScore(scorefile, false);
 	    bShouldRedraw = true;
         } else {
             mHasReadMessages = false;
@@ -1417,7 +1417,7 @@ void ofxAntescofog::saveAsScore() {
 }
 
 
-int ofxAntescofog::loadScore(string filename) {
+int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	ofxAntescofoNote->clear_error();
 	cout << "Trying to load score : " << filename << endl;
 	// save zoom view range
@@ -1452,13 +1452,15 @@ int ofxAntescofog::loadScore(string filename) {
 		mSliderBPM->setValue(bpm);
 		update();
 
-		// send OSC read msg to Antescofo
-		ofxOscMessage m;
-		m.setAddress("/antescofo/cmd");
-		m.addStringArg("read");
-		m.addStringArg(mScore_filename);
-		cout << "Sending OSC \"read "<< mScore_filename << "\" to Antescofo Patch." << endl;
-		mOSCsender.sendMessage(m);
+		if (sendOsc) {
+			// send OSC read msg to Antescofo
+			ofxOscMessage m;
+			m.setAddress("/antescofo/cmd");
+			m.addStringArg("read");
+			m.addStringArg(mScore_filename);
+			cout << "Sending OSC \"read "<< mScore_filename << "\" to Antescofo Patch." << endl;
+			mOSCsender.sendMessage(m);
+		}
 	} else {
 		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 		display_error();

@@ -284,6 +284,7 @@ void ofxTLAccompAudioTrack::draw(){
 	ofPushStyle();
 	ofSetColor(0, 0, 0, 200);
 	//float x = playHeadX - normalizedXtoScreenX(playheadBounds.min, zoomBounds);
+	float normalizationRatio = timeline->getDurationInSeconds() / player.getDuration();
 	float x = normalizedXtoScreenX(playHeadX, playheadBounds);
 	ofSetLineWidth(1);
 	ofLine(x + bounds.x, bounds.y, bounds.x+x, bounds.y + bounds.height);
@@ -562,6 +563,7 @@ void ofxTLAccompAudioTrack::boundsChanged(ofEventArgs& args){
 
 void ofxTLAccompAudioTrack::fakeStop(){
 	cout << "ofxTLAccompAudioTrack:: fakeStop"  << endl;
+	playHeadX = 0;
 	fakeSpeed = 0.;
 }
 
@@ -578,9 +580,10 @@ void ofxTLAccompAudioTrack::fakePlay(float pos){ // pos in seconds
 	//ofAddListener(ofEvents().update, this, &ofxTLAccompAudioTrack::update);
 	lastInstant = fakeStart;
 	playheadBounds = zoomBounds;
-	if (pos)
+	if (pos) {
 		//playHeadX = millisToScreenX(screenXtoNormalizedX( pos*1000, zoomBounds));
 		playHeadX = screenXtoNormalizedX(millisToScreenX(pos*1000), playheadBounds);
+	}
 	cout << "ofxTLAccompAudioTrack:: fakePlay: fakeEnd:" << fakeEndIndex << " fakeRateMS:" << fakeRateMS << " pos:" << pos << " playheadX: "<<playHeadX<< endl;
 }
 

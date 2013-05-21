@@ -196,7 +196,7 @@ class ofxAntescofog : public ofBaseApp{
 		bool bShowError, bErrorInitDone;
 
 		// open/save file
-		int loadScore(string filename);
+		int loadScore(string filename, bool sendOsc = true);
 		void saveScore();
 		void saveAsScore();
 
