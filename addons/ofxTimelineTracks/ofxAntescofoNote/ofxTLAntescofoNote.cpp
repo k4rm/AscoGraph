@@ -417,6 +417,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					// glissando : draw line
 					if (switches[i]->type == ANTESCOFO_MULTI && i+1 < switches.size()
 							&& (switches[i+1]->type == ANTESCOFO_MULTI || switches[i+1]->type == ANTESCOFO_MULTI_STOP)) {
+						cout << "draw multi line" << endl;
 						setNoteColor(i);
 						// next note:
 						float startX2 =  normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i+1]->beat.min), zoomBounds);
@@ -876,12 +877,14 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 		bool endAlreadySelected = clickedSwitchA->endSelected;
 		clickedSwitchA->startSelected = didSelectedStartTime || (ofGetModifierKeyShift() && startAlreadySelected);
 		clickedSwitchA->endSelected   = !didSelectedStartTime || (ofGetModifierKeyShift() && endAlreadySelected);
+		/*
 		if(didSelectedStartTime){
 			timeline->setDragTimeOffset( clickedSwitchA->dragOffsets.min );
 		}
 		else{
 			timeline->setDragTimeOffset( clickedSwitchA->dragOffsets.max );
 		}
+		*/
 	} else { // premiere selection
 		//if(ofGetModifierKeyShift()){
 		draggingSelectionRange = true;
@@ -936,6 +939,7 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 
 void ofxTLAntescofoNote::mouseMoved(ofMouseEventArgs& args, long millis){
 	//cout << "mouseMoved: "<< args.x<<", "<<args.y << endl ;
+	/*
 	hoverSwitch = switchHandleForScreenPoint(ofPoint(args.x, args.y), hoveringStartTime);
 	if(hoverSwitch == NULL){
 		hoverSwitch = switchForScreenXY(args.x, args.y);
@@ -953,6 +957,7 @@ void ofxTLAntescofoNote::mouseMoved(ofMouseEventArgs& args, long millis){
 
 	portInHover = portInButtonBounds.inside(args.x, args.y);
 	portOutHover = portOutButtonBounds.inside(args.x, args.y);
+	*/
 }
 
 //TODO: account for snapping
@@ -1216,6 +1221,7 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 						if(e->multi_event>0)
 						{
 
+							cout << "getnotetype multi" << endl;
 							return ANTESCOFO_MULTI; // MULTI TRILL XXX
 						}
 						return ANTESCOFO_TRILL;
@@ -1225,6 +1231,7 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 				return ANTESCOFO_CHORD;
 
 			case 0:  // NOTE
+			case 1:
 			default:
 				{
 					if (1 == e->pitch_list.size() && 0.0 == e->pitch_list[0])
@@ -1235,6 +1242,7 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 						{
 							if(e->multi_event>0)
 							{
+								cout << "getnotetype multi2" << endl;
 								return ANTESCOFO_MULTI;
 							}
 						} else {
@@ -1246,8 +1254,8 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 					}
 				}
 
-			case 1:  // DummySilence
-				return -1;
+			//case 1:  // DummySilence
+			//	return -1;
 		}
 	}
 	cerr << "ofxTLAntescofoNote::getNoteType: unknown type" << endl;
@@ -1374,11 +1382,13 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				bGot_Action = true;
 		}
 
+		cout << "getNoteType0" << endl;
 		int newtype = getNoteType(e);
 		//str << ">>>>>>>> got newtype " << newtype << " isMarkov:"<< e->isMarkov << " pitchsize:" << e->pitch_list.size(); console->addln(str.str()); str.str("");
 		if ((e->pitch_list.size() == 1 && e->beat_duration) || (e->pitch_list.size() && e->pitch_list[0] && !e->beat_duration)) { // NOTE, TRILL, MULTI
 			//if (newtype == -1) continue;
 			if (newtype == ANTESCOFO_MULTI) {
+				cout << "loadscore: multi"<< endl;
 				double beatmulti = e->beatcum;
 				double durmulti = e->multi_dur;
 				for (vector<float>::iterator m = e->multi_source.begin(); m != e->multi_source.end(); m++) { // MULTI sources
@@ -1495,6 +1505,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				p++;
 				bGot_Action = false;
 				if (j == e->pitch_list.begin()) newSwitch->label = e->cuename;
+				cout << "getNoteType1" << endl;
 				newSwitch->type = getNoteType(e);
 				switches.push_back(newSwitch);
 				line2note[e->scloc->begin.line] = switches.size() - 1;
