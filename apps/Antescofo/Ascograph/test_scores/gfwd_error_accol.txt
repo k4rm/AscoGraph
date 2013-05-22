@@ -1,0 +1,4 @@
+NOTE C4 1.
+group {
+	toto
+	toto2

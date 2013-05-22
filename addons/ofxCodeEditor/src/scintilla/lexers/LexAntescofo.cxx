@@ -409,10 +409,10 @@ static void FoldAntescofoDoc(unsigned int startPos, int length, int initStyle, W
           if (levelNext < SC_FOLDLEVELBASE)
             levelNext = SC_FOLDLEVELBASE;
         }
-        if (currentChar == '(')
+        if (currentChar == '{')
           levelNext++;
         else
-          if (currentChar == ')')
+          if (currentChar == '}')
           {
             levelNext--;
             if (levelNext < SC_FOLDLEVELBASE)
@@ -427,7 +427,7 @@ static void FoldAntescofoDoc(unsigned int startPos, int length, int initStyle, W
         if (style != stylePrev)
         {
           // END decreases the folding level, regardless which keyword follows.
-          bool endFound = MatchIgnoreCase(styler, i, "end");
+          bool endFound = MatchIgnoreCase(styler, i, "}");
           if (endPending)
           {
             levelNext--;
@@ -442,13 +442,13 @@ static void FoldAntescofoDoc(unsigned int startPos, int length, int initStyle, W
               else
               {
                 if (!foldOnlyBegin)
-                {
-                  bool whileFound = MatchIgnoreCase(styler, i, "while");
-                  bool loopFound = MatchIgnoreCase(styler, i, "loop");
-                  bool repeatFound = MatchIgnoreCase(styler, i, "repeat");
-                  bool caseFound = MatchIgnoreCase(styler, i, "case");
+                {/*
+                  bool groupFound = MatchIgnoreCase(styler, i, "group") || MatchIgnoreCase(styler, i, "gfwd");
+                  bool loopFound = MatchIgnoreCase(styler, i, "loop") || MatchIgnoreCase(styler, i, "lfwd");
+                  bool curveFound = MatchIgnoreCase(styler, i, "cfwd") || MatchIgnoreCase(styler, i, "curve");
+                  bool wheneverFound = MatchIgnoreCase(styler, i, "whenever");
 
-                  if (whileFound || loopFound || repeatFound || caseFound)
+                  if (groupFound || loopFound || curveFound )//|| wheneverFound)
                     levelNext++;
                   else
                   {
@@ -471,10 +471,9 @@ static void FoldAntescofoDoc(unsigned int startPos, int length, int initStyle, W
                       // sub parts of IF and CASE.
                       if (MatchIgnoreCase(styler, i, "elseif"))
                         elseIfPending = true;
-                      if (MatchIgnoreCase(styler, i, "when"))
-                        whenPending = true;
+                      //if (MatchIgnoreCase(styler, i, "when")) whenPending = true;
                     }
-                  }
+                  }*/
                 }
               }
             }

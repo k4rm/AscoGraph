@@ -1,7 +1,7 @@
 BPM 60
 NOTE A4 4
 NOTE C4 0.5
-GFWD testgroup 
+group testgroup 
 {
 	action_one
 	action_two 12

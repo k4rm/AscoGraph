@@ -1,15 +1,19 @@
 BPM 60
 
 NOTE C4 4.0
-CURVE slider grain:=0.05s action:=print $x ; the grain size is 50 milliseconds
+Curve slider Grain := 0.05s, Action :=
+        {
+            print $x
+        }
 {
-  $x 
-  {
-	{ 0 }
-	1.0 { 1 }
-	2. { 2 } 
-	3. { 3 }
-	4. { 4 }
-  }
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 } type "linear"
+        5.696 { 1.70435 } type "linear"
+        1.304 { 4 }
+    }
 }
 NOTE C2 10

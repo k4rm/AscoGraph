@@ -1025,14 +1025,14 @@ void SCI_METHOD LexerCPP::Fold(unsigned int startPos, int length, int initStyle,
 			}
 		}
 		if (options.foldSyntaxBased && (style == SCE_C_OPERATOR)) {
-			if (ch == '{') {
+			if (ch == '(') {
 				// Measure the minimum before a '{' to allow
 				// folding on "} else {"
 				if (levelMinCurrent > levelNext) {
 					levelMinCurrent = levelNext;
 				}
 				levelNext++;
-			} else if (ch == '}') {
+			} else if (ch == ')') {
 				levelNext--;
 			}
 		}

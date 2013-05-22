@@ -683,13 +683,7 @@ void ofxTLBeatCurves::draw(){
 	if(bounds.width == 0 || bounds.height < 2){
 		return;
 	}
-	
 
-	//print keyframes:
-	/*cout << "print keyframes:" << endl;
-	for(int i = 0; i < keyframes.size(); i++){
-		cout << "keyframes["<<i<<"] : beat:"<< keyframes[i]->beat << endl;
-	}*/
 	if(shouldRecomputePreviews || viewIsDirty){
 		recomputePreviews();
 	}

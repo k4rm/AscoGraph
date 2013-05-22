@@ -105,7 +105,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
  */
 - (void) setupEditor
 {  
-	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: 0];
+	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: (sptr_t) "Antescofo"];
 	// alternatively: [mEditor setEditorProperty: SCI_SETLEXERLANGUAGE parameter: nil value: (sptr_t) "mysql"];
 
 	// Number of styles we use with this lexer.
@@ -194,7 +194,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 
 	// Some special lexer properties.
 	[mEditor setLexerProperty: @"fold" value: @"1"];
-	[mEditor setLexerProperty: @"fold.compact" value: @"0"];
+	[mEditor setLexerProperty: @"fold.compact" value: @"1"];
 	[mEditor setLexerProperty: @"fold.comment" value: @"1"];
 	[mEditor setLexerProperty: @"fold.preprocessor" value: @"1"];
 
@@ -208,8 +208,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERTAIL value: SC_MARK_LCORNER];
 	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDEREND value: SC_MARK_BOXPLUSCONNECTED];
 	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDEROPENMID value: SC_MARK_BOXMINUSCONNECTED];
-	[mEditor setGeneralProperty
-		: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERMIDTAIL value: SC_MARK_TCORNER];
+	[mEditor setGeneralProperty : SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERMIDTAIL value: SC_MARK_TCORNER];
 	for (int n= 25; n < 32; ++n) // Markers 25..31 are reserved for folding.
 	{
 		[mEditor setColorProperty: SCI_MARKERSETFORE parameter: n value: [NSColor whiteColor]];

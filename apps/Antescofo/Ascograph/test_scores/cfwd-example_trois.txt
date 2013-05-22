@@ -16,3 +16,10 @@ curve @action := plot $NOW $x $y $z
 	}
 }	
 
+NOTE a3 3
+
+NOTE a3 3
+
+NOTE a3 3
+NOTE a3 3
+NOTE a3 3
