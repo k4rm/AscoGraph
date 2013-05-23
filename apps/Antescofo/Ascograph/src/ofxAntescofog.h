@@ -1,12 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#ifdef TARGET_OSX
-//# include "ofxCocoaWindowNibless.h"
-//# include "ofxCocoaWindow.h"
-//# include "ofxCocoa.h"
-//# include "Editor.h"
-#endif
 #include "ofxCocoaDelegate.h"
 #include "ofxTimeline.h"
 #include "ofxTLZoomer2D.h"
@@ -35,6 +29,7 @@
 #define INT_CONSTANT_BUTTON_STOP        13
 #define INT_CONSTANT_BUTTON_SAVE_AS     14
 #define	INT_CONSTANT_BUTTON_LINEWRAP    15
+#define	INT_CONSTANT_BUTTON_FIND        16
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -64,6 +59,11 @@
 #define TEXT_CONSTANT_PARSE_ERROR               " /!\\ Antescofo Score parsing error /!\\  "
 #define TEXT_CONSTANT_BUTTON_CANCEL             "Cancel"
 #define TEXT_CONSTANT_BUTTON_BACK               "Back"
+#define TEXT_CONSTANT_BUTTON_FIND               "Find"
+#define TEXT_CONSTANT_BUTTON_REPLACE       	"Replace"
+#define TEXT_CONSTANT_BUTTON_TEXT               "Text"
+#define TEXT_CONSTANT_BUTTON_REPLACE_TEXT	"Replaced Text"
+#define TEXT_CONSTANT_BUTTON_REPLACE_NB		"Number of replacement:"
 #define TEXT_CONSTANT_TEMP_FILENAME             "/tmp/tmpfile-ascograph.txt"
 #define TEXT_CONSTANT_TITLE_LOAD_SCORE          "Select a score : MusicXML2 or Antescofo format"
 #define TEXT_CONSTANT_TITLE_SAVE_AS_SCORE       "Save score in Antescofo format"
@@ -154,10 +154,10 @@ class ofxAntescofog : public ofBaseApp{
 
 		// UI
 		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC;
-		ofxUICanvas *guiSetup_Colors;
+		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;
 		ofxUISlider *mSliderBPM;
-		ofxUILabel  *mLabelBeat, *mLabelPitch, *mLabelAccompSpeed;
+		ofxUILabel  *mLabelBeat, *mLabelPitch, *mLabelAccompSpeed, *mFindReplaceOccur;
 		ofxUILabelButton *mSaveColorButton;
 		void exit();
 		void guiEvent(ofxUIEventArgs &e);
@@ -205,4 +205,8 @@ class ofxAntescofog : public ofBaseApp{
 		bool bEditorShow;
 
 		struct timeval last_draw_time;
+
+		// find text
+		bool bFindTextInitDone, bShowFind;
+		void draw_FindText();
 };

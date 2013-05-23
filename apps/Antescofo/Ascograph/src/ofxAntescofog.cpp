@@ -35,8 +35,10 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
     fAntescofoTimeSeconds = 0;
     bAutoScroll = false;
     bColorSetupInitDone = false;
+    bFindTextInitDone = false;
     bOSCSetupInitDone = false;
     bShowError = false;
+    bShowFind = false;
     bErrorInitDone = false;
     bEditorShow = true;
     bSetupDone = false;
@@ -82,6 +84,8 @@ void ofxAntescofog::menu_item_hit(int n)
             if (!bShowColorSetup) {
                 timeline.disable();
                 bShowColorSetup = true;
+                bShowOSCSetup = false;
+                bShowFind = false;
                 guiBottom->disable();
             } 
             break;
@@ -114,6 +118,16 @@ void ofxAntescofog::menu_item_hit(int n)
 	    bLineWrapMode = !bLineWrapMode;
 	    cout << "Setting line wrapping mode:" << bLineWrapMode << endl; 
 	    [ editor setWrapMode:bLineWrapMode ];
+            break;
+	case INT_CONSTANT_BUTTON_FIND:
+	    cout << "Setting find text mode" << endl; 
+	    if (!bShowFind) {
+		timeline.disable();
+                bShowColorSetup = false;
+                bShowOSCSetup = false;
+		bShowFind = true;
+                guiBottom->disable();
+	    }
             break;
         case INT_CONSTANT_BUTTON_PLAY:
         {
@@ -241,9 +255,14 @@ void ofxAntescofog::setupUI() {
     id editMenu = [[[NSMenu new] autorelease] initWithTitle:@"Edit"];
     id editMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit" action:NULL keyEquivalent:@""] autorelease];
     // . select all
-    id selectMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(menu_item_hit:) keyEquivalent:@"A"] autorelease];
+    id selectMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(menu_item_hit:) keyEquivalent:@"a"] autorelease];
     [editMenuItem setTag:INT_CONSTANT_BUTTON_SELECTALL];
     [editMenu addItem:selectMenuItem];
+    // . find
+    id findMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Find text" action:@selector(menu_item_hit:) keyEquivalent:@"f"] autorelease];
+    [findMenuItem setTag:INT_CONSTANT_BUTTON_FIND];
+    [editMenu addItem:findMenuItem];
+
     [editMenuItem setSubmenu:editMenu];
     [menubar addItem:editMenuItem];
 
@@ -310,9 +329,11 @@ void ofxAntescofog::setupUI() {
     guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight());
     guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y);
     guiSetup_Colors = new ofxUICanvas(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+    guiFind = new ofxUICanvas(300, score_y, ofGetWindowWidth()-300, ofGetWindowHeight()-100-score_y);
 
     guiBottom->setFont("DroidSansMono.ttf");
-		/*
+    guiFind->setFont("DroidSansMono.ttf");
+    /*
     guiBottom->setFont("NewMedia Fett.ttf");
     guiSetup_OSC->setFont("NewMedia Fett.ttf");
     guiSetup_Colors->setFont("NewMedia Fett.ttf");
@@ -320,8 +341,8 @@ void ofxAntescofog::setupUI() {
     */
 
 
-		// register double click on editor notification callback
-		[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
+    // register double click on editor notification callback
+    [[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
 
     //guiSetup_Colors->setScrollableDirections(false, true);
     guiError->setScrollAreaToScreen();
@@ -395,7 +416,8 @@ void ofxAntescofog::setupUI() {
     guiBottom->addWidgetLeft(b);
 
 
-
+    guiFind->setColorBack(ofColor(0, 0, 0, 0));
+    
 
     /*vector<string> items;
     items.push_back("Play to midi synth");
@@ -444,6 +466,7 @@ void ofxAntescofog::setupUI() {
     //ofAddListener(guiTop->newGUIEvent, this, &ofxAntescofog::guiEvent);
     ofAddListener(guiError->newGUIEvent, this, &ofxAntescofog::guiEvent);
     ofAddListener(guiBottom->newGUIEvent, this, &ofxAntescofog::guiEvent);
+    ofAddListener(guiFind->newGUIEvent, this, &ofxAntescofog::guiEvent);
     ofAddListener(guiSetup_Colors->newGUIEvent, this, &ofxAntescofog::guiEvent);
     ofAddListener(guiSetup_OSC->newGUIEvent, this, &ofxAntescofog::guiEvent);
 
@@ -761,6 +784,10 @@ void ofxAntescofog::draw() {
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_error();
+	} else if (bShowFind) {
+		ofSetColor(ofxAntescofoNote->color_staves_bg);
+		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+		draw_FindText();
 	} else {
 		if (bMayUseCache && !timeline.getIsPlaying() && !bShouldRedraw) {
 			drawCache.draw(0, 0);
@@ -1175,12 +1202,49 @@ void ofxAntescofog::draw_OSCSetup() {
 
 }
 
+void ofxAntescofog::draw_FindText() {
+    ofSetColor(0, 0, 0, 100);
+    ofRect(40, mUIbottom_y, score_w - 40, ofGetWindowHeight() - mUIbottom_y);
+    if (!bFindTextInitDone) {// init and create buttons with color rect
+        guiFind->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
+	guiFind->addWidgetDown(new ofxUILabel("Enter your text to search or replace: ", OFX_UI_FONT_MEDIUM));
+	guiFind->addWidgetDown(new ofxUITextInput(300, TEXT_CONSTANT_BUTTON_TEXT, "", OFX_UI_FONT_MEDIUM));
+        guiFind->addWidgetRight(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_FIND, fontsize));
+	guiFind->addWidgetDown(new ofxUITextInput(300, TEXT_CONSTANT_BUTTON_REPLACE_TEXT, "", OFX_UI_FONT_MEDIUM));
+        guiFind->addWidgetRight(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_REPLACE, fontsize));
+        ((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_BACK))->setLabelVisible(true);
+        ((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND))->setLabelVisible(true);
+	//((ofxUITextInput*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->setClicked();
+	((ofxUITextInput*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->setColorBack(ofColor(200, 0, 0, 100));
+	((ofxUITextInput*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE_TEXT))->setColorBack(ofColor(200, 0, 0, 100));
+	((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE))->setLabelVisible(true);
+	guiFind->addWidgetDown(new ofxUILabel(TEXT_CONSTANT_BUTTON_REPLACE_NB, OFX_UI_FONT_MEDIUM));
+	mFindReplaceOccur = new ofxUILabel("0", OFX_UI_FONT_MEDIUM);
+	guiFind->addWidgetRight(mFindReplaceOccur);
+	mFindReplaceOccur->setVisible(false);
+	((ofxUILabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE_NB))->setVisible(false);
+        bFindTextInitDone = true;
+    } else {
+        guiFind->setVisible(true);
+        guiFind->getWidget(TEXT_CONSTANT_BUTTON_BACK)->setVisible(true);
+        ((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_BACK))->setLabelVisible(true);
+        guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT)->setVisible(true);
+        guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND)->setVisible(true);
+	((ofxUILabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE_NB))->setVisible(false);
+	mFindReplaceOccur->setVisible(false);
+	//((ofxUITextInput*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->setClicked();
+	((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND))->setLabelVisible(true);
+	((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE))->setLabelVisible(true);
+    }
+}
+
 #define OF_KEY_TAB      9
 
 //--------------------------------------------------------------
 void ofxAntescofog::keyPressed(int key){
     // space key is cancel on error window
-    if(key == ' ') {
+
+    if(0 && key == ' ') {
 	    if (bShowError) {
 		    bShowError = false;
 		    guiError->disable();
@@ -1193,15 +1257,11 @@ void ofxAntescofog::keyPressed(int key){
     if(key == OF_KEY_TAB /*&& !bEditorShow*/) {
         ofxAntescofoNote->toggleView();
     }
-    if(key == 'e'){
-			setEditorMode(!bEditorShow, 0);
-		} 
-		if(key == 'c'){
-			console->toggleShow();
-		}
-		else {
-			 //ofSetWindowShape(ofGetWidth() - 300, ofGetHeight());
-			 //cocoaWindow->setWindowShape(ofGetWidth() - 300, ofGetHeight());
+    //if(key == 'e'){ setEditorMode(!bEditorShow, 0); } 
+    //if(key == 'c'){ console->toggleShow(); }
+    else {
+	    //ofSetWindowShape(ofGetWidth() - 300, ofGetHeight());
+	    //cocoaWindow->setWindowShape(ofGetWidth() - 300, ofGetHeight());
     }
     if (key == OF_KEY_F7){
         ofToggleFullscreen();
@@ -1662,6 +1722,38 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         timeline.enable();
         guiBottom->enable();
     }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_FIND) {
+	    cout << "Find button hit!" << endl;
+	    ofxUILabel *l = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->getLabelWidget();
+	    if (l) {
+		    string str = l->getLabel();
+		    if (str.size()) {
+			    [ editor searchText:str ];
+			    //guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND_NEXT)->setVisible(true);
+			    //((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND_NEXT))->setLabelVisible(true);
+		    } else cout << "empty search string" << endl;
+	    } else { cout << "can not get search string " << endl; }
+    }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_REPLACE) {
+	    cout << "Replace button hit!" << endl;
+	    ofxUILabel *l = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->getLabelWidget();
+	    ofxUILabel *l2 = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE_TEXT))->getLabelWidget();
+	    int res = 0;
+	    if (l) {
+		    string str = l->getLabel();
+		    string str2 = l2 ? l2->getLabel() : "";
+		    if (str.size()) {
+			    res = [ editor searchNreplaceText:str str2:str2];
+			    ofxUILabel *l = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE_NB))->getLabelWidget();
+			    l->setVisible(true);
+			    mFindReplaceOccur->setVisible(true);
+			    mFindReplaceOccur->setLabel(ofToString(res));
+			    string out;
+			    [ editor getEditorContent:out ];
+			    cout << out << endl;
+		    } else cout << "empty search string" << endl;
+	    } else { cout << "can not get search string " << endl; }
+    }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_BACK)
 	{
         cout << "Back pressed" << endl;
@@ -1672,7 +1764,10 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         } else if (bShowOSCSetup) {
             bShowOSCSetup = false;
             guiSetup_OSC->disable();
-        }
+        } else if (bShowFind) {
+	    bShowFind = false;
+	    guiFind->disable();
+	}
 
         e.widget->toggleVisible();
         ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;

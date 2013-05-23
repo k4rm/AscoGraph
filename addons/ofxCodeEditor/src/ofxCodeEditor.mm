@@ -285,21 +285,62 @@ static const char * box_xpm[] = {
 }
 */
 
+- (void) searchNext: (string) str
+{
+  int searchFlags= 0;
+  /*if (matchCase)
+    searchFlags |= SCFIND_MATCHCASE;
+  if (wholeWord)
+    searchFlags |= SCFIND_WHOLEWORD;
+    */
+
+  /*
+  NSString *text = [NSString stringWithUTF8String:str.c_str() ];
+
+      bool result = [ mEditor directCall:mEditor
+                                 message: SCI_SEARCHNEXT
+                                  wParam: searchFlags
+                                  lParam: (sptr_t) text];
+
+      if (result)
+	      [self setGeneralProperty: SCI_SCROLLCARET value: 0];
+	      */
+}
+
+-(int) searchNreplaceText:(string)str str2:(string)str2
+{
+	NSString *text1 = [NSString stringWithUTF8String:str.c_str() ];
+	NSString *text2 = [NSString stringWithUTF8String:str2.c_str() ];
+	cout << "CodeEditor: will searchNreplace for text: " << str << " with text:" << str2 << endl;
+
+	int res = [ mEditor findAndReplaceText: text1
+			    	        byText: text2
+				     matchCase: NO
+				     wholeWord: NO
+					 doAll: YES];
+	cout << "searchNreplace Text: res:" << res << endl;
+	return res;
+}
 
 - (void) searchText: (string) str
 {
 	NSString *text = [NSString stringWithUTF8String:str.c_str() ];
-	[mEditor findAndHighlightText: text
-		matchCase: NO
-		wholeWord: NO
-		scrollTo: YES
-		wrap: YES
-		backwards: YES];
+	cout << "CodeEditor: will search for text: " << str.c_str() << endl;
 
+	bool res = [mEditor findAndHighlightText: text
+			matchCase: NO
+			wholeWord: NO
+			scrollTo: YES
+			wrap: YES
+			//backwards: YES];
+			backwards: NO];
+
+	//if (!res) return;
 	long matchStart = [mEditor getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
 	long matchEnd = [mEditor getGeneralProperty: SCI_GETSELECTIONEND parameter: 0];
 	[mEditor setGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd];
 	cout << "searchText: " << str << "-->"<< matchStart<< ":" << matchEnd << endl;
+	//[ self showLine:matchStart lineb:matchEnd ];
 
 	//if ([[searchField stringValue] isEqualToString: @"XX"]) [self showAutocompletion];
 }

@@ -119,22 +119,9 @@ void ofxTLAntescofoNote::setup(){
 	enable();
 	load();	
 
-	//	ofxTLRegisterPlaybackEvents(this);
+	//ofxTLRegisterPlaybackEvents(this);
 
 	ofAddListener(ofEvents().update, this, &ofxTLAntescofoNote::update);
-
-	// print input ports to console
-	//midiIn.listPorts(); // via instance
-	// open port by number (you may need to change this)
-	//currentInPort = 1;
-	//midiIn.openPort(currentInPort);
-	//currentOutPort = 1;
-	//midiOut.openPort(currentOutPort);
-
-	// add testApp as a listener
-	//midiIn.addListener(this);
-	// print received messages to the console
-	//midiIn.setVerbose(false);
 
 	//noteFont.loadFont ("Boulez.ttf", 10, true, true, true);
 	noteImage = new ofImage();

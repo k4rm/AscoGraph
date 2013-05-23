@@ -33,6 +33,8 @@
 - (void) loadFile: (string) filename;
 - (void) getEditorContent: (string&) content;
 - (void) searchText:(string) str;
+- (int) searchNreplaceText:(string)str str2:(string)str2;
+- (void) searchNext: (string) str;
 - (void) setWrapMode:(bool)mode;
 - (void) replaceString:(int)linea lineb:(int)lineb str:(const char *)str;
 - (void) set_normal_keywords: (const char*)normal_keywords_;

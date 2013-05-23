@@ -334,6 +334,10 @@ public:
 	{
 		return clicked; 
 	}
+	void setClicked()
+	{
+		clicked = true;
+	}
 	
 	ofxUILabel *getLabel()
 	{
