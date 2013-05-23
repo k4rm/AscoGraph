@@ -42,6 +42,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
     bSetupDone = false;
     editor = 0;
     bShouldRedraw = true;
+    bLineWrapMode = false;
     audioTrack = NULL;
 	
     if (argc > 1) mScore_filename = argv[1];
@@ -108,6 +109,11 @@ void ofxAntescofog::menu_item_hit(int n)
 	    bAutoScroll = !bAutoScroll;
 	    cout << "Setting autoscroll mode:" << bAutoScroll << endl; 
             ofxAntescofoNote->setAutoScroll(bAutoScroll);
+            break;
+	case INT_CONSTANT_BUTTON_LINEWRAP:
+	    bLineWrapMode = !bLineWrapMode;
+	    cout << "Setting line wrapping mode:" << bLineWrapMode << endl; 
+	    [ editor setWrapMode:bLineWrapMode ];
             break;
         case INT_CONSTANT_BUTTON_PLAY:
         {
@@ -281,6 +287,10 @@ void ofxAntescofog::setupUI() {
     id autoscrollMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Automatic Scroll" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
     [autoscrollMenuItem setTag:INT_CONSTANT_BUTTON_AUTOSCROLL];
     [viewMenu addItem:autoscrollMenuItem];
+    // line wrap mode
+    id lineWrapModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Line Wrapping" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+    [lineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
+    [viewMenu addItem:lineWrapModeMenuItem];
 
     [viewMenuItem setSubmenu:viewMenu];
     [menubar addItem:viewMenuItem];

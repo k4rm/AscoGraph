@@ -34,6 +34,7 @@
 #define INT_CONSTANT_BUTTON_START       12
 #define INT_CONSTANT_BUTTON_STOP        13
 #define INT_CONSTANT_BUTTON_SAVE_AS     14
+#define	INT_CONSTANT_BUTTON_LINEWRAP    15
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -52,6 +53,7 @@
 #define TEXT_CONSTANT_BUTTON_SPEED              "Accompaniment speed : "
 #define TEXT_CONSTANT_BUTTON_SNAP               "Snap to grid"
 #define TEXT_CONSTANT_BUTTON_AUTOSCROLL         "Auto Scroll"
+#define TEXT_CONSTANT_BUTTON_LINEWRAP		"Toggle line wrapping"
 #define TEXT_CONSTANT_BUTTON_PLAY               "Play"
 #define TEXT_CONSTANT_BUTTON_START              "Start"
 #define TEXT_CONSTANT_BUTTON_STOP               "Stop"
@@ -139,7 +141,7 @@ class ofxAntescofog : public ofBaseApp{
 		int score_line_space;
 
 		int bpm;
-		bool bSnapToGrid, bAutoScroll, bSetupDone;
+		bool bSnapToGrid, bAutoScroll, bSetupDone, bLineWrapMode;
 		string tmpfilename; // file to store converted MusicXML file to Antescofo score
 		string mScore_filename;
 

@@ -234,6 +234,13 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 	[mEditor setStatusText: @"Operation complete"];
 }
 
+
+- (void) setWrapMode:(bool)mode
+{
+	[mEditor setGeneralProperty: SCI_SETWRAPMODE parameter:mode value:mode];
+}
+
+
 //--------------------------------------------------------------------------------------------------
 
 /* XPM */
