@@ -74,6 +74,8 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 		virtual float interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBeatKeyframe* end, float sampleBeat);
 		virtual void willDeleteKeyframe(ofxTLBeatKeyframe* keyframe);
 
+		bool get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coord2, int* firsti, int* lasti);
+
 		//easing dialog stuff
 		void initializeEasings();
 		ofVec2f easingWindowPosition;

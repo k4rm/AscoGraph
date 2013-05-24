@@ -1155,7 +1155,7 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 		//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
 		// add track
 		if (values.size() && delays.size() && (*(values.begin())).size()) {
-			trackName = string("CURVE ") + varname;
+			trackName = string("CURVE ") + parentCurve->label + string(" ") +varname;
 			string uniqueName = _timeline->confirmedUniqueName(trackName);
 
 			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
@@ -1245,7 +1245,7 @@ FloatValue* ActionCurve::get_new_y(Expression* y) {
 void ActionCurve::deleteKeyframeAtBeat(float beat) {
 	if (beat == 0) {
 		//set_dur_val(val, simple_vect->begin());
-		abort();
+		//abort();
 		return;
 	}
 
@@ -1344,7 +1344,8 @@ void ActionCurve::addKeyframeAtBeat(float beat, float val)
 					vector<SimpleContFunction>::iterator sp = s; sp--;
 					AnteDuration* ad = new AnteDuration(d);
 					FloatValue* ny1 = get_new_y(sp->y1);
-					assert(ny1);
+					//assert(ny1);
+					cout << "addKeyframeAtBeat:ERROR : not an constant value in curve...." << endl;
 					FloatValue* ny0 = new FloatValue(val);
 					s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var));
 					dur_vect->insert(k, ad);

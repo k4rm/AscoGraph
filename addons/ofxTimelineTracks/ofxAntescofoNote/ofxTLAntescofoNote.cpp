@@ -1356,6 +1356,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	for (vector<Event *>::iterator i = score->begin(); i != score->end(); i++)
 	{
 		Event *e = *i;
+		if (!e->isEvent()) continue;
 		if (e->gfwd) {
 			Gfwd *g = e->gfwd;
 			oss.str(""); oss.clear();
@@ -1384,7 +1385,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->startSelected = newSwitch->endSelected = false;
 					newSwitch->beat.min = beatmulti;
 					newSwitch->beat.max = newSwitch->beat.min + durmulti*2/3;
-					newSwitch->pitch = abs(*m) > 1000 ? *m / 100 : *m;
+					newSwitch->pitch = abs(*m) > 1000 ? abs(*m) / 100 : abs(*m);
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;
 					if (bGot_Action && m == e->multi_source.begin())  { // associate action with first MULTI switch
@@ -1416,7 +1417,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->startSelected = newSwitch->endSelected = false;
 					newSwitch->beat.min = beatmulti + durmulti/3;
 					newSwitch->beat.max = newSwitch->beat.min + durmulti*2/3;
-					newSwitch->pitch = abs(*m) > 1000 ? *m / 100 : *m;
+					newSwitch->pitch = abs(*m) > 1000 ? abs(*m) / 100 : abs(*m);
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;
 					// get location in text score
@@ -1442,7 +1443,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->startSelected = newSwitch->endSelected = false;
 			newSwitch->beat.min = e->beatcum;
 			newSwitch->beat.max = newSwitch->beat.min + e->beat_duration;
-			newSwitch->pitch = abs(e->pitch_list[0]) > 1000 ? e->pitch_list[0] / 100 : e->pitch_list[0];
+			newSwitch->pitch = abs(e->pitch_list[0]) > 1000 ? abs(e->pitch_list[0]) / 100 : abs(e->pitch_list[0]);
 			newSwitch->velocity = 127;
 			newSwitch->channel = 1;
 			if (bGot_Action)  {
@@ -1450,6 +1451,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				add_action(e->beatcum, actstr, e);
 			}
 			// get location in text score
+			if (!e->scloc) cout << *e;
 			assert(e->scloc);
 			newSwitch->lineNum_begin = e->scloc->begin.line;
 			newSwitch->colNum_begin = e->scloc->begin.column;
@@ -1478,7 +1480,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				newSwitch->startSelected = newSwitch->endSelected = false;
 				newSwitch->beat.min = e->beatcum;
 				newSwitch->beat.max = newSwitch->beat.min + e->beat_duration;
-				newSwitch->pitch = abs(e->pitch_list[p]) > 1000 ? e->pitch_list[p] / 100 : e->pitch_list[p];
+				newSwitch->pitch = abs(e->pitch_list[p]) > 1000 ? abs(e->pitch_list[p]) / 100 : abs(e->pitch_list[p]);
 				newSwitch->velocity = 127;
 				newSwitch->channel = 1;
 				newSwitch->lineNum_begin = e->scloc->begin.line;
@@ -1510,7 +1512,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->startSelected = newSwitch->endSelected = false;
 					newSwitch->beat.min = e->beatcum ;//+ e->beat_duration/3;
 					newSwitch->beat.max = newSwitch->beat.min + e->beat_duration; //*2/3;
-					newSwitch->pitch = abs(*r) > 1000 ? *r / 100 : *r;
+					newSwitch->pitch = abs(*r) > 1000 ? abs(*r) / 100 : abs(*r);
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;
 					if (bGot_Action)  {
@@ -1582,7 +1584,7 @@ void ofxTLAntescofoNote::setScore(Score* s) {
 float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mOsc_tempo, float mOsc_pitch) {
 
 	//if (mOsc_tempo == 0) cerr << "Error null tempo returned by Antescofo, skipping a division by zero..." << endl;
-	if (mOsc_beat == 0) return 0;
+	//if (mOsc_beat == 0) return 0;
 
 	float r = timeline->beatToMillisec(mOsc_beat) / 1000;
 	//timeline->setCurrentTimeSeconds(r);
