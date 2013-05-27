@@ -1,6 +1,6 @@
 /*
 
-  Copyright (C) 2003-2007  Grame
+  Copyright (C) 2003-2013 Thomas Coffy
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -16,9 +16,8 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  Grame Research Laboratory, 9 rue du Garet, 69001 Lyon - France
-  research@grame.fr
-
+  thomas.coffy@ircam.fr
+  http://repmus.ircam.fr/antescofo
 */
 
 #include <sstream>

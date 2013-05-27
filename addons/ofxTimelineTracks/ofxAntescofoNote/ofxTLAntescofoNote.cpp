@@ -1,5 +1,8 @@
 /**
- * ofxTimeline
+ * ofxTLAntescofoNote : pianoroll/staffview for Antescofo score langage
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ *
+ * derived from ofxTimeline
  *	
  * Copyright (c) 2011 James George
  * http://jamesgeorge.org + http://flightphase.com
@@ -94,7 +97,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	inArmed = false;
 	outArmed = false;
 	shouldCreateNewSwitch = false;
-	noteRange = ofRange(58, 88) ;// ofRange(10,110);
+	noteRange = ofRange(58, 88);
 	color_gui_bg = ofColor(30, 110, 110);
 
 	bounds.height = 275;
@@ -204,7 +207,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 	ofFill();
 	// draw piano roll
 	int piano_width = 20;
-	for (int i = noteRange.max; i >= noteRange.min; i--) { // && i * rowHeight < bounds.height; i++) 
+	for (int i = noteRange.max; i >= noteRange.min; i--) {
 		int j = noteRange.max - i;
 		int n = i % 12;
 		if (n == 0 || n == 2 || n == 4 || n == 5 || n == 7 || n == 9 || n == 11) {
@@ -224,103 +227,6 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 		ofLine(bounds.x, bounds.y + j * rowHeight, bounds.x + bounds.width, bounds.y + j * rowHeight);
 	}
 
-	/* // draw note number guides
-		 ofSetColor(255, 255, 255, 160);
-		 for (int i = noteRange.max; i >= noteRange.min; i--) {
-		 string noteNumber = ofToString(i);
-	//string noteNumber = ofToString(ofMap(i, 0, noteRange.span(), noteRange.max, noteRange.min));
-	//ofDrawBitmapString(noteNumber, 3, bounds.y + (i-noteRange.min) * rowHeight + rowHeight / 2.0f + 4);
-	ofDrawBitmapString(noteNumber, 3, bounds.y + (noteRange.max - i) * rowHeight + rowHeight / 2.0f + 4);
-	}*/
-	// draw beat bars
-	/*    ofSetColor(0);
-				for (int i = 0; i < 200; i++) {
-				float startX =  normalizedXtoScreenX( beatToNormalizedX(i%4), zoomBounds);
-				ofLine(startX, bounds.y, startX+2, bounds.y+bounds.height);
-				}
-				*/
-	/* commented by karm
-	// Draw BG
-	ofFill();
-	ofSetColor(guiBGColor);
-	drawGuiBG(portInButtonBounds);
-
-	// Draw Text
-	if(portInHover) {
-	ofSetColor(0, 255, 255);
-	} else {
-	ofSetColor(255);
-	}
-	string portGuiString = "In: " + midiIn.getName();
-	drawLabel(portGuiString, portInButtonBounds);
-
-	******************* Arm In GUI
-	if(inArmed) {
-	ofSetColor(255,0,0);
-	} else {
-	ofSetColor(guiBGColor);
-	}
-	// draw state-colored BG
-	drawGuiBG(armInButtonBounds);
-	// draw text
-	ofSetColor(255);
-	drawLabel("Arm", armInButtonBounds);
-	*/
-	//************************ Range GUI
-	// draw label
-	/*
-	ofSetColor(0);
-	drawLabel("Range:", rangeLabelBounds);
-
-	// draw min bg
-	ofSetColor(color_gui_bg);
-	drawGuiBG(rangeMinSliderBounds);
-	// draw min text
-	ofSetColor(0);
-	drawLabel(ofToString(noteRange.min), rangeMinSliderBounds);
-
-	// draw max bg
-	ofSetColor(color_gui_bg);
-	drawGuiBG(rangeMaxSliderBounds);
-	// draw max text
-	ofSetColor(0);
-	drawLabel(ofToString(noteRange.max), rangeMaxSliderBounds);
-
-	ofSetColor(color_gui_bg);
-	drawGuiBG(rangeTrimButtonBounds);
-	ofSetColor(0);
-	drawLabel("Trim", rangeTrimButtonBounds);
-	*/
-	//************************
-	/*t
-	****** Port Out GUI
-
-	// Draw BG
-	ofFill();
-	ofSetColor(guiBGColor);
-	drawGuiBG(portOutButtonBounds);
-
-	// Draw Text
-	if(portOutHover) {
-	ofSetColor(0, 255, 255);
-	} else {
-	ofSetColor(255);
-	}
-	drawLabel("Out: " + midiOut.getName(), portOutButtonBounds);
-
-	// ********* Arm In GUI
-	if(outArmed) {
-	ofSetColor(255,0,0);
-	} else {
-	ofSetColor(guiBGColor);
-	}
-	// draw state-colored BG
-	drawGuiBG(armOutButtonBounds);
-	// draw text
-	ofSetColor(255);
-	drawLabel("Arm", armOutButtonBounds);
-	*/	//************************
-
 	// draw notes
 	if(switches.size() > 0) {
 		float zoomMinX = bounds.x;
@@ -335,7 +241,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					if (abs(switches[i]->pitch) > noteRange.max || abs(switches[i]->pitch) < noteRange.min) continue; // don't draw note outside range
 					ofFill();
 
-					setNoteColor(i); //ofSetColor(color_note);
+					setNoteColor(i);
 					// set color to transparent when selected
 					if(switches[i]->startSelected && switches[i]->endSelected) ofSetColor(color_note_selected);
 					if (abs(switches[i]->pitch) && switches[i]->beat.span() == 0) ofSetColor(color_note, 100); // grace note
@@ -415,11 +321,6 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 						ofLine(noteBounds.x + noteBounds.width/2, noteBounds.y + noteBounds.height/2,
 								noteBounds2.x + noteBounds2.width/2, noteBounds2.y + noteBounds2.height/2);
 					}
-					/* if (switches[i]->type == ANTESCOFO_TRILL) {
-						 ostringstream str;
-						 str << "got trill: pitch:" << switches[i]->pitch <<  " min:" << switches[i]->beat.min <<  " max:" << switches[i]->beat.max;
-						 console->addln(str.str());
-						 }*/
 				} else { // draw a rest note
 					ofNoFill();
 					int rest_pseudoPitch_ymin = noteRange.min;
@@ -505,52 +406,9 @@ void ofxTLAntescofoNote::draw_showStaves() {
 	float score_line_w = bounds.width;// - score_line_x - score_line_interval;
 	float score_line_h = 1;
 
-	/*
-	// buttons
-	ofSetColor(255);
-	drawLabel("Range:", rangeLabelBounds);
-
-	// draw min bg
-	ofSetColor(color_gui_bg);
-	drawGuiBG(rangeMinSliderBounds);
-	// draw min text
-	ofSetColor(255);
-	drawLabel(ofToString(noteRange.min), rangeMinSliderBounds);
-
-	// draw max bg
-	ofSetColor(color_gui_bg);
-	drawGuiBG(rangeMaxSliderBounds);
-	// draw max text
-	ofSetColor(255);
-	drawLabel(ofToString(noteRange.max), rangeMaxSliderBounds);
-
-	ofSetColor(color_gui_bg);
-	drawGuiBG(rangeTrimButtonBounds);
-	ofSetColor(255);
-	drawLabel("Trim", rangeTrimButtonBounds);
-	*/
 	float rowHeight = bounds.height / (noteRange.span()+1);
 
 	ofSetColor(color_staves_fg, 180);
-	//ofRect(score_line_x, score_line_y, score_line_w, score_line_h);
-	/* for (int i = 0; i < 5; i++) {
-		 ofRect(score_line_x, score_line_y + i * score_line_space, score_line_w, score_line_h);
-		 std::cout << "Drawing line : " << score_line_x << ", " << score_line_y + i * score_line_space << ", " << score_line_w<< ", " << score_line_h << std::endl;
-		 }*/
-	// notes
-	/* for (int i = 0; i <= noteRange.span() && i * rowHeight < bounds.height; i++) {
-		 if (i)
-
-		 int n = i % 12; // 0:C
-
-		 if (n == 0) || n == 2 || n == 4 || n == 5 || n == 7 || n == 9 || n == 11) {
-		 ofSetColor(255, 255, 255, 240);
-		 ofRect(bounds.x, bounds.y + i * rowHeight, piano_width, rowHeight);
-
-		 ofSetColor(color_range_white);
-		 */
-
-
 	// draw staves :
 	ofSetColor(0, 0, 0, 155);
 	int staves[10] = { 77, 74, 71, 67, 64, 57, 53, 50, 47, 43 };
@@ -575,13 +433,9 @@ void ofxTLAntescofoNote::draw_showStaves() {
 					int yy = bounds.y + rowHeight* ofMap(staves[0], noteRange.max, noteRange.min, 0, noteRange.span());
 					int hh = rowHeight* ofMap(staves[9], noteRange.max, noteRange.min, 0, noteRange.span());
 					if (switches[i]->label.size()) {
-						//cout << "ofxTLAntescofoNote: label:"<< switches[i]->label << endl;
-
 						ofLine(startX, yy, startX, bounds.y + hh);
 					}
-					//ofDrawBitmapString(switches[i]->label.substr(7, switches[i]->label.size()), startX, yy - 4);
-					ofSetColor(0, 0, 0, 255);//105);
-					//ofDrawBitmapString(switches[i]->label, startX, yy - 4);
+					ofSetColor(0, 0, 0, 255);
 					mFont.drawString(switches[i]->label, startX, yy - 4);
 					ofSetColor(0, 0, 0, 255);
 				}
@@ -685,7 +539,6 @@ void ofxTLAntescofoNote::draw_showStaves() {
 
 void ofxTLAntescofoNote::autoscroll() {
 	static float lastpos = 0;
-//#ifdef AUTOSCROLL_BROKEN
 	// was : float pos = timeline->getPercentComplete();
 	float pos = mCurSecs / mDur_in_secs;
 	if (bAutoScroll && mDur_in_secs && lastpos != pos) {
@@ -709,44 +562,13 @@ void ofxTLAntescofoNote::autoscroll() {
 			//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
 			zoom->setViewRange(z);
 			//zoom->setSelectedRange(z);
-#if 0
-			float logSpan = powf(z.span(), 2.0);
-			//recompute view range
-			c = ofMap(pos, z.span()/2, 1.0 - z.span()/2, logSpan/2, 1.0-logSpan/2);
-			cout << "c="<<c << endl;
-
-			//z.min = ofClamp(pos - c, 0, 1); z.max = ofClamp(pos + c, 0, 1);
-			z = ofRange(c - logSpan/2, c + logSpan/2);
-			//zoom->setSelectedRange(ofRange(c - logSpan/2, c + logSpan/2));
-			zoom->setSelectedRange(z);
-#endif
-
-			//zoom->setSelectedRange(z);
 			//zoom->setViewRange(z);
-			/*
-			ofRange n;//(pos - d/2, pos + d/2);
 
-			//if (r.min - d/2 <= pos) n.min = ofClamp(pos-d/2, 0, r.min + .01);
-			//if (r.max + d/2 >= pos) n.max = ofClamp(pos+d/2, r.max + .01, 1);
-
-			//if (pos >= r.max || pos <= r.min)
-			{
-				//  cout << "EXTRAAAAAAAAAAAA"<<endl;
-
-				if (n.min <= 0) n.min = 0;
-				if (n.max >= 1.0) n.max = 1;
-
-				zoom->setViewRange(n);
-			} 
-			*/
 			lastpos = pos;
 		}
 
-		// page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
+		// TODO page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
 	}
-//#endif
-
-
 }
 
 void ofxTLAntescofoNote::draw_playhead() {
@@ -760,7 +582,6 @@ void ofxTLAntescofoNote::draw_playhead() {
 
 void ofxTLAntescofoNote::draw() {
 	ofPushStyle();
-	//**** DRAW BORDER
 	ofNoFill();
 	if(hover){
 		ofSetColor(timeline->getColors().highlightColor);
@@ -941,13 +762,9 @@ void ofxTLAntescofoNote::mouseMoved(ofMouseEventArgs& args, long millis){
 		hoverSwitch->startHovered = hoveringStartTime;
 		hoverSwitch->endHovered = !hoveringStartTime;
 	}
-
-	portInHover = portInButtonBounds.inside(args.x, args.y);
-	portOutHover = portOutButtonBounds.inside(args.x, args.y);
 	*/
 }
 
-//TODO: account for snapping
 void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //bool snapped){
 #if 0
 	//cout << "mouseDragged: "<< args.x<<", "<<args.y << ", millis:"<< millis << endl ;
@@ -1123,19 +940,6 @@ void ofxTLAntescofoNote::keyPressed(ofKeyEventArgs& args){
 
 void ofxTLAntescofoNote::nudgeBy(ofVec2f nudgePercent){
 	cerr << "TODO implement ofxTLAntescofoNote::nudgeBy()" << endl;
-#if 0
-	for(int i = 0; i < switches.size(); i++)
-		if(switches[i]->startSelected){
-			switches[i]->time.min += nudgePercent.x; 
-		}
-	if(switches[i]->endSelected){
-		switches[i]->time.max += nudgePercent.x; 
-	}		
-}
-
-//	if(autosave) save();
-#endif
-
 }
 
 ofxTLAntescofoNoteOn* ofxTLAntescofoNote::switchForScreenXY(float screenPos, int y){
@@ -1207,8 +1011,6 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 					{
 						if(e->multi_event>0)
 						{
-
-							cout << "getnotetype multi" << endl;
 							return ANTESCOFO_MULTI; // MULTI TRILL XXX
 						}
 						return ANTESCOFO_TRILL;
@@ -1229,7 +1031,6 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 						{
 							if(e->multi_event>0)
 							{
-								cout << "getnotetype multi2" << endl;
 								return ANTESCOFO_MULTI;
 							}
 						} else {
@@ -1333,8 +1134,6 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 	ostringstream str;
 	str << "Duration ------------------ score size : " << score->size() << "."<< endl;
-	//for (vector<Event *>::iterator i = score->begin(); i != score->end(); i++)
-	//	    cout << "Duration ------------------ beatcum: " << (*i)->beatcum << "."<< endl;
 	vector<Event *>::iterator i = score->end();
 	i--; // duration is the last element index
 	float dur_in_beats = (*i)->beatcum + (*i)->beat_duration;
@@ -1372,7 +1171,6 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 		cout << "getNoteType0" << endl;
 		int newtype = getNoteType(e);
-		//str << ">>>>>>>> got newtype " << newtype << " isMarkov:"<< e->isMarkov << " pitchsize:" << e->pitch_list.size(); console->addln(str.str()); str.str("");
 		if ((e->pitch_list.size() == 1 && e->beat_duration) || (e->pitch_list.size() && e->pitch_list[0] && !e->beat_duration)) { // NOTE, TRILL, MULTI
 			//if (newtype == -1) continue;
 			if (newtype == ANTESCOFO_MULTI) {
@@ -1458,7 +1256,6 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->lineNum_end = e->scloc->end.line;
 			newSwitch->colNum_end = e->scloc->end.column;
 			newSwitch->label = e->cuename;
-			//if (newSwitch->label.compare(0, 7, "measure") == 0)                 newSwitch->measure = newSwitch->label.substr(7, newSwitch->label.size());
 			switches.push_back(newSwitch);
 			line2note[e->scloc->begin.line] = switches.size() - 1;
 			str << "added new switch: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
@@ -1668,8 +1465,6 @@ string ofxTLAntescofoNote::getXMLStringForSwitches(bool selectedOnly){
 		if(!selectedOnly || (switches[i]->startSelected && switches[i]->endSelected)){
 			settings.addTag("note");
 			settings.pushTag("note",notesAdded);
-			//TIME settings.addValue("startTime", switches[i]->time.min);
-			//TIME settings.addValue("endTime", switches[i]->time.max);
 			settings.addValue("startBeat", switches[i]->beat.min);
 			settings.addValue("endBeat", switches[i]->beat.max);
 			settings.addValue("pitch", switches[i]->pitch);
@@ -1760,7 +1555,6 @@ vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromXML(ofxXmlSettings
 			ofxTLAntescofoNoteOn* newSwitch = new ofxTLAntescofoNoteOn();
 			newSwitch->startSelected = newSwitch->endSelected = false;
 			xmlStore.pushTag("note", i);
-			//TIME newSwitch->time.min = xmlStore.getValue("startTime",0.0);
 			newSwitch->beat.min = xmlStore.getValue("startBeat",0.0);
 			newSwitch->beat.max = xmlStore.getValue("endBeat",0.0);
 			newSwitch->pitch = xmlStore.getValue("pitch",0);
@@ -1787,12 +1581,10 @@ vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromMusicXML(string fi
 
 	xmlreader r;
 	SXMLFile xmlfile;
-	//xmlfile = r.read("/Volumes/Data/Coffy/ofx/of_v0072_osx_release/apps/myApps/Antescofog/libmusicxml-2.00-src/files/samples/musicxml/BeetAnGeSample.xml");
 	xmlfile = r.read(filename.c_str());
 	if (xmlfile) {
 		Sxmlelement st = xmlfile->elements();
 		if (st) {
-			//AntescofoWriter = xml2antescofo(xmlfile, false, std::cout, NULL);
 			xml2antescofovisitor v(*AntescofoWriter, true, true, false);
 			Santescofoelement as = v.convert(st);
 
@@ -1812,7 +1604,6 @@ vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromMusicXML(string fi
 
 
 string ofxTLAntescofoNote::copyRequest(){
-	//	cout << "copy request" << endl;
 	return getXMLStringForSwitches(true);
 }
 
@@ -1826,58 +1617,11 @@ string ofxTLAntescofoNote::cutRequest(){
 			switches.erase(switches.begin()+i);
 		}
 	}	
-
-	//	if(autosave) save();
-
 	return switchString;
 }
 
 void ofxTLAntescofoNote::pasteSent(string pasteboard){
 	cerr << "ofxTLAntescofoNote::pasteSent: TODO" << endl;
-#if 0
-	//	cout << "pasting " << pasteboard << endl;
-	ofxXmlSettings pasted;
-	pasted.loadFromBuffer(pasteboard);
-	vector<ofxTLAntescofoNoteOn*> newSwitches = switchesFromXML(pasted);
-	if(newSwitches.size() == 0){
-		return;
-	}
-
-	timeline->unselectAll();
-	//move switches relative to the playhead
-	float playheadPercent = timeline->getPercentComplete();
-	float basePercent = newSwitches[0]->time.min;
-	for(int i = 0; i < newSwitches.size(); i++){
-		//		cout << "pasted time is " << newSwitches[i]->time << endl;
-		newSwitches[i]->time += playheadPercent - basePercent;
-		//		cout << "repositioned time " << newSwitches[i]->time << endl;
-		newSwitches[i]->time.clamp(ofRange(0,1.0)); 
-		//		cout << "clamped time " << newSwitches[i]->time << endl;
-	}
-
-	//validate switch as not overlapping with any other switches
-	float playheadJumpPoint = -1;
-	for(int i = 0; i < newSwitches.size(); i++){
-		for(int s = 0; s < switches.size(); s++){
-			if(newSwitches[i]->time.intersects(switches[s]->time)){
-				delete newSwitches[i];
-				newSwitches[i] = NULL;
-				break;
-			}
-		}
-		if(newSwitches[i] != NULL){
-			switches.push_back(newSwitches[i]);
-			playheadJumpPoint = newSwitches[i]->time.max; 
-		}
-
-	}
-	if(playheadJumpPoint != -1 && timeline->getMovePlayheadOnPaste()){
-		timeline->setPercentComplete( playheadJumpPoint );
-	}
-
-	sort(switches.begin(), switches.end(), switchsort);
-	//	if(autosave) save();
-#endif
 }
 
 void ofxTLAntescofoNote::missedAll(){
@@ -1924,18 +1668,6 @@ void ofxTLAntescofoNote::playbackStarted(ofxTLPlaybackEventArgs& args){
 }
 void ofxTLAntescofoNote::playbackLooped(ofxTLPlaybackEventArgs& args){
 	cerr << "ofxTLAntescofoNote::playbackLooped: TODO" << endl;
-#if 0
-	for(int i = 0; i < switches.size(); i++){
-		// stop all notes at end of timeline
-		if(switches[i]->growing){
-			switches[i]->growing = false;
-			switches[i]->time.max = 1.0;
-		}
-		// reset trigger states to allow retriggers
-		switches[i]->triggeredOn = false;
-		switches[i]->triggeredOff = false;
-	}
-#endif
 }
 void ofxTLAntescofoNote::playbackEnded(ofxTLPlaybackEventArgs& args){
 	endActiveNotes();
@@ -1943,16 +1675,6 @@ void ofxTLAntescofoNote::playbackEnded(ofxTLPlaybackEventArgs& args){
 
 void ofxTLAntescofoNote::endActiveNotes() {
 	cerr << "ofxTLAntescofoNote::endActiveNotes: TODO" << endl;
-#if 0
-
-	for(int i = 0; i < switches.size(); i++){
-		if(switches[i]->growing) {
-			switches[i]->growing = false;
-			switches[i]->time.max = timeline->getPercentComplete();
-		}
-	}
-#endif
-
 }
 
 bool ofxTLAntescofoNote::isSwitchInBounds(ofxTLAntescofoNoteOn* s){
@@ -1960,11 +1682,8 @@ bool ofxTLAntescofoNote::isSwitchInBounds(ofxTLAntescofoNoteOn* s){
 	return zoomBounds.intersects(r);
 }
 
-// XXX
 void ofxTLAntescofoNote::updateDragOffsets(float clickX){
 	for(int i = 0; i < switches.size(); i++){
-		//TIME switches[i]->dragOffsets = ofRange(clickX - normalizedXtoScreenX(switches[i]->time.min, zoomBounds),
-		//TIME								   clickX - normalizedXtoScreenX(switches[i]->time.max, zoomBounds));
 		switches[i]->dragOffsets = ofRange(clickX - normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds),
 				clickX - normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds));
 	}
@@ -1981,10 +1700,6 @@ int ofxTLAntescofoNote::howManySwitchesAreSelected(){
 }
 
 void ofxTLAntescofoNote::unselectAll(){
-	//	if(ofGetModifierKeyShift()){
-	//		return;
-	//	}
-
 	for(int i = 0; i < switches.size(); i++){
 		switches[i]->startSelected = false;
 		switches[i]->endSelected = false;
@@ -2014,11 +1729,7 @@ ofxTLAntescofoNoteOn* ofxTLAntescofoNote::nearestGrowingNoteBeforePointWithPitch
 	float nearest = 1.0;
 	ofxTLAntescofoNoteOn* nearestSwitch = NULL;
 	for(int i = 0; i < switches.size(); i++){
-		//		if (switches[i]->time.max > percent) {
-		//			break;
-		//		}
 		float percent_x = timeline->beatToNormalizedX(switches[i]->beat.min);
-		//if(percent - switches[i]->time.min < nearest && switches[i]->pitch == pitch && switches[i]->growing){
 		if(percent - percent_x < nearest && switches[i]->pitch == pitch && switches[i]->growing){
 			nearest = percent - percent_x;
 			nearestSwitch = switches[i];
@@ -2038,14 +1749,6 @@ void ofxTLAntescofoNote::addNote(float beat, int pitch, int velocity, bool growi
 	newNote->velocity = velocity;
 	newNote->beat.min = beat;
 	newNote->beat.max = beat + 1;
-#if 0
-	if(!growing) {
-		double oneMeasure = 60 / timeline->getBPM();
-		double halfMeasure = oneMeasure/2;
-		double quarterMeasure = halfMeasure/2;
-		newNote->time.max = time + ofMap(quarterMeasure, 0, timeline->getDurationInSeconds(), 0, 1);
-	}
-#endif
 	newNote->growing = growing;
 	newNote->channel = channel;
 	newNote->startHovered = false;
@@ -2054,13 +1757,12 @@ void ofxTLAntescofoNote::addNote(float beat, int pitch, int velocity, bool growi
 	newNote->triggeredOff = false;
 	switches.push_back(newNote);
 	sort(switches.begin(), switches.end(), switchsort);
-	//	if(autosave) save();
 	drawRectChanged();
 }
 
 void ofxTLAntescofoNote::trimRange() {
 	if(switches.size() > 0) {
-		ofRange newRange = ofRange(58, 74); //switches[0]->pitch, switches[0]->pitch);
+		ofRange newRange = ofRange(58, 74);
 		for (int i = 0; i < switches.size(); i++) {
 			if (switches[i]->pitch == 0) continue; // handle rest note
 			if (switches[i]->pitch > newRange.max) {
@@ -2075,16 +1777,11 @@ void ofxTLAntescofoNote::trimRange() {
 
 void ofxTLAntescofoNote::drawRectChanged(){
 	guiHeaderHeight = 13;
-	//ofRectangle startRect = ofRectangle(bounds.x + 100 - guiXPadding, 0, 0, guiHeaderHeight);
-	ofRectangle startRect = ofRectangle(bounds.x + bounds.width - /*220*/ 165 - guiXPadding, 0, 0, guiHeaderHeight);
-	//portInButtonBounds = getBoundsEastOf(startRect, "In: " + midiIn.getName());
-	//armInButtonBounds = getBoundsEastOf(portInButtonBounds, "Arm");
+	ofRectangle startRect = ofRectangle(bounds.x + bounds.width - 165 - guiXPadding, 0, 0, guiHeaderHeight);
 	rangeLabelBounds = getBoundsEastOf(startRect, "Range");
 	rangeMinSliderBounds = getBoundsEastOf(rangeLabelBounds, ofToString(noteRange.min));
 	rangeMaxSliderBounds = getBoundsEastOf(rangeMinSliderBounds, ofToString(noteRange.max));
 	rangeTrimButtonBounds = getBoundsEastOf(rangeMaxSliderBounds, "Trim");
-	//portOutButtonBounds = getBoundsEastOf(rangeTrimButtonBounds, "Out: " + midiOut.getName());
-	//armOutButtonBounds = getBoundsEastOf(portOutButtonBounds, "Arm");
 }
 
 ofRectangle ofxTLAntescofoNote::getBoundsEastOf(ofRectangle anchor, string label){

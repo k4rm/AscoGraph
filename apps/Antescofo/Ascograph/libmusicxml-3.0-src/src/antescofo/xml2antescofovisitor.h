@@ -1,25 +1,23 @@
 /*
 
-  MusicXML Library
-  Copyright � Grame 2007
+  Copyright (C) 2003-2013 Thomas Coffy
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-    
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-    
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-    Grame Research Laboratory, 9, rue du Garet 69001 Lyon - France
-    research@grame.fr
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+  thomas.coffy@ircam.fr
+  http://repmus.ircam.fr/antescofo
 */
 
 #ifndef __xml2antescofovisitor__
@@ -35,7 +33,6 @@
 #include "typedefs.h"
 #include "visitor.h"
 #include "xml.h"
-//#include "xmlpart2antescofo.h"
 #include "antescofowriter.h"
 
 namespace MusicXML2 
@@ -72,11 +69,11 @@ class EXP xml2antescofovisitor :
 	// the antescofo elements stack
 	std::stack<Santescofoelement>	fStack;
 	bool	fGenerateComments, fGenerateStem, fGenerateBars, fGeneratePositions;
-	
-	scoreHeader		fHeader;		// musicxml header elements (should be flushed at the beginning of the first voice)
+
+	scoreHeader	fHeader;		// musicxml header elements (should be flushed at the beginning of the first voice)
 	partHeaderMap	fPartHeaders;	// musicxml score-part elements (should be flushed at the beginning of each part)
-	std::string		fCurrentPartID;
-	int				fCurrentStaffIndex;		// the index of the current antescofo staff
+	std::string	fCurrentPartID;
+	int		fCurrentStaffIndex;		// the index of the current antescofo staff
 
 	void start (Santescofoelement& elt)		{ fStack.push(elt); }
 	void add (Santescofoelement& elt)		{ fStack.top()->add(elt); }
@@ -84,30 +81,30 @@ class EXP xml2antescofovisitor :
 	void pop ()							{ fStack.pop(); }
 
 
-	void flushHeader	 ( scoreHeader& header );
+	void flushHeader ( scoreHeader& header );
 	void flushPartHeader ( partHeader& header );
 
 	protected:
 
-		virtual void visitStart( S_score_partwise& elt);
-		virtual void visitStart( S_movement_title& elt);
-		virtual void visitStart( S_creator& elt);
-		virtual void visitStart( S_score_part& elt);
-		virtual void visitStart( S_part_name& elt);
-		virtual void visitStart( S_part& elt);
-		Santescofoelement& current ()				{ return fStack.top(); }
+	virtual void visitStart( S_score_partwise& elt);
+	virtual void visitStart( S_movement_title& elt);
+	virtual void visitStart( S_creator& elt);
+	virtual void visitStart( S_score_part& elt);
+	virtual void visitStart( S_part_name& elt);
+	virtual void visitStart( S_part& elt);
+	Santescofoelement& current ()	{ return fStack.top(); }
 
-    public:
-				 xml2antescofovisitor(antescofowriter& w, bool generateComments, bool generateStem, bool generateBar=true);
-		virtual ~xml2antescofovisitor() {}
+	public:
+	xml2antescofovisitor(antescofowriter& w, bool generateComments, bool generateStem, bool generateBar=true);
+	virtual ~xml2antescofovisitor() {}
 
-		Santescofoelement convert (const Sxmlelement& xml);
+	Santescofoelement convert (const Sxmlelement& xml);
 
-		antescofowriter& w;
+	antescofowriter& w;
 
-		// this is to control exact positionning of elements when information is present
-		// ie converts relative-x/-y into dx/dy attributes
-		void generatePositions (bool state)		{ fGeneratePositions = state; }
+	// this is to control exact positionning of elements when information is present
+	// ie converts relative-x/-y into dx/dy attributes
+	void generatePositions (bool state)		{ fGeneratePositions = state; }
 
 	static void addPosition	 ( Sxmlelement elt, Santescofoelement& tag, int yoffset);
 };

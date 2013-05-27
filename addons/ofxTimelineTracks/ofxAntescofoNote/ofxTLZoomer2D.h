@@ -1,5 +1,13 @@
 /**
- * ofxZoomer2D
+ * ofxTLZoomer2D : a 2D zoom track for ofxTimeline
+ * part of AscoGraph : an Antescofo musical score editor
+ *
+ * http://repmus.ircam.fr/mutant/ascograph
+ *
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ *
+ * derived from ofxTimeline
+
  * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
@@ -64,7 +72,7 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 	
 	//this set is NON exponential, but normalized 0-1
 	void setViewRange(ofRange newRange);
-  ofRange getSelectedRange(); //non exponential
+	ofRange getSelectedRange(); //non exponential
 	void setSelectedRange(ofRange newRange);
   private:
 
@@ -73,7 +81,6 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 	void notifyZoomEnded();
 
 	ofRange currentViewRange;
-//	ofRange currentLogViewRange;
 
 	float xMaxGrabOffset, xMinGrabOffset;
 	float yGrabOffset;
@@ -83,8 +90,4 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 	bool minSelected;
 	bool maxSelected;
 	bool midSelected;
-	
-//	bool pointInScreenBounds(ofVec2f screenpoint);
-//	float screenXtoRangeX(float x);
-//	float rangeXtoScreenX(float x);
 };

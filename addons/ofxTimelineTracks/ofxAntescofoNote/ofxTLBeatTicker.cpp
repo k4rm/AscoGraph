@@ -1,9 +1,9 @@
 //
 //  ofxTLBeatTicker.cpp
-//  ofxAntescofog
+//  part of AscoGraph : graphical editor for Antescofo musical scores.
 //
 //  Created by Thomas Coffy on 06/12/12.
-//
+//  Licensed under the Apache License : http://www.apache.org/licenses/LICENSE-2.0
 //
 #include <algorithm>
 #include <string>

@@ -1,6 +1,9 @@
 /**
- * ofxTLAntescofoNotes.cpp
- *	
+ * ofxTLAntescofoNote : pianoroll/staffview for Antescofo score langage
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ *
+ * derived from ofxTimeline
+ *
  * Copyright (c) 2011 James George
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
@@ -185,10 +188,6 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofColor color_resize_note;
 	ofColor color_note_rest;
 	ofColor color_resize_note_rest, color_key, color_text, color_highlight, color_disabled, color_modalBg, color_outline;
-
-	//    ofColor color_range_impair(255, 255, 255, 240);
-	//    ofColor color_range_pair(255, 255, 255, 225);
-
 
 	protected:
 	virtual void update(ofEventArgs& args);

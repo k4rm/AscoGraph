@@ -1,5 +1,9 @@
 /**
- * ofxTimeline
+ * ofxTLMultiCurves : continuous Curve objects editing in Antescofo score langage
+ *
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ *
+ * derived from ofxTimeline
  * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
@@ -70,13 +74,8 @@ class ofxTLMultiCurves : public ofxTLTrack {
 
   protected:
 	
-
-    //virtual ofxTLKeyframe* newKeyframe();
-    //virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
-    //virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
-    
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);	
-		virtual float interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBeatKeyframe* end, float sampleBeat);
+    virtual float interpolateValueForKeys(ofxTLBeatKeyframe* start, ofxTLBeatKeyframe* end, float sampleBeat);
 
     vector<ofxTLBeatCurves*> curves;
     int howmany;

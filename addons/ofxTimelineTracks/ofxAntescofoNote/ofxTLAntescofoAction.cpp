@@ -1,9 +1,9 @@
 //
 //  ofxAntescofoAction.cpp
-//  ofxAntescofog
+//  part of AscoGraph : graphical editor for Antescofo musical scores.
 //
 //  Created by Thomas Coffy on 06/12/12.
-//
+//  Licensed under the Apache License : http://www.apache.org/licenses/LICENSE-2.0
 //
 #include <sstream>
 #include <algorithm>
@@ -117,125 +117,6 @@ void ofxTLAntescofoAction::drawBitmapStringHighlight(string text, int x, int y, 
 
 void ofxTLAntescofoAction::add_action_curves(float beatnum, ActionGroup *ar, Curve *c) 
 { 
-#if 0
-	if (c) {
-		cout << "got Cfwd: " << c->label() << endl; 
-		Display_cfwd* d = new Display_cfwd();
-		d->label = c->label();
-		CfwdStep* s = c->_continuous_step;
-		double dou = 0.;
-
-		// TODO get _beta
-
-		// get grain
-		if (s->_grain) {
-			FloatValue *fgrain = dynamic_cast<FloatValue*>(s->_grain->value());
-			if (fgrain) {
-				dou = fgrain->get_double();
-				cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
-				d->grain = dou;
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>(s->_grain->value());
-				if (in) {
-					dou = fgrain->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
-					d->grain = dou;
-				}
-			}
-		}
-		// get values
-		vector< vector <double> >::iterator vvalues = d->values.begin();
-		for (std::vector< std::vector<Expression*>* >::const_iterator j = c->_values_vector.begin(); j != c->_values_vector.end(); j++) {
-			vector<double> hvalues;// = d->values.begin();
-			for (std::vector<Expression* >::const_iterator k = (*j)->begin(); k != (*j)->end(); k++) {
-				FloatValue* f = dynamic_cast<FloatValue*>(*k);
-				if (f) {
-					dou = f->get_double();
-					cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
-					hvalues.push_back(dou);
-				} else {
-					IntValue* in = dynamic_cast<IntValue*>(*k);
-					if (in) {
-						dou = in->get_int();
-						cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
-						hvalues.push_back(dou);
-					}
-				}
-			}
-			//cout << "ofxTLAntescofoAction::add_action: push values:" << endl;
-			d->values.push_back(hvalues);
-		}
-		// get delays
-		for (std::vector<AnteDuration*>::const_iterator j = c->_delays_vector.begin(); j != c->_delays_vector.end(); j++) {
-			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
-			if (f) {
-				dou = f->get_double();
-				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
-				d->delays.push_back(dou);
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>((*j)->value());
-				if (in) {
-					dou = in->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
-					d->delays.push_back(dou);
-				}
-			}
-		}
-		ar->cfwd = d;
-		cout << "ofxTLAntescofoAction::add_action: delays size:" << d->delays.size() << endl;
-	}
-
-	//for (int n = 0; n < ar->cfwd->delays.size(); n++) { cout << " ------- delays " << ar->cfwd->delays[n] << endl; }
-	// add track
-	if (ar && ar->cfwd && ar->cfwd->values.size() && ar->cfwd->delays.size() && (*(ar->cfwd->values.begin())).size()) {
-		string trackName = string("CFWD ") + ar->cfwd->label;
-		string xmlFileName;
-		if(xmlFileName == ""){
-			string uniqueName = getTimeline()->confirmedUniqueName(trackName);
-			xmlFileName = ofToDataPath("GUI/" + uniqueName + "_.xml");
-		}
-
-		int howmany = (*(ar->cfwd->values.begin())).size();
-		ofxTLMultiCurves* curves = new ofxTLMultiCurves();
-		curves->clear();
-		curves->disable();
-		getTimeline()->addTrack(trackName, curves);
-		curves->setHowmany(howmany);
-		ar->trackName = trackName;
-
-		// set values ranges
-		int j = 0; 
-		for (int j = 0; j < howmany; j++) {
-			float min = 0, max = 0;
-			for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-				if (min > (*i)[j]) min = (*i)[j];
-				if (max < (*i)[j]) max = (*i)[j];
-			}
-			curves->setValueRangeMax(j, max);
-			cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
-			cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
-			curves->setValueRangeMin(j, min);
-		}
-
-		// set keyframes
-		for (int n = 0; n < howmany; n++) {
-			double dcumul = 0.;
-			for (int k = 0; k < ar->cfwd->delays.size(); k++) {
-				//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
-				dcumul += ar->cfwd->delays[k];
-				//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-				cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << timeline->beatToMillisec(ar->beatnum + dcumul)
-					<< " val=" <<  ar->cfwd->values[k][n] << endl;
-
-				//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
-				curves->addKeyframeAtBeatAtCurveId(n, ar->cfwd->values[k][n], ar->beatnum + dcumul);
-				// }
-			}
-
-			curves->enable();
-		}
-	}
-#endif
 }
 
 int ofxTLAntescofoAction::get_x(float beat) {
@@ -281,20 +162,11 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 		if (e->gfwd && e->gfwd->delay() && e->gfwd->delay()->value() && e->gfwd->delay()->value()->is_value())
 			delay = (double)e->gfwd->delay()->eval();
 		ActionGroupHeader *header = new ActionGroupHeader(beatnum, delay, e->gfwd, e);
-		/*
-		for (vector<Action*>::const_iterator i = e->gfwd->actions().begin(); i != e->gfwd->actions().end(); i++) {
-			Cfwd* c = dynamic_cast<Cfwd*>(*i);
-			if (c) 
-				add_action_curves(beatnum, ar, c);
-		}
-		*/
-
 		// store for future use
 		mActionGroups.push_back(header);
 
 	}
 
-	// TODO add nested event
 	if (mActionGroups.size()) {
 		enable();
 		// ensure zoom track is at the bottom
@@ -500,9 +372,6 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		list<ActionGroupHeader*>::const_iterator j = i;
 
-		//ofRange r(_timeline->screenXtoNormalizedX(header->rect.x, tlAction->getZoomBounds()), _timeline->screenXtoNormalizedX(header->rect.x + header->rect.width, tlAction->getZoomBounds()));
-		//if (++j != mActionGroups.end() && (zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum)) || zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum) + (*j)->duration)) ) {
-		//if (++j != mActionGroups.end() && zoomBounds.contains(timeline->beatToNormalizedX((*j)->beatnum))) {
 		if (++j != mActionGroups.end() && (*i)->group->is_in_bounds(this) ) {
 			if ( ((*i)->rect.x + (*i)->rect.width) + 1 >= (*j)->rect.x) {
 				update_avoid_overlap_rec((*i)->group, (*j)->rect.x /*- (*i)->rect.x*/ - 2);
@@ -510,34 +379,11 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 		}
 		//cout << "Action hearder height:"  << (*i)->rect.height <<" x:" << bounds.x << endl;
 	}
-#if 0 //TODO should do 
-	list<ActionGroup*>::const_iterator g;
-	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
-		if (! ag->header->top_level_group) {
-			(*g)->header->rect.y += ag->header->HEADER_HEIGHT;
-			break;
-		}
-	}
-	// loop rec ?
-#endif
-#if 0
-	// check maximum height, and set track height
-	float maxh = 0;
-	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
-		if (maxh < (*i)->rect.height)
-			maxh = (*i)->rect.height;
-
-	if (maxh > bounds.height) {
-		bounds.height = maxh;
-		//cout << "ofxTLAntescofoAction update_avoid_overlap: changing action track size:" << maxh << endl;
-	}
-#endif
 }
 
 // for updating subgroups y
 int ofxTLAntescofoAction::update_sub_y(ActionGroup *ag)
 {
-
 	/*
 	// go deep and assign each header rect.y
 	list<ActionGroup*>::const_iterator g;
@@ -1691,192 +1537,3 @@ bool ActionGroupHeader::is_in_arrow(int x, int y)
 	return res;
 }
 
-
-/*
-ActionLoop::ActionLoop(Lfwd *l, float delay_, Event *e, ActionGroupHeader* header_)
-	: lfwd(l)
-{
-	delay = delay_;
-	header = header_;
-	if (l) {
-		cout << "got Loop: " << l->label() << endl; 
-		label = l->label();
-		double dou = 0.;
-
-		if (l->_period) {
-			period = l->_period->eval();
-		}
-		if (l->_group)
-			ActionGroup *g = new ActionGroup(l->_group, event, header);
-	}
-}
-
-
-void ActionLoop::draw(ofxTLAntescofoAction *tlAction)
-{
-
-
-}
-
-void ActionLoop::print()
-{
-	cout << "**** Action Loop: " << label << " period:" << period<< endl;
-}
-
-
-*/
-
-
-
-
-/* old cfwd:
-ActionCurve::ActionCurve(Cfwd* c, float delay_, Event *e, ActionGroupHeader* header_)
-{
-	delay = delay_;
-	header = header_;
-	if (c) {
-		cout << "got Curve: " << c->label() << endl; 
-		label = c->label();
-		CfwdStep* s = c->_continuous_step;
-		double dou = 0.;
-
-		// TODO get _beta
-
-		// get grain
-		if (s->_grain) {
-			FloatValue *fgrain = dynamic_cast<FloatValue*>(s->_grain->value());
-			if (fgrain) {
-				dou = fgrain->get_double();
-				cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
-				grain = dou;
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>(s->_grain->value());
-				if (in) {
-					dou = fgrain->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got grain:" << dou << endl;
-					grain = dou;
-				}
-			}
-		}
-		// get values
-		vector< vector <double> >::iterator vvalues = values.begin();
-		for (std::vector< std::vector<Expression*>* >::const_iterator j = c->_values_vector.begin(); j != c->_values_vector.end(); j++) {
-			vector<double> hvalues;// = d->values.begin();
-			for (std::vector<Expression* >::const_iterator k = (*j)->begin(); k != (*j)->end(); k++) {
-				FloatValue* f = dynamic_cast<FloatValue*>(*k);
-				if (f) {
-					dou = f->get_double();
-					cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
-					hvalues.push_back(dou);
-				} else {
-					IntValue* in = dynamic_cast<IntValue*>(*k);
-					if (in) {
-						dou = in->get_int();
-						cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
-						hvalues.push_back(dou);
-					}
-				}
-			}
-			//cout << "ofxTLAntescofoAction::add_action: push values:" << endl;
-			values.push_back(hvalues);
-		}
-		// get delays
-		for (std::vector<AnteDuration*>::const_iterator j = c->_delays_vector.begin(); j != c->_delays_vector.end(); j++) {
-			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
-			if (f) {
-				dou = f->get_double();
-				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
-				delays.push_back(dou);
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>((*j)->value());
-				if (in) {
-					dou = in->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
-					delays.push_back(dou);
-				}
-			}
-		}
-		cout << "ofxTLAntescofoAction::add_action: delays size:" << delays.size() << endl;
-	}
-
-	//for (int n = 0; n < ar->cfwd->delays.size(); n++) { cout << " ------- delays " << ar->cfwd->delays[n] << endl; }
-
-	// add track
-	if (values.size() && delays.size() && (*(values.begin())).size()) {
-		trackName = string("CURVE ") + label;
-		string uniqueName = _timeline->confirmedUniqueName(trackName);
-
-		int howmany = (*(values.begin())).size();
-		if (howmany == 1) { // mono curves
-			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
-			_timeline->addTrack(trackName, curves);
-
-			// set values ranges
-			int j = 0; 
-			for (int j = 0; j < howmany; j++) { // useless lazy copy-pasted loop from below
-				float min = 0, max = 0;
-				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
-					if (min > (*i)[j]) min = (*i)[j];
-					if (max < (*i)[j]) max = (*i)[j];
-				}
-				curves->setValueRangeMax(max);
-				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
-				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
-				curves->setValueRangeMin(min);
-			}
-			// set keyframes
-			for (int n = 0; n < howmany; n++) { // useless lazy copy-pasted loop from below
-				double dcumul = 0.;
-				for (int k = 0; k < delays.size(); k++) {
-					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
-					dcumul += delays[k];
-					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
-						<< " val=" <<  values[k][n] << endl;
-
-					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
-					curves->addKeyframeAtBeat(values[k][n], header->beatnum + dcumul);
-					// }
-				}
-				curves->enable();
-			}
-		} else { // multicurves
-			ofxTLMultiCurves* multicurves = new ofxTLMultiCurves();
-			multicurves->clear();
-			multicurves->disable();
-			_timeline->addTrack(trackName, multicurves);
-			multicurves->setHowmany(howmany);
-
-			// set values ranges
-			int j = 0; 
-			for (int j = 0; j < howmany; j++) {
-				float min = 0, max = 0;
-				for (vector< vector<double> >::iterator i = values.begin(); i != values.end(); i++) {
-					if (min > (*i)[j]) min = (*i)[j];
-					if (max < (*i)[j]) max = (*i)[j];
-				}
-				multicurves->setValueRangeMax(j, max);
-				cout << "ofxTLAntescofoAction::add_action: CFWD value max: "<< max << endl;
-				cout << "ofxTLAntescofoAction::add_action: CFWD value min: "<< min << endl;
-				multicurves->setValueRangeMin(j, min);
-			}
-			// set keyframes
-			for (int n = 0; n < howmany; n++) {
-				double dcumul = 0.;
-				for (int k = 0; k < delays.size(); k++) {
-					//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
-					dcumul += delays[k];
-					//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
-					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << n << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
-						<< " val=" <<  values[k][n] << endl;
-
-					//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
-					multicurves->addKeyframeAtBeatAtCurveId(n, values[k][n], header->beatnum + dcumul);
-					// }
-				}
-				multicurves->enable();
-			}
-		} // end multicurves
-	}
-
-}*/

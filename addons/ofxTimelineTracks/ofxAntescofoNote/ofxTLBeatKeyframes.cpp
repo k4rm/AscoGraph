@@ -1,5 +1,9 @@
 /**
- * ofxTimeline
+ * ofxTLBeatKeyframes : continuous Curve objects editing in Antescofo score langage
+ *
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ *
+ * derived from ofxTimeline
  * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George

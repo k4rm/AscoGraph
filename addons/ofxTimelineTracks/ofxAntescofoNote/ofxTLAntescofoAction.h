@@ -1,10 +1,11 @@
 //
 //  ofxAntescofoAction.h
-//  ofxAntescofog
+//  part of AscoGraph : graphical editor for Antescofo musical scores.
 //
 //  Created by Thomas Coffy on 06/12/12.
+//  Licensed under the Apache License : http://www.apache.org/licenses/LICENSE-2.0
 //
-//
+
 #pragma once
 
 #include <iostream>
@@ -16,7 +17,6 @@
 
 class ofxAntescofog;
 class Score;
-//class Event;
 class ofxTLAntescofoNote;
 class Curve;
 class ActionRect;
@@ -28,7 +28,6 @@ class Display_cfwd {
 		string label;
 		double grain;
 		vector< vector<double> > values;
-		//std::vector<double> values; 
 		vector<double> delays;
 };
 
@@ -68,18 +67,12 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		virtual void save();
 		virtual void load();
-
-		/*
-		float normalizedXtoScreenX_(float x, ofRange z) { return normalizedXtoScreenX(x, z); }
-		ofRectangle getBounds() { return bounds; }
-		*/
 		ofRange getZoomBounds() { return zoomBounds; }
 		ofRectangle getBoundedRect(ofRectangle& r);
 		
 		void setNoteTrack(ofxTLAntescofoNote* o) { ofxAntescofoNote = o; }
 		ofxTLAntescofoNote *ofxAntescofoNote;
 		void setScore(Score* s);
-		//bool mousePressed_In_Arrow(ofMouseEventArgs& args, list<ActionRect*> actionrects);
 		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
 		void add_action(float beatnum, string action, Event *e);
 		void add_action_curves(float beatnum, ActionGroup *ar, Curve *c);
@@ -195,23 +188,6 @@ class ActionCurve : public ActionGroup {
 
 };
 
-/*
-class ActionLoop : public ActionGroup {
-	public:
-		ActionLoop(Lfwd *l, float delay_, Event *e, ActionGroupHeader* header_);
-		virtual ~ActionLoop() {}
-
-		virtual void draw(ofxTLAntescofoAction *tlAction);
-		virtual void print();
-		string action;
-		double delay;
-		ActionGroup *group;
-		Lfwd *lfwd;
-
-		string label;
-		float period;
-};
-*/
 
 class ActionGroupHeader {
 	public:

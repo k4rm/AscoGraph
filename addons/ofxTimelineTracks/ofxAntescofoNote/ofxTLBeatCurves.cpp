@@ -1,5 +1,9 @@
 /**
- * ofxTimeline
+ * ofxTLBeatCurves : continuous Curve objects editing in Antescofo score langage
+ *
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ *
+ * derived from ofxTimeline
  * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
@@ -67,18 +71,6 @@ ofxTLBeatKeyframe* ofxTLBeatCurves::newKeyframe(){
 }
 
 
-#if 0
-//easetype: ofSetColor(150, 100, 10);
-void ofxTLCurves::setColor_EasetypeSel(ofColor &col) {
-	mColor_easeTypeSel = col;
-}
-//ofSetColor(80, 80, 80);
-void ofxTLCurves::setColor_EasetypeDefault(ofColor &col) {
-	mColor_easeTypeDefault = col;
-}
-#endif
-
-
 void ofxTLBeatCurves::drawModalContent(){
 	//cout << "ofxTLBeatCurves::drawModalContent() " << endl;
 
@@ -99,11 +91,9 @@ void ofxTLBeatCurves::drawModalContent(){
 		//TODO turn into something like selectionContainsEaseType();
 		//so that we can show the multi-selected easies
 		if(easingTypes[i] ==  ((ofxTLTweenBeatKeyframe*)selectedKeyframes[0])->easeType){
-			//ofSetColor(mColor_easeTypeSel);
 			ofSetColor(150, 100, 10);
 		}
 		else{
-			//ofSetColor(mColor_easeTypeDefault); 
 			ofSetColor(80, 80, 80);
 		}
 		ofFill();
@@ -123,11 +113,9 @@ void ofxTLBeatCurves::drawModalContent(){
 	for(int i = 0; i < easingFunctions.size(); i++){
 		//TODO: turn into something like selectionContainsEaseFunc();
 		if(easingFunctions[i] == tweenFrame->easeFunc){
-			//ofSetColor(mColor_easeTypeSel);
 			ofSetColor(150, 100, 10);
 		}
 		else{
-			//ofSetColor(mColor_easeTypeDefault);
 			ofSetColor(80, 80, 80);
 		}
 		ofFill();
@@ -537,112 +525,6 @@ void ofxTLBeatCurves::initializeEasings(){
 
 }
 
-#if 0
-void ofxTLBeatCurves::draw(){
-	//cout << "ofxTLBeatCurves::draw" << endl;
-
-	//cout << "ofxTLBeatCurves::draw(): bw:"<< bounds.width << " bh:" << bounds.height  << endl;
-	if(bounds.width == 0 || bounds.height < 2 || keyframes.empty()){
-		return;
-	}
-
-	if(shouldRecomputePreviews || viewIsDirty){
-		recomputePreviews();
-	}
-
-	ofPushStyle();
-	ofFill();
-
-	// draw rect around curves
-	//ofVec2f beginPoint = screenPositionForKeyframe(keyframes[0]);
-	//ofVec2f endPoint = screenPositionForKeyframe(keyframes[keyframes.size() - 1]);
-
-	ofSetColor(keyColor, 30);
-	//ofSetColor(0, 0, 0, 30);
-	//ofRect(beginPoint.x , bounds.y, endPoint.x - beginPoint.x, bounds.height);
-
-	//draw current value indicator as a big transparent rectangle
-	//ofSetColor(timeline->getColors().disabledColor, 30);
-	ofSetColor(disabledColor);
-
-
-	//******* DRAW FILL CURVES
-	ofSetPolyMode(OF_POLY_WINDING_NONZERO);
-	ofBeginShape();
-	ofVec2f screenpoint;
-	for (int i = 0; i < keyframes.size(); i++){
-		if (isKeyframeIsInBounds(keyframes[i])){
-			ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
-			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
-			if(keysAreDraggable){
-				//string frameString = timeline->formatTime(keyframes[i]->beat);
-				timeline->getFont().drawString(ofToString(keysValue, 2), screenpoint.x+5, screenpoint.y-5);
-			}
-			//ofCircle(screenpoint.x, screenpoint.y, 200);
-			//cout << "x:" <<screenpoint.x << " y:" << screenpoint.y << endl;
-			ofVertex(screenpoint.x, screenpoint.y);
-		}
-	}
-	// draw edges
-	if (keyframes.size()) {
-		// last point
-		screenpoint = screenPositionForKeyframe(keyframes[keyframes.size()-1]);
-		ofVertex(screenpoint.x, bounds.getMaxY()); // right low corner of rect
-		// first point
-		screenpoint = screenPositionForKeyframe(keyframes[0]);
-		ofVertex(screenpoint.x, bounds.getMaxY()); // right low corner of rect
-		ofVertex(screenpoint.x, screenpoint.y);  
-	}
-	ofEndShape();
-	//***** DRAW KEYFRAME LINES
-	//ofSetColor(timeline->getColors().keyColor);
-	ofSetColor(keyColor);
-	ofNoFill();
-
-	preview.draw();
-
-	//**** DRAW KEYFRAME DOTS
-
-	//**** HOVER FRAME
-	if(hoverKeyframe != NULL){
-		ofPushStyle();
-		ofFill();
-		//ofSetColor(timeline->getColors().highlightColor);
-		ofSetColor(highlightColor);
-		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
-		cout << "ofxTLBeatCurves::highlight: " << hoverKeyPoint.x << " : " << hoverKeyPoint.y << endl;
-		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
-		ofPopStyle();
-	}
-
-	//**** ALL CACHED VISIBLE KEYS
-	ofSetColor(timeline->getColors().textColor);
-	ofNoFill();
-	for(int i = 0; i < keyPoints.size(); i++){
-		ofRect(keyPoints[i].x-1, keyPoints[i].y-1, 3, 3);
-	}
-
-	//**** SELECTED KEYS
-	ofSetColor(timeline->getColors().textColor);
-	ofFill();
-	for(int i = 0; i < selectedKeyframes.size(); i++){
-		if(isKeyframeIsInBounds(selectedKeyframes[i])) {
-			ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[i]);
-			float keysValue = ofMap(selectedKeyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
-			if(keysAreDraggable){
-				//string frameString = timeline->formatTime(selectedKeyframes[i]->time);
-				timeline->getFont().drawString(ofToString(keysValue, 2), screenpoint.x+5, screenpoint.y-5);
-			}
-			ofCircle(screenpoint.x, screenpoint.y, 4);
-			//cout << "ofxTLKeyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
-		}
-	}
-
-	ofPopStyle();
-}
-#else
-
-
 void ofxTLBeatCurves::recomputePreviews(){
 	preview.clear();
 
@@ -900,8 +782,3 @@ void ofxTLBeatCurves::draw(){
 
 	ofPopStyle();
 }
-#endif
-
-
-// save
-

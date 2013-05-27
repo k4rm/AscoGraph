@@ -25,673 +25,647 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[], ofxCocoaWindow* window) {
 	mouseX = mouseY = 0;
 	cocoaWindow = window;
 #else
-	ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
+ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 #endif
-		console = new ofxConsole(4, 500, 800, 300, 10);
-		bShowColorSetup = false;
-		bShowOSCSetup = false;
-		bSnapToGrid = true;
-		mHasReadMessages = false;
-		fAntescofoTimeSeconds = 0;
-		bAutoScroll = false;
-		bColorSetupInitDone = false;
-		bFindTextInitDone = false;
-		bOSCSetupInitDone = false;
-		bShowError = false;
-		bShowFind = false;
-		bErrorInitDone = false;
-		bEditorShow = true;
-		bSetupDone = false;
-		editor = 0;
-		bShouldRedraw = true;
-		bLineWrapMode = false;
-		audioTrack = NULL;
+	console = new ofxConsole(4, 500, 800, 300, 10);
+	bShowColorSetup = false;
+	bShowOSCSetup = false;
+	bSnapToGrid = true;
+	mHasReadMessages = false;
+	fAntescofoTimeSeconds = 0;
+	bAutoScroll = false;
+	bColorSetupInitDone = false;
+	bFindTextInitDone = false;
+	bOSCSetupInitDone = false;
+	bShowError = false;
+	bShowFind = false;
+	bErrorInitDone = false;
+	bEditorShow = true;
+	bSetupDone = false;
+	editor = 0;
+	bShouldRedraw = true;
+	bLineWrapMode = false;
+	audioTrack = NULL;
 
-		if (argc > 1) mScore_filename = argv[1];
+	if (argc > 1) mScore_filename = argv[1];
 
-		gettimeofday(&last_draw_time, 0);
-	}
+	gettimeofday(&last_draw_time, 0);
+}
 
 
-	void ofxAntescofog::menu_item_hit(int n)
-	{
-		switch (n) {
-			case INT_CONSTANT_BUTTON_LOAD:
-				{
-					ofFileDialogResult openFileResult = ofSystemLoadDialog(TEXT_CONSTANT_TITLE_LOAD_SCORE);
-					if (openFileResult.bSuccess){
-						string f = openFileResult.filePath;
-						ofLogVerbose("Selected file: " + f);
-						loadScore(f);
-					} else {
-						ofLogVerbose("Cancel load score hit.");
-					}
-					break;
-				}
-			case INT_CONSTANT_BUTTON_RELOAD:
-				ofxAntescofoNote->clear(); // TODO ask for Saving file
-				loadScore(mScore_filename);
-				break;
-			case INT_CONSTANT_BUTTON_SAVE:
-				ofLogVerbose("Save score hit");
-				saveScore();
-				break;
-			case INT_CONSTANT_BUTTON_SAVE_AS:
-				ofLogVerbose("Save As score hit");
-				saveAsScore();
-				break;
-			case INT_CONSTANT_BUTTON_COLORSETUP:
-				if (!bShowColorSetup) {
-					timeline.disable();
-					bShowColorSetup = true;
-					bShowOSCSetup = false;
-					bShowFind = false;
-					guiBottom->disable();
-				} 
-				break;
-			case INT_CONSTANT_BUTTON_OSCSETUP:
-				if (!bShowOSCSetup) {
-					timeline.disable();
-					bShowColorSetup = false;
-					bShowOSCSetup = true;
-					guiBottom->disable();
+void ofxAntescofog::menu_item_hit(int n)
+{
+	switch (n) {
+		case INT_CONSTANT_BUTTON_LOAD:
+			{
+				ofFileDialogResult openFileResult = ofSystemLoadDialog(TEXT_CONSTANT_TITLE_LOAD_SCORE);
+				if (openFileResult.bSuccess){
+					string f = openFileResult.filePath;
+					ofLogVerbose("Selected file: " + f);
+					loadScore(f);
+				} else {
+					ofLogVerbose("Cancel load score hit.");
 				}
 				break;
-			case INT_CONSTANT_BUTTON_TOGGLEVIEW:
-				ofxAntescofoNote->toggleView();
-				break;
-			case INT_CONSTANT_BUTTON_TOGGLEEDIT:
-				setEditorMode(!bEditorShow, 0);
-				break;
-			case INT_CONSTANT_BUTTON_SNAP:
-				bSnapToGrid = !bSnapToGrid;
-				cout << "Setting SnapToGrid to : " << bSnapToGrid << endl;
-				timeline.setShowBPMGrid(bSnapToGrid);
-				timeline.enableSnapToBPM(bSnapToGrid);
-				break;
-			case INT_CONSTANT_BUTTON_AUTOSCROLL:
-				bAutoScroll = !bAutoScroll;
-				cout << "Setting autoscroll mode:" << bAutoScroll << endl; 
-				ofxAntescofoNote->setAutoScroll(bAutoScroll);
-				break;
-			case INT_CONSTANT_BUTTON_LINEWRAP:
-				bLineWrapMode = !bLineWrapMode;
-				cout << "Setting line wrapping mode:" << bLineWrapMode << endl; 
-				[ editor setWrapMode:bLineWrapMode ];
-				break;
-			case INT_CONSTANT_BUTTON_FIND:
-				cout << "Setting find text mode" << endl; 
-				if (!bShowFind) {
-					timeline.disable();
-					bShowColorSetup = false;
-					bShowOSCSetup = false;
-					bShowFind = true;
-					guiBottom->disable();
-				}
-				break;
-			case INT_CONSTANT_BUTTON_PLAY:
-				{
-					ofxOscMessage m;
-					m.setAddress("/antescofo/cmd");
-					m.addStringArg("play");
-					mOSCsender.sendMessage(m);
-					break;
-				}
-			case INT_CONSTANT_BUTTON_START:
-				{
-					ofxOscMessage m;
-					m.setAddress("/antescofo/cmd");
-					m.addStringArg("start");
-					mOSCsender.sendMessage(m);
-					break;
-				}
-			case INT_CONSTANT_BUTTON_STOP:
-				{
-					ofxOscMessage m;
-					m.setAddress("/antescofo/cmd");
-					m.addStringArg("stop");
-					mOSCsender.sendMessage(m);
-					break;
-				}
-		}
-
-		bShouldRedraw = true;
-	}
-
-	static ofxAntescofog *fog;
-
-	@implementation ofxCocoaDelegate (ofxAntescofogAdditions)
-		- (void)menu_item_hit:(id)sender
-		{
-
-			NSMenuItem *i = (NSMenuItem*)sender;
-
-			//if (i) cout << "menu item button hit" << [i tag] << endl;
-			if (fog) {
-				fog->menu_item_hit([i tag]);
 			}
-		}
-
-	- (void) receiveNotification:(NSNotification *) notification
-	{
-		//NSLog([notification name]);
-		if ([[notification name] isEqualToString:@"DoubleClick"]) {
-
-			NSDictionary *userInfo = notification.userInfo;
-			int line = [[userInfo objectForKey:@"line"] intValue];
-			NSLog(@"DoubleClick on line: %d", line);
-			if (fog) {
-				fog->editorDoubleclicked(line);
+		case INT_CONSTANT_BUTTON_RELOAD:
+			ofxAntescofoNote->clear(); // TODO ask for Saving file
+			loadScore(mScore_filename);
+			break;
+		case INT_CONSTANT_BUTTON_SAVE:
+			ofLogVerbose("Save score hit");
+			saveScore();
+			break;
+		case INT_CONSTANT_BUTTON_SAVE_AS:
+			ofLogVerbose("Save As score hit");
+			saveAsScore();
+			break;
+		case INT_CONSTANT_BUTTON_COLORSETUP:
+			if (!bShowColorSetup) {
+				timeline.disable();
+				bShowColorSetup = true;
+				bShowOSCSetup = false;
+				bShowFind = false;
+				guiBottom->disable();
+			} 
+			break;
+		case INT_CONSTANT_BUTTON_OSCSETUP:
+			if (!bShowOSCSetup) {
+				timeline.disable();
+				bShowColorSetup = false;
+				bShowOSCSetup = true;
+				guiBottom->disable();
 			}
-		}
+			break;
+		case INT_CONSTANT_BUTTON_TOGGLEVIEW:
+			ofxAntescofoNote->toggleView();
+			break;
+		case INT_CONSTANT_BUTTON_TOGGLEEDIT:
+			setEditorMode(!bEditorShow, 0);
+			break;
+		case INT_CONSTANT_BUTTON_SNAP:
+			bSnapToGrid = !bSnapToGrid;
+			cout << "Setting SnapToGrid to : " << bSnapToGrid << endl;
+			timeline.setShowBPMGrid(bSnapToGrid);
+			timeline.enableSnapToBPM(bSnapToGrid);
+			break;
+		case INT_CONSTANT_BUTTON_AUTOSCROLL:
+			bAutoScroll = !bAutoScroll;
+			cout << "Setting autoscroll mode:" << bAutoScroll << endl; 
+			ofxAntescofoNote->setAutoScroll(bAutoScroll);
+			break;
+		case INT_CONSTANT_BUTTON_LINEWRAP:
+			bLineWrapMode = !bLineWrapMode;
+			cout << "Setting line wrapping mode:" << bLineWrapMode << endl; 
+			[ editor setWrapMode:bLineWrapMode ];
+			break;
+		case INT_CONSTANT_BUTTON_FIND:
+			cout << "Setting find text mode" << endl; 
+			if (!bShowFind) {
+				timeline.disable();
+				bShowColorSetup = false;
+				bShowOSCSetup = false;
+				bShowFind = true;
+				guiBottom->disable();
+			}
+			break;
+		case INT_CONSTANT_BUTTON_PLAY:
+			{
+				ofxOscMessage m;
+				m.setAddress("/antescofo/cmd");
+				m.addStringArg("play");
+				mOSCsender.sendMessage(m);
+				break;
+			}
+		case INT_CONSTANT_BUTTON_START:
+			{
+				ofxOscMessage m;
+				m.setAddress("/antescofo/cmd");
+				m.addStringArg("start");
+				mOSCsender.sendMessage(m);
+				break;
+			}
+		case INT_CONSTANT_BUTTON_STOP:
+			{
+				ofxOscMessage m;
+				m.setAddress("/antescofo/cmd");
+				m.addStringArg("stop");
+				mOSCsender.sendMessage(m);
+				break;
+			}
 	}
 
-	@end
+	bShouldRedraw = true;
+}
 
-		void ofxAntescofog::setupUI() {
-			id menubar = [[NSMenu new] autorelease];
-			id appMenu = [[NSMenu new] autorelease];
-			id appName = [[NSProcessInfo processInfo] processName];
-			[NSApp setMainMenu:menubar];
+static ofxAntescofog *fog;
 
-			cout << "Creating OSX Menus..." << endl;
-			//////////////////
-			// Application 
-			// . about
-			id appMenuItem = [[[NSMenuItem alloc] initWithTitle:appName action:NULL keyEquivalent:@""] autorelease];
-			NSString* title = [@"About " stringByAppendingString:appName];
-			[appMenu addItemWithTitle:title action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
+@implementation ofxCocoaDelegate (ofxAntescofogAdditions)
+	- (void)menu_item_hit:(id)sender
+{
 
-			// . color setup
-			id colorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Colors Setup" action:@selector(menu_item_hit:) keyEquivalent:@","] autorelease];
-			[colorMenuItem setTag:INT_CONSTANT_BUTTON_COLORSETUP];
-			[appMenu addItem:colorMenuItem];
+	NSMenuItem *i = (NSMenuItem*)sender;
 
-			// . OSC setup
-			id oscMenuItem = [[[NSMenuItem alloc] initWithTitle:@"OSC Setup" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[oscMenuItem setTag:INT_CONSTANT_BUTTON_OSCSETUP];
-			[appMenu addItem:oscMenuItem];
+	//if (i) cout << "menu item button hit" << [i tag] << endl;
+	if (fog) {
+		fog->menu_item_hit([i tag]);
+	}
+}
 
-			// . quit
-			id quitTitle = [@"Quit " stringByAppendingString:appName];
-			id quitMenuItem = [[[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"] autorelease];
-			[quitMenuItem setTag:INT_CONSTANT_BUTTON_QUIT];
-			[appMenu addItem:quitMenuItem];
-			[menubar addItem:appMenuItem];
-			[appMenuItem setSubmenu:appMenu];
+- (void) receiveNotification:(NSNotification *) notification
+{
+	//NSLog([notification name]);
+	if ([[notification name] isEqualToString:@"DoubleClick"]) {
 
-			//////////////////
-			// File
-			id fileMenu = [[[NSMenu new] autorelease] initWithTitle:@"File"];
-			id fileMenuItem = [[[NSMenuItem alloc] initWithTitle:@"File" action:NULL keyEquivalent:@""] autorelease];
-			// . load
-			NSString* txt = [@"" stringByAppendingString:@"Load score"];
-			id loadMenuItem = [[[NSMenuItem alloc] initWithTitle:txt action:@selector(menu_item_hit:) keyEquivalent:@"o"] autorelease];
-			[loadMenuItem setTag:INT_CONSTANT_BUTTON_LOAD];
-			[fileMenu addItem:loadMenuItem];
+		NSDictionary *userInfo = notification.userInfo;
+		int line = [[userInfo objectForKey:@"line"] intValue];
+		NSLog(@"DoubleClick on line: %d", line);
+		if (fog) {
+			fog->editorDoubleclicked(line);
+		}
+	}
+}
+@end
 
+void ofxAntescofog::setupUI() {
+	id menubar = [[NSMenu new] autorelease];
+	id appMenu = [[NSMenu new] autorelease];
+	id appName = [[NSProcessInfo processInfo] processName];
+	[NSApp setMainMenu:menubar];
 
-			// . reload
-			id reloadMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Reload current score" action:@selector(menu_item_hit:) keyEquivalent:@"r"] autorelease];
-			[reloadMenuItem setTag:INT_CONSTANT_BUTTON_RELOAD];
-			[fileMenu addItem:reloadMenuItem];
+	cout << "Creating OSX Menus..." << endl;
+	//////////////////
+	// Application 
+	// . about
+	id appMenuItem = [[[NSMenuItem alloc] initWithTitle:appName action:NULL keyEquivalent:@""] autorelease];
+	NSString* title = [@"About " stringByAppendingString:appName];
+	[appMenu addItemWithTitle:title action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
 
-			// . save 
-			id saveMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
-			[saveMenuItem setTag:INT_CONSTANT_BUTTON_SAVE];
-			[fileMenu addItem:saveMenuItem];
+	// . color setup
+	id colorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Colors Setup" action:@selector(menu_item_hit:) keyEquivalent:@","] autorelease];
+	[colorMenuItem setTag:INT_CONSTANT_BUTTON_COLORSETUP];
+	[appMenu addItem:colorMenuItem];
 
-			// . save as
-			id saveAsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score As" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
-			[saveAsMenuItem setTag:INT_CONSTANT_BUTTON_SAVE_AS];
-			[fileMenu addItem:saveAsMenuItem];
+	// . OSC setup
+	id oscMenuItem = [[[NSMenuItem alloc] initWithTitle:@"OSC Setup" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[oscMenuItem setTag:INT_CONSTANT_BUTTON_OSCSETUP];
+	[appMenu addItem:oscMenuItem];
 
+	// . quit
+	id quitTitle = [@"Quit " stringByAppendingString:appName];
+	id quitMenuItem = [[[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"] autorelease];
+	[quitMenuItem setTag:INT_CONSTANT_BUTTON_QUIT];
+	[appMenu addItem:quitMenuItem];
+	[menubar addItem:appMenuItem];
+	[appMenuItem setSubmenu:appMenu];
 
-			[fileMenuItem setSubmenu:fileMenu];
-			[menubar addItem:fileMenuItem];
-
-			//////////////////
-			// Edit
-			id editMenu = [[[NSMenu new] autorelease] initWithTitle:@"Edit"];
-			id editMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit" action:NULL keyEquivalent:@""] autorelease];
-			// . select all
-			id selectMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(menu_item_hit:) keyEquivalent:@"a"] autorelease];
-			[editMenuItem setTag:INT_CONSTANT_BUTTON_SELECTALL];
-			[editMenu addItem:selectMenuItem];
-			// . find
-			id findMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Find text" action:@selector(menu_item_hit:) keyEquivalent:@"f"] autorelease];
-			[findMenuItem setTag:INT_CONSTANT_BUTTON_FIND];
-			[editMenu addItem:findMenuItem];
-
-			[editMenuItem setSubmenu:editMenu];
-			[menubar addItem:editMenuItem];
-
-			//////////////////
-			// Transport
-			id transMenu = [[[NSMenu new] autorelease] initWithTitle:@"Transport"];
-			id transMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Transport" action:NULL keyEquivalent:@""] autorelease];
-			// . Play
-			id playMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Play" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[playMenuItem setTag:INT_CONSTANT_BUTTON_PLAY];
-			[transMenu addItem:playMenuItem];
-			// . Start
-			id startMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Start" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[startMenuItem setTag:INT_CONSTANT_BUTTON_START];
-			[transMenu addItem:startMenuItem];
-			// . Stop
-			id stopMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Stop" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[stopMenuItem setTag:INT_CONSTANT_BUTTON_STOP];
-			[transMenu addItem:stopMenuItem];
-
-			[transMenuItem setSubmenu:transMenu];
-			[menubar addItem:transMenuItem];
-
-			//////////////////
-			// View
-			id viewMenu = [[[NSMenu new] autorelease] initWithTitle:@"View"];
-			id viewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			// . toggle view
-			id toggleViewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[toggleViewMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEVIEW];
-			[viewMenu addItem:toggleViewMenuItem];
-			// . toggle editor
-			id toggleEditorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Editor" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[toggleEditorMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEEDIT];
-			[viewMenu addItem:toggleEditorMenuItem];
-			// . snap grid
-			id snapMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Snap to grid" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[snapMenuItem setTag:INT_CONSTANT_BUTTON_SNAP];
-			[viewMenu addItem:snapMenuItem];
-			// . autoscroll
-			id autoscrollMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Automatic Scroll" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[autoscrollMenuItem setTag:INT_CONSTANT_BUTTON_AUTOSCROLL];
-			[viewMenu addItem:autoscrollMenuItem];
-			// line wrap mode
-			id lineWrapModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Line Wrapping" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			[lineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
-			[viewMenu addItem:lineWrapModeMenuItem];
-
-			[viewMenuItem setSubmenu:viewMenu];
-			[menubar addItem:viewMenuItem];
+	//////////////////
+	// File
+	id fileMenu = [[[NSMenu new] autorelease] initWithTitle:@"File"];
+	id fileMenuItem = [[[NSMenuItem alloc] initWithTitle:@"File" action:NULL keyEquivalent:@""] autorelease];
+	// . load
+	NSString* txt = [@"" stringByAppendingString:@"Load score"];
+	id loadMenuItem = [[[NSMenuItem alloc] initWithTitle:txt action:@selector(menu_item_hit:) keyEquivalent:@"o"] autorelease];
+	[loadMenuItem setTag:INT_CONSTANT_BUTTON_LOAD];
+	[fileMenu addItem:loadMenuItem];
 
 
-			//////////////////
-			// Help
-			id helpMenu = [[[NSMenu new] autorelease] initWithTitle:@"Help"];
-			id helpMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Help" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-			//[helpMenu addItem:helpMenuItem];
-			[helpMenuItem setSubmenu:helpMenu];
-			[menubar addItem:helpMenuItem];
+	// . reload
+	id reloadMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Reload current score" action:@selector(menu_item_hit:) keyEquivalent:@"r"] autorelease];
+	[reloadMenuItem setTag:INT_CONSTANT_BUTTON_RELOAD];
+	[fileMenu addItem:reloadMenuItem];
 
-			//guiTop = new ofxUICanvas(0, 0, ofGetWindowWidth(), mUIbottom_y);//score_y);
-			//guiBottom = new ofxUICanvas(0, 2*ofGetWindowHeight()/3, ofGetWindowWidth(), 1*ofGetWindowHeight()/3);
-			guiBottom = new ofxUICanvas(0, 0, score_x+score_w, score_y);
-			guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight());
-			guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y);
-			guiSetup_Colors = new ofxUICanvas(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
-			guiFind = new ofxUICanvas(300, score_y, ofGetWindowWidth()-300, ofGetWindowHeight()-100-score_y);
+	// . save 
+	id saveMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
+	[saveMenuItem setTag:INT_CONSTANT_BUTTON_SAVE];
+	[fileMenu addItem:saveMenuItem];
 
-			guiBottom->setFont("DroidSansMono.ttf");
-			guiFind->setFont("DroidSansMono.ttf");
-			/*
-			   guiBottom->setFont("NewMedia Fett.ttf");
-			   guiSetup_OSC->setFont("NewMedia Fett.ttf");
-			   guiSetup_Colors->setFont("NewMedia Fett.ttf");
-			   guiError->setFont("NewMedia Fett.ttf");
-			   */
+	// . save as
+	id saveAsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score As" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
+	[saveAsMenuItem setTag:INT_CONSTANT_BUTTON_SAVE_AS];
+	[fileMenu addItem:saveAsMenuItem];
 
 
-			// register double click on editor notification callback
-			[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
+	[fileMenuItem setSubmenu:fileMenu];
+	[menubar addItem:fileMenuItem];
 
-			//guiSetup_Colors->setScrollableDirections(false, true);
-			guiError->setScrollAreaToScreen();
-			guiError->setScrollableDirections(true, false);
-			guiSetup_OSC->setColorBack(ofColor(0, 0, 0, 0));
-			guiSetup_Colors->setColorBack(ofColor(0, 0, 0, 0));
+	//////////////////
+	// Edit
+	id editMenu = [[[NSMenu new] autorelease] initWithTitle:@"Edit"];
+	id editMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit" action:NULL keyEquivalent:@""] autorelease];
+	// . select all
+	id selectMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(menu_item_hit:) keyEquivalent:@"a"] autorelease];
+	[editMenuItem setTag:INT_CONSTANT_BUTTON_SELECTALL];
+	[editMenu addItem:selectMenuItem];
+	// . find
+	id findMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Find text" action:@selector(menu_item_hit:) keyEquivalent:@"f"] autorelease];
+	[findMenuItem setTag:INT_CONSTANT_BUTTON_FIND];
+	[editMenu addItem:findMenuItem];
 
-			guiBottom->loadSettings("GUI/guiSettings.xml");
-			//guiTop->loadSettings("GUI/guiSettings.xml");
+	[editMenuItem setSubmenu:editMenu];
+	[menubar addItem:editMenuItem];
 
-			//guiTop->setUIColors(ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_key, ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_staves_fg,
-			//                    ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_gui_bg);
+	//////////////////
+	// Transport
+	id transMenu = [[[NSMenu new] autorelease] initWithTitle:@"Transport"];
+	id transMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Transport" action:NULL keyEquivalent:@""] autorelease];
+	// . Play
+	id playMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Play" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[playMenuItem setTag:INT_CONSTANT_BUTTON_PLAY];
+	[transMenu addItem:playMenuItem];
+	// . Start
+	id startMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Start" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[startMenuItem setTag:INT_CONSTANT_BUTTON_START];
+	[transMenu addItem:startMenuItem];
+	// . Stop
+	id stopMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Stop" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[stopMenuItem setTag:INT_CONSTANT_BUTTON_STOP];
+	[transMenu addItem:stopMenuItem];
 
-			//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
-			mSliderBPM = new ofxUISlider(16*4*10, 0, 70, 12, 30, 300, 120, TEXT_CONSTANT_BUTTON_BPM);
-			guiBottom->addWidgetDown(mSliderBPM);
+	[transMenuItem setSubmenu:transMenu];
+	[menubar addItem:transMenuItem];
+
+	//////////////////
+	// View
+	id viewMenu = [[[NSMenu new] autorelease] initWithTitle:@"View"];
+	id viewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	// . toggle view
+	id toggleViewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[toggleViewMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEVIEW];
+	[viewMenu addItem:toggleViewMenuItem];
+	// . toggle editor
+	id toggleEditorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Editor" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[toggleEditorMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEEDIT];
+	[viewMenu addItem:toggleEditorMenuItem];
+	// . snap grid
+	id snapMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Snap to grid" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[snapMenuItem setTag:INT_CONSTANT_BUTTON_SNAP];
+	[viewMenu addItem:snapMenuItem];
+	// . autoscroll
+	id autoscrollMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Automatic Scroll" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[autoscrollMenuItem setTag:INT_CONSTANT_BUTTON_AUTOSCROLL];
+	[viewMenu addItem:autoscrollMenuItem];
+	// line wrap mode
+	id lineWrapModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Line Wrapping" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[lineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
+	[viewMenu addItem:lineWrapModeMenuItem];
+
+	[viewMenuItem setSubmenu:viewMenu];
+	[menubar addItem:viewMenuItem];
+
+
+	//////////////////
+	// Help
+	id helpMenu = [[[NSMenu new] autorelease] initWithTitle:@"Help"];
+	id helpMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Help" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	//[helpMenu addItem:helpMenuItem];
+	[helpMenuItem setSubmenu:helpMenu];
+	[menubar addItem:helpMenuItem];
+
+	//guiTop = new ofxUICanvas(0, 0, ofGetWindowWidth(), mUIbottom_y);//score_y);
+	//guiBottom = new ofxUICanvas(0, 2*ofGetWindowHeight()/3, ofGetWindowWidth(), 1*ofGetWindowHeight()/3);
+	guiBottom = new ofxUICanvas(0, 0, score_x+score_w, score_y);
+	guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight());
+	guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y);
+	guiSetup_Colors = new ofxUICanvas(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+	guiFind = new ofxUICanvas(300, score_y, ofGetWindowWidth()-300, ofGetWindowHeight()-100-score_y);
+
+	guiBottom->setFont("DroidSansMono.ttf");
+	guiFind->setFont("DroidSansMono.ttf");
+	/*
+	   guiBottom->setFont("NewMedia Fett.ttf");
+	   guiSetup_OSC->setFont("NewMedia Fett.ttf");
+	   guiSetup_Colors->setFont("NewMedia Fett.ttf");
+	   guiError->setFont("NewMedia Fett.ttf");
+	   */
+
+
+	// register double click on editor notification callback
+	[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
+
+	//guiSetup_Colors->setScrollableDirections(false, true);
+	guiError->setScrollAreaToScreen();
+	guiError->setScrollableDirections(true, false);
+	guiSetup_OSC->setColorBack(ofColor(0, 0, 0, 0));
+	guiSetup_Colors->setColorBack(ofColor(0, 0, 0, 0));
+
+	guiBottom->loadSettings("GUI/guiSettings.xml");
+	//guiTop->loadSettings("GUI/guiSettings.xml");
+
+	//guiTop->setUIColors(ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_key, ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_staves_fg,
+	//                    ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_gui_bg);
+
+	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
+	mSliderBPM = new ofxUISlider(16*4*10, 0, 70, 12, 30, 300, 120, TEXT_CONSTANT_BUTTON_BPM);
+	guiBottom->addWidgetDown(mSliderBPM);
 
 
 #if NO_UIBUTTONS
-			guiBottom->addWidgetRight(new ofxUILabelToggle(bSnapToGrid, TEXT_CONSTANT_BUTTON_SNAP, OFX_UI_FONT_SMALL));
-			guiBottom->addWidgetRight(new ofxUILabelToggle(bAutoScroll, TEXT_CONSTANT_BUTTON_AUTOSCROLL, OFX_UI_FONT_SMALL));
+	guiBottom->addWidgetRight(new ofxUILabelToggle(bSnapToGrid, TEXT_CONSTANT_BUTTON_SNAP, OFX_UI_FONT_SMALL));
+	guiBottom->addWidgetRight(new ofxUILabelToggle(bAutoScroll, TEXT_CONSTANT_BUTTON_AUTOSCROLL, OFX_UI_FONT_SMALL));
 #endif
-			//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
-			ofxUIButton *b = new ofxUIButton("NOTE", false, 30, 15);
-			guiBottom->addWidgetRight(b);
-			b->setColorBack(ofxAntescofoNote->color_note);
+	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
+	ofxUIButton *b = new ofxUIButton("NOTE", false, 30, 15);
+	guiBottom->addWidgetRight(b);
+	b->setColorBack(ofxAntescofoNote->color_note);
 
-			b = new ofxUIButton(30, 15, false, "CHORD");
-			guiBottom->addWidgetRight(b);
-			b->setColorBack(ofxAntescofoNote->color_note_chord);
+	b = new ofxUIButton(30, 15, false, "CHORD");
+	guiBottom->addWidgetRight(b);
+	b->setColorBack(ofxAntescofoNote->color_note_chord);
 
-			b = new ofxUIButton(30, 15, false, "MULTI"); 
-			guiBottom->addWidgetRight(b);
-			b->setColorBack(ofxAntescofoNote->color_note_multi);
+	b = new ofxUIButton(30, 15, false, "MULTI"); 
+	guiBottom->addWidgetRight(b);
+	b->setColorBack(ofxAntescofoNote->color_note_multi);
 
-			b = new ofxUIButton(30, 15, false, "TRILL"); 
-			guiBottom->addWidgetRight(b);
-			b->setColorBack(ofxAntescofoNote->color_note_trill);
+	b = new ofxUIButton(30, 15, false, "TRILL"); 
+	guiBottom->addWidgetRight(b);
+	b->setColorBack(ofxAntescofoNote->color_note_trill);
 
-			ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
-			space->setVisible(false);
-			guiBottom->addWidgetDown(space);
-			mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, fontsize);
-			guiBottom->addWidgetDown(mLabelBeat);
-			mLabelBeat = new ofxUILabel("0", fontsize);
-			guiBottom->addWidgetRight(mLabelBeat);
-			mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, fontsize);
-			guiBottom->addWidgetDown(mLabelPitch);
-			mLabelPitch = new ofxUILabel("0", fontsize);
-			guiBottom->addWidgetRight(mLabelPitch);
-			mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
-			guiBottom->addWidgetDown(mLabelAccompSpeed);
-			mLabelAccompSpeed = new ofxUILabel("0", fontsize);
-			guiBottom->addWidgetRight(mLabelAccompSpeed);
+	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
+	space->setVisible(false);
+	guiBottom->addWidgetDown(space);
+	mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, fontsize);
+	guiBottom->addWidgetDown(mLabelBeat);
+	mLabelBeat = new ofxUILabel("0", fontsize);
+	guiBottom->addWidgetRight(mLabelBeat);
+	mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, fontsize);
+	guiBottom->addWidgetDown(mLabelPitch);
+	mLabelPitch = new ofxUILabel("0", fontsize);
+	guiBottom->addWidgetRight(mLabelPitch);
+	mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
+	guiBottom->addWidgetDown(mLabelAccompSpeed);
+	mLabelAccompSpeed = new ofxUILabel("0", fontsize);
+	guiBottom->addWidgetRight(mLabelAccompSpeed);
 
-			// event buttons
-			space = new ofxUISpacer(3, 1);
-			space->setVisible(false);
-			guiBottom->addWidgetLeft(space, OFX_UI_ALIGN_RIGHT);
+	// event buttons
+	space = new ofxUISpacer(3, 1);
+	space->setVisible(false);
+	guiBottom->addWidgetLeft(space, OFX_UI_ALIGN_RIGHT);
 
-			b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
-			//guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
-			guiBottom->addWidgetLeft(b);
-			b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
-			guiBottom->addWidgetLeft(b);
-			b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
-			guiBottom->addWidgetLeft(b);
-			b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
-			guiBottom->addWidgetLeft(b);
-			b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
-			guiBottom->addWidgetLeft(b);
-
-
-			guiFind->setColorBack(ofColor(0, 0, 0, 0));
+	b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
+	//guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
+	guiBottom->addWidgetLeft(b);
+	b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetLeft(b);
+	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetLeft(b);
+	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetLeft(b);
+	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetLeft(b);
 
 
-			/*vector<string> items;
-			  items.push_back("Play to midi synth");
-			  items.push_back("Open MusicXML score");
-			  items.push_back("Open Antescofo score");
-			  items.push_back("Save to Antescofo score");
-			  items.push_back("Save to Antescofo score as...");
-			  items.push_back("Setup OSC");
-			  items.push_back("About Antescofog");
-			  items.push_back("Colors preferences");
-			  items.push_back("Help");
-			  */
+	guiFind->setColorBack(ofColor(0, 0, 0, 0));
+
+
+	/*vector<string> items;
+	  items.push_back("Play to midi synth");
+	  items.push_back("Open MusicXML score");
+	  items.push_back("Open Antescofo score");
+	  items.push_back("Save to Antescofo score");
+	  items.push_back("Save to Antescofo score as...");
+	  items.push_back("Setup OSC");
+	  items.push_back("About Antescofog");
+	  items.push_back("Colors preferences");
+	  items.push_back("Help");
+	  */
 
 #if NO_UI_BUTTON
-			guiTop->addWidgetRight(new ofxUILabel(TEXT_CONSTANT_TITLE, OFX_UI_FONT_MEDIUM));
-			guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_LOAD, OFX_UI_FONT_SMALL));
-			guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_SAVE, OFX_UI_FONT_SMALL));
-			guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_COLOR_SETUP, OFX_UI_FONT_SMALL));
-			guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_OSC_SETUP, OFX_UI_FONT_SMALL));
-			guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_TOGGLE_VIEW, OFX_UI_FONT_SMALL));
-			guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_RELOAD, OFX_UI_FONT_SMALL));
-			guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_TOGGLE_EDITOR, OFX_UI_FONT_SMALL));
+	guiTop->addWidgetRight(new ofxUILabel(TEXT_CONSTANT_TITLE, OFX_UI_FONT_MEDIUM));
+	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_LOAD, OFX_UI_FONT_SMALL));
+	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_SAVE, OFX_UI_FONT_SMALL));
+	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_COLOR_SETUP, OFX_UI_FONT_SMALL));
+	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_OSC_SETUP, OFX_UI_FONT_SMALL));
+	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_TOGGLE_VIEW, OFX_UI_FONT_SMALL));
+	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_RELOAD, OFX_UI_FONT_SMALL));
+	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_TOGGLE_EDITOR, OFX_UI_FONT_SMALL));
 #endif
 
-			mSaveColorButton = new ofxUILabelButton(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2, 100, false, TEXT_CONSTANT_BUTTON_SAVE_COLOR);
-			guiSetup_Colors->addWidget(mSaveColorButton);
-			mSaveColorButton->setVisible(false);
-			mSaveColorButton->setLabelVisible(false);
-			guiSetup_Colors->setVisible(false);
+	mSaveColorButton = new ofxUILabelButton(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2, 100, false, TEXT_CONSTANT_BUTTON_SAVE_COLOR);
+	guiSetup_Colors->addWidget(mSaveColorButton);
+	mSaveColorButton->setVisible(false);
+	mSaveColorButton->setLabelVisible(false);
+	guiSetup_Colors->setVisible(false);
 
-			guiError->setVisible(false);
-			guiError->disable();
+	guiError->setVisible(false);
+	guiError->disable();
 
-			mLogoInria.loadImage("logo_inria.png");
-			mLogoIrcam.loadImage("logo_ircam.png");
-			/*
-			   logoInria = ofRectangle(600, 7, 150, 40);
-			   ofSetColor(255);
-			   ofFill();
-			   ofRect(logoInria);
-			   */
+	mLogoInria.loadImage("logo_inria.png");
+	mLogoIrcam.loadImage("logo_ircam.png");
 
-			//guiTop->disable(); guiBottom->disable(); guiTop->setVisible(false); guiBottom->setVisible(false);
+	ofAddListener(guiError->newGUIEvent, this, &ofxAntescofog::guiEvent);
+	ofAddListener(guiBottom->newGUIEvent, this, &ofxAntescofog::guiEvent);
+	ofAddListener(guiFind->newGUIEvent, this, &ofxAntescofog::guiEvent);
+	ofAddListener(guiSetup_Colors->newGUIEvent, this, &ofxAntescofog::guiEvent);
+	ofAddListener(guiSetup_OSC->newGUIEvent, this, &ofxAntescofog::guiEvent);
 
+}
 
-			//ofAddListener(guiTop->newGUIEvent, this, &ofxAntescofog::guiEvent);
-			ofAddListener(guiError->newGUIEvent, this, &ofxAntescofog::guiEvent);
-			ofAddListener(guiBottom->newGUIEvent, this, &ofxAntescofog::guiEvent);
-			ofAddListener(guiFind->newGUIEvent, this, &ofxAntescofog::guiEvent);
-			ofAddListener(guiSetup_Colors->newGUIEvent, this, &ofxAntescofog::guiEvent);
-			ofAddListener(guiSetup_OSC->newGUIEvent, this, &ofxAntescofog::guiEvent);
+void ofxAntescofog::setupOSC(){
+	// listen for OSC
+	//mOsc_port = 3002;
+	int port;
+	std::istringstream is(mOsc_port);
+	is >> port;
+	if (! is.good())
+	{
+		//cerr << "Not a number, try again." << endl;
+		mOsc_port = "6789";
+	}
+	std::cout << "Listening on OSC port " << port << endl;
+	try {
+		mOSCreceiver.setup(atoi(mOsc_port.c_str()));
+	} catch(exception& e) { 
+		ofSetColor(0, 0, 0, 100);
+		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+		ofSetColor(255, 255, 255, 240);
 
-		}
-
-	void ofxAntescofog::setupOSC(){
-		// listen for OSC
-		//mOsc_port = 3002;
-		int port;
-		std::istringstream is(mOsc_port);
-		is >> port;
-		if (! is.good())
-		{
-			//cerr << "Not a number, try again." << endl;
-			mOsc_port = "6789";
-		}
-		std::cout << "Listening on OSC port " << port << endl;
-		try {
-			mOSCreceiver.setup(atoi(mOsc_port.c_str()));
-		} catch(exception& e) { 
-			ofSetColor(0, 0, 0, 100);
-			ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
-			ofSetColor(255, 255, 255, 240);
-
-			string err = "Error can not listen on port ";
-			err += port;
-			err += " ! Please verify port is available (is another application blocking this UDP port ?";
-			cerr << err << endl;
-			ofDrawBitmapString(err, 100, 300);
-			ofxAntescofoNote->set_error(err);
-			guiError->draw();
-			display_error();
-		}
-
-		//mOsc_port_MAX = 3003;
-		is.str(mOsc_port_MAX);
-		is >> port;
-		if (! is.good())
-		{
-			//cerr << "Not a number, try again." << endl;
-			mOsc_port_MAX = "5678";
-		}
-		std::cout << "Connecting OSC on " << mOsc_host << ":"<< atoi(mOsc_port_MAX.c_str()) << endl;
-		mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
+		string err = "Error can not listen on port ";
+		err += port;
+		err += " ! Please verify port is available (is another application blocking this UDP port ?";
+		cerr << err << endl;
+		ofDrawBitmapString(err, 100, 300);
+		ofxAntescofoNote->set_error(err);
+		guiError->draw();
+		display_error();
 	}
 
-
-	//--------------------------------------------------------------
-	void ofxAntescofog::setupTimeline(){
-		//ofSetBackgroundAuto(false);
-		timeline.setOffset(ofVec2f(score_x, score_y));
-		timeline.setup(); //registers events
-
-		//timeline.setWidth(score_w - 100);
-		timeline.setFrameRate(24);
-		timeline.setShowTicker(false);
-		timeline.setShowBPMGrid(bSnapToGrid);
-		timeline.enableSnapToBPM(bSnapToGrid);
-		timeline.setDurationInSeconds(60);
-		//timeline.moveToThread(); //increases accuracy of bang call backs
-
-		timeline.setLoopType(OF_LOOP_NORMAL);//LOOP_NONE); ///NORMAL); //turns the timeline to loop
-		timeline.setBPM(bpm);
-		timeline.setLockWidthToWindow(false);
-		//timeline.setWidth(ofGetWidth());
-
-		// use custom zoomer :
-		timeline.addTrack("zoom", ofxAntescofoZoom);
-		timeline.setZoomer(ofxAntescofoZoom);
-
-		timeline.addTrack("Beats", ofxAntescofoBeatTicker);
-		timeline.addTrack("Notes", ofxAntescofoNote);
-		ofxAntescofoNote->setDrawRect(ofRectangle(0, 0, score_w, 300));
-		ofxAntescofoBeatTicker->setup();
-		timeline.setShowTicker(true);
-		timeline.setBPM(bpm);
-
-		//timeline.addCurves("test", "test.xml");
-		timeline.enable();
-		timeline.setFrameBased(false);
-		ofxAntescofoNote->enable();
-
-		/*
-		// stick to the bottom of the window
-		ofxTLZoomer* z = timeline.getZoomer();
-		ofRectangle rz = z->getDrawRect(); 
-		ofRectangle ra = ofxAntescofoAction->getDrawRect();
-		ra.height = ofGetHeight() - ra.y - rz.height - 200;
-		ofxAntescofoAction->setDrawRect(ra);
-		*/
+	//mOsc_port_MAX = 3003;
+	is.str(mOsc_port_MAX);
+	is >> port;
+	if (! is.good())
+	{
+		//cerr << "Not a number, try again." << endl;
+		mOsc_port_MAX = "5678";
 	}
+	std::cout << "Connecting OSC on " << mOsc_host << ":"<< atoi(mOsc_port_MAX.c_str()) << endl;
+	mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
+}
+
+
+//--------------------------------------------------------------
+void ofxAntescofog::setupTimeline(){
+	//ofSetBackgroundAuto(false);
+	timeline.setOffset(ofVec2f(score_x, score_y));
+	timeline.setup(); //registers events
+
+	//timeline.setWidth(score_w - 100);
+	timeline.setFrameRate(24);
+	timeline.setShowTicker(false);
+	timeline.setShowBPMGrid(bSnapToGrid);
+	timeline.enableSnapToBPM(bSnapToGrid);
+	timeline.setDurationInSeconds(60);
+	//timeline.moveToThread(); //increases accuracy of bang call backs
+
+	timeline.setLoopType(OF_LOOP_NORMAL);//LOOP_NONE); ///NORMAL); //turns the timeline to loop
+	timeline.setBPM(bpm);
+	timeline.setLockWidthToWindow(false);
+	//timeline.setWidth(ofGetWidth());
+
+	// use custom zoomer :
+	timeline.addTrack("zoom", ofxAntescofoZoom);
+	timeline.setZoomer(ofxAntescofoZoom);
+
+	timeline.addTrack("Beats", ofxAntescofoBeatTicker);
+	timeline.addTrack("Notes", ofxAntescofoNote);
+	ofxAntescofoNote->setDrawRect(ofRectangle(0, 0, score_w, 300));
+	ofxAntescofoBeatTicker->setup();
+	timeline.setShowTicker(true);
+	timeline.setBPM(bpm);
+
+	//timeline.addCurves("test", "test.xml");
+	timeline.enable();
+	timeline.setFrameBased(false);
+	ofxAntescofoNote->enable();
+
+	/*
+	// stick to the bottom of the window
+	ofxTLZoomer* z = timeline.getZoomer();
+	ofRectangle rz = z->getDrawRect(); 
+	ofRectangle ra = ofxAntescofoAction->getDrawRect();
+	ra.height = ofGetHeight() - ra.y - rz.height - 200;
+	ofxAntescofoAction->setDrawRect(ra);
+	*/
+}
 
 
 
-	//--------------------------------------------------------------
-	void ofxAntescofog::setup(){
-		console->addln("ofxAntescofo::setup()");
-		ofSetDataPathRoot("../Resources/");
+//--------------------------------------------------------------
+void ofxAntescofog::setup(){
+	console->addln("ofxAntescofo::setup()");
+	ofSetDataPathRoot("../Resources/");
 
-		//ofBackground(.15*255);
-		//ofSetFrameRate(60);
-		ofSetVerticalSync(true);
-		ofEnableSmoothing();
-		ofEnableAlphaBlending();
+	//ofBackground(.15*255);
+	//ofSetFrameRate(60);
+	ofSetVerticalSync(true);
+	ofEnableSmoothing();
+	ofEnableAlphaBlending();
 
-		//cocoaWindow->setUpdateRate(1);
-		ofSetLogLevel(OF_LOG_VERBOSE);
+	//cocoaWindow->setUpdateRate(1);
+	ofSetLogLevel(OF_LOG_VERBOSE);
 
-		fog = this;
-		score_x = 5;
-		score_y = 81+10;
-		mUIbottom_y = 40;
+	fog = this;
+	score_x = 5;
+	score_y = 81+10;
+	mUIbottom_y = 40;
 
-		bpm = 120; 
+	bpm = 120; 
 
-		score_w = ofGetWindowWidth() - score_x - 5;
-		score_h = ofGetWindowHeight()/3;
+	score_w = ofGetWindowWidth() - score_x - 5;
+	score_h = ofGetWindowHeight()/3;
 
-		ofAddListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
+	ofAddListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
 
-		ofxAntescofoZoom = new ofxTLZoomer2D();
-		ofxAntescofoNote = new ofxTLAntescofoNote(this);
-		ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
+	ofxAntescofoZoom = new ofxTLZoomer2D();
+	ofxAntescofoNote = new ofxTLAntescofoNote(this);
+	ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
 
-		load(); // xml settings
+	load(); // xml settings
 
-		setupTimeline();
+	setupTimeline();
 
-		setupUI();
+	setupUI();
 
-		setupOSC();
+	setupOSC();
 
-		remove(TEXT_CONSTANT_TEMP_FILENAME);
-		remove(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
-		// finally open a score if given on command line
-		//if (mScore_filename.size()) loadScore(mScore_filename);
+	remove(TEXT_CONSTANT_TEMP_FILENAME);
+	remove(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+	// finally open a score if given on command line
+	//if (mScore_filename.size()) loadScore(mScore_filename);
 
-		setEditorMode(bEditorShow, 0);
+	setEditorMode(bEditorShow, 0);
 
-		drawCache.allocate(ofGetWindowWidth(), ofGetHeight(), GL_RGBA);
-		drawCache.begin();
-		ofClear(255,255,255, 0);
-		drawCache.end();
+	drawCache.allocate(ofGetWindowWidth(), ofGetHeight(), GL_RGBA);
+	drawCache.begin();
+	ofClear(255,255,255, 0);
+	drawCache.end();
 
-		bSetupDone = true;
-	}
+	bSetupDone = true;
+}
 
-	//--------------------------------------------------------------
-	void ofxAntescofog::update() {
-		if (!bSetupDone)
-			return;
-		//if (!bEditorShow) score_w = ofGetWindowWidth() - score_x;
-		//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
-		timeline.setWidth(score_w);
-		timeline.setOffset(ofVec2f(score_x, score_y));
+//--------------------------------------------------------------
+void ofxAntescofog::update() {
+	if (!bSetupDone)
+		return;
+	//if (!bEditorShow) score_w = ofGetWindowWidth() - score_x;
+	//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
+	timeline.setWidth(score_w);
+	timeline.setOffset(ofVec2f(score_x, score_y));
 
-#if 0
-		// stick to the bottom of the window
-		//ofxTLZoomer* o = timeline.getZoomer();
-		ofRectangle r = ofxAntescofoAction->getDrawRect();
-		r.y = ofGetHeight() - r.height;
-		ofxAntescofoAction->setDrawRect(r);
-		//#else
-		// stick to the bottom of the window
-		ofxTLZoomer* z = timeline.getZoomer();
-		ofRectangle rz = z->getDrawRect(); 
-		ofRectangle ra = ofxAntescofoAction->getDrawRect();
-		ra.height = ofGetHeight() - ra.y - rz.height;
-		ofxAntescofoAction->setDrawRect(ra);
-#endif
-
-		// check for waiting messages
-		while( mOSCreceiver.hasWaitingMessages() )
-		{
-			// get the next message
-			ofxOscMessage m;
-			mOSCreceiver.getNextMessage( &m );
-			if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
-			for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
-			if(m.getAddress() == "/antescofo/stop"){
-				if (audioTrack) audioTrack->fakeStop();
-				mHasReadMessages = true;
-			}else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
-				mOsc_tempo = m.getArgAsFloat(0);
-				if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
-				bpm = mOsc_tempo;
-				//if (bpm) timeline.setBPM(bpm);
-				mSliderBPM->setValue(bpm);
-				mHasReadMessages = true;
-			} else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-				mOsc_beat = m.getArgAsFloat(0);
-				mLabelBeat->setLabel(ofToString(mOsc_beat));
-				if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
-				if (mOsc_beat == 0)
-					ofxAntescofoNote->missedAll();
-				mHasReadMessages = true;
-			} else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-				mOsc_rnow = m.getArgAsFloat(0);
-				//mLabelBeat->setLabel(ofToString(mOsc_rnow));
-				if (_debug) cout << "OSC received: rnow: "<< mOsc_rnow << endl;
-				//mHasReadMessages = true;
-			} else if(m.getAddress() == "/antescofo/pitch"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-				mOsc_pitch = m.getArgAsFloat(0);
-				mLabelPitch->setLabel(ofToString(mOsc_pitch));
-				if (_debug) cout << "OSC received: pitch: "<< mOsc_pitch << endl;
-				mHasReadMessages = true;
-			} else if(m.getAddress() == "/antescofo/accomp_pos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
-				if (_debug) cout << "OSC received: accomp_pos: "<<  m.getArgAsFloat(0) << endl;
-				mHasReadMessages = true;
-				if (audioTrack) audioTrack->fakePlay(m.getArgAsFloat(0));
-			} else if(m.getAddress() == "/antescofo/accomp_speed"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-				mOsc_accomp_speed= m.getArgAsFloat(0);
-				mLabelAccompSpeed->setLabel(ofToString(mOsc_accomp_speed));
-				if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
-				mHasReadMessages = true;
-				if (audioTrack) audioTrack->setFakeSpeed(mOsc_accomp_speed);
-				bShouldRedraw = true;
-			} else if(m.getAddress() == "/antescofo/loadscore"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
-				string scorefile = m.getArgAsString(0);
-				if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
-				mHasReadMessages = true;
-				loadScore(scorefile, false);
-				bShouldRedraw = true;
-			} else {
-				mHasReadMessages = false;
+	// check for waiting messages
+	while( mOSCreceiver.hasWaitingMessages() )
+	{
+		// get the next message
+		ofxOscMessage m;
+		mOSCreceiver.getNextMessage( &m );
+		if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
+		for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
+		if(m.getAddress() == "/antescofo/stop"){
+			if (audioTrack) audioTrack->fakeStop();
+			mHasReadMessages = true;
+		}else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+			mOsc_tempo = m.getArgAsFloat(0);
+			if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
+			bpm = mOsc_tempo;
+			//if (bpm) timeline.setBPM(bpm);
+			mSliderBPM->setValue(bpm);
+			mHasReadMessages = true;
+		} else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+			mOsc_beat = m.getArgAsFloat(0);
+			mLabelBeat->setLabel(ofToString(mOsc_beat));
+			if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
+			if (mOsc_beat == 0)
+				ofxAntescofoNote->missedAll();
+			mHasReadMessages = true;
+		} else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+			mOsc_rnow = m.getArgAsFloat(0);
+			//mLabelBeat->setLabel(ofToString(mOsc_rnow));
+			if (_debug) cout << "OSC received: rnow: "<< mOsc_rnow << endl;
+			//mHasReadMessages = true;
+		} else if(m.getAddress() == "/antescofo/pitch"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+			mOsc_pitch = m.getArgAsFloat(0);
+			mLabelPitch->setLabel(ofToString(mOsc_pitch));
+			if (_debug) cout << "OSC received: pitch: "<< mOsc_pitch << endl;
+			mHasReadMessages = true;
+		} else if(m.getAddress() == "/antescofo/accomp_pos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+			if (_debug) cout << "OSC received: accomp_pos: "<<  m.getArgAsFloat(0) << endl;
+			mHasReadMessages = true;
+			if (audioTrack) audioTrack->fakePlay(m.getArgAsFloat(0));
+		} else if(m.getAddress() == "/antescofo/accomp_speed"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+			mOsc_accomp_speed= m.getArgAsFloat(0);
+			mLabelAccompSpeed->setLabel(ofToString(mOsc_accomp_speed));
+			if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
+			mHasReadMessages = true;
+			if (audioTrack) audioTrack->setFakeSpeed(mOsc_accomp_speed);
+			bShouldRedraw = true;
+		} else if(m.getAddress() == "/antescofo/loadscore"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
+			string scorefile = m.getArgAsString(0);
+			if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
+			mHasReadMessages = true;
+			loadScore(scorefile, false);
+			bShouldRedraw = true;
+		} else {
+			mHasReadMessages = false;
 			// unrecognized message: display on the bottom of the screen
 			string msg_string;
 			msg_string = m.getAddress();
@@ -715,31 +689,31 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[], ofxCocoaWindow* window) {
 				}
 			}
 			// add to the list of strings to display
-		/*	msg_string[current_msg_string] = msg_string;
-			timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
-			current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
+			/*	msg_string[current_msg_string] = msg_string;
+				timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
+				current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
 			// clear the next line
 			msg_strings[current_msg_string] = "";
-		*/
-            cout << "OSC received: unknown msg: "<< msg_string << endl;
-        }
-			break;
-    }
+			*/
+			cout << "OSC received: unknown msg: "<< msg_string << endl;
+		}
+		break;
+	}
 
-    // if we read something, advance playhead
-    if (mHasReadMessages) {
+	// if we read something, advance playhead
+	if (mHasReadMessages) {
 
-	mLastOSCmsgDate = ofGetSystemTime();
-        fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
-        
-        if (_debug) cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
-        //timeline.setCurrentTimeSeconds(fAntescofoTimeSeconds);
-        //ofNotifyEvent(playbackStarted, )
-        mHasReadMessages = false;
-        //timeline.play();
-	bShouldRedraw = true;
-    }
-    //guiBottom->update();
+		mLastOSCmsgDate = ofGetSystemTime();
+		fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
+
+		if (_debug) cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
+		//timeline.setCurrentTimeSeconds(fAntescofoTimeSeconds);
+		//ofNotifyEvent(playbackStarted, )
+		mHasReadMessages = false;
+		//timeline.play();
+		bShouldRedraw = true;
+	}
+	//guiBottom->update();
 }
 
 //--------------------------------------------------------------

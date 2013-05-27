@@ -1,7 +1,6 @@
 /*
 
-  MusicXML Library
-  Copyright (C) 2006,2008  Grame
+  Copyright (C) 2003-2013 Thomas Coffy
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -17,9 +16,8 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  Grame Research Laboratory, 9 rue du Garet, 69001 Lyon - France
-  research@grame.fr
-
+  thomas.coffy@ircam.fr
+  http://repmus.ircam.fr/antescofo
 */
 
 #ifdef VC6
@@ -205,23 +203,6 @@ void xml2antescofovisitor::visitStart ( S_part& elt )
 //______________________________________________________________________________
 void xml2antescofovisitor::addPosition	( Sxmlelement elt, Santescofoelement& tag, int yoffset)
 {
-	/*
-	float posx = elt->getAttributeFloatValue("default-x", 0) + elt->getAttributeFloatValue("relative-x", 0);
-	if (posx) {
-		posx = (posx / 10) * 2;   // convert to half spaces
-		stringstream s;
-		s << "dx=" << posx << "hs";
-		tag->add (antescofoparam::create(s.str(), false));
-	}
-	float posy = elt->getAttributeFloatValue("default-y", 0) + elt->getAttributeFloatValue("relative-y", 0);
-	if (posy) {
-		posy = (posy / 10) * 2;   // convert to half spaces
-		posy += yoffset;		  // anchor point convertion (defaults to upper line in xml)
-		stringstream s;
-		s << "dy=" << posy << "hs";
-		tag->add (antescofoparam::create(s.str(), false));
-	}
-	*/
 }
 
 }

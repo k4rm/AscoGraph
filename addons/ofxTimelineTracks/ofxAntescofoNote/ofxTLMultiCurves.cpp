@@ -1,5 +1,9 @@
 /**
- * ofxTimeline
+ * ofxTLMultiCurves : continuous Curve objects editing in Antescofo score langage
+ *
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ *
+ * derived from ofxTimeline
  * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
@@ -183,30 +187,8 @@ ofRange ofxTLMultiCurves::getValueRange(int which)
     return curves[which]->getValueRange();
 }
 
-/*
-void ofxTLMultiCurves::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
-    ofxTLTweenKeyframe* tweenKey =  (ofxTLTweenKeyframe*)key;    
-    tweenKey->easeFunc = easingFunctions[ofClamp(xmlStore.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
-    tweenKey->easeType = easingTypes[ofClamp(xmlStore.getValue("easetype", 0), 0, easingTypes.size()-1)];
-}
-
-void ofxTLMultiCurves::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
-    ofxTLTweenKeyframe* tweenKey =  (ofxTLTweenKeyframe*)key;
-    xmlStore.addValue("easefunc", tweenKey->easeFunc->id);
-    xmlStore.addValue("easetype", tweenKey->easeType->id);
-}
-*/
-
-
 void ofxTLMultiCurves::addKeyframeAtBeatAtCurveId(int which, float value, float beat){
     //cout << "ofxTLMultiCurves::addKeyframeAtMillisAtCurveId : id:" << which << " val:" << value << " millis:" << millis << endl;
     curves[which]->addKeyframeAtBeat(value, beat);
 }
-#if 0
-ofVec2f ofxTLCurves::screenPositionForKeyframe(ofxTLKeyframe* keyframe){
-    return ofVec2f(normalizedXtoScreenX( keyframe->time, zoomBounds),// millisToScreenX(keyframe->time), 
-									ofMap(keyframe->value, 1.0, 0.0, bounds.y, bounds.y+bounds.height, true));
-                   //valueToScreenY(keyframe->value));
-}
-#endif
 
