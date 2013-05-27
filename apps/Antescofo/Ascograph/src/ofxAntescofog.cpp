@@ -55,6 +55,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 
 void ofxAntescofog::menu_item_hit(int n)
 {
+	cout << "menu = " << n << endl;
 	switch (n) {
 		case INT_CONSTANT_BUTTON_LOAD:
 			{
@@ -96,6 +97,14 @@ void ofxAntescofog::menu_item_hit(int n)
 				bShowOSCSetup = true;
 				guiBottom->disable();
 			}
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_GROUP:
+		case INT_CONSTANT_BUTTON_CREATE_LOOP:
+		case INT_CONSTANT_BUTTON_CREATE_CURVE:
+		case INT_CONSTANT_BUTTON_CREATE_CURVES:
+		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
+			ofLogVerbose("Create Menu hit");
+			createCodeTemplate(n);
 			break;
 		case INT_CONSTANT_BUTTON_TOGGLEVIEW:
 			ofxAntescofoNote->toggleView();
@@ -241,7 +250,7 @@ void ofxAntescofog::setupUI() {
 	[fileMenu addItem:saveMenuItem];
 
 	// . save as
-	id saveAsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score As" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
+	id saveAsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score As" action:@selector(menu_item_hit:) keyEquivalent:@"S"] autorelease];
 	[saveAsMenuItem setTag:INT_CONSTANT_BUTTON_SAVE_AS];
 	[fileMenu addItem:saveAsMenuItem];
 
@@ -264,6 +273,41 @@ void ofxAntescofog::setupUI() {
 
 	[editMenuItem setSubmenu:editMenu];
 	[menubar addItem:editMenuItem];
+
+
+	//////////////////
+	// Create
+	id createMenu = [[[NSMenu new] autorelease] initWithTitle:@"Create"];
+	id createMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create" action:NULL keyEquivalent:@""] autorelease];
+	// group
+	NSMenuItem* createGroupMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Group {...}" action:@selector(menu_item_hit:) keyEquivalent:@"g"] autorelease];
+	[createGroupMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_GROUP];
+	createGroupMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createMenu addItem:createGroupMenuItem];
+	// loop
+	NSMenuItem* createLoopMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Loop {...}" action:@selector(menu_item_hit:) keyEquivalent:@"l"] autorelease];
+	createLoopMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createLoopMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_LOOP];
+	[createMenu addItem:createLoopMenuItem];
+
+	// curve
+	NSMenuItem* createCurveMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Curve {...}" action:@selector(menu_item_hit:) keyEquivalent:@"c"] autorelease];
+	[createCurveMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_CURVE];
+	createCurveMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createMenu addItem:createCurveMenuItem];
+	// curves
+	NSMenuItem* createCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Curves {...}" action:@selector(menu_item_hit:) keyEquivalent:@"C"] autorelease];
+	createCurvesMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createCurvesMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_CURVES];
+	[createMenu addItem:createCurvesMenuItem];
+	// whenever
+	NSMenuItem* createWheneverMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Whenever {...}" action:@selector(menu_item_hit:) keyEquivalent:@"w"] autorelease];
+	createWheneverMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createWheneverMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_WHENEVER];
+	[createMenu addItem:createWheneverMenuItem];
+
+	[createMenuItem setSubmenu:createMenu];
+	[menubar addItem:createMenuItem];
 
 	//////////////////
 	// Transport
@@ -1073,36 +1117,36 @@ void ofxAntescofog::save_ColorPicker(string name)
 
 void ofxAntescofog::draw_ColorPicker(string name)
 {
-    mColorPicker.setColorRadius(1.0);
-    mColorPicker.setColorAngle( 0.5 );
-    
-    int x, y, w, h;
+	mColorPicker.setColorRadius(1.0);
+	mColorPicker.setColorAngle( 0.5 );
 
-    w = 300;
-    h = 400;
-    x = ofGetWindowWidth() / 2 + w;
+	int x, y, w, h;
 
-    y = ofGetWindowHeight() / 2;
+	w = 300;
+	h = 400;
+	x = ofGetWindowWidth() / 2 + w;
 
-    ofColor c;
-    if (colorString2var[name])
-        c = *(colorString2var[name]);
-    else {
-				string str = "Can not find color index for color named ";
-				console->addln(str);
-		}
-    
-    mColorPicker.setColor(c);
-    mColorPicker.draw( x-w/2, y-h/2, w, h );
-    mColorPicker.addListeners();
-    mColorPicker.show();
-    mSaveColorButton->setVisible(true);
-		mSaveColorButton->setLabelVisible(true);
-    
-    ofxUIRectangle *r = mSaveColorButton->getPaddingRect();
-    r->x = x + w - 50;
-    r->y = y + h + 250;
-    mSaveColorButton->update();
+	y = ofGetWindowHeight() / 2;
+
+	ofColor c;
+	if (colorString2var[name])
+		c = *(colorString2var[name]);
+	else {
+		string str = "Can not find color index for color named ";
+		console->addln(str);
+	}
+
+	mColorPicker.setColor(c);
+	mColorPicker.draw( x-w/2, y-h/2, w, h );
+	mColorPicker.addListeners();
+	mColorPicker.show();
+	mSaveColorButton->setVisible(true);
+	mSaveColorButton->setLabelVisible(true);
+
+	ofxUIRectangle *r = mSaveColorButton->getPaddingRect();
+	r->x = x + w - 50;
+	r->y = y + h + 250;
+	mSaveColorButton->update();
 }
 
 
@@ -1775,6 +1819,41 @@ void ofxAntescofog::replaceEditorScore(int linebegin, int lineend, string actstr
 
 }
 
+void ofxAntescofog::createCodeTemplate(int which)
+{
+	int pos = [ editor getCurrentPos ];
+	string str;
+
+	switch (which) {
+		case INT_CONSTANT_BUTTON_CREATE_GROUP:
+			str = "0. group /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) @guard = expr */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n}\n";
+			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			break;
+
+		case INT_CONSTANT_BUTTON_CREATE_LOOP:
+			str = "0. loop 6.66 /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) @guard = expr */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n} /*until(expr)*/\n";
+			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			break;
+
+		case INT_CONSTANT_BUTTON_CREATE_CURVE:
+			str = "curve slider  Grain := 0.05s, Action := print $x $y\n{\n\t$x, $y\n\t{\n\t    { 0. 2. }\n\t1   { 1. 0. } /*type \"exponential\"*/\n\t2/5 { 3. 1.4}\n\t; ...\n\t}\n}\n";
+			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			break;
+
+		case INT_CONSTANT_BUTTON_CREATE_CURVES:
+			str = "curve @action := plot $NOW $x $y $z {\n\t$x\n\t{\t\t{ 2.0 }\n\t\t1.0\t{ 4.0 }\n\t\t1.0\t{ 1.4 }\n\t}\n\t$y, $z\n\t{\t\t{5.0, 4.0}\n\t\t3.0\t{0.3 ,7.0}\n\t}\n}\n";
+			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			break;
+
+		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
+			str = "whenever(/*expr*/) /* @guard=expr */ {\n\t1. action1\n\t1/4 action2\n\t; ...\n} /*until(expr)*/\n";
+			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			break;
+
+		default:
+			;
+	}
+}
 
 void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 {
@@ -1788,5 +1867,3 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 	bringTrackToTop(zoomer);
 	bringTrackToTop(zoomer);
 }
-
-

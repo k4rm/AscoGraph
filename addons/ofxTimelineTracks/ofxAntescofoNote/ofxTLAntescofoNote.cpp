@@ -245,20 +245,15 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					// set color to transparent when selected
 					if(switches[i]->startSelected && switches[i]->endSelected) ofSetColor(color_note_selected);
 					if (abs(switches[i]->pitch) && switches[i]->beat.span() == 0) ofSetColor(color_note, 100); // grace note
-					int whichRow = ofMap(abs(switches[i]->pitch), noteRange.max, noteRange.min, 1, noteRange.span());
+					int whichRow = ofMap(abs(switches[i]->pitch), noteRange.max, noteRange.min, 0, noteRange.span());
+					cout << "pitch:" << abs(switches[i]->pitch) << " whichRow:" << whichRow << endl;
 					ofRectangle noteBounds = ofRectangle(startX, bounds.y + whichRow * rowHeight, endX - startX, rowHeight);
 
 					// note heads
 					float y = bounds.y + whichRow * rowHeight;
 					float w = endX - startX;
 					float h = rowHeight;
-#ifdef CIRCLE_NOTE_HEADS
-					ofCircle(startX + h/2, y+ h/2, 1*h/2);// un cercle au debut
-					ofCircle(endX - h/2, y + h/2, 1*h/2); // un a la fin
-					ofRectangle r(startX + h/2, y, endX - startX - h, rowHeight);
-#endif
-#define ROUNDED_NOTE_HEADS
-#ifdef ROUNDED_NOTE_HEADS
+					// rounded rect note heads
 					int rr = 3;
 					if (endX - startX >= rr) { 
 						roundedRect(startX, y, endX - startX, rowHeight, rr);
@@ -273,10 +268,6 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 						ofRectangle rb(startX, y, endX - startX, rowHeight); // black border around note
 						ofRect(rb);
 					}
-#else
-					ofRectangle r(startX, y, endX - startX, rowHeight);
-					ofRect(r);// et un rect entre les deux
-					ofNoFill();
 #if 0 // not yet missed events
 					// missed events
 					if (mLastBeat >= switches[i]->beat.min && switches[i]->missed) {
@@ -284,14 +275,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 						ofSetColor(25, 40, 40, 100);
 						ofSphere(50,50,-10,40);
 						ofSetColor(255, 0, 0, 200);
-
-					} else
-#else
-						ofSetColor(0, 0, 0, 200);
-#endif
-					ofRectangle rb(startX, y, endX - startX, rowHeight); // black border around note
-					ofRect(rb);
-					ofFill();
+					}
 #endif
 					setNoteColor(i);
 
@@ -1347,6 +1331,8 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 }
 
 void ofxTLAntescofoNote::update_duration() {
+	if (!ofxAntescofoAction)
+		createActionTrack();
 	int maxdur = ofxAntescofoAction->get_max_note_beat();
 
 	cout << "Maximum note beat calculated : " << maxdur << " beats." << endl;

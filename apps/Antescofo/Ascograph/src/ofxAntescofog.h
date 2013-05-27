@@ -30,6 +30,11 @@
 #define INT_CONSTANT_BUTTON_SAVE_AS     14
 #define	INT_CONSTANT_BUTTON_LINEWRAP    15
 #define	INT_CONSTANT_BUTTON_FIND        16
+#define	INT_CONSTANT_BUTTON_CREATE_GROUP	 17
+#define	INT_CONSTANT_BUTTON_CREATE_WHENEVER	 18
+#define	INT_CONSTANT_BUTTON_CREATE_CURVE	 19
+#define	INT_CONSTANT_BUTTON_CREATE_CURVES	 20
+#define	INT_CONSTANT_BUTTON_CREATE_LOOP		 21
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -126,9 +131,9 @@ class ofxAntescofog : public ofBaseApp{
 		void editorShowLine(int linea, int lineb);
 		void editorDoubleclicked(int line);
 		void replaceEditorScore(int linebegin, int lineend, string actstr);
+		void createCodeTemplate(int which);
 
 		ofxTLAntescofoNote* ofxAntescofoNote;
-		//ofxTLAntescofoAction* ofxAntescofoAction;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker;
 		ofxTLZoomer2D *ofxAntescofoZoom;
 		ofxTLAccompAudioTrack* audioTrack;
@@ -144,7 +149,6 @@ class ofxAntescofog : public ofBaseApp{
 		bool bSnapToGrid, bAutoScroll, bSetupDone, bLineWrapMode;
 		string tmpfilename; // file to store converted MusicXML file to Antescofo score
 		string mScore_filename;
-
 
 		vector<float> accomp_map_index, accomp_map_markers;
 
