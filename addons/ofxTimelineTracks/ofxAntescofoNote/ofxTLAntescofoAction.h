@@ -161,7 +161,7 @@ class ActionCurve : public ActionGroup {
 
 		virtual void draw(ofxTLAntescofoAction *tlAction) {}
 		virtual void print();
-		void addKeyframeAtBeat(float beat, float val);
+		bool addKeyframeAtBeat(float beat, float val);
 		void deleteKeyframeAtBeat(float beat);
 		void moveKeyframeAtBeat(float to_beat, float from_beat, float to_val, float from_val);
 		void changeKeyframeEasing(float beat, string type);

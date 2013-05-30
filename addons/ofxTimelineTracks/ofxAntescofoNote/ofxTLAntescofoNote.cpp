@@ -246,7 +246,6 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					if(switches[i]->startSelected && switches[i]->endSelected) ofSetColor(color_note_selected);
 					if (abs(switches[i]->pitch) && switches[i]->beat.span() == 0) ofSetColor(color_note, 100); // grace note
 					int whichRow = ofMap(abs(switches[i]->pitch), noteRange.max, noteRange.min, 0, noteRange.span());
-					cout << "pitch:" << abs(switches[i]->pitch) << " whichRow:" << whichRow << endl;
 					ofRectangle noteBounds = ofRectangle(startX, bounds.y + whichRow * rowHeight, endX - startX, rowHeight);
 
 					// note heads

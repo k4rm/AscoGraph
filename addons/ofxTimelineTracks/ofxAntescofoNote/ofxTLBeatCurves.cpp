@@ -39,7 +39,7 @@
 #include "ofxTimeline.h"
 #include "ofxHotKeys.h"
 
-bool curve_debug = false;
+bool curve_debug = true;
 
 ofxTLBeatCurves::ofxTLBeatCurves()
 : ofxTLBeatKeyframes()
@@ -284,7 +284,6 @@ void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
-		if (curve_debug) cout << "ofxTLBeatCurves::mouseReleased: should apply" << endl;
 	keysAreDraggable = false;
 	if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y)) {
 		if (curve_debug) cout << "ofxTLBeatCurves::mouseReleased: should apply" << endl;
@@ -292,7 +291,45 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 		if (tlAction) tlAction->replaceEditorScore(ref);
 		bDrawApplyButton = false;
 	}
-	if(keysDidDrag){
+
+	if (drawingEasingWindow /*&& args.button == 0*/){
+		//drawingEasingWindow = false; timeline->dismissedModalContent();
+		ofVec2f screenpoint(args.x,args.y);
+		for(int i = 0; i < easingFunctions.size(); i++){
+			if(easingFunctions[i]->bounds.inside(screenpoint-easingWindowPosition)){
+				for(int k = 0; k < selectedKeyframes.size(); k++){
+					((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
+					// modify easing type in curve
+					float beat = selectedKeyframes[k]->beat;
+					ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
+					drawingEasingWindow = false; timeline->dismissedModalContent();
+				}
+				timeline->flagTrackModified(this);
+				shouldRecomputePreviews = true;
+				cout << "ofxTLBeatCurves::mouseReleased: easingFunc : " << i << endl;
+				return;
+			}
+		}
+
+		for(int i = 0; i < easingTypes.size(); i++){
+			if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
+				cout << "ofxTLBeatCurves::mouseReleased: easingType : " << i << endl;
+				for(int k = 0; k < selectedKeyframes.size(); k++){
+					((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
+					// modify easing type in curve
+					//float beat = selectedKeyframes[k]->beat;
+					//ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
+					//drawingEasingWindow = false; timeline->dismissedModalContent();
+				}
+				timeline->flagTrackModified(this);
+				shouldRecomputePreviews = true;
+				return;
+			}
+		}
+	} //else{ //ofxTLBeatKeyframes::mouseReleased(args, millis); }
+
+	if (!bounds.inside(args.x, args.y)) return;
+	if(keysDidDrag && !drawingEasingWindow){
 		//reset these caches because they may no longer be valid
 		lastKeyframeIndex = 1;
 		lastSampleBeat = 0;
@@ -313,69 +350,28 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 		}
 	}
 
-	if(createNewOnMouseup) {
-		float beat = timeline->millisecToBeat(millis);
-		//add a new one
-		selectedKeyframe = newKeyframe();
-		setKeyframeBeat(selectedKeyframe, beat);
-		selectedKeyframe->value = screenYToValue(args.y);
-		selectedKeyframe->orig_value = ofMap(selectedKeyframe->value, 0, 1.0, valueRange.min, valueRange.max, true);
-		keyframes.push_back(selectedKeyframe);
-		selectedKeyframes.push_back(selectedKeyframe);
-		updateKeyframeSort();
-		timeline->flagTrackModified(this);
+	if(createNewOnMouseup && !drawingEasingWindow) {
+		if (ref->parentCurve->howmany == 1) {
+			float beat = timeline->millisecToBeat(millis);
+			//add a new one
+			selectedKeyframe = newKeyframe();
+			setKeyframeBeat(selectedKeyframe, beat);
+			selectedKeyframe->value = screenYToValue(args.y);
+			selectedKeyframe->orig_value = ofMap(selectedKeyframe->value, 0, 1.0, valueRange.min, valueRange.max, true);
+			keyframes.push_back(selectedKeyframe);
+			selectedKeyframes.push_back(selectedKeyframe);
+			updateKeyframeSort();
+			timeline->flagTrackModified(this);
 
-		// when new breakpoint is created, we should reduce next breakpoint duration, before adding
-		ref->addKeyframeAtBeat(beat, selectedKeyframe->orig_value);
-		bDrawApplyButton = true;
+			// when new breakpoint is created, we should reduce next breakpoint duration, before adding
+			cout << "ofxTLBeatCurves::mouseReleased: howmany:" << ref->parentCurve->howmany << endl;
+			ref->addKeyframeAtBeat(beat, selectedKeyframe->orig_value);
+			bDrawApplyButton = true;
+		}
 	}
 
 
 	createNewOnMouseup = false;
-
-#if OLDSHIT
-	if (!bounds.inside(args.x, args.y)) return;
-	if (curve_debug) cout << "ofxTLBeatCurves::mouseReleased: button:" << args.button <<endl;
-	if (drawingEasingWindow && args.button == 0){
-		drawingEasingWindow = false;
-		timeline->dismissedModalContent();
-		ofVec2f screenpoint(args.x,args.y);
-		for(int i = 0; i < easingFunctions.size(); i++){
-			if(easingFunctions[i]->bounds.inside(screenpoint-easingWindowPosition)){
-				for(int k = 0; k < selectedKeyframes.size(); k++){
-					((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
-					// modify easing type in curve
-					float beat = selectedKeyframes[k]->beat;
-					ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
-
-				}
-				timeline->flagTrackModified(this);
-				shouldRecomputePreviews = true;
-				return;
-			}
-		}
-
-		for(int i = 0; i < easingTypes.size(); i++){
-			if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
-				for(int k = 0; k < selectedKeyframes.size(); k++){
-					((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
-					// modify easing type in curve
-					float beat = selectedKeyframes[k]->beat;
-					ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
-				}
-				timeline->flagTrackModified(this);
-				shouldRecomputePreviews = true;
-				return;
-			}
-		}
-	}
-	else{
-
-		//bool hastoupdate = createNewOnMouseup || keysDidDrag;
-		ofxTLBeatKeyframes::mouseReleased(args, millis);
-		//if (hastoupdate) updateEditorContent();
-	}
-#endif
 }
 
 void ofxTLBeatCurves::willDeleteKeyframe(ofxTLBeatKeyframe* keyframe){
@@ -564,12 +560,17 @@ void ofxTLBeatCurves::recomputePreviews(){
 bool ofxTLBeatCurves::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coord2, int* firsti, int* lasti) {
 	int i = 0;
 
+	*firsti = 0;
+	*lasti = 1;
 	bool found = false;
-	coord1->x = coord1->y = coord2->x = coord2->y = 0;
+	coord1->x = coord1->y = 0;
+	coord2->x = bounds.x + bounds.width + 1;
+	coord2->y = 0;
 	for (int i = 0; i < keyframes.size(); i++) {
 		if (isKeyframeIsInBounds(keyframes[i])) {
 			*coord1 = screenPositionForKeyframe(keyframes[i]);
 			*firsti = i;
+			//cout << "get_first_last_displayed_keyframe: found first=" << i << endl;
 			found = true;
 			break;
 		}
@@ -578,10 +579,40 @@ bool ofxTLBeatCurves::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f
 		if (isKeyframeIsInBounds(keyframes[i])) {
 			*coord2 = screenPositionForKeyframe(keyframes[i]);
 			*lasti = i; 
+			//cout << "get_first_last_displayed_keyframe: found last=" << i << endl;
 			found = true;
 			break;
 		}
 	}
+	// if not found in bounds, find out bounds
+	if (!found) { 
+		// find which keyframe is needed for interpolation on bounds.x
+		ofVec2f bx(bounds.x, 0);
+
+		for (int i = 0; i < keyframes.size(); i++) {
+			if (timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds) > bounds.x) {
+				//cout << "get_first_last_displayed_keyframe: not found first=" << i-1 << endl;
+				*firsti = i - 1;
+				break;
+			}
+		}
+	
+		for (int i = keyframes.size() - 1; i >= 0; i--) {
+			if (timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds) < bounds.x + bounds.width) {
+				*lasti = i;
+				//cout << "get_first_last_displayed_keyframe: not found last=" << i << endl;
+				*coord2 = ofVec2f(bounds.x + bounds.width + 1, 0);
+				break;
+			}
+		}
+	}
+	if (*firsti == *lasti) {
+		if (*firsti)
+			*firsti = *firsti - 1;
+		else *lasti = 1;
+	}
+	if (*lasti == -1) *lasti = *firsti + 1;
+	//if (curve_debug) cout << "get first last:==========> [ "<< *firsti << " - " << *lasti << " ] : coord1:("<< coord1->x << ", " << coord1->y << "), coord2:("<< coord2->x << ", " << coord2->y << ")"<< endl;
 
 	return found;
 }
@@ -621,12 +652,8 @@ void ofxTLBeatCurves::draw(){
 	}
 
 	ofVec2f screenpoint_first, screenpoint_last;
-	int firsti, lasti;
-	if (!get_first_last_displayed_keyframe(&screenpoint_first, &screenpoint_last, &firsti, &lasti)) {
-		//ofRect(ofRectangle(bounds.x, );
-		return;
-	}
-
+	int firsti = 0, lasti = 0;
+	bool inbounds = get_first_last_displayed_keyframe(&screenpoint_first, &screenpoint_last, &firsti, &lasti);
 
 	ofPushStyle();
 
@@ -651,11 +678,11 @@ void ofxTLBeatCurves::draw(){
 	// left low corner
 	ofVertex(bounds.x, bounds.y + bounds.height);
 	// left high corner
-	if (screenpoint_first.x != bounds.x && firsti > 0) { // first point is not on 0
-		float ny = interpolateValueForKeys(keyframes[firsti-1], keyframes[firsti], timeline->normalizedXToBeat(screenXtoNormalizedX(bounds.x, zoomBounds)));
+	if (screenpoint_first.x != bounds.x && firsti >= 0) { // first point is not on 0
+		float ny = interpolateValueForKeys(keyframes[firsti], keyframes[firsti+1], timeline->normalizedXToBeat(screenXtoNormalizedX(bounds.x, zoomBounds)));
 		float y = bounds.height - ny * bounds.height;
 		if (y < 0) y = 0;
-		if (curve_debug) cout << "firsti="<< firsti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bounds.x, zoomBounds)) <<  " y:" << y << endl;
+		//if (curve_debug) cout << "firsti="<< firsti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bounds.x, zoomBounds)) <<  " y:" << y << endl;
 		ofVertex(bounds.x, bounds.y + y);
 	}
 
@@ -670,10 +697,10 @@ void ofxTLBeatCurves::draw(){
                 ofCircle(screenpoint.x, screenpoint.y, 4);
                 //ofCurveVertex(screenpoint.x, screenpoint.y);
 		ofVertex(screenpoint.x, screenpoint.y);
-            } 
+            }
         }
 	int bw = bounds.x + bounds.width;
-	if (screenpoint_last.x < bw) { // first point is not on 0
+	if (screenpoint_last.x < bw && inbounds) { // first point is not on 0
 		float y = screenpoint_last.y;
 		//if (curve_debug) cout << "lasti="<< lasti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)) <<  " y:" << y << endl;
 		ofVertex(bw, y); // right high corner
@@ -681,11 +708,10 @@ void ofxTLBeatCurves::draw(){
 	} else {
 		float ny = interpolateValueForKeys(keyframes[lasti-1], keyframes[lasti], timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)));
 		float y = bounds.height - ny * bounds.height;
-		if (curve_debug) cout << "lasti="<< lasti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)) <<  " y:" << y << endl;
+		//if (curve_debug) cout << "lasti="<< lasti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)) <<  " y:" << y << endl;
 		if (y < 0) y = 0;
 		ofVertex(bw, bounds.y + y); // right high corner
 		ofVertex(bw, bounds.y+bounds.height); // right low corner
-
 	}
 
 	

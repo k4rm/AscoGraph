@@ -316,6 +316,7 @@ ofxTLBeatKeyframe* ofxTLBeatKeyframes::keyframeAtScreenpoint(ofVec2f p){
 }
 
 bool ofxTLBeatKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return false;
 	cout <<"ofxTLBeatKeyframes: mousepressed" << endl;
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
 	keysAreStretchable = ofGetModifierShiftPressed() && ofGetModifierControlPressed();
@@ -478,6 +479,7 @@ void ofxTLBeatKeyframes::updateKeyframeSort(){
 }
 
 void ofxTLBeatKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
+	if (!bounds.inside(args.x, args.y)) return;
 	keysAreDraggable = false;
 	if(keysDidDrag){
 		//reset these caches because they may no longer be valid

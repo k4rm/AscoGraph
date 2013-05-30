@@ -129,6 +129,7 @@ void ofxTLMultiCurves::setHowmany(int howmany_)
 
 
 bool ofxTLMultiCurves::mousePressed(ofMouseEventArgs& args, long millis){
+    if (!bounds.inside(args.x, args.y)) return false;
     cout << "ofxTLMultiCurves: moussePressed"<<endl;
     int selected = -1;
     bool r = false;

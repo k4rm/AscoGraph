@@ -1836,7 +1836,7 @@ void ofxAntescofog::createCodeTemplate(int which)
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_CURVE:
-			str = "curve slider  Grain := 0.05s, Action := print $x $y\n{\n\t$x, $y\n\t{\n\t    { 0. 2. }\n\t1   { 1. 0. } /*type \"exponential\"*/\n\t2/5 { 3. 1.4}\n\t; ...\n\t}\n}\n";
+			str = "curve slider  Grain := 0.05s, Action := print $x $y\n{\n\t$x, $y\n\t{\n\t    { 0. 2. } /*type \"exponential\"*/\n\t1   { 1. 0. }\n\t2/5 { 3. 1.4}\n\t; ...\n\t}\n}\n";
 			[ editor replaceString:pos lineb:pos str:str.c_str() ];
 			break;
 

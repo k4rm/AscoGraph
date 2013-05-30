@@ -491,6 +491,7 @@ void ofxTLAntescofoAction::regionSelected(ofLongRange timeRange, ofRange valueRa
 
 bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 {
+	if (!bounds.inside(args.x, args.y)) return false;
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
 		(*i)->group->selected = false;
 
@@ -893,11 +894,11 @@ ActionMultiCurves::ActionMultiCurves(Curve* c, float delay_, Event *e, ActionGro
 		header->lineNum_begin = curve->locate()->begin.line;
 		header->lineNum_end = curve->locate()->end.line;
 
-		howmany = curve->seq_vect.size();
-
-		for (uint i = 0; i < howmany; i++)
-		{
-			SeqContFunction* s = curve->seq_vect[i];
+		howmany = curve->seq_vect[0]->var_list->size();
+		cout << "ActionMultiCurves: contains howmany:"<< howmany << endl;
+		//for (uint i = 0; i < howmany; i++)
+		//{
+			SeqContFunction* s = curve->seq_vect[0];
 			list<Var*>::iterator it_var = s->var_list->begin();
 			for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
 			{
@@ -908,7 +909,7 @@ ActionMultiCurves::ActionMultiCurves(Curve* c, float delay_, Event *e, ActionGro
 				ActionCurve* newc = new ActionCurve(var, &s->s_vect[j], &s->dur_vect, 0, e, header, this);
 				sons.push_back(newc);
 			}
-		}
+		//}
 	}
 }
 
@@ -996,6 +997,11 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 					cout << "ofxTLAntescofoAction::add_action: got delay:" << ii << endl;
 					delays.push_back(ii);
 				}
+				else if ((*j)->value()->is_constant()) {
+						double val = eval_double((*j)->value());
+						cout << "ofxTLAntescofoAction::add_action: got delay:" << val << endl;
+						delays.push_back(val);
+				}
 			}
 		}
 		//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
@@ -1023,16 +1029,45 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 			// set keyframes
 			double dcumul = 0.;
 			for (int k = 0; k < delays.size(); k++) {
-				//cout << " ------- delays["<<n<<"]: " << ar->cfwd->delays[n] << endl;
 				dcumul += delays[k];
-				//for (vector< vector<double> >::iterator i = ar->cfwd->values.begin(); i != ar->cfwd->values.end(); i++) {
 				cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << 0 << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
 					<< " val=" <<  values[0][k] << endl;
-
-				//c->addKeyframeAtMillis(ar->cfwd->values[i], ofxAntescofoNote->beatToMillisec(ar->beatnum + dcumul));
 				curves->addKeyframeAtBeat(values[0][k], header->beatnum + dcumul);
-				// }
 				curves->enable();
+#if 0
+				// assign type
+				for(int i = 0; i < easingFunctions.size(); i++) {
+					if(easingFunctions[i]->name == /**/){
+						for(int k = 0; k < selectedKeyframes.size(); k++){
+							((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
+							// modify easing type in curve
+							float beat = selectedKeyframes[k]->beat;
+							ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
+							drawingEasingWindow = false; timeline->dismissedModalContent();
+						}
+						timeline->flagTrackModified(this);
+						shouldRecomputePreviews = true;
+						cout << "ofxTLBeatCurves::mouseReleased: easingFunc : " << i << endl;
+						return;
+					}
+				}
+
+				for(int i = 0; i < easingTypes.size(); i++){
+					if (easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
+						cout << "ofxTLBeatCurves::mouseReleased: easingType : " << i << endl;
+						for(int k = 0; k < selectedKeyframes.size(); k++){
+							((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
+							// modify easing type in curve
+							//float beat = selectedKeyframes[k]->beat;
+							//ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
+							//drawingEasingWindow = false; timeline->dismissedModalContent();
+						}
+						timeline->flagTrackModified(this);
+						shouldRecomputePreviews = true;
+						return;
+					}
+				}
+#endif
 			}
 		}
 	}
@@ -1118,9 +1153,8 @@ void ActionCurve::deleteKeyframeAtBeat(float beat) {
 			p--;
 			// delete k, but change prev duration += k duration
 			if (s == simple_vect->end()) { //k == dur_vect->end()) {
-				cout << "------------------------------------ last elt ---------------" << endl;
-					dur_vect->erase(k);
-					simple_vect->erase(s);
+				dur_vect->erase(k);
+				simple_vect->erase(s);
 			} else {
 				vector<AnteDuration*>::iterator n = k;
 				n++;
@@ -1157,13 +1191,16 @@ void ActionCurve::deleteKeyframeAtBeat(float beat) {
 }
 
 // when new breakpoint is created, we should reduce prev breakpoint duration, before adding
-void ActionCurve::addKeyframeAtBeat(float beat, float val)
+bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 {
 	if (debug_edit_curve) { cout << "ofxTLAntescofoAction:: add keyframe at beat: " << beat << " val: " << val << endl; print(); }
 	if (beat == 0) {
 		//set_dur_val(val, simple_vect->begin());
-		return;
+		return false;
 	}
+	cout << "ofxTLAntescofoAction:: add keyframe at beat: howmany:" << parentCurve->howmany << endl;
+	if (parentCurve->howmany > 1) // do not support multicurves editing for now
+		return false;
 
 	double dcumul = 0.;
 	int i = 0;
@@ -1191,7 +1228,7 @@ void ActionCurve::addKeyframeAtBeat(float beat, float val)
 					AnteDuration* ad = new AnteDuration(d);
 					FloatValue* ny1 = get_new_y(sp->y1);
 					//assert(ny1);
-					cout << "addKeyframeAtBeat:ERROR : not an constant value in curve...." << endl;
+					if (!ny1) cout << "addKeyframeAtBeat:ERROR : not an constant value in curve...." << endl;
 					FloatValue* ny0 = new FloatValue(val);
 					s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var));
 					dur_vect->insert(k, ad);
@@ -1217,6 +1254,7 @@ void ActionCurve::addKeyframeAtBeat(float beat, float val)
 	}
 	parentCurve->curve->show(cout);
 	print();
+	return true;
 }
 
 
@@ -1227,6 +1265,7 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 	float dcumul = 0;
 	int i = 0;
 	bool done = false;
+
 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
 	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {

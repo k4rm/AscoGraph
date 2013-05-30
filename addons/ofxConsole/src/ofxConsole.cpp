@@ -74,13 +74,14 @@ void ofxConsole::draw()
 {
 	if (!bShow) return;
 	ofNoFill();
-	ofSetColor(255, 255, 255, 200);
+	ofSetColor(0, 0, 0, 200);
+	//ofSetColor(255, 255, 255, 200);
 	ofRect(x, y, w, h);
 	ofFill();
-	ofSetColor(255, 255, 255, 10);
+	ofSetColor(0, 0, 0, 10);
 
 	ofRect(x, y, w, h);
-	ofSetColor(255, 255, 255, 210);
+	ofSetColor(0, 0, 0, 210);
 
 	int b = 0, d = 0;
 	int len;
