@@ -1085,7 +1085,6 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 		ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
 		[ editor setup: nswin glview:nsview_ rect:r];
 
-		cout << "mScore_filename:" << mScore_filename << " : " << access(mScore_filename.c_str(), R_OK) << endl;
 		if (mScore_filename.size() && access(mScore_filename.c_str(), R_OK) != -1)
 			[ editor loadFile:mScore_filename];
 		else if (access(mScore_filename.c_str(), R_OK) != -1)
@@ -1093,8 +1092,12 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 	} else {
 		if (editor) {
 			[ editor die];
-			score_w = ofGetWindowWidth() - score_x;
-			cocoaWindow->setWindowShape(ofGetWidth() - CONSTANT_EDITOR_VIEW_WIDTH + 2*score_x, ofGetHeight());
+			int w = ofGetWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
+			cocoaWindow->setWindowShape(w, ofGetHeight());
+			score_w = ofGetWindowWidth() - 2*score_x;
+
+			timeline.setWidth(score_w);
+			guiBottom->getRect()->width = score_w + score_x;
 		}
 	}
 #endif
