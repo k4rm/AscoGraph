@@ -39,7 +39,7 @@
 #include "ofxTimeline.h"
 #include "ofxHotKeys.h"
 
-bool curve_debug = true;
+bool curve_debug = false;
 
 ofxTLBeatCurves::ofxTLBeatCurves()
 : ofxTLBeatKeyframes()
@@ -48,6 +48,7 @@ ofxTLBeatCurves::ofxTLBeatCurves()
 	valueRange = ofRange(0.0, 1.0);
 	drawingEasingWindow = false;
 
+	boundsCached = ofRectangle(0, 0, 0, 0);
 	bDrawApplyButton = false;
 }
 
@@ -241,6 +242,7 @@ void ofxTLBeatCurves::mouseMoved(ofMouseEventArgs& args, long millis){
 	} else cursor.set(args.x, args.y);
 }
 void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
+	if (ref->parentCurve->howmany != 1) return;
 	//if (!bounds.inside(args.x, args.y)) return;
 	//if(!drawingEasingWindow){ ofxTLBeatKeyframes::mouseDragged(args, millis); }
 	float beat = timeline->millisecToBeat(millis);
@@ -284,6 +286,7 @@ void ofxTLBeatCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
+	if (ref->parentCurve->howmany != 1) return;
 	keysAreDraggable = false;
 	if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y)) {
 		if (curve_debug) cout << "ofxTLBeatCurves::mouseReleased: should apply" << endl;
@@ -391,6 +394,7 @@ void ofxTLBeatCurves::updateEditorContent()
 */
 
 void ofxTLBeatCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
+	if (ref->parentCurve->howmany != 1) return;
 	easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
 			MIN(args.y, timeline->getBottomLeft().y - (tweenBoxHeight*easingFunctions.size())));
 
@@ -612,7 +616,7 @@ bool ofxTLBeatCurves::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f
 		else *lasti = 1;
 	}
 	if (*lasti == -1) *lasti = *firsti + 1;
-	//if (curve_debug) cout << "get first last:==========> [ "<< *firsti << " - " << *lasti << " ] : coord1:("<< coord1->x << ", " << coord1->y << "), coord2:("<< coord2->x << ", " << coord2->y << ")"<< endl;
+	if (curve_debug) cout << "get first last:==========> [ "<< *firsti << " - " << *lasti << " ] : coord1:("<< coord1->x << ", " << coord1->y << "), coord2:("<< coord2->x << ", " << coord2->y << ")"<< endl;
 
 	return found;
 }
@@ -624,10 +628,24 @@ void ofxTLBeatCurves::draw(){
 		return;
 	}
 
+	bool redraw = false;
 	if(shouldRecomputePreviews || viewIsDirty){
 		recomputePreviews();
+		redraw = true;
 	}
 	
+	/*
+	if (bounds == boundsCached && !redraw) {
+		drawCache.draw(0,0);
+		return;
+	}
+
+	redraw = true;
+	bounds = boundsCached;
+
+	drawCache.begin();
+	*/
+
 	// Draw Apply btn 
 	if (bDrawApplyButton) {
 		ofPushStyle();
@@ -669,7 +687,7 @@ void ofxTLBeatCurves::draw(){
 
         //******* DRAW FILL CURVES
         ofSetPolyMode(OF_POLY_WINDING_NONZERO);
-
+#if 0
 
 	//cout << "keyframe size:" << keyframes.size() << endl;
 	//cout << "selectedKeyframe size:" << selectedKeyframes.size() << endl;
@@ -679,10 +697,10 @@ void ofxTLBeatCurves::draw(){
 	ofVertex(bounds.x, bounds.y + bounds.height);
 	// left high corner
 	if (screenpoint_first.x != bounds.x && firsti >= 0) { // first point is not on 0
-		float ny = interpolateValueForKeys(keyframes[firsti], keyframes[firsti+1], timeline->normalizedXToBeat(screenXtoNormalizedX(bounds.x, zoomBounds)));
+		float ny = interpolateValueForKeys(keyframes[firsti], keyframes[firsti+1], timeline->normalizedXToBeat(screenXtoNormalizedX(screenpoint_first.x, zoomBounds)));
 		float y = bounds.height - ny * bounds.height;
 		if (y < 0) y = 0;
-		//if (curve_debug) cout << "firsti="<< firsti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bounds.x, zoomBounds)) <<  " y:" << y << endl;
+		if (curve_debug) cout << "firsti="<< firsti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bounds.x, zoomBounds)) <<  " y:" << y << endl;
 		ofVertex(bounds.x, bounds.y + y);
 	}
 
@@ -702,18 +720,19 @@ void ofxTLBeatCurves::draw(){
 	int bw = bounds.x + bounds.width;
 	if (screenpoint_last.x < bw && inbounds) { // first point is not on 0
 		float y = screenpoint_last.y;
-		//if (curve_debug) cout << "lasti="<< lasti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)) <<  " y:" << y << endl;
+		if (curve_debug) cout << "<lasti="<< lasti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)) <<  " y:" << y << endl;
 		ofVertex(bw, y); // right high corner
 		ofVertex(bw, bounds.y+bounds.height); // right low corner
 	} else {
 		float ny = interpolateValueForKeys(keyframes[lasti-1], keyframes[lasti], timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)));
 		float y = bounds.height - ny * bounds.height;
-		//if (curve_debug) cout << "lasti="<< lasti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)) <<  " y:" << y << endl;
-		if (y < 0) y = 0;
-		ofVertex(bw, bounds.y + y); // right high corner
+		if (curve_debug) cout << ">lasti="<< lasti << " x:"<< timeline->normalizedXToBeat(screenXtoNormalizedX(bw, zoomBounds)) <<  " y:" << y << endl;
+		//if (y < 0) y = 0;
+		if (y >= 0)
+			ofVertex(bw, bounds.y + y); // right high corner
 		ofVertex(bw, bounds.y+bounds.height); // right low corner
 	}
-
+#endif
 	
 #if 0
 	// draw edges

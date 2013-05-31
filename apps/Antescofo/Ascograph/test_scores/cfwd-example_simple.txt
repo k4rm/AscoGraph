@@ -16,3 +16,124 @@ Curve slider  Grain := 0.05s, Action :=
 }
 
 NOTE C2 20
+
+
+NOTE C4 4.0
+Curve slider2  Grain := 0.05s, Action :=
+        {
+            print $x
+        }
+{
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 }
+    }
+}
+
+
+
+NOTE C4 4.0
+Curve slide3r  Grain := 0.05s, Action :=
+        {
+            print $x
+        }
+{
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 }
+    }
+}
+
+
+
+NOTE C4 4.0
+Curve slide4r  Grain := 0.05s, Action :=
+        {
+            print $x
+        }
+{
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 }
+    }
+}
+
+
+
+NOTE C4 4.0
+Curve slider5  Grain := 0.05s, Action :=
+        {
+            print $x
+        }
+{
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 }
+    }
+}
+
+
+
+NOTE C4 4.0
+Curve slider6  Grain := 0.05s, Action :=
+        {
+            print $x
+        }
+{
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 }
+    }
+}
+
+
+
+NOTE C4 4.0
+Curve slider7  Grain := 0.05s, Action :=
+        {
+            print $x
+        }
+{
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 }
+    }
+}
+
+
+
+NOTE C4 4.0
+Curve slider8  Grain := 0.05s, Action :=
+        {
+            print $x
+        }
+{
+    $x
+    {
+          { 0 } type "linear"
+        1 { 1 } type "linear"
+        2 { 2 } type "linear"
+        3 { 3 }
+    }
+}
+
+
+NOTE C4 4.0

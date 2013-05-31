@@ -1085,15 +1085,16 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 		ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
 		[ editor setup: nswin glview:nsview_ rect:r];
 
-		if (mScore_filename.size() && access(mScore_filename.c_str(), R_OK))
+		cout << "mScore_filename:" << mScore_filename << " : " << access(mScore_filename.c_str(), R_OK) << endl;
+		if (mScore_filename.size() && access(mScore_filename.c_str(), R_OK) != -1)
 			[ editor loadFile:mScore_filename];
-		else if (access(mScore_filename.c_str(), R_OK))
+		else if (access(mScore_filename.c_str(), R_OK) != -1)
 			[ editor loadFile:TEXT_CONSTANT_TEMP_FILENAME ];
 	} else {
 		if (editor) {
 			[ editor die];
 			score_w = ofGetWindowWidth() - score_x;
-			cocoaWindow->setWindowShape(ofGetWidth() - CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
+			cocoaWindow->setWindowShape(ofGetWidth() - CONSTANT_EDITOR_VIEW_WIDTH + 2*score_x, ofGetHeight());
 		}
 	}
 #endif

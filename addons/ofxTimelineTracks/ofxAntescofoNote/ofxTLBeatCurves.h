@@ -91,6 +91,9 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 		float easingBoxHeight;
 		float tweenBoxWidth;
 		float tweenBoxHeight;
+
+		ofFbo	drawCache;
+		ofRectangle boundsCached;
 		ofPoint	cursor;
 
 		ofRectangle mApplyBtnRect;

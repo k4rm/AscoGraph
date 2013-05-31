@@ -346,8 +346,6 @@ static const char * box_xpm[] = {
 }
 
 - (void) die {
-	//[textStorage release];
-
 	NSRect s = [mWindow frame];
 	s.size.width -= 400;
 	[ mGLview setFrame:s ];
@@ -360,6 +358,7 @@ static const char * box_xpm[] = {
 //void ofxCodeEditor::loadFile(string filename)
 - (void) loadFile: (string) filename
 {
+	cout << "ofxCodeEditor: loadfile:" << filename << endl;
 	NSError* error = nil;
 
 	NSString* path = [[NSBundle mainBundle] pathForResource: [NSString stringWithUTF8String:filename.c_str()]//@"TestData" 
