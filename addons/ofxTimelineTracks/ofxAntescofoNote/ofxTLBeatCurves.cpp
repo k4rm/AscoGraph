@@ -295,7 +295,7 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 		bDrawApplyButton = false;
 	}
 
-	if (drawingEasingWindow /*&& args.button == 0*/){
+	if (drawingEasingWindow) {
 		//drawingEasingWindow = false; timeline->dismissedModalContent();
 		ofVec2f screenpoint(args.x,args.y);
 		for(int i = 0; i < easingFunctions.size(); i++){
@@ -305,7 +305,9 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 					// modify easing type in curve
 					float beat = selectedKeyframes[k]->beat;
 					ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
-					drawingEasingWindow = false; timeline->dismissedModalContent();
+					drawingEasingWindow = false;
+					timeline->dismissedModalContent();
+					bDrawApplyButton = false;
 				}
 				timeline->flagTrackModified(this);
 				shouldRecomputePreviews = true;
@@ -319,6 +321,7 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 				cout << "ofxTLBeatCurves::mouseReleased: easingType : " << i << endl;
 				for(int k = 0; k < selectedKeyframes.size(); k++){
 					((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
+					bDrawApplyButton = false;
 					// modify easing type in curve
 					//float beat = selectedKeyframes[k]->beat;
 					//ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
@@ -329,20 +332,30 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 				return;
 			}
 		}
-	} //else{ //ofxTLBeatKeyframes::mouseReleased(args, millis); }
+	}
 
-	if (!bounds.inside(args.x, args.y)) return;
+	if (!bounds.inside(args.x, args.y)) {
+		// click is out of easingWindow
+		drawingEasingWindow = false;
+		timeline->dismissedModalContent();
+		return;
+	}
 	if(keysDidDrag && !drawingEasingWindow){
 		//reset these caches because they may no longer be valid
 		lastKeyframeIndex = 1;
 		lastSampleBeat = 0;
 		timeline->flagTrackModified(this);
-		for(int i = 0; i < selectedKeyframes.size(); i++){
+		for (int i = 0; i < selectedKeyframes.size(); i++) {
 			if (curve_debug) cout << "ofxTLBeatCurves::mouseReleased: selectedkeyframe: origbeat: " <<  selectedKeyframes[i]->orig_beat << " beat:" << selectedKeyframes[i]->beat << endl;
 
 			//ref->moveKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->orig_beat, selectedKeyframes[i]->tmp_value, selectedKeyframe->orig_value);
+			EasingFunction* func = ((ofxTLTweenBeatKeyframe*)(selectedKeyframes[i]))->easeFunc;
+			EasingType* type = ((ofxTLTweenBeatKeyframe*)(selectedKeyframes[i]))->easeType;
+
 			ref->deleteKeyframeAtBeat(selectedKeyframes[i]->orig_beat);
 			ref->addKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->tmp_value);
+			ref->changeKeyframeEasing(selectedKeyframes[i]->beat, func->name);
+
 			bDrawApplyButton = true;
 
 			selectedKeyframes[i]->orig_value = selectedKeyframes[i]->tmp_value;

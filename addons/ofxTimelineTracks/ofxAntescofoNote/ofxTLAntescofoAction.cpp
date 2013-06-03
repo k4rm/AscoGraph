@@ -1048,61 +1048,6 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 				if (easetype.size() && easetype != "linear" && easetype != "\"linear\"")
 					curves->changeKeyframeEasing(header->beatnum + dcumul, easetype);
 				curves->enable();
-#if 0
-				vector<SimpleContFunction>::iterator s = simple_vect->begin();
-				for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
-					if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe easing at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
-
-					dcumul += (*k)->eval();
-
-					if (dcumul < beat)
-						continue;
-					else {
-						if (s->type && s->type->is_value()) {
-							if (debug_edit_curve) cout << "change: is value:" << s->type->is_value() << endl;
-							if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe" << endl;
-							Value* v = (Value*)s->type->is_value();
-							//StringValue *sv = dynamic_cast<StringValue*>(s->type);
-							*v = StringValue(type);
-							done = true;
-							break;
-						}
-					}
-				}
-
-				// assign type
-				for(int i = 0; i < easingFunctions.size(); i++) {
-					if(easingFunctions[i]->name == /**/){
-						for(int k = 0; k < selectedKeyframes.size(); k++){
-							((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
-							// modify easing type in curve
-							float beat = selectedKeyframes[k]->beat;
-							ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
-							drawingEasingWindow = false; timeline->dismissedModalContent();
-						}
-						timeline->flagTrackModified(this);
-						shouldRecomputePreviews = true;
-						cout << "ofxTLBeatCurves::mouseReleased: easingFunc : " << i << endl;
-						return;
-					}
-				}
-
-				for(int i = 0; i < easingTypes.size(); i++){
-					if (easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
-						cout << "ofxTLBeatCurves::mouseReleased: easingType : " << i << endl;
-						for(int k = 0; k < selectedKeyframes.size(); k++){
-							((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
-							// modify easing type in curve
-							//float beat = selectedKeyframes[k]->beat;
-							//ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
-							//drawingEasingWindow = false; timeline->dismissedModalContent();
-						}
-						timeline->flagTrackModified(this);
-						shouldRecomputePreviews = true;
-						return;
-					}
-				}
-#endif
 			}
 		}
 	}
