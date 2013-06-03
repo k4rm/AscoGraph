@@ -377,6 +377,49 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 	createNewOnMouseup = false;
 }
 
+// change keyframe easing type
+void ofxTLBeatCurves::changeKeyframeEasing(float beat, string type) {
+	cout << "ofxTLBeatCurves::changeKeyframeEasing: beat:"<< beat << " type:"<< type << endl;
+	float dcumul = 0;
+	int i = 0;
+	bool done = false;
+
+	if (type.size() && type[0] == '\"')
+		type = type.substr(1, type.size() - 2);
+
+	for(int i = 0; i < keyframes.size(); i++) {
+		//if (debug_edit_curve) cout << "ofxTLBeatCurves:: change keyframe easing at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
+
+		dcumul += keyframes[i]->beat;
+		if (dcumul < beat)
+			continue;
+		else {
+			for(int j = 0; j < easingFunctions.size(); j++){
+				//cout << "ofxTLBeatCurves::changeKeyframeEasing: got for keyframe: " << i << " name:" << easingFunctions[j]->name << endl;
+				string str = easingFunctions[j]->name;
+				bool res = (type == str);
+				//cout << "type:" << type << " =?= " << "str:" << str << " res:" << res << endl;
+				if(type == str) {
+					//cout << "ofxTLBeatCurves::changeKeyframeEasing: changed to type " << type << endl;
+					// modify easing type
+					((ofxTLTweenBeatKeyframe*)keyframes[i])->easeFunc = easingFunctions[j];
+				}
+			}
+			/*
+			for(int j = 0; j < easingTypes.size(); j++){
+				if(easingTypes[j]->easeType == easingTypes[i]) {
+					((ofxTLTweenBeatKeyframe*)keyframes[i])->easeType = easingTypes[j];
+					return;
+				}
+			} */
+		}
+		break;
+	}
+
+
+}
+
+
 void ofxTLBeatCurves::willDeleteKeyframe(ofxTLBeatKeyframe* keyframe){
 	bDrawApplyButton = true;
 	ref->deleteKeyframeAtBeat(keyframe->beat);

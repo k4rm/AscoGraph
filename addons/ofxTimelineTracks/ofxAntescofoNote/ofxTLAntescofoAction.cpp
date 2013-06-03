@@ -21,6 +21,8 @@
 
 ofxTimeline *_timeline;
 
+bool debug_edit_curve = false;
+
 template<class T>
 int inline findAndReplace(T& source, const T& find, const T& replace)
 {
@@ -1028,13 +1030,46 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 			curves->setValueRangeMin(min);
 			// set keyframes
 			double dcumul = 0.;
-			for (int k = 0; k < delays.size(); k++) {
+			vector<SimpleContFunction>::iterator s = simple_vect->begin();
+			for (int k = 0; k < delays.size(); k++, s++) {
 				dcumul += delays[k];
 				cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << 0 << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
 					<< " val=" <<  values[0][k] << endl;
+				string easetype;
+				if (s != simple_vect->end() && s->type && s->type->is_value()) {
+					Value* v = (Value*)s->type->is_value();
+					//*v = StringValue(type);
+					ostringstream oss; 
+					oss << *v;
+					easetype = oss.str();
+				}
+
 				curves->addKeyframeAtBeat(values[0][k], header->beatnum + dcumul);
+				if (easetype.size() && easetype != "linear" && easetype != "\"linear\"")
+					curves->changeKeyframeEasing(header->beatnum + dcumul, easetype);
 				curves->enable();
 #if 0
+				vector<SimpleContFunction>::iterator s = simple_vect->begin();
+				for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {
+					if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe easing at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
+
+					dcumul += (*k)->eval();
+
+					if (dcumul < beat)
+						continue;
+					else {
+						if (s->type && s->type->is_value()) {
+							if (debug_edit_curve) cout << "change: is value:" << s->type->is_value() << endl;
+							if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe" << endl;
+							Value* v = (Value*)s->type->is_value();
+							//StringValue *sv = dynamic_cast<StringValue*>(s->type);
+							*v = StringValue(type);
+							done = true;
+							break;
+						}
+					}
+				}
+
 				// assign type
 				for(int i = 0; i < easingFunctions.size(); i++) {
 					if(easingFunctions[i]->name == /**/){
@@ -1077,7 +1112,6 @@ ActionCurve::~ActionCurve()
 {
 }
 
-bool debug_edit_curve = true;
 
 bool ActionCurve::set_dur_val(double d, AnteDuration* a)
 {
@@ -1230,6 +1264,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 					//assert(ny1);
 					if (!ny1) cout << "addKeyframeAtBeat:ERROR : not an constant value in curve...." << endl;
 					FloatValue* ny0 = new FloatValue(val);
+					//s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var));
 					s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var));
 					dur_vect->insert(k, ad);
 					// change prev y1
@@ -1239,6 +1274,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 					if (debug_edit_curve) cout << "looping stopped, inserted: " << i << endl;
 				} 
 			} else { cout << "Can not convert to Value." << endl; }
+
 			break;
 		} 
 	}
@@ -1276,8 +1312,8 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 		if (dcumul < beat)
 			continue;
 		else {
-			if (debug_edit_curve) cout << "change: is value:" << s->type->is_value() << endl;
-			if (s->type && s->type->is_value()) {
+			if (s != simple_vect->end() && s->type && s->type->is_value()) {
+				if (debug_edit_curve) cout << "change: is value:" << s->type->is_value() << endl;
 				if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe" << endl;
 				Value* v = (Value*)s->type->is_value();
 				//StringValue *sv = dynamic_cast<StringValue*>(s->type);
@@ -1287,6 +1323,7 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 			}
 		}
 	}
+
 	if (done) {
 		parentCurve->curve->show(cout);
 		print();
