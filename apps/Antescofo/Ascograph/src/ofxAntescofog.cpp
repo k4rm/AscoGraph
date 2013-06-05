@@ -366,8 +366,6 @@ void ofxAntescofog::setupUI() {
 	[helpMenuItem setSubmenu:helpMenu];
 	[menubar addItem:helpMenuItem];
 
-	//guiTop = new ofxUICanvas(0, 0, ofGetWindowWidth(), mUIbottom_y);//score_y);
-	//guiBottom = new ofxUICanvas(0, 2*ofGetWindowHeight()/3, ofGetWindowWidth(), 1*ofGetWindowHeight()/3);
 	guiBottom = new ofxUICanvas(0, 0, score_x+score_w, score_y);
 	guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight());
 	guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y);
@@ -458,6 +456,17 @@ void ofxAntescofog::setupUI() {
 	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
 	guiBottom->addWidgetLeft(b);
 
+	guiElevator = new ofxUICanvas(0, score_y, 17, ofGetWindowHeight() - score_y);
+	elevator = new ofxUIRangeSlider(3, 0*score_y+2, 12, ofGetWindowHeight() - score_y - 6, 1, 255, 200, 255, "elevator", OFX_UI_FONT_SMALL);
+	guiElevator->addWidget(elevator);
+
+	elevator->setLabelPrecision(0);
+	elevator->setLabelVisible(false);
+	elevator->setColorFill(ofColor(timeline.getColors().outlineColor, 72)); //ofColor(0, 0, 0, 255));
+	elevator->setVisible(false);
+	guiElevator->setVisible(false);
+	guiElevator->setFont("DroidSansMono.ttf");
+	guiElevator->disable();
 
 	guiFind->setColorBack(ofColor(0, 0, 0, 0));
 
@@ -502,6 +511,7 @@ void ofxAntescofog::setupUI() {
 	ofAddListener(guiFind->newGUIEvent, this, &ofxAntescofog::guiEvent);
 	ofAddListener(guiSetup_Colors->newGUIEvent, this, &ofxAntescofog::guiEvent);
 	ofAddListener(guiSetup_OSC->newGUIEvent, this, &ofxAntescofog::guiEvent);
+	ofAddListener(guiElevator->newGUIEvent, this, &ofxAntescofog::guiEvent);
 
 }
 
@@ -655,6 +665,11 @@ void ofxAntescofog::update() {
 	//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
 	timeline.setWidth(score_w);
 	timeline.setOffset(ofVec2f(score_x, score_y));
+
+	if (timeline.getDrawRect().height + score_y > ofGetWindowHeight()) {
+		if (!elevator->isVisible())
+			elevatorEnable();
+	} // else if (elevator->isVisible() && ) elevatorDisable();
 
 	// check for waiting messages
 	while( mOSCreceiver.hasWaitingMessages() )
@@ -813,6 +828,8 @@ void ofxAntescofog::draw() {
 
 			timeline.draw();
 			guiBottom->draw();
+			if (guiElevator->isEnabled())
+				guiElevator->draw();
 			console->draw();
 			ofPopStyle();
 
@@ -1790,6 +1807,21 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         timeline.enable();
         guiBottom->enable();
     }
+    if(e.widget->getName() == "elevator")
+    {
+	    ofxUIRangeSlider *r = (ofxUIRangeSlider*)e.widget;
+	    double m = (r->getPercentValueLow() + r->getPercentValueHigh()) / 2;
+	    int score_h = timeline.getDrawRect().height;
+	    int topy =  guiBottom->getRect()->y; //timeline.getDrawRect().y;
+	    double ny = (m - 0.75) * score_h + topy;
+	    cout << "Elevator clicked: medium:" << m << " score_y: " << score_y << " ny:" << ny << endl;
+	    if (ny + score_h < topy)
+		    ny = score_y + 200;
+	    if (topy + ny > ofGetWindowHeight())
+		    ny = ofGetWindowHeight() + topy - score_h;
+	    score_y = ny;
+    }
+
 }
 
 void ofxAntescofog::editorDoubleclicked(int line)
@@ -1857,6 +1889,45 @@ void ofxAntescofog::createCodeTemplate(int which)
 		default:
 			;
 	}
+}
+
+
+void ofxAntescofog::elevatorEnable()
+{
+	elevator->setVisible(true);
+	guiElevator->enable();
+	guiElevator->setVisible(true);
+	int var = 14;
+	score_x += var;
+	score_w -= var;
+	ofRectangle r = timeline.getDrawRect();
+	int h = r.height;
+	//elevator->setValueLow(0);
+	//elevator->setValueHigh(0);
+	//elevator->setMax(0);
+	//elevator->setMin(0);
+	double d = (ofGetWindowHeight() - score_y);
+	double valueHigh = d / h;
+	cout << "ofxAntescofog::elevatorEnable: timeline h : " << h << endl;
+	cout << "ofxAntescofog::elevatorEnable:(ofGetWindowHeight() - score_y) : " << d <<endl; 
+	cout << "ofxAntescofog::elevatorEnable: valueHigh : " << valueHigh << endl;
+	//elevator->setValueLow(valueHigh);
+	//elevator->setValueHigh(valueHigh*100);
+	//elevator->setColorBack(ofColor(0, 0, 0, 255));
+
+	//elevator->setMin(valueHigh);
+	//elevator->setMax(valueHigh*25);
+}
+
+void ofxAntescofog::elevatorDisable()
+{
+	cout << " ofxAntescofog::elevatorDisable()" << endl;
+	int var = 14;
+	score_x -= var;
+	score_w += var;
+	elevator->setVisible(false);
+	guiElevator->disable();
+	guiElevator->setVisible(false);
 }
 
 void AntescofoTimeline::setZoomer(ofxTLZoomer *z)

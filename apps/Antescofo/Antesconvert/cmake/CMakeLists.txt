@@ -26,7 +26,7 @@ set(OPENFRAMEWORKS_ADDONS_ROOT ${OPENFRAMEWORKS_ROOT}/addons/)
 set (ANTESCOFO_PARSER_PATH ${OPENFRAMEWORKS_ROOT}/../antescofo_New )
 
 # oscpack
-get_filename_component(OSCPACK_DIR ${ANTESCOFO_PARSER_PATH}/../musync-libs/oscpack_1_1_0_RC2/ ABSOLUTE)
+get_filename_component(OSCPACK_DIR ${ANTESCOFO_PARSER_PATH}/../Mutant-libs/oscpack_1_1_0_RC2/ ABSOLUTE)
 set (OSCPACK_INCLUDES_DIR 
 		${OSCPACK_DIR}/ip
 		${OSCPACK_DIR}/osc
@@ -72,10 +72,12 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/FakeRuntime.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Expression.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/FakeRuntime.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Action.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/IOfile.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function_map.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Score.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Environment.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Statements.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Values.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/TemporalRegex.cpp
 	${ANTESCOFO_PARSER_PATH}/parser/parsedriver.cpp

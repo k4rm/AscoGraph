@@ -214,7 +214,7 @@ public:
 			else 
 			{
 				ofRect(rect->getX(), rect->getY()+(1.0-valuehigh)*rect->getHeight(), rect->getWidth(), rect->getHeight()*(valuehigh-valuelow)); 
-			}	
+			}
 			if(kind == OFX_UI_WIDGET_RSLIDER_V)
 			{
 				label->drawString(rect->getX()+rect->getWidth()+padding, label->getRect()->getHeight()/2.0+rect->getY()+rect->getHeight()-rect->getHeight()*valuehigh, ofToString(getScaledValueHigh(),labelPrecision)); 

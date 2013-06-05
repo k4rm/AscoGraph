@@ -157,7 +157,7 @@ class ofxAntescofog : public ofBaseApp{
 #endif
 
 		// UI
-		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC;
+		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC, *guiElevator;
 		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;
 		ofxUISlider *mSliderBPM;
@@ -189,6 +189,9 @@ class ofxAntescofog : public ofBaseApp{
 		void save_ColorPicker(string name);
 		void draw_ColorAsset(string name, ofColor *color);
 		string mColorChanged;
+		ofxUIRangeSlider* elevator;
+		void elevatorEnable();
+		void elevatorDisable();
 
 		// OSC setup
 		void draw_OSCSetup();

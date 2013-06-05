@@ -692,7 +692,6 @@ public:
     virtual void draw()
     {
         ofPushStyle();
-        
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_LIGHTING);
         ofEnableBlendMode(OF_BLENDMODE_ALPHA); 
@@ -715,9 +714,9 @@ public:
 
         for(vector<ofxUIWidget *>::reverse_iterator it = widgets.rbegin(); it != widgets.rend(); ++it)
         {
-            if((*it)->isVisible() && ((*it)->getRect()->rInside(*rect) || (*it)->isModal()))
+		if((*it)->isVisible() && ((*it)->getRect()->rInside(*rect) || (*it)->isModal()))
             {
-                (*it)->draw(); 	
+			(*it)->draw(); 	
             }
 		}    
         

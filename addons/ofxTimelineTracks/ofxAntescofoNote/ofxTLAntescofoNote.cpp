@@ -555,9 +555,10 @@ void ofxTLAntescofoNote::autoscroll() {
 }
 
 void ofxTLAntescofoNote::draw_playhead() {
+	float x = normalizedXtoScreenX( mCurSecs/mDur_in_secs, zoomBounds);
+	if (x < bounds.x) return;
 	ofPushStyle();
 	ofSetColor(0, 0, 0, 255);
-	float x = normalizedXtoScreenX( mCurSecs/mDur_in_secs, zoomBounds);
 	ofLine(x, bounds.y, x, bounds.y + bounds.height);
 	ofSetLineWidth(3);
 	ofPopStyle();

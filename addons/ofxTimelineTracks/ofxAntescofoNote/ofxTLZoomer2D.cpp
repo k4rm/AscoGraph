@@ -119,6 +119,17 @@ void ofxTLZoomer2D::mouseMoved(ofMouseEventArgs& args) {
 }
 
 void ofxTLZoomer2D::mousePressed(ofMouseEventArgs& args) {
+	if (args.button == 3) {
+		/*
+		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
+		float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
+		float midpointx = (minScreenX+maxScreenX)/2.;
+		xMinGrabOffset = minScreenX;
+		xMaxGrabOffset = maxScreenX;
+		*/
+		notifyZoomStarted();
+	}
+	if (!bounds.inside(args.x, args.y)) return;
 	if(!enabled) return;
 
 	minSelected = maxSelected = midSelected = false;
@@ -136,7 +147,35 @@ void ofxTLZoomer2D::mousePressed(ofMouseEventArgs& args) {
 }
 
 void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
-	if(!enabled) return;
+	if (args.button == 3) {
+/*
+		cout << "ofxTLZoomer2D::mouseDragged: " << args.x << " " << args.y << endl;
+		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
+		//xMinGrabOffset = args.x - minScreenX;
+		float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
+		//xMaxGrabOffset = args.x - maxScreenX;
+		float midpointx = (minScreenX+maxScreenX)/2.;
+
+		float originalMin = currentViewRange.min;
+		float xmin = ofClamp( screenXtoNormalizedX(args.x, ofRange(0, 1.0)), 0, currentViewRange.max-.01);
+		float originalMax = currentViewRange.max;
+		float xmax = ofClamp( screenXtoNormalizedX(args.x, ofRange(0, 1.0)), currentViewRange.min+.01, 1.0);
+		*/
+
+		float d = currentViewRange.max - currentViewRange.min;
+		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
+		float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
+		float xmin = ofClamp( screenXtoNormalizedX(minScreenX + args.x, ofRange(0, 1.0)), 0, currentViewRange.max-.01);
+		//float xmax = ofClamp( screenXtoNormalizedX(minScreenX + args.x, ofRange(0, 1.0)), currentViewRange.min+.01, 1.0);
+		float xmax = xmin + d;
+
+		currentViewRange.min = fmax(0., xmin);
+		currentViewRange.max = fmin(xmax, 1.);
+		notifyZoomDragged(currentViewRange);
+		return;
+
+	}
+	if(!enabled || !mouseIsDown) return;
 
 	bool notify = false;
 	ofRange oldRange = getViewRange();
@@ -177,6 +216,9 @@ bool ofxTLZoomer2D::isActive(){
 }
 
 void ofxTLZoomer2D::mouseReleased(ofMouseEventArgs& args){
+	if (args.button == 3) {
+		notifyZoomEnded();
+	}
 	if(!enabled) return;
 	
 	if(mouseIsDown){

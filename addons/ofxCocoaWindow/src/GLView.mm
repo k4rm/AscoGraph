@@ -414,13 +414,37 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	ofNotifyMouseDragged(p.x, p.y, 1);
 }
 
+-(void)beginGestureWithEvent:(NSEvent *)theEvent
+{
+    ofPoint p = [self ofPointFromEvent:theEvent];
+    ofNotifyMousePressed(p.x, p.y, 3);
+}
+
+-(void)endGestureWithEvent:(NSEvent *)theEvent
+{
+    ofPoint p = [self ofPointFromEvent:theEvent];
+    ofNotifyMouseReleased(p.x, p.y, 3);
+}
+
+
 //------------------------------------------------------------
 -(void)scrollWheel:(NSEvent *)theEvent {
 	// TODO: work on this, need to connect into OF scoll if possible
 	//	float wheelDelta = [theEvent deltaX] +[theEvent deltaY] + [theEvent deltaZ];
 	//NSLog(@"GLView: got scrollwheel event");
-	//ofPoint p = [self ofPointFromEvent:theEvent];
-	//ofNotifyMouseDragged(p.x, p.y, 3);
+    ofPoint p = [self ofPointFromEvent:theEvent];
+   // NSLog(@"User scrolled on (%f,%f) : %f horizontally and %f vertically", p.x, p.y, [theEvent deltaX], [theEvent deltaY]);
+
+    //ofNotifyMouseDragged(p.x, p.y, 3);
+    ofNotifyMouseDragged([theEvent deltaX], [theEvent deltaY], 3);
+    /*
+    ofTouchEventArgs args;
+    args.x = p.x;
+    args.y = p.y;
+    args.minoraxis = [theEvent deltaX];
+    args.majoraxis = [theEvent deltaY];
+    ofNotifyEvent(&ofEvents().touchMoved, &args);//, NULL);
+    */
 }
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender {
