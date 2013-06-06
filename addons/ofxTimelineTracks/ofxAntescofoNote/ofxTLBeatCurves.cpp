@@ -368,7 +368,8 @@ void ofxTLBeatCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 
 	if(createNewOnMouseup && !drawingEasingWindow) {
 		if (ref->parentCurve->howmany == 1) {
-			float beat = timeline->millisecToBeat(millis);
+			//float beat = timeline->millisecToBeat(millis);
+			float beat = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(args.x, zoomBounds));
 			//add a new one
 			selectedKeyframe = newKeyframe();
 			setKeyframeBeat(selectedKeyframe, beat);

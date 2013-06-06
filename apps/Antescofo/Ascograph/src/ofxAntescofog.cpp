@@ -834,9 +834,9 @@ void ofxAntescofog::draw() {
 			ofPopStyle();
 
 			// logos
-			//mLogoInria.draw(score_w - 290, 2, 148, 54);
-			//mLogoIrcam.draw(score_w - 120, 0, 109, 64);
-			mLogoIrcam.draw(score_w - 170, 0, 109, 64);
+			mLogoInria.draw(score_w - 290, 2, 148, 54);
+			mLogoIrcam.draw(score_w - 120, 0, 109, 64);
+			//mLogoIrcam.draw(score_w - 170, 0, 109, 64);
 		
 			drawCache.end();
 
@@ -1312,12 +1312,8 @@ void ofxAntescofog::mouseMoved( int x, int y){
 }
 
 //--------------------------------------------------------------
-void ofxAntescofog::mouseDragged( int x, int y, int button ){
-	bShouldRedraw = true;
-}
-
-//--------------------------------------------------------------
 void ofxAntescofog::mousePressed( int x, int y, int button ) {
+	//if (args.button == 3) { }
 	bShouldRedraw = true;
     //cout << "Fog : mousePressed r:"<< mEditorRect.x << ","<< mEditorRect.y << ","<< mEditorRect.width << "," << mEditorRect.height <<" inside:"<< mEditorRect.inside(x, y) << endl;
     
@@ -1339,6 +1335,34 @@ void ofxAntescofog::mousePressed( int x, int y, int button ) {
         ofxAntescofoAction->bEditorShow = false;
     }
 #endif
+}
+
+//--------------------------------------------------------------
+void ofxAntescofog::mouseDragged( int x, int y, int button ){
+	int topy = guiBottom->getRect()->y + guiBottom->getRect()->height;
+	if (button == 3 && ofGetWindowHeight() < topy + timeline.getDrawRect().height) { // scroll events
+		ofxUIRangeSlider *r = (ofxUIRangeSlider*)guiElevator->getWidget("elevator");
+		double vlow = r->getPercentValueLow() * 255;
+		double vhigh = r->getPercentValueHigh() * 255;
+		int score_h = timeline.getDrawRect().height;
+		double ny = score_y + 3*y;
+		if (ny > topy)
+			ny = topy;
+		if (ny + score_h < topy)
+			ny = score_y + 200;
+		if (topy + ny > ofGetWindowHeight())
+			ny = ofGetWindowHeight() + topy - score_h;
+		double m = ny / (score_h + topy) + 0.1;
+		double nvl = m - 1;
+		double nvh = m - 0.5;
+		r->setValueLow(nvl*255);
+		r->setValueHigh(nvh*255);
+
+		//cout << "Elevator scrolled: score_y: " << score_y << " ny:" << ny << " barvalues: [ "<< nvl << " - "<< nvh<<" ]"<< endl;
+		score_y = ny;
+	}
+
+	bShouldRedraw = true;
 }
 
 
@@ -1812,9 +1836,9 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    ofxUIRangeSlider *r = (ofxUIRangeSlider*)e.widget;
 	    double m = (r->getPercentValueLow() + r->getPercentValueHigh()) / 2;
 	    int score_h = timeline.getDrawRect().height;
-	    int topy =  guiBottom->getRect()->y; //timeline.getDrawRect().y;
+	    int topy = guiBottom->getRect()->y;
 	    double ny = (m - 0.75) * score_h + topy;
-	    cout << "Elevator clicked: medium:" << m << " score_y: " << score_y << " ny:" << ny << endl;
+	    //cout << "Elevator clicked: medium:" << m << " score_y: " << score_y << " ny:" << ny << endl;
 	    if (ny + score_h < topy)
 		    ny = score_y + 200;
 	    if (topy + ny > ofGetWindowHeight())

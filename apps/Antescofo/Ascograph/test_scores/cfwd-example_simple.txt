@@ -1,17 +1,18 @@
 BPM 60
 
 NOTE C4 4.0
-Curve slider  Grain := 0.05s, Action :=
+Curve slider  @Grain := 0.05s, Action :=
         {
-            print $x
+            print $x 
+
         }
 {
     $x
     {
           { 0 } type "linear"
         1 { 1 } type "linear"
-        2 { 2 } type "quadratic"
-        3 { 3 }
+        5.506 { 0.0359716 } type "linear"
+        17.669 { 2.69784 }
     }
 }
 

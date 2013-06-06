@@ -119,14 +119,7 @@ void ofxTLZoomer2D::mouseMoved(ofMouseEventArgs& args) {
 }
 
 void ofxTLZoomer2D::mousePressed(ofMouseEventArgs& args) {
-	if (args.button == 3) {
-		/*
-		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
-		float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
-		float midpointx = (minScreenX+maxScreenX)/2.;
-		xMinGrabOffset = minScreenX;
-		xMaxGrabOffset = maxScreenX;
-		*/
+	if (args.button == 3) {  // scroll events
 		notifyZoomStarted();
 	}
 	if (!bounds.inside(args.x, args.y)) return;
@@ -147,25 +140,11 @@ void ofxTLZoomer2D::mousePressed(ofMouseEventArgs& args) {
 }
 
 void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
-	if (args.button == 3) {
-/*
-		cout << "ofxTLZoomer2D::mouseDragged: " << args.x << " " << args.y << endl;
-		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
-		//xMinGrabOffset = args.x - minScreenX;
-		float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
-		//xMaxGrabOffset = args.x - maxScreenX;
-		float midpointx = (minScreenX+maxScreenX)/2.;
-
-		float originalMin = currentViewRange.min;
-		float xmin = ofClamp( screenXtoNormalizedX(args.x, ofRange(0, 1.0)), 0, currentViewRange.max-.01);
-		float originalMax = currentViewRange.max;
-		float xmax = ofClamp( screenXtoNormalizedX(args.x, ofRange(0, 1.0)), currentViewRange.min+.01, 1.0);
-		*/
-
+	if (args.button == 3) { // scroll events
 		float d = currentViewRange.max - currentViewRange.min;
 		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
 		float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
-		float xmin = ofClamp( screenXtoNormalizedX(minScreenX + args.x, ofRange(0, 1.0)), 0, currentViewRange.max-.01);
+		float xmin = ofClamp( screenXtoNormalizedX(minScreenX + 3*args.x, ofRange(0, 1.0)), 0, currentViewRange.max-.01);
 		//float xmax = ofClamp( screenXtoNormalizedX(minScreenX + args.x, ofRange(0, 1.0)), currentViewRange.min+.01, 1.0);
 		float xmax = xmin + d;
 
