@@ -47,6 +47,7 @@ class ofxTLTweenBeatKeyframe : public ofxTLBeatKeyframe{
   public:
     EasingFunction* easeFunc;
 	EasingType* easeType;
+	int easeTypeId;
 };
 
 

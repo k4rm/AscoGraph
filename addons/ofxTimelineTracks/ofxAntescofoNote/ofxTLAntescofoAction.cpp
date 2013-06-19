@@ -1240,13 +1240,12 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 
 
 void ActionCurve::changeKeyframeEasing(float beat, string type) {
-	if (debug_edit_curve) cout << "ActionCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << endl;
-	//if (type == "sine")
+	//if (debug_edit_curve) 
+	cout << "ActionCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << endl;
 	
 	float dcumul = 0;
 	int i = 0;
 	bool done = false;
-
 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
 	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, i++, s++) {

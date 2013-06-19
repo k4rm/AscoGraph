@@ -70,7 +70,7 @@
 	}
 }
 
-@MACRO_DEF harm_hob_note($NUM, $PERIOD1, $PERIOD2, $INT1, $INT2, INT3 )
+@MACRO_DEF harm_hob_note($NUM, $PERIOD1, $PERIOD2, $INT1, $INT2, $INT3 )
 {
 	GFWD harm_hob_note$NUM
 	{
@@ -87,15 +87,15 @@
 		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,8.8), $INT1, $INT2)
 		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  @linear_jump($PERIOD1,$PERIOD2,10.0,10.0), $INT1, $INT2)
 		; in 10 steps move the interval
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,1.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,2.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,3.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,4.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,5.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,6.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,7.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,8.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,9.0))
-		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,INT3,10.0,10.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,1.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,2.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,3.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,4.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,5.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,6.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,7.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,8.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,9.0))
+		@harm_notes( $NUM, expr{$PERIOD1/50.0}, 1.0,  $PERIOD2, $INT1, @linear_jump($INT2,$INT3,10.0,10.0))
 	}
 }

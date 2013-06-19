@@ -7,9 +7,8 @@ Curve slider  @Grain := 0.05s, Action :=
 
         }
 {
-    $x
-    {
-          { 0 } type "linear"
+    $x {
+        { 0 } @type "linear"
         0.593 { 1.62393 } type "linear"
         2.216 { 1.0618 } type "circular"
         5.129 { 1.34634 } type "linear"
