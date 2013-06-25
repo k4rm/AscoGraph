@@ -891,16 +891,37 @@ ActionMultiCurves::ActionMultiCurves(Curve* c, float delay_, Event *e, ActionGro
 	if (curve) {
 		cout << "got MultiCurve: " << curve->label() << endl; 
 		label = curve->label();
-		// TODO get attributes..
 
 		header->lineNum_begin = curve->locate()->begin.line;
 		header->lineNum_end = curve->locate()->end.line;
 
-		howmany = curve->seq_vect[0]->var_list->size();
-		cout << "ActionMultiCurves: contains howmany:"<< howmany << endl;
-		//for (uint i = 0; i < howmany; i++)
-		//{
-			SeqContFunction* s = curve->seq_vect[0];
+		nbvects = curve->seq_vect.size();
+
+
+		cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
+		for (uint i = 0; i < nbvects; i++)
+		{
+			howmany = curve->seq_vect[i]->var_list->size();
+			cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< howmany << endl;
+			SeqContFunction* s = curve->seq_vect[i];
+			list<Var*>::iterator it_var = s->var_list->begin();
+			//for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
+			//{
+				string var = (*it_var)->name();
+				cout << "ActionMultiCurves: adding sub curve:" << endl;
+
+				ActionCurve* newc = new ActionCurve(*(s->var_list), s, &s->dur_vect, 0, e, header, this);
+				sons.push_back(newc);
+			//}
+		}
+
+#if 0
+		cout << "ActionMultiCurves: contains " << nbvects << " vectors:"<< nbvects << endl;
+		for (uint i = 0; i < nbvects; i++)
+		{
+			howmany = curve->seq_vect[i]->var_list->size();
+			cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< howmany << endl;
+			SeqContFunction* s = curve->seq_vect[i];
 			list<Var*>::iterator it_var = s->var_list->begin();
 			for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
 			{
@@ -911,7 +932,88 @@ ActionMultiCurves::ActionMultiCurves(Curve* c, float delay_, Event *e, ActionGro
 				ActionCurve* newc = new ActionCurve(var, &s->s_vect[j], &s->dur_vect, 0, e, header, this);
 				sons.push_back(newc);
 			}
-		//}
+		}
+#endif
+
+	}
+}
+
+/*
+ * Split a multi curve into tracks
+ * that means copy for each member of seq_vect
+ *      for each var: create a curve
+ */
+void ActionCurve::split()
+{
+	if (parentCurve->curve) {
+		cout << "ActionMultiCurves:: split " << parentCurve->curve->label() << endl; 
+		label = parentCurve->curve->label();
+		int nbvects = parentCurve->curve->seq_vect.size();
+
+		vector<SeqContFunction*> listseq;
+		ofxTLAntescofoAction* actionTrack = (ofxTLAntescofoAction *)_timeline->getTrack("Actions");
+		cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
+		int nbtracks = 0;
+		for (uint i = 0; i < nbvects; i++)
+		{
+			parentCurve->howmany = parentCurve->curve->seq_vect[i]->var_list->size();
+			cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< parentCurve->howmany << endl;
+			SeqContFunction* s = parentCurve->curve->seq_vect[i];
+			list<Var*>::iterator it_var = s->var_list->begin();
+			// accumulate types
+			vector<Expression*> listinterp;
+
+			for (int j = 0; j < s->s_vect[0].size(); j++) {
+				listinterp.push_back(s->s_vect[0][j].type);
+			}
+			for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
+			{
+				nbtracks++;
+				vector<Expression*> listexp; 
+				vector<SimpleContFunction>* simple_vect = &parentCurve->curve->seq_vect[i]->s_vect[j]; //&(seq->s_vect[j]);
+				// get values
+				vector<double> hvalues;
+				for (uint j = 0; j != parentCurve->curve->seq_vect[i]->dur_vect.size() - 1; j++) {
+					listexp.push_back((*simple_vect)[j].y0);
+				}
+				// get last y1
+				listexp.push_back((*simple_vect)[simple_vect->size()-1].y1);
+				
+				antescofo *ao = (actionTrack)->mAntescofog->ofxAntescofoNote->mAntescofo;
+				SeqContFunction* n = new SeqContFunction(ao, *it_var, s->dur_vect, listexp, listinterp, s->grain, *parentCurve->curve);
+				listseq.push_back(n);
+			}
+		}
+		// assign new seq_vect
+		vector<SeqContFunction*> oldseq = parentCurve->curve->seq_vect;
+		parentCurve->curve->seq_vect = listseq;
+		parentCurve->curve->show(cout);
+
+
+		// remove track
+		/*
+		list<ActionGroup*>::iterator j;
+		for (j = sons.begin(); j != sons.end(); ) {
+			list<ActionGroup*>::iterator currentg;
+			ActionGroup *g = *j;
+			j++;
+			sons.erase(currentg);
+			//delete g;
+		}*/
+		_timeline->removeTrack(trackName);
+		/*
+		parentCurve->howmany = 1;
+		// add tracks
+		vector<SeqContFunction*>::iterator i;
+		for (i = listseq.begin(); i != listseq.end(); i++) {
+			createTracks_from_parser_objects(*(*i)->var_list, *i, &(*i)->dur_vect, 0, event, header, parentCurve);
+		}
+		*/
+
+		actionTrack->replaceEditorScore(this);
+		string newscore;
+		[actionTrack->mAntescofog->editor getEditorContent:newscore];
+		((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore);
 	}
 }
 
@@ -941,17 +1043,32 @@ string ActionMultiCurves::dump()
 	return groupdump;
 }
 
-ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_)
+ActionCurve::ActionCurve(list<Var*> &var, SeqContFunction* seq, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_)
 	: parentCurve(parentCurve_)
 {
 	delay = delay_;
 	header = header_;
 	event = e;
-	varname = var;
-	simple_vect = simple_vect_;
+	for (list<Var*>::iterator i = var.begin(); i != var.end(); i++) {
+		varname += (*i)->name();
+		if (i != var.end()) varname += ", ";
+	}
+	simple_vect = &seq->s_vect[0];
 	dur_vect = dur_vect_;
-	if (e) {
-		cout << "ofxTLAntescofoAction::add_action: ActionCurve: got "<< dur_vect->size() << " delays" << endl;// << seq->label() << endl; 
+
+	createTracks_from_parser_objects(var, seq, dur_vect, delay, e, header, parentCurve_);
+}
+
+
+bool ActionCurve::createTracks_from_parser_objects(list<Var*> &var, SeqContFunction* seq, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_) 
+{
+	simple_vect = &seq->s_vect[0];
+	dur_vect = dur_vect_;
+	parentCurve = parentCurve_;
+
+	cout << "ofxTLAntescofoAction::adding ActionCurve: for var: "<< varname << " : " << dur_vect->size() << " delays" << endl;// << seq->label() << endl; 
+	for (int i = 0; i < var.size(); i++) {
+		vector<SimpleContFunction>* simple_vect = &(seq->s_vect[i]);
 		// get values
 		vector<double> hvalues;
 		for (uint j = 0; j != dur_vect->size() - 1; j++) {
@@ -985,33 +1102,79 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 			}
 		}
 		values.push_back(hvalues);
-		// get delays
-		for (std::vector<AnteDuration*>::const_iterator j = dur_vect->begin(); j != dur_vect->end(); j++) {
-			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
-			if (f) {
-				double dou = f->get_double();
-				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
-				delays.push_back(dou);
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>((*j)->value());
-				if (in) {
-					int ii = in->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got delay:" << ii << endl;
-					delays.push_back(ii);
-				}
-				else if ((*j)->value()->is_constant()) {
-						double val = eval_double((*j)->value());
-						cout << "ofxTLAntescofoAction::add_action: got delay:" << val << endl;
-						delays.push_back(val);
-				}
+	}
+	// get delays
+	for (std::vector<AnteDuration*>::const_iterator j = dur_vect->begin(); j != dur_vect->end(); j++) {
+		FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
+		if (f) {
+			double dou = f->get_double();
+			cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
+			delays.push_back(dou);
+		} else {
+			IntValue* in = dynamic_cast<IntValue*>((*j)->value());
+			if (in) {
+				int ii = in->get_int();
+				cout << "ofxTLAntescofoAction::add_action: got delay:" << ii << endl;
+				delays.push_back(ii);
+			}
+			else if ((*j)->value()->is_constant()) {
+				double val = eval_double((*j)->value());
+				cout << "ofxTLAntescofoAction::add_action: got delay:" << val << endl;
+				delays.push_back(val);
 			}
 		}
-		//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
-		// add track
-		if (values.size() && delays.size() && (*(values.begin())).size()) {
-			trackName = string("CURVE ") + parentCurve->label + string(" ") +varname;
-			string uniqueName = _timeline->confirmedUniqueName(trackName);
+	}
+	//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
+	// add track
+	if (values.size() && delays.size() && (*(values.begin())).size()) {
+		string uniqueName = _timeline->confirmedUniqueName(trackName);
 
+		if (parentCurve->howmany > 1) {
+			trackName = string("Curves ") + parentCurve->label + string(" ") +varname;
+			ofxTLMultiCurves* curve = new ofxTLMultiCurves();
+			_timeline->addTrack(trackName, curve);
+			curve->setTimeline(_timeline);
+			curve->setHowmany(parentCurve->howmany);
+
+			for (int i = 0; i < parentCurve->howmany; i++) {
+				curve->getCurve(i)->tlAction = (ofxTLAntescofoAction *)_timeline->getTrack("Actions");
+				curve->getCurve(i)->ref = this;
+				// set values ranges
+				int j = 0; 
+				float min = 0, max = 0;
+				for (vector<double>::iterator ii = values[i].begin(); ii != values[i].end(); ii++) {
+					if (min > (*ii)) min = (*ii);
+					if (max < (*ii)) max = (*ii);
+				}
+				curve->setValueRangeMax(i, max);
+				curve->setValueRangeMin(i, min);
+				// set keyframes
+				double dcumul = 0.;
+				vector<SimpleContFunction>::iterator s = simple_vect->begin();
+				for (int k = 0; k < delays.size(); k++, s++) {
+					dcumul += delays[k];
+					cout << "ofxTLAntescofoAction::add_action: CFWD add keyframe[" << k << "] msec=" << _timeline->beatToMillisec(header->beatnum + dcumul)
+						<< " val=" <<  values[i][k] << endl;
+					string easetype;
+					if (s != simple_vect->end() && s->type && s->type->is_value()) {
+						Value* v = (Value*)s->type->is_value();
+						//*v = StringValue(type);
+						ostringstream oss; 
+						oss << *v;
+						easetype = oss.str();
+					}
+
+					curve->addKeyframeAtBeatAtCurveId(i, values[i][k], header->beatnum + dcumul);
+					if (easetype.size() && easetype != "linear" && easetype != "\"linear\"")
+						curve->changeKeyframeEasingAtCurveId(i, header->beatnum + dcumul, easetype);
+				}
+
+				curve->getCurve(i)->enable();
+			}
+
+			curve->enable();
+		} else {
+			trackName = string("Curves ") + parentCurve->label + string(" ") +varname;
 			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
 
 			_timeline->addTrack(trackName, curves);
@@ -1051,7 +1214,9 @@ ActionCurve::ActionCurve(string var, vector<SimpleContFunction>* simple_vect_, v
 			}
 		}
 	}
+	return true;
 }
+
 
 ActionCurve::~ActionCurve()
 {
@@ -1165,8 +1330,6 @@ void ActionCurve::deleteKeyframeAtBeat(float beat) {
 	}
 	parentCurve->curve->show(cout);
 	print();
-
-
 }
 
 // when new breakpoint is created, we should reduce prev breakpoint duration, before adding

@@ -138,6 +138,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual void load();
 	virtual int loadscoreMusicXML(string filename, string outfilename);
 	virtual int loadscoreAntescofo(string filename);
+	virtual bool loadscoreAntescofo_fromString(string newscore);
 	bool getAccompanimentMarkers(vector<float>& map_index, vector<float>& map_markers);
 	bool getAccompanimentMarkers_rec_group(Gfwd *g, vector<float>& map_index, vector<float>& map_markers);
 
@@ -188,6 +189,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofColor color_resize_note;
 	ofColor color_note_rest;
 	ofColor color_resize_note_rest, color_key, color_text, color_highlight, color_disabled, color_modalBg, color_outline;
+	antescofo   *mAntescofo;
 
 	protected:
 	virtual void update(ofEventArgs& args);
@@ -272,7 +274,6 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofxTLAntescofoAction* ofxAntescofoAction;
 
 	// Antescofo score support
-	antescofo   *mAntescofo;
 	Score       *mNetscore;
 	ParseDriver *mParseDriver;
 	map<int,int> line2note;

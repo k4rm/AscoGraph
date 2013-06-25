@@ -39,7 +39,7 @@
 #include "ofxTimeline.h"
 #include "ofxHotKeys.h"
 
-bool curve_debug = false;
+bool curve_debug = true;
 
 ofxTLBeatCurves::ofxTLBeatCurves()
 : ofxTLBeatKeyframes()
@@ -553,12 +553,12 @@ void ofxTLBeatCurves::initializeEasings(){
 
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingCirc();
-	ef->name = "circular";
+	ef->name = "circ";
 	easingFunctions.push_back(ef);
 
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingQuad();
-	ef->name = "quadratic";
+	ef->name = "quad";
 	easingFunctions.push_back(ef);
 
 	ef = new EasingFunction();
@@ -568,17 +568,17 @@ void ofxTLBeatCurves::initializeEasings(){
 
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingQuart();
-	ef->name = "quartic";
+	ef->name = "quart";
 	easingFunctions.push_back(ef);
 
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingQuint();
-	ef->name = "quintic";
+	ef->name = "quint";
 	easingFunctions.push_back(ef);
 
 	ef = new EasingFunction();
 	ef->easing = new ofxEasingExpo();
-	ef->name = "exponential";
+	ef->name = "exp";
 	easingFunctions.push_back(ef);
 
 	ef = new EasingFunction();
@@ -904,10 +904,12 @@ void ofxTLBeatCurves::draw(){
 
         ofEndShape();
 	//***** DRAW KEYFRAME LINES
-	ofSetColor(timeline->getColors().keyColor);
+	ofSetLineWidth(2);
+	ofSetColor(keyColor);
 	ofNoFill();
-	
+
 	preview.draw();
+	ofSetLineWidth(1);
 	
 	//**** DRAW KEYFRAME DOTS
 	
@@ -925,6 +927,7 @@ void ofxTLBeatCurves::draw(){
 	ofSetColor(timeline->getColors().textColor);
 	ofNoFill();
 	for(int i = 0; i < keyPoints.size(); i++){
+		if (curve_debug) cout << "ofxTLBeatCurves::draw(): "<<keyPoints[i].x << ", "<< keyPoints[i].y << endl;
 		ofRect(keyPoints[i].x-1, keyPoints[i].y-1, 3, 3);
 	}
 	
@@ -944,7 +947,7 @@ void ofxTLBeatCurves::draw(){
 					timeline->getFont().drawString(ofToString(selectedKeyframes[i]->orig_value, 4), screenpoint.x+5, screenpoint.y-5);
 			}
 			ofCircle(screenpoint.x, screenpoint.y, 4);
-                        // cout << "ofxTLKeyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
+                        //if (curve_debug) cout << "ofxTLKeyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
 		}
 	}
 

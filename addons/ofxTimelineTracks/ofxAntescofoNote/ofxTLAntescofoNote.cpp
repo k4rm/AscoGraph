@@ -1435,6 +1435,38 @@ bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 	} else return loadscoreAntescofo(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 }
 
+// called from ofxTLAntescofoAction with a score not saved to parse from the text editor
+// -> save the text editor content to a tmp file
+// -> save a backup of current score
+// -> parse tmp file, if parse error : restore backup score
+bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
+{
+	ostringstream str;
+	str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: " << newscore << endl;
+	ofxAntescofoAction->clear_actions();
+
+	// save a copy of current score
+	vector<ofxTLAntescofoNoteOn*> bkpswitches = switches;
+
+	// try to parse resulting new score
+	ofstream f;
+	f.open(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+	f << newscore;
+	f.close();
+	str_error.erase();
+	Score *score;
+	if (NULL == (score = mParseDriver->parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
+		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
+		return 0;
+
+		str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: display dialog box saying [Error action syntax error]" << endl;
+		str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: display dialog box asking [keep current action ? or cancel change]";
+		console->addln(str.str()); str.str("");
+		switches = bkpswitches;
+	} else return loadscoreAntescofo(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+}
+
+
 void ofxTLAntescofoNote::createActionTrack() {
 	ofxAntescofoAction = new ofxTLAntescofoAction(mAntescofog);
 	getTimeline()->addTrack("Actions", ofxAntescofoAction);

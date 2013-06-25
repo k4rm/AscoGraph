@@ -69,7 +69,7 @@ class ofxTLBeatCurves : public ofxTLBeatKeyframes {
 		virtual string getTrackType();
 		void changeKeyframeEasing(float beat, string type);
 
-		ofColor keyColor, highlightColor, disabledColor;
+		ofColor keyColor, highlightColor, disabledColor, mPreviewColor;
 	protected:
 
 		virtual ofxTLBeatKeyframe* newKeyframe();

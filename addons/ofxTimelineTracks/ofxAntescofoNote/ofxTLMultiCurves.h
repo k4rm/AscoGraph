@@ -71,7 +71,11 @@ class ofxTLMultiCurves : public ofxTLTrack {
     virtual ofRange getValueRange(int which);
 
     void addKeyframeAtBeatAtCurveId(int which, float val, float beat);
+    void changeKeyframeEasingAtCurveId(int which, float beat, string type);
 
+
+    ofxTLBeatCurves* getCurve(int which);
+    ofRectangle mSplitBtnRect;
   protected:
 	
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);	

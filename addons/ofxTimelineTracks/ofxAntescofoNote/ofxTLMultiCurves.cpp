@@ -74,9 +74,34 @@ void ofxTLMultiCurves::update() {
 
 void ofxTLMultiCurves::draw() {
     if (isEnabled()) {
+	if (howmany > 1) { // draw Split btn
+		ofPushStyle();
+		ofFill();
+		ofSetColor(timeline->getColors().backgroundColor);
+		mSplitBtnRect.x = bounds.x + bounds.width - 80;
+		mSplitBtnRect.y = bounds.y - 13 - 4;
+		mSplitBtnRect.width = 60;
+		mSplitBtnRect.height = 14;
+		ofRect(mSplitBtnRect);
+		ofSetColor(0);
+		ofNoFill();
+		ofRect(mSplitBtnRect);
+
+		ofDrawBitmapString("Split",  mSplitBtnRect.x + 4, mSplitBtnRect.y + 10);
+
+		// draw min bg
+		/*ofSetColor(200, 0, 0, 160);
+		ofFill();
+		ofRect(bounds);
+		*/
+		ofPopStyle();
+	}
+
         for (int i = 0; i < howmany; i++) {
-            if (curves[i])
+            if (curves[i]) {
+		//cout << "Drawing --------- curve : " << i << endl;
                 curves[i]->draw();
+	    }
         }
     }
 }
@@ -87,7 +112,7 @@ void ofxTLMultiCurves::setup() {
     for (int i = 0; i < howmany; i++) {
         curves[i]->setTimeline(timeline);
         curves[i]->setDrawRect(bounds);
-				curves[i]->setZoomBounds(zoomBounds);
+	curves[i]->setZoomBounds(zoomBounds);
         curves[i]->setup();
     }
 }
@@ -112,6 +137,8 @@ void ofxTLMultiCurves::setHowmany(int howmany_)
             c->setZoomBounds(zoomBounds);
             c->selectAll();
             c->setTimeline(timeline);
+            c->setup();
+            c->clear();
             c->setDrawRect(bounds);
             int r = 10*i;
             int g = 70*i;
@@ -119,8 +146,7 @@ void ofxTLMultiCurves::setHowmany(int howmany_)
             c->highlightColor = ofColor(r % 255, g % 255, b % 255, 140);
             c->disabledColor = ofColor((r-3) % 255, (g-3) % 255, (b-3) % 255, 120);
             c->keyColor = ofColor((r+20) % 255, (g+20) % 255, (b+30) % 255, 140);
-            c->setup();
-            c->clear();
+	    c->mPreviewColor = ofColor((r+20) % 255, (g+20) % 255, (b+30) % 255, 140);
 
             curves.push_back(c);
         }
@@ -151,12 +177,20 @@ bool ofxTLMultiCurves::mousePressed(ofMouseEventArgs& args, long millis){
     return r;
 }
 
+
 void ofxTLMultiCurves::mouseDragged(ofMouseEventArgs& args, long millis){
+
     for (int i = 0; i < howmany; i++)
         curves[i]->mouseDragged(args,millis);
 }
 
 void ofxTLMultiCurves::mouseReleased(ofMouseEventArgs& args, long millis){
+    if (mSplitBtnRect.inside(args.x, args.y)) {
+	    if (howmany > 1)
+		curves[0]->ref->split();
+		//((ActionMultiCurves*)((curves[0])->ref))->split();
+	return;
+    }
     for (int i = 0; i < howmany; i++) {
         curves[i]->mouseReleased(args,millis);
     }
@@ -189,7 +223,17 @@ ofRange ofxTLMultiCurves::getValueRange(int which)
 }
 
 void ofxTLMultiCurves::addKeyframeAtBeatAtCurveId(int which, float value, float beat){
-    //cout << "ofxTLMultiCurves::addKeyframeAtMillisAtCurveId : id:" << which << " val:" << value << " millis:" << millis << endl;
+    cout << "ofxTLMultiCurves::addKeyframeAtBeatAtCurveId : id:" << which << " val:" << value << " beat:" << beat << endl;
     curves[which]->addKeyframeAtBeat(value, beat);
 }
 
+
+void ofxTLMultiCurves::changeKeyframeEasingAtCurveId(int which, float beat, string type) {
+    curves[which]->changeKeyframeEasing(beat, type);
+}
+
+ofxTLBeatCurves* ofxTLMultiCurves::getCurve(int which) {
+	if (which > howmany)
+		return NULL;
+	return curves[which];
+}

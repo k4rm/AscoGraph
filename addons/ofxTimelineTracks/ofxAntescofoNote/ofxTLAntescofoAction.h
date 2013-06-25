@@ -149,14 +149,14 @@ class ActionMultiCurves : public ActionGroup {
 		virtual void print();
 		virtual string dump();
 
-		int howmany;
+		int howmany, nbvects;
 		string label;
 		Curve* curve;
 };
 
 class ActionCurve : public ActionGroup {
 	public:
-		ActionCurve(string var, vector<SimpleContFunction>* s_vect, vector<AnteDuration*>* dur_vect, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_=NULL);
+		ActionCurve(list<Var*> &var, SeqContFunction* seq, vector<AnteDuration*>* dur_vect, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_=NULL);
 		virtual ~ActionCurve();
 
 		virtual void draw(ofxTLAntescofoAction *tlAction) {}
@@ -168,7 +168,8 @@ class ActionCurve : public ActionGroup {
 		bool set_dur_val(double d, AnteDuration* a);
 		FloatValue* get_new_y(Expression* y);
 		bool set_y(Expression* y, double val);
-		
+		virtual void split();
+		bool createTracks_from_parser_objects(list<Var*> &var, SeqContFunction* seq, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_);
 
 		string action;
 
@@ -179,7 +180,6 @@ class ActionCurve : public ActionGroup {
 		ActionMultiCurves* parentCurve;
 		vector< vector<double> > values;
 		SeqContFunction* seq;
-		//std::vector<double> values; 
 		vector<double> delays;
 		
 		// parser strucs:

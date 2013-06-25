@@ -1,22 +1,24 @@
+
 BPM 60
 
 NOTE C4 4.0
-Curve slider  @Grain := 0.05s, Action :=
-        {
-            print $x 
-
-        }
+curve slider  Grain := 0.05s, Action := print $x $y
 {
-    $x {
-        { 0 } @type "linear"
-        0.593 { 1.62393 } type "linear"
-        2.216 { 1.0618 } type "circular"
-        5.129 { 1.34634 } type "linear"
-        4.633 { 1.48779 } type "linear"
-        0.851 { 1.24224 } type "bounce"
-        1.798 { 0.881364 } type "linear"
-        26.305 { 0.4733 }
-    }
+	$x
+	{
+	    { 0. } /*type "exponential"*/
+	1   { 1. }
+	2/5 { 3. }
+	; ...
+	}
+	$y
+	{
+	    { 2. } /*type "exponential"*/
+	1   { 0. }
+	2/5 { 1.4}
+	; ...
+	}
+
 }
 
      
