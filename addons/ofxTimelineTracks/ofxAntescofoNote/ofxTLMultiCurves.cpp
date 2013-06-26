@@ -125,7 +125,7 @@ void ofxTLMultiCurves::drawModalContent() {
         
 }
 
-void ofxTLMultiCurves::setHowmany(int howmany_)
+void ofxTLMultiCurves::setHowmany(int howmany_, int numTrack)
 {
         howmany = howmany_;
         cout << "Instanciating " << howmany << " curves in a MultiCurves obj." << endl;
@@ -140,9 +140,9 @@ void ofxTLMultiCurves::setHowmany(int howmany_)
             c->setup();
             c->clear();
             c->setDrawRect(bounds);
-            int r = 10*i;
-            int g = 70*i;
-            int b = 60*i; 
+            int r = 10*(i + numTrack);
+            int g = 70*(i + numTrack);
+            int b = 60*(i + numTrack); 
             c->highlightColor = ofColor(r % 255, g % 255, b % 255, 140);
             c->disabledColor = ofColor((r-3) % 255, (g-3) % 255, (b-3) % 255, 120);
             c->keyColor = ofColor((r+20) % 255, (g+20) % 255, (b+30) % 255, 140);

@@ -39,7 +39,7 @@
 #include "ofxTimeline.h"
 #include "ofxHotKeys.h"
 
-bool curve_debug = true;
+bool curve_debug = false;
 
 ofxTLBeatCurves::ofxTLBeatCurves()
 : ofxTLBeatKeyframes()

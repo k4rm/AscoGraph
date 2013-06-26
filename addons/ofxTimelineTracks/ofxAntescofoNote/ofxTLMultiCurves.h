@@ -58,7 +58,7 @@ class ofxTLMultiCurves : public ofxTLTrack {
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
     virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 	
-    virtual void setHowmany(int howmany_);
+    virtual void setHowmany(int howmany_, int nbtracks = 1);
     virtual string getTrackType();
 
     virtual void setValueRange(int which, ofRange range, float defaultValue = 0);
