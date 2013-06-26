@@ -1,0 +1,137 @@
+; Antheme 2 INTRO
+	 print debut_debut 
+BPM 92	; tempo a la croche attention
+		; 0_clear bang 
+	 	; a2fx_pgm 1
+		; outputs_pgm 2
+		 levels_pgm 4 
+
+	 	antescofo-in 1 
+		antescofo_remoteONOFF 0
+		
+		antescofo-mess nofharm 7
+
+		a2fx_pgm 2
+		outputs_pgm 2
+		levels_pgm 2
+		deltas_pgm 2
+		
+		ir1 0
+
+;	FWD antescofo-gamma	-0.5
+	 print Intro_ready_for_label_1 
+	; %%%%%%%%%%%%%%%%%%%%%
+	 running_section s1  ; running_section is the variable that tells the current section 
+	; %%%%%%%%%%%%%%%%%%%%%
+	
+VARIANCE 0.3
+NOTE 9300 0.142	Q1;premier_trait 
+	 cue_nb 1;	cue_nb is also a reserved variable 
+	 ir1 100 100
+NOTE 8500 0.142
+NOTE 9000 0.142
+NOTE 8200 0.142
+NOTE 8000 0.142
+NOTE 7900 0.142
+NOTE 7500 0.142	;N7
+NOTE 8500 0.2	;N8
+NOTE 7700 0.2
+NOTE 8000 0.2
+NOTE 7600 0.2
+NOTE 7500 0.2	;N12
+NOTE 8400 0.25 ;	N13
+NOTE 7600 0.25
+NOTE 7900 0.25
+NOTE 7500 0.25 ;	NBT
+
+;	PFWD 0.1 s1-t1-trait2 bang
+
+; BPM 46	; gn 03IX09 car partition ˆ la noire god damned arshia !
+TEMPO OFF
+TRILL ( 7400 7500 )	8.0	Q2	;second_trait ; old_e2; Trill_1
+	 	cue_nb 2; 
+	 	ir2-param reverb tr0 25 ; tr0 was 3 Strange but why not commented gn 15fev10 
+	 	A2_samples_in	74	120	15 
+		0.1	A2_samples_in	73	120	15 
+	 	0.1	A2_samples_in	70	120 15 
+		0.1	A2_samples_in	69	120	15 
+		0.1	A2_samples_in	68	120	15 
+		0.1	A2_samples_in	67	120	15 
+		0.1	A2_samples_in	66	120	15 
+		0.1	A2_samples_in	63	120	15 
+		fd_1_del 25; 
+		fd_1_fre -347; 
+		fd_1_db 0; 
+		ir1 99 500;	start decrescendo reverb inf 1 
+
+;	PFWD 2.0 cmd-cue 2
+;VARIANCE 0.4
+CHORD ( 6600 7400 )	0.5	Q3;sevenclick-1	;Chord
+	 cue_nb 3 
+		ir1 98 500; 
+	 A2_samples_in	66	0	15 
+NOTE 0 0.5
+CHORD ( 6300 7400 )	0.5		Q4;sevenclick-2
+	 cue_nb 4 
+		ir1 95 500; 
+		A2_samples_in	63	0	15 
+NOTE 0 0.5	
+CHORD ( 7000 7400 )	0.5 Q5;sevenclick-3
+	 cue_nb 5 
+		ir1 93 500; 
+		A2_samples_in	70	0	15 
+NOTE 0 0.5
+CHORD ( 6900 7400 )	0.5 Q6;sevenclick-4
+	 cue_nb 6 
+		ir1 90 500; 
+		A2_samples_in	69	0	15 
+NOTE 0 0.5
+VARIANCE 0.2
+CHORD ( 7300 7400 )	0.5 	Q7;sevenclick-5
+	 cue_nb 7 
+		ir1 88 500; 
+		A2_samples_in	73	0	15 
+NOTE 0 0.5
+CHORD ( 6700 7400 )	0.5 	Q8;sevenclick-6
+	 cue_nb 8 
+		ir1 85 500; 
+		A2_samples_in	67	0	15 
+NOTE 0 0.5
+CHORD ( 6800 7400 )	0.5 	Q9;sevenclick-7
+	 cue_nb 9 
+		ir1 83 500; 
+		A2_samples_in	68	0	15 
+		src4 fact prer 60 
+		src4 fact pres 90 
+		src4	source	Az	315 
+	 	antescofo-in 0 ; manual antescofo here 
+NOTE 0 0.5
+;VARIANCE 0.25
+TRILL ( 6900 7000 7200 7400 )	1.0	Q10;old_e3_fshift
+	 	antescofo-mess nofharm 10	; back to normal!
+	 	cue_nb 10 
+	;PFWD	vtofd 91 20;
+	;PFWD	fd 91
+NOTE 0.0 2.0
+NOTE 7400 0.5	Q11;old_e4_cut_all
+	 	cue_nb 11 ; fshift+del 
+		A2_samples_in	74	0	15 
+	;PFWD	ir1 0 100;
+	;PFWD	ir2 0 100;
+	;PFWD	fd 0 100;
+	;PFWD	vtoir1 0 100;
+	;PFWD	smp1toir2 0 100;
+NOTE 0 3.5
+; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+; section 2
+; Glisses == dummy events with labels
+; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+NOTE 1000 1.0	ev5; old_e5_silence
+	; %%%%%%%%%%%%%%%%%%%%%
+	 running_section s2 
+	; %%%%%%%%%%%%%%%%%%%%%
+	 cue_nb 5 
+NOTE 1100 1.0	ev6+load; old_e6_load_next_score
+	 cue_nb 6 
+	 antescofo-score a2_new_secI.score.txt 
+NOTE 1200 1.0

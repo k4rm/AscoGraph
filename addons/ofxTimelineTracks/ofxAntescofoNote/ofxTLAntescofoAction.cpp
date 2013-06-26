@@ -22,7 +22,7 @@
 ofxTimeline *_timeline;
 
 bool debug_edit_curve = false;
-
+bool debug_actiongroup = false;
 template<class T>
 int inline findAndReplace(T& source, const T& find, const T& replace)
 {
@@ -1520,7 +1520,7 @@ ActionMessage::ActionMessage(Message* m, float delay_, Event *e, ActionGroupHead
 	//ActionRects.push_back(newact);
 
 	delay = delay_;
-	cout << "Action: adding message with delay: " << delay << " : " << action << endl;
+	if (debug_actiongroup) 	cout << "Action: adding message with delay: " << delay << " : " << action << endl;
 }
 
 void ActionMessage::print() {
@@ -1546,7 +1546,7 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 {
 	if (action) {
 		string lab = action->label();
-		cout << "ActionGroupHeader: adding : " << lab << endl;
+		if (debug_actiongroup) cout << "ActionGroupHeader: adding : " << lab << endl;
 		realtitle = lab;
 		if (lab.size() && strncmp(lab.c_str(), "top_gfwd_", 9) == 0) {
 			top_level_group = true;

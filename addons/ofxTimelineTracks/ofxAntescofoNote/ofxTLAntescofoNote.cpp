@@ -58,10 +58,14 @@
 
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
+bool debug_loadscore = false;
+
+
 int bitmapFontSize = 8;
 int guiXPadding = 15;
 
 extern ofxConsole* console;
+
 
 static string str_error; // filled by our error()
 void pre_antescofo::error(const char *fmt,...)
@@ -985,8 +989,7 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 {
 	if (e) {
 		ostringstream str;
-		str << "getNoteType: isMArkov:"<< e->isMarkov << endl;
-		console->addln(str.str()); str.str("");
+		if (debug_loadscore) { str << "getNoteType: isMArkov:"<< e->isMarkov << endl; console->addln(str.str()); str.str(""); }
 		switch (e->isMarkov)
 		{
 			case 2: // TRILL
@@ -1153,12 +1156,10 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				bGot_Action = true;
 		}
 
-		cout << "getNoteType0" << endl;
 		int newtype = getNoteType(e);
 		if ((e->pitch_list.size() == 1 && e->beat_duration) || (e->pitch_list.size() && e->pitch_list[0] && !e->beat_duration)) { // NOTE, TRILL, MULTI
 			//if (newtype == -1) continue;
 			if (newtype == ANTESCOFO_MULTI) {
-				cout << "loadscore: multi"<< endl;
 				double beatmulti = e->beatcum;
 				double durmulti = e->multi_dur;
 				for (vector<float>::iterator m = e->multi_source.begin(); m != e->multi_source.end(); m++) { // MULTI sources
@@ -1188,8 +1189,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 						}
 					}
 					switches.push_back(newSwitch);
-					str << "added new switch for MULTI source: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
-					console->addln(str.str()); str.str("");
+					if (debug_loadscore) { str << "added new switch for MULTI source: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 					line2note[e->scloc->begin.line] = switches.size() - 1;
 					bGot_Action = false;
 				}
@@ -1210,16 +1210,14 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->colNum_end = e->scloc->end.column;
 					switches.push_back(newSwitch);
 					line2note[e->scloc->begin.line] = switches.size() - 1;
-					str << "added new switch for MULTI target: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
-					console->addln(str.str()); str.str("");
+					if (debug_loadscore) { str << "added new switch for MULTI target: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 					bGot_Action = false;
 				}
 				if (e->multi_source.size() && e->multi_target.size())
 					continue;
 			} 
 
-			str << "got pitch:"<< e->pitch_list[0] << " type:"<< newtype << " markov:"<<e->isMarkov;
-			console->addln(str.str()); str.str("");
+			if (debug_loadscore) { str << "got pitch:"<< e->pitch_list[0] << " type:"<< newtype << " markov:"<<e->isMarkov; console->addln(str.str()); str.str(""); }
 			ofxTLAntescofoNoteOn *newSwitch = new ofxTLAntescofoNoteOn();
 			newSwitch->type = newtype;
 			newSwitch->startSelected = newSwitch->endSelected = false;
@@ -1242,8 +1240,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->label = e->cuename;
 			switches.push_back(newSwitch);
 			line2note[e->scloc->begin.line] = switches.size() - 1;
-			str << "added new switch: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
-			console->addln(str.str()); str.str("");
+			if (debug_loadscore) { str << "added new switch: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 			bGot_Action = false;
 		}
 		else if (e->pitch_list.size() > 1 && e->beat_duration) {
@@ -1275,12 +1272,10 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				p++;
 				bGot_Action = false;
 				if (j == e->pitch_list.begin()) newSwitch->label = e->cuename;
-				cout << "getNoteType1" << endl;
 				newSwitch->type = getNoteType(e);
 				switches.push_back(newSwitch);
 				line2note[e->scloc->begin.line] = switches.size() - 1;
-				str << "added new switch: CHORD:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
-				console->addln(str.str()); str.str("");
+				if (debug_loadscore) { str << "added new switch: CHORD:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 			}
 			bGot_Action = false;
 		} else if (newtype == ANTESCOFO_TRILL) {
@@ -1309,8 +1304,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					if (r == t->begin()) newSwitch->label = e->cuename;
 					switches.push_back(newSwitch);
 					line2note[e->scloc->begin.line] = switches.size() - 1;
-					str << "added new switch for TRILL: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch;
-					console->addln(str.str()); str.str("");
+					if (debug_loadscore) { str << "added new switch for TRILL: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 					bGot_Action = false;
 
 				}
