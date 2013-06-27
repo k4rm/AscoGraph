@@ -142,11 +142,11 @@ void ofxTLMultiCurves::setHowmany(int howmany_, int numTrack)
             c->setDrawRect(bounds);
             int r = 10*(i + numTrack);
             int g = 70*(i + numTrack);
-            int b = 60*(i + numTrack); 
+            int b = 10*(i + numTrack); 
             c->highlightColor = ofColor(r % 255, g % 255, b % 255, 140);
             c->disabledColor = ofColor((r-3) % 255, (g-3) % 255, (b-3) % 255, 120);
-            c->keyColor = ofColor((r+20) % 255, (g+20) % 255, (b+30) % 255, 140);
-	    c->mPreviewColor = ofColor((r+20) % 255, (g+20) % 255, (b+30) % 255, 140);
+            c->keyColor = ofColor((r+240) % 255, (g+120) % 255, (b+130) % 255, 140);
+	    c->mPreviewColor = ofColor((r+20) % 255, (g+20) % 255, (b+130) % 255, 140);
 
             curves.push_back(c);
         }

@@ -1176,6 +1176,7 @@ bool ActionCurve::createTracks_from_parser_objects(list<Var*> &var, SeqContFunct
 		} else {
 			trackName = string("Curves ") + parentCurve->label + string(" ") +varname;
 			ofxTLBeatCurves* curves = new ofxTLBeatCurves();
+			curves->keyColor = ofColor(255, 0, 0, 255);
 
 			_timeline->addTrack(trackName, curves);
 			curves->tlAction = (ofxTLAntescofoAction *)_timeline->getTrack("Actions");

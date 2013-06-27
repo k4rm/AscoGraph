@@ -397,24 +397,33 @@ void ofxTLAntescofoNote::draw_showStaves() {
 
 	ofSetColor(color_staves_fg, 180);
 	// draw staves :
-	ofSetColor(0, 0, 0, 155);
+	ofSetColor(0, 0, 0, 195);
 	int staves[10] = { 77, 74, 71, 67, 64, 57, 53, 50, 47, 43 };
 	for (int i = 0; i < 10; i++) {
 		if (staves[i] > noteRange.max || staves[i] < noteRange.min) continue; // don't draw note outside range
 
 		int whichRow = ofMap(staves[i], noteRange.max, noteRange.min, 0, noteRange.span());
 
-		ofRect(bounds.x, bounds.y + whichRow * rowHeight, score_line_w, score_line_h);
+		//if (i >= 5) // let a space between two staves
+			//whichRow += 2;
+
+		float y = bounds.y + whichRow * rowHeight;
+
+		//cout << "line " << i << " whichRow:" << whichRow << " y:" << y << endl;
+		ofRect(bounds.x, y , score_line_w, score_line_h);
 	}
 	bool bShowGraceNote = false;
 	ofSetColor(0, 0, 0, 255);
 	if(switches.size() > 0) {
+		float zoomMinX = bounds.x;
+		float zoomMaxX = bounds.x + bounds.width;
 		for(int i = 0; i < switches.size(); i++){
 			if(isSwitchInBounds(switches[i])){
 				float startX =  normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
 				float endX = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds);
 
 				// measure bar
+#if 0
 				if (switches[i]->label.size()) {
 					ofSetColor(0, 0, 0, 105);
 					int yy = bounds.y + rowHeight* ofMap(staves[0], noteRange.max, noteRange.min, 0, noteRange.span());
@@ -426,7 +435,7 @@ void ofxTLAntescofoNote::draw_showStaves() {
 					mFont.drawString(switches[i]->label, startX, yy - 4);
 					ofSetColor(0, 0, 0, 255);
 				}
-
+#endif
 				if (abs(switches[i]->pitch) != 0) {
 					if (abs(switches[i]->pitch) > noteRange.max || abs(switches[i]->pitch) < noteRange.min) continue; // don't draw note outside range
 
@@ -441,6 +450,7 @@ void ofxTLAntescofoNote::draw_showStaves() {
 						accident = true;
 					}
 					int whichRow = ofMap(p, noteRange.max, noteRange.min, 0, noteRange.span());
+
 					ofRectangle noteBounds = ofRectangle(startX, bounds.y + whichRow * rowHeight, endX - startX, rowHeight);
 					int y = bounds.y + whichRow*rowHeight;
 
@@ -455,8 +465,8 @@ void ofxTLAntescofoNote::draw_showStaves() {
 					ofEllipse(startX+5, y + rowHeight/2, notehead_w, notehead_h);
 #else
 					// draw note image
-					ofSetColor(0, 0, 0, 255);
-					int sp = rowHeight*4;/// noteImage->getHeight();
+					ofSetColor(0, 0, 0, 200);
+					int sp = rowHeight*3;/// noteImage->getHeight();
 					if (bShowGraceNote)
 						sp /= 2;
 					noteImage->draw(startX, y - sp/2, sp, sp);//noteImage->getWidth(), noteImage->getHeight());
@@ -517,6 +527,34 @@ void ofxTLAntescofoNote::draw_showStaves() {
 					int h = 7;
 					ofSetColor(0, 0, 0, 255);
 					ofRect(startX, y - h + 2, endX-startX, h);
+				}
+			}
+		}
+		// draw markers (separate loop used for calculate width)
+		float lastX = bounds.x + bounds.width;
+		int sizec = mFont.stringWidth(string("_"));
+		for(int i = switches.size() - 1; i >= 0; i--){
+			if(isSwitchInBounds(switches[i])){
+				float startX =  max(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds), zoomMinX);
+				float endX = min(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds), zoomMaxX);
+
+				if (!switches[i]->label.empty()) {
+					ofSetLineWidth(1);
+					//ofLine(startX, bounds.y, startX, bounds.y + bounds.height);
+					ofSetColor(0, 0, 0, 105);
+					int yy = bounds.y + rowHeight* ofMap(staves[0], noteRange.max, noteRange.min, 0, noteRange.span());
+					int hh = rowHeight* ofMap(staves[9], noteRange.max, noteRange.min, 0, noteRange.span());
+					if (switches[i]->label.size()) {
+						ofLine(startX, yy, startX, bounds.y + hh);
+					}
+					float w = lastX - startX;
+					int l = floor( (w+1) / (sizec ));
+					int s = switches[i]->label.size();
+					if (l > s) l = s;
+					string str = switches[i]->label.substr(s-l, l);
+					ofSetColor(0, 0, 0, 255);
+					mFont.drawString(str, startX, yy - 4);
+					lastX = startX;
 				}
 			}
 		}
