@@ -35,6 +35,7 @@
 #define	INT_CONSTANT_BUTTON_CREATE_CURVE	 19
 #define	INT_CONSTANT_BUTTON_CREATE_CURVES	 20
 #define	INT_CONSTANT_BUTTON_CREATE_LOOP		 21
+#define INT_CONSTANT_BUTTON_PLAYSTRING	22
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -55,6 +56,7 @@
 #define TEXT_CONSTANT_BUTTON_AUTOSCROLL         "Auto Scroll"
 #define TEXT_CONSTANT_BUTTON_LINEWRAP		"Toggle line wrapping"
 #define TEXT_CONSTANT_BUTTON_PLAY               "Play"
+#define TEXT_CONSTANT_BUTTON_PLAYSTRING         "Play string"
 #define TEXT_CONSTANT_BUTTON_START              "Start"
 #define TEXT_CONSTANT_BUTTON_STOP               "Stop"
 #define TEXT_CONSTANT_BUTTON_NEXT_EVENT         "next event"

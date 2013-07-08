@@ -322,6 +322,25 @@ static const char * box_xpm[] = {
 	return res;
 }
 
+- (string) getSelection
+{
+	long matchStart = [mEditor getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
+	long matchEnd = [mEditor getGeneralProperty: SCI_GETSELECTIONEND parameter: 0];
+
+	long n = matchEnd - matchStart;
+	cout << "getSelection: n=" << n << " start:" << matchStart << " end:" << matchEnd << endl;
+
+	if (n > 0) {
+		char cstr[n];
+		//[mEditor getGeneralProperty:SCI_GETSELTEXT parameter:(sptr_t)cstr];
+		[ScintillaView directCall:mEditor message:SCI_GETSELTEXT wParam:(uptr_t)(0) lParam:(sptr_t)cstr];
+		string ret(cstr);
+		return ret;
+	}
+	return string("");
+}
+
+
 - (void) searchText: (string) str
 {
 	NSString *text = [NSString stringWithUTF8String:str.c_str() ];

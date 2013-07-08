@@ -29,6 +29,7 @@
 - (void) gotoPos:(int) pos;
 - (int) getNbLines;
 - (int) getLenght;
+- (string) getSelection;
 //- (void) showAutocompletion;
 - (void) loadFile: (string) filename;
 - (void) getEditorContent: (string&) content;

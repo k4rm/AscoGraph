@@ -151,6 +151,7 @@ void ofxAntescofog::menu_item_hit(int n)
 				ofxOscMessage m;
 				m.setAddress("/antescofo/cmd");
 				m.addStringArg("start");
+				m.addStringArg("");
 				mOSCsender.sendMessage(m);
 				break;
 			}
@@ -162,6 +163,19 @@ void ofxAntescofog::menu_item_hit(int n)
 				mOSCsender.sendMessage(m);
 				break;
 			}
+		case INT_CONSTANT_BUTTON_PLAYSTRING:
+			{
+				ofxOscMessage m;
+				m.setAddress("/antescofo/cmd");
+				string msg = [editor getSelection];
+				cout << "<<<<<<<<<<<<<<<<<<<< sending playstring >>>>>>>>>>>>>>>>>>>>>" << endl;
+				cout << msg << endl;
+				m.addStringArg("playstring");
+				m.addStringArg(msg);
+				mOSCsender.sendMessage(m);
+				break;
+			}
+
 	}
 
 	bShouldRedraw = true;
@@ -325,6 +339,10 @@ void ofxAntescofog::setupUI() {
 	id stopMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Stop" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[stopMenuItem setTag:INT_CONSTANT_BUTTON_STOP];
 	[transMenu addItem:stopMenuItem];
+	// . PlayString
+	id playStringMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Play string" action:@selector(menu_item_hit:) keyEquivalent:@"p"] autorelease];
+	[playStringMenuItem setTag:INT_CONSTANT_BUTTON_PLAYSTRING];
+	[transMenu addItem:playStringMenuItem];
 
 	[transMenuItem setSubmenu:transMenu];
 	[menubar addItem:transMenuItem];
@@ -1736,6 +1754,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
 		    m.addStringArg("start");
+		    m.addStringArg("");
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
 	    }
