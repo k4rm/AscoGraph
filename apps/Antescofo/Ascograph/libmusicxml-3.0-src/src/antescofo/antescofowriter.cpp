@@ -367,17 +367,23 @@ void antescofowriter::final_compress()
 	map<rational, measure_elt>::iterator next = v_Notes.begin();
 	map<rational, measure_elt>::iterator i = next;
 	next++;
-	for (; next != v_Notes.end(); next++) {
-		if (next->second.nMeasure == i->second.nMeasure && next->second.type == i->second.type) {
-			if ((/*next->second.type == ANTESCOFO_NOTE ||*/ next->second.type == ANTESCOFO_REST)
-					&& next->second.pitches.size() && i->second.pitches.size() && next->second.pitches[0] == i->second.pitches[0]) {
+	for (; next != v_Notes.end(); ) {
+		bool compressed = false;
+		if (/*next->second.nMeasure == i->second.nMeasure && */next->second.type == i->second.type) {
+			if (/*next->second.type == ANTESCOFO_NOTE ||*/ next->second.type == ANTESCOFO_REST
+					/*&& next->second.pitches.size() && i->second.pitches.size() && next->second.pitches[0] == i->second.pitches[0]*/) {
 				merge_notes(i, next);
+				compressed = true;
 			} else if ((next->second.type == ANTESCOFO_TRILL || next->second.type == ANTESCOFO_MULTI || next->second.type == ANTESCOFO_CHORD)
 					&& i->second.pitches == next->second.pitches) {
 				merge_notes(i, next);
+				compressed = true;
 			}
 		}
-		i = next;
+		if (!compressed) // stay on the same first note if compressed
+			i++;
+		next = i;
+		next++;
 	}
 
 	// - compress tied notes

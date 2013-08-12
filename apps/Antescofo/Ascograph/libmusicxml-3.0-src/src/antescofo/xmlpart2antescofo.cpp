@@ -821,22 +821,28 @@ string xmlpart2antescofo::noteName ( const notevisitor& nv )
 rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
 {
 	rational dur(0);
-	rational r = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
-	if (r.getNumerator() == 0) { // graphic type missing or unknown
-		r.set (nv.getDuration(), fCurrentDivision);
-		if (nv.getType() == kRest)
-			r /= 4;
-	}
-	r.rationalise();
-	rational tm = nv.getTimeModification();
-	r *= tm;
-	r.rationalise();
-	dur.set (r.getNumerator()*4, r.getDenominator());
-	int dots = nv.getDots();
-	if (dots) 
-		dur += (dur * dots) / 2;
-	dur.rationalise();
+	if (nv.getType() == kRest) {
+		rational r(nv.getDuration(), fCurrentDivision);
+		r.rationalise();
+		dur.set(r.getNumerator(), r.getDenominator());
+	} else {
 
+		rational r = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
+		if (r.getNumerator() == 0) { // graphic type missing or unknown
+			r.set (nv.getDuration(), fCurrentDivision);
+			if (nv.getType() == kRest)
+				r /= 4;
+		}
+		r.rationalise();
+		rational tm = nv.getTimeModification();
+		r *= tm;
+		r.rationalise();
+		dur.set (r.getNumerator()*4, r.getDenominator());
+		int dots = nv.getDots();
+		if (dots) 
+			dur += (dur * dots) / 2;
+	}
+	dur.rationalise();
 	return dur;
 }
     
