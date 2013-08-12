@@ -643,6 +643,7 @@ void ofxAntescofog::setup(){
 
 	bpm = 120; 
 
+	ofSetEscapeQuitsApp(false);
 	score_w = ofGetWindowWidth() - score_x - 5;
 	score_h = ofGetWindowHeight()/3;
 

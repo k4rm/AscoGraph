@@ -315,7 +315,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         
         if( key ==  OF_KEY_ESC )
         {
-            [ NSApp terminate : nil ];
+            //[ NSApp terminate : nil ];
         }
         else if( key == 63232 )
         {
