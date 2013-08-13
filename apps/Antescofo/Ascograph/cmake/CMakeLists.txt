@@ -57,6 +57,8 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/Expression.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function_map.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Function_tab.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Proc.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Score.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Environment.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/IOfile.cpp

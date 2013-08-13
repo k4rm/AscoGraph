@@ -1089,8 +1089,8 @@ bool ofxTLAntescofoNote::getAccompanimentMarkers_rec_group(Gfwd *g, vector<float
 			if (debug) cout << "getAccompanimentMarkers in event in action in assign: name:"  << assign->var().name() << endl;
 			if (assign->var().name().size() && assign->var().name() == string("$map_rel")) {
 				if (debug) cout << "getAccompanimentMarkers in event in action in assign: name:"  << assign->value() << " OK" << endl;
-				Expression* rhs = assign->value();
-				MapDefinition* md = dynamic_cast<MapDefinition*>(rhs);
+				const Expression* rhs = assign->value();
+				const MapDefinition* md = dynamic_cast<const MapDefinition*>(rhs);
 				if (md && md->map_list) {
 					const MapList *ml = md->map_list;
 					for(MapList::const_iterator it = ml->begin(); it!=ml->end(); it++) {
@@ -1108,8 +1108,8 @@ bool ofxTLAntescofoNote::getAccompanimentMarkers_rec_group(Gfwd *g, vector<float
 			}
 			if (assign->var().name().size() && assign->var().name() == string("$map_abs")) {
 				if (debug) cout << "getAccompanimentMarkers in event in action in assign: name:"  << assign->value() << " OK" << endl;
-				Expression* rhs = assign->value();
-				MapDefinition* md = dynamic_cast<MapDefinition*>(rhs);
+				const Expression* rhs = assign->value();
+				const MapDefinition* md = dynamic_cast<const MapDefinition*>(rhs);
 				if (md && md->map_list) {
 					const MapList *ml = md->map_list;
 					for(MapList::const_iterator it = ml->begin(); it!=ml->end(); it++) {
