@@ -20,6 +20,7 @@ class Score;
 class ofxTLAntescofoNote;
 class Curve;
 class ActionRect;
+class ofxTLBeatCurves;
 
 using namespace std;
 
@@ -148,10 +149,13 @@ class ActionMultiCurves : public ActionGroup {
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		virtual string dump();
+		void show();
+		void hide();
 
 		int howmany, nbvects;
 		string label;
 		Curve* curve;
+		int x, y;
 };
 
 class ActionCurve : public ActionGroup {
@@ -169,7 +173,7 @@ class ActionCurve : public ActionGroup {
 		FloatValue* get_new_y(Expression* y);
 		bool set_y(Expression* y, double val);
 		virtual void split();
-		bool createTracks_from_parser_objects(list<Var*> &var, SeqContFunction* seq, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_);
+		bool createTracks_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_);
 
 		string action;
 
@@ -178,9 +182,11 @@ class ActionCurve : public ActionGroup {
 		double grain;
 		string symb;
 		ActionMultiCurves* parentCurve;
+		ofxTLBeatCurves* curves;
 		vector< vector<double> > values;
 		SeqContFunction* seq;
 		vector<double> delays;
+		list<Var*> &vars;
 		
 		// parser strucs:
 		vector<SimpleContFunction>* simple_vect;
