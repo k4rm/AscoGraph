@@ -82,7 +82,7 @@ void ofxTLAntescofoAction::draw()
 				ActionGroupHeader *act = *i;
 				act->draw(this);
 				
-				act->print();
+				//act->print();
 				
 				if (0 && movingAction) {
 					ofPushStyle();
@@ -227,7 +227,7 @@ int ofxTLAntescofoAction::get_max_note_beat()
 // return height of ActionGroup in px
 int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 {
-	int debugsub = 1;
+	int debugsub = 0;
 	if (debugsub) cout << "update_sub: " << ag->header->title << endl;
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->header->rect.y;
@@ -285,7 +285,6 @@ int ofxTLAntescofoAction::update_sub(ActionGroup *ag)
 				(*g)->header->rect.x = get_x((*g)->header->beatnum + (*g)->header->delay);// normalizedXtoScreenX( timeline->beatToNormalizedX((*g)->header->beatnum + (*g)->header->delay), zoomBounds);
 			//(*g)->header->rect.x += normalizedXtoScreenX( timeline->beatToNormalizedX((*g)->header->delay), zoomBounds);
 			(*g)->header->rect.y = cury;
-			cout << "******************* curh:"<< curh << " cury="<< cury << endl;
 		}
 	 	curh = update_sub(*g);
 		if (debugsub) cout << " curh from upadte_sub:" << curh << endl;
@@ -1340,14 +1339,15 @@ FloatValue* ActionCurve::get_new_y(Expression* y) {
 	} else return NULL;
 }
 
-void ActionCurve::deleteKeyframeAtBeat(float beat) {
+void ActionCurve::deleteKeyframeAtBeat(float beat_) {
+	double beat = beat_;
 	if (beat == 0) {
 		//set_dur_val(val, simple_vect->begin());
 		//abort();
 		return;
 	}
 
-	double dcumul = 0.;
+	double dcumul = parentCurve->header->beatnum + delay;
 	int i = 0;
 	bool done = false;
 
@@ -1356,24 +1356,29 @@ void ActionCurve::deleteKeyframeAtBeat(float beat) {
 		return;
 	}
 
-	if (debug_edit_curve) { cout << "Entering deleteKeyframeAtBeat: " << beat << endl; parentCurve->curve->show(cout); print(); }
+	if (debug_edit_curve) { cout << "Entering deleteKeyframeAtBeat: " << beat << " dur_vect size:" << dur_vect->size() << endl; parentCurve->curve->show(cout); print(); }
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
 	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end() /* && s != simple_vect->end()*/; k++, i++, s++) {
-		if (debug_edit_curve) cout << "ofxTLAntescofoAction:: del keyframe  looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
-
 		dcumul += (*k)->eval();
-		//cout << "------ y0 " << (*s).y0 << endl; cout << " y1:" << (*s).y1 << endl;
-		if (dcumul < beat)
+		if (debug_edit_curve) cout << "ofxTLAntescofoAction:: del keyframe  looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul << " beat:" << beat<< endl;
+
+		//if dcumul < beat
+		if (fabs(dcumul - beat) > 0.001) {
+			cout << "------------------ continue" << endl;
 			continue;
+		}
 		else {
+			cout << "------------------ Entering else" << endl;
 			vector<AnteDuration*>::iterator p = k;
 			p--;
 			// delete k, but change prev duration += k duration
 			if (s == simple_vect->end()) { //k == dur_vect->end()) {
+				cout << "%%%%%%%%%%%%%%%%%%%%% Entering ==" << endl;
 				dur_vect->erase(k);
 				simple_vect->erase(s);
 			} else {
 				vector<AnteDuration*>::iterator n = k;
+				cout << "%%%%%%%%%%%%%%%%%%%%% Entering !=" << endl;
 				n++;
 				if (set_dur_val((*n)->eval() + (*k)->eval(), *n)) {
 					// add new point to simple_vect[]
@@ -1417,7 +1422,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 	if (parentCurve->howmany > 1) // do not support multicurves editing for now
 		return false;
 
-	double dcumul = 0.;
+	double dcumul = parentCurve->header->beatnum + delay;
 	int i = 0;
 	bool done = false;
 
@@ -1434,7 +1439,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 			p--;
 			// insert point between p and k 
 			// substract (dcumul - beat) on prev point
-			double d = beat - (*p)->eval();
+			double d = (*k)->eval() - (dcumul - beat);// - (*p)->eval();
 			if (set_dur_val(dcumul - beat, *k)) {
 				// add new point to simple_vect[]
 				if (debug_edit_curve) cout << "New point duration : beat:"<< beat << " k:"<< (*k)->eval() << " duration:" << d << endl;
@@ -1464,7 +1469,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 		k--;
 		vector<SimpleContFunction>::iterator s = simple_vect->end();
 		s--;
-		AnteDuration *ad = new AnteDuration(beat - (*k)->eval());
+		AnteDuration *ad = new AnteDuration(beat - parentCurve->header->beatnum - (*k)->eval());
 		simple_vect->push_back(SimpleContFunction(s->antesc, new StringValue("linear"), ad, get_new_y(s->y1), new FloatValue(val), s->var));
 		dur_vect->push_back(ad);
 		//set_dur_val(dcumul - beat, *k)
@@ -1627,7 +1632,7 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 		}
 		Curve* c = dynamic_cast<Curve*>(action);
 		if (c) {
-			title = "Curve " + action->label();
+			title = "Curve " + action->label() + "   ";
 			rect.height = HEADER_HEIGHT;
 			cout << "ActionGroupHeader : -----create curve ----" << endl;
 			lineNum_begin = action->locate()->begin.line;
@@ -1674,7 +1679,6 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 	ofSetLineWidth(1);
 	cout << "ActionRects.draw: label:"<< realtitle<< " inbounds:" << group->is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
 	if (top_level_group && group && group->is_in_bounds(tlAction)) {
-		cout << "1" << endl;
 		ofFill();
 		ofSetColor(200, 200, 200, 255);
 		ofRectangle inrect = rect;
@@ -1689,10 +1693,8 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 				(*i)->draw(tlAction);
 		}
 	} else if (!hidden) {
-		cout << "2" << endl;
 		int sizec = tlAction->mFont.stringWidth(string("_"));
 		if (group && group->is_in_bounds(tlAction)) {
-		cout << "3" << endl;
 			ofFill();
 			ofSetColor(200, 200, 200, 255);
 			ofRectangle inrect = rect;
@@ -1716,7 +1718,7 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 				if (group && group->period > 0) { name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
 				tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + LINE_HEIGHT - 6);
 				ofNoFill(); // black border
-				if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
+				//if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 				ofRect(tlAction->getBoundedRect(rect));
 			} 
 			//cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
@@ -1727,7 +1729,6 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 			}
 		}
 	} else { // hidden, just draw header and arrow
-		cout << "4" << endl;
 		ofFill(); // rect color filled
 		ofSetColor(headerColor);
 		rect.height = HEADER_HEIGHT;
@@ -1740,9 +1741,9 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 		if (group && group->period > 0) {name = "Loop " + realtitle; name += " period:"; name += group->get_period(); }
 		tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + LINE_HEIGHT - 6);
 		ofNoFill();
-		if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
+		//if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 		ofRect(tlAction->getBoundedRect(rect)); // black border rect
-		cout << "ActionGroupHeader.draw hidden: ("<<rect.x<<","<<rect.y << ", "<< rect.width << "x" << rect.height <<  ") : " << title << endl;
+		//cout << "ActionGroupHeader.draw hidden: ("<<rect.x<<","<<rect.y << ", "<< rect.width << "x" << rect.height <<  ") : " << title << endl;
 	}
 }
 
