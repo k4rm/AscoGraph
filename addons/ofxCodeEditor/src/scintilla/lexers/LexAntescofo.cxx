@@ -36,11 +36,11 @@ using namespace Scintilla;
 #endif
 
 static inline bool IsAWordChar(int ch) {
-	return (ch < 0x80) && (isalnum(ch) || ch == '_');
+	return (ch < 0x80) && (isalnum(ch) || ch == '_' || ch == '$' || ch == '@');
 }
 
 static inline bool IsAWordStart(int ch) {
-	return (ch < 0x80) && (isalpha(ch) || ch == '_');
+	return (ch < 0x80) && (isalpha(ch) || ch == '_' || ch == '$' || ch == '@');
 }
 
 static inline bool IsANumberChar(int ch) {
@@ -61,14 +61,23 @@ static void CheckForKeyword(StyleContext& sc, WordList* keywordlists[], int acti
   char* s = new char[length];
   sc.GetCurrentLowered(s, length);
   if (keywordlists[0]->InList(s)) 
+      { cout << "Got ---0---: "<< s << endl;
     sc.ChangeState(SCE_ANTESCOFO_MAJORKEYWORD | activeState);
+      }
   else
     if (keywordlists[1]->InList(s))
+      { cout << "Got ---1---: "<< s << endl;
       sc.ChangeState(SCE_ANTESCOFO_KEYWORD | activeState);
+      }
     else
-      //if (keywordlists[2]->InList(s)) sc.ChangeState(SCE_ANTESCOFO_DATABASEOBJECT | activeState); else
+      //if (keywordlists[2]->InList(s)) else
+	//sc.ChangeState(SCE_ANTESCOFO_DATABASEOBJECT | activeState); 
+	//sc.ChangeState(SCE_ANTESCOFO_SYSTEMVARIABLE  | activeState); 
         if (keywordlists[3]->InList(s))
           sc.ChangeState(SCE_ANTESCOFO_FUNCTION | activeState);
+        else
+	  if (keywordlists[4]->InList(s))
+          sc.ChangeState(SCE_ANTESCOFO_SYSTEMVARIABLE | activeState);
         else
           if (keywordlists[5]->InList(s))
             sc.ChangeState(SCE_ANTESCOFO_PROCEDUREKEYWORD | activeState);

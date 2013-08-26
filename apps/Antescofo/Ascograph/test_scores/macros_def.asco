@@ -27,7 +27,7 @@
 }
 
 @FUN_DEF b2s($X) {
-	$X*60.0/$RT_TEMPO
+	$X*60.0/ $RT_TEMPO
 }
 
 @FUN_DEF beat2msec($X) {
@@ -45,7 +45,7 @@
 */
 
 @FUN_DEF b($X) {
-	1000*$X*60.0/$RT_TEMPO
+	1000 * $X * 60.0 / $rt_tempo
 }
 
 @FUN_DEF B($X) {
@@ -85,7 +85,7 @@
 	440.0 * exp(($X-69) * log(2) / 12 )
 }
 
-; voix,note,velocit�,dur�e en beat,volume start,volume end, expression start, expression end, pour cent
+; voix,note,velocitÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ,durÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂe en beat,volume start,volume end, expression start, expression end, pour cent
 @MACRO_DEF cresc($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT) 
 {	
 	GFWD cresc_VOIX_NOTE ; cresc_VOIX 
@@ -100,7 +100,7 @@
 	}
 }
 
-@MACRO_DEF cresc2($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT) 
+@macro_def cresc2($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT) 
 {	
 	GFWD cresc_VOIX_NOTE ; nom dynamique !! cresc_VOIX 
 	{
