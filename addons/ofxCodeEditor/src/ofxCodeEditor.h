@@ -27,6 +27,8 @@
 - (int) getCurrentPos;
 - (void) scrollLine: (int) line;
 - (void) gotoPos:(int) pos;
+- (int) modified;
+- (void) clear;
 - (int) getNbLines;
 - (int) getLenght;
 - (string) getSelection;

@@ -2,17 +2,24 @@
 BPM 60
 NOTE C2 1
 NOTE C4 4.0
+
+
+     
+NOTE C2 10
+NOTE C2 10
 Curve slider  @Grain := 0.05s, @Action :=
         {
-            print $x $y
+            print $x $y 
         }
 {
     $x
     {
           { 0.0 } @type "linear"
         1 { 1.0 } @type "linear"
-        0.4 { 3.0 } @type "linear"
-        6.416 { 2.64179 }
+        1.34472 { 2.17164 } @type "linear"
+        0.731658 { 1.76866 } @type "linear"
+        0.0216174 { 2.03731 } @type "linear"
+        4.718 { 2.64179 }
     }
     $y
     {
@@ -21,7 +28,3 @@ Curve slider  @Grain := 0.05s, @Action :=
         0.4 { 1.4 }
     }
 }
-
-     
-NOTE C2 10
-NOTE C2 10

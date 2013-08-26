@@ -36,6 +36,7 @@
 #define	INT_CONSTANT_BUTTON_CREATE_CURVES	 20
 #define	INT_CONSTANT_BUTTON_CREATE_LOOP		 21
 #define INT_CONSTANT_BUTTON_PLAYSTRING	22
+#define INT_CONSTANT_BUTTON_NEW		23
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -210,6 +211,9 @@ class ofxAntescofog : public ofBaseApp{
 		int loadScore(string filename, bool sendOsc = true);
 		void saveScore();
 		void saveAsScore();
+		void newScore();
+		void askToSaveScore();
+		bool edited();
 
 		bool bEditorShow;
 

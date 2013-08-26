@@ -1677,7 +1677,7 @@ string ActionGroup::get_period()
 void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction) 
 {
 	ofSetLineWidth(1);
-	cout << "ActionRects.draw: label:"<< realtitle<< " inbounds:" << group->is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
+	//cout << "ActionRects.draw: label:"<< realtitle<< " inbounds:" << group->is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y << " " << rect.width <<  "x"<< rect.height << endl;
 	if (top_level_group && group && group->is_in_bounds(tlAction)) {
 		ofFill();
 		ofSetColor(200, 200, 200, 255);

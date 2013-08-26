@@ -406,6 +406,18 @@ static const char * box_xpm[] = {
 
 }
 
+- (void) clear
+{
+	[mEditor setString: @""];
+	[mWindow setTitle: @""];
+}
+
+- (int) modified
+{
+	return [mEditor getGeneralProperty:SCI_GETMODIFY];
+}
+
+
 
 - (void) gotoPos: (int) pos
 {

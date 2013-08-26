@@ -70,9 +70,16 @@ void ofxAntescofog::menu_item_hit(int n)
 				break;
 			}
 		case INT_CONSTANT_BUTTON_RELOAD:
+			askToSaveScore();
 			ofxAntescofoNote->clear(); // TODO ask for Saving file
 			loadScore(mScore_filename);
 			break;
+		case INT_CONSTANT_BUTTON_NEW:
+			askToSaveScore();
+			ofxAntescofoNote->clear(); // TODO ask for Saving file
+			newScore();
+			break;
+
 		case INT_CONSTANT_BUTTON_SAVE:
 			ofLogVerbose("Save score hit");
 			saveScore();
@@ -246,8 +253,14 @@ void ofxAntescofog::setupUI() {
 	// File
 	id fileMenu = [[[NSMenu new] autorelease] initWithTitle:@"File"];
 	id fileMenuItem = [[[NSMenuItem alloc] initWithTitle:@"File" action:NULL keyEquivalent:@""] autorelease];
+	// . new
+	NSString* txt = [@"" stringByAppendingString:@"New score"];
+	id newMenuItem = [[[NSMenuItem alloc] initWithTitle:txt action:@selector(menu_item_hit:) keyEquivalent:@"n"] autorelease];
+	[newMenuItem setTag:INT_CONSTANT_BUTTON_NEW];
+	[fileMenu addItem:newMenuItem];
+
 	// . load
-	NSString* txt = [@"" stringByAppendingString:@"Load score"];
+	txt = [@"" stringByAppendingString:@"Load score"];
 	id loadMenuItem = [[[NSMenuItem alloc] initWithTitle:txt action:@selector(menu_item_hit:) keyEquivalent:@"o"] autorelease];
 	[loadMenuItem setTag:INT_CONSTANT_BUTTON_LOAD];
 	[fileMenu addItem:loadMenuItem];
@@ -1536,6 +1549,48 @@ void ofxAntescofog::saveScore() {
 
 }
 
+bool ofxAntescofog::edited() {
+	string editorcontent;
+	[ editor getEditorContent:editorcontent ];
+
+	string filecontent;
+	ifstream file;
+	file.open (mScore_filename.c_str(), ios::ate);
+	int fsize;
+	fsize = (int) file.tellg();
+	cout << "file: " << mScore_filename << " fsize=" << fsize << endl;
+	file.seekg (0, ios::beg);
+	char* memblock = new char[fsize];
+	file.read (memblock, fsize);
+	filecontent = string(memblock);
+	file.close();
+	delete memblock;
+
+	cout << "original file len:" << filecontent.size() << endl;
+	if (filecontent.size() != editorcontent.size()
+		|| filecontent.compare(editorcontent)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void ofxAntescofog::askToSaveScore() {
+	if (edited()) {
+		cout << "askToSaveScore: file modified" << endl;
+		saveAsScore();
+
+	} else {
+		cout << "askToSaveScore: file not modified" << endl;
+	}
+}
+
+
+void ofxAntescofog::newScore() {
+	[ editor clear ];
+	
+	ofxAntescofoNote->clear_actions();
+}
 
 void ofxAntescofog::saveAsScore() {
 	if (bEditorShow) {
