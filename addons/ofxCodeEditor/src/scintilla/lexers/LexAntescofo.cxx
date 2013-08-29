@@ -61,14 +61,10 @@ static void CheckForKeyword(StyleContext& sc, WordList* keywordlists[], int acti
   char* s = new char[length];
   sc.GetCurrentLowered(s, length);
   if (keywordlists[0]->InList(s)) 
-      { cout << "Got ---0---: "<< s << endl;
     sc.ChangeState(SCE_ANTESCOFO_MAJORKEYWORD | activeState);
-      }
   else
     if (keywordlists[1]->InList(s))
-      { cout << "Got ---1---: "<< s << endl;
       sc.ChangeState(SCE_ANTESCOFO_KEYWORD | activeState);
-      }
     else
       //if (keywordlists[2]->InList(s)) else
 	//sc.ChangeState(SCE_ANTESCOFO_DATABASEOBJECT | activeState); 

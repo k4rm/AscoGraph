@@ -40,6 +40,7 @@
 - (void) searchNext: (string) str;
 - (void) setWrapMode:(bool)mode;
 - (void) replaceString:(int)linea lineb:(int)lineb str:(const char *)str;
+- (void) insertStringAtPos:(int)posa posb:(int)posb str:(const char*)str;
 - (void) set_normal_keywords: (const char*)normal_keywords_;
 - (void) set_major_keywords: (const char*)major_keywords_;
 - (void) set_procedure_keywords: (const char*)procedure_keywords_;

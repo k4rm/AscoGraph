@@ -479,11 +479,19 @@ static const char * box_xpm[] = {
 
 - (void) replaceString:(int)linea lineb:(int)lineb str:(const char*)str;
 {
+	cout << "editor::replacestring: from " << linea << " to " << lineb << endl;
 	[ self showLine:linea lineb:lineb ];
 	[ mEditor setGeneralProperty: SCI_REPLACESEL parameter:0 value:(long)str ];
 	//[ self showLine:linea lineb:lineb ];
 }
 
+- (void) insertStringAtPos:(int)posa posb:(int)posb str:(const char*)str;
+{
+	cout << "editor::insertstringAtPos: from " << posa << " to " << posb << endl;
+	//[ self gotopos:posa ];
+	[ mEditor setGeneralProperty: SCI_INSERTTEXT parameter:posa value:(long)str ];
+	//[ self showLine:linea lineb:lineb ];
+}
 @end
 
 

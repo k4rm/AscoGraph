@@ -1962,27 +1962,27 @@ void ofxAntescofog::createCodeTemplate(int which)
 	switch (which) {
 		case INT_CONSTANT_BUTTON_CREATE_GROUP:
 			str = "0. group /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) @guard = expr */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n}\n";
-			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_LOOP:
 			str = "0. loop 6.66 /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) @guard = expr */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n} /*until(expr)*/\n";
-			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_CURVE:
 			str = "curve slider  Grain := 0.05s, Action := print $x $y\n{\n\t$x, $y\n\t{\n\t    { 0. 2. } /*type \"exponential\"*/\n\t1   { 1. 0. }\n\t2/5 { 3. 1.4}\n\t; ...\n\t}\n}\n";
-			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_CURVES:
 			str = "curve @action := plot $NOW $x $y $z {\n\t$x\n\t{\t\t{ 2.0 }\n\t\t1.0\t{ 4.0 }\n\t\t1.0\t{ 1.4 }\n\t}\n\t$y, $z\n\t{\t\t{5.0, 4.0}\n\t\t3.0\t{0.3 ,7.0}\n\t}\n}\n";
-			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
 			str = "whenever(/*expr*/) /* @guard=expr */ {\n\t1. action1\n\t1/4 action2\n\t; ...\n} /*until(expr)*/\n";
-			[ editor replaceString:pos lineb:pos str:str.c_str() ];
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
 		default:
