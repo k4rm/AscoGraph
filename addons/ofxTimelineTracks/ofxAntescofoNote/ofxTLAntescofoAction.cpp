@@ -833,6 +833,39 @@ void ofxTLAntescofoAction::setScore(Score* score)
 	mScore = score;
 }
 
+void ofxTLAntescofoAction::show_rec(ActionGroup* a, string label) {
+	cout << "ShowRec: label:" << label << endl;
+	ActionMultiCurves* ac = 0;
+	if ((ac = dynamic_cast<ActionMultiCurves* >(a))) {
+		for (vector<ActionCurve*>::iterator i = ac->curves.begin(); i != ac->curves.end(); i++) {
+			ActionCurve *c = (*i);
+			cout << "ShowRec: comparing with label:" << c->label << endl;
+			if (label == c->label) {
+				cout << "Show: GOT IT !" << endl;
+				a->header->hidden = false;
+				return;
+			}
+		}
+	}
+	for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+		show_rec(*j, label);
+	}
+}
+
+void ofxTLAntescofoAction::show(string label) {
+	cout << "Show: label:" << label << endl;
+	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		 if ((*i)->group) {
+			ActionGroup* a = (*i)->group;
+			if (a->sons.size()) {
+				for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+					show_rec(*j, label);
+				}
+			}
+		 }
+	}
+}
+
 string ofxTLAntescofoAction::cut_str(int w, string in)
 {
 	int sizec = mFont.stringWidth(string("_"));
@@ -958,8 +991,9 @@ ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_)
 
 				//ActionMultiCurves *cu = new ActionMultiCurves(c, d, event, nh); 
 				//sons.push_back((ActionGroup*)cu);
-				if (nh->group)
+				if (nh->group) {
 					sons.push_back(nh->group);
+				}
 				continue;
 			}
 
@@ -1106,6 +1140,7 @@ ActionMultiCurves::ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */Curve*
 				cout << "ActionMultiCurves: adding sub curve:" << endl;
 
 				ActionCurve* newc = new ActionCurve(*(s->var_list), s, &s->dur_vect, 0, e, this);
+				newc->label = antescofo_curve->label();
 				curves.push_back(newc);
 			//}
 		}
@@ -1226,6 +1261,7 @@ void ActionCurve::split()
 		string newscore;
 		[actionTrack->mAntescofog->editor getEditorContent:newscore];
 		((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore);
+		actionTrack->show(label);
 	}
 }
 
@@ -1310,7 +1346,7 @@ ActionCurve::ActionCurve(list<Var*> &var, SeqContFunction* seq_, vector<AnteDura
 	vars = var;
 	for (list<Var*>::iterator i = var.begin(); i != var.end(); i++) {
 		varname += (*i)->name();
-		if (i != var.end()) varname += ", ";
+		if (i != var.end()) varname += " ";
 	}
 	simple_vect = &seq->s_vect[0];
 	dur_vect = dur_vect_;
@@ -1797,6 +1833,8 @@ void ActionCurve::draw(ofxTLAntescofoAction* tlAction) {
 
 	for (int i = 0; i < beatcurves.size(); i++) {
 		beatcurves[i]->draw();
+		ofSetColor(0, 0, 0, 255);
+		ofDrawBitmapString(varname, beatcurves[i]->bounds.x + 8, beatcurves[i]->bounds.y + 15);
 	}
 
 	ofNoFill();

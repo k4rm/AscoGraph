@@ -91,6 +91,8 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		int get_x(float beat);
 		string cut_str(int w, string in);
+		void show(string label);
+		void show_rec(ActionGroup* a, string label);
 		void replaceEditorScore(ActionCurve* actioncurve);
 
 		ofTrueTypeFont mFont;
