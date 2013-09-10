@@ -1825,7 +1825,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT)
 			    m.addStringArg("nextevent");
 		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
-			    m.addStringArg("prevevent");
+			    m.addStringArg("previousevent");
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
 	    }

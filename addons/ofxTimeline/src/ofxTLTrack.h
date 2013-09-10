@@ -217,6 +217,7 @@ class ofxTLTrack
 	string name;
     string displayName;
 	string xmlFileName;
+
 	ofRectangle bounds;
 	ofRange zoomBounds;	
 };

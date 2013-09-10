@@ -20,7 +20,7 @@ class Score;
 class ofxTLAntescofoNote;
 class Curve;
 class ActionRect;
-class ofxTLBeatCurves;
+class BeatCurve;
 
 using namespace std;
 
@@ -36,6 +36,7 @@ class ActionGroupHeader;
 class ActionGroup;
 class ActionMessage;
 class ActionCurve;
+class ActionMultiCurves;
 
 class ofxTLAntescofoAction : public ofxTLTrack
 {
@@ -49,7 +50,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		virtual void draw();
 		virtual void update();
 		void update_groups();
-		int update_sub(ActionGroup *ag);
+		int update_sub_height(ActionGroup *ag);
 		float update_sub_duration(ActionGroup *ag);
 		int update_sub_width(ActionGroup *ag);
 		int update_sub_y(ActionGroup *ag);
@@ -57,24 +58,27 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void update_avoid_overlap_rec(ActionGroup* g, int w);
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
+		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
+		virtual bool mousePressed_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 		virtual void mouseDragged(ofMouseEventArgs& args, long millis);//bool snapped);
 		virtual void mouseReleased(ofMouseEventArgs& args, long millis);
+		vector<ActionMultiCurves*> clickedCurves;
 
 		virtual void keyPressed(ofKeyEventArgs& args);
-		void keyPressed(int key);
-
+		void keyPressed_curve_rec(ActionGroup* a, ofKeyEventArgs& key);
+		
 		void windowResized(int w, int h);
 
 		virtual void save();
 		virtual void load();
 		ofRange getZoomBounds() { return zoomBounds; }
 		ofRectangle getBoundedRect(ofRectangle& r);
+		ofRectangle getBounds();
 		
 		void setNoteTrack(ofxTLAntescofoNote* o) { ofxAntescofoNote = o; }
 		ofxTLAntescofoNote *ofxAntescofoNote;
 		void setScore(Score* s);
-		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
 		void add_action(float beatnum, string action, Event *e);
 		void add_action_curves(float beatnum, ActionGroup *ar, Curve *c);
 
@@ -115,6 +119,7 @@ class ActionGroup {
 		string get_period();
 		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		virtual string dump();
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
@@ -143,27 +148,33 @@ class ActionMessage : public ActionGroup {
 
 class ActionMultiCurves : public ActionGroup {
 	public:
-		ActionMultiCurves(Curve* c, float delay_, Event* e, ActionGroupHeader* header_);
+		ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */ Curve* c, float delay_, Event* e, ActionGroupHeader* header_);
 		virtual ~ActionMultiCurves();
 
-		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual void draw(ofxTLAntescofoAction *tlAction_);
+		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		virtual string dump();
 		void show();
 		void hide();
+		int getWidth();
+		int getHeight();
 
+		ofxTLAntescofoAction *tlAction;
+		Curve* antescofo_curve;
+		vector<ActionCurve* > curves;
 		int howmany, nbvects;
 		string label;
-		Curve* curve;
-		int x, y;
 };
 
-class ActionCurve : public ActionGroup {
+class ActionCurve {
 	public:
-		ActionCurve(list<Var*> &var, SeqContFunction* seq, vector<AnteDuration*>* dur_vect, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_=NULL);
+		ActionCurve(list<Var*> &var, SeqContFunction* seq, vector<AnteDuration*>* dur_vect, float delay_, Event *e, ActionMultiCurves* parentCurve_=NULL);
 		virtual ~ActionCurve();
 
-		virtual void draw(ofxTLAntescofoAction *tlAction) {}
+		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
+		virtual void drawSplitBtn(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		bool addKeyframeAtBeat(float beat, float val);
 		void deleteKeyframeAtBeat(float beat);
@@ -173,7 +184,13 @@ class ActionCurve : public ActionGroup {
 		FloatValue* get_new_y(Expression* y);
 		bool set_y(Expression* y, double val);
 		virtual void split();
-		bool createTracks_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_);
+		int getWidth();
+		int getHeight();
+		void setWidth(int w);
+		void getHeight(int h);
+		//bool createTracks_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_);
+		bool create_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, /*float delay_, Event *e,*/ ActionMultiCurves* parentCurve_);
+		ofRectangle mSplitBtnRect;
 
 		string action;
 
@@ -182,7 +199,7 @@ class ActionCurve : public ActionGroup {
 		double grain;
 		string symb;
 		ActionMultiCurves* parentCurve;
-		ofxTLBeatCurves* curves;
+		vector<BeatCurve* > beatcurves;
 		vector< vector<double> > values;
 		SeqContFunction* seq;
 		vector<double> delays;
@@ -191,7 +208,6 @@ class ActionCurve : public ActionGroup {
 		// parser strucs:
 		vector<SimpleContFunction>* simple_vect;
 		vector<AnteDuration*>* dur_vect;
-
 };
 
 
