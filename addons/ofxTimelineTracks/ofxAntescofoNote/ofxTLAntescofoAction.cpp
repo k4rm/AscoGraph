@@ -83,7 +83,7 @@ void ofxTLAntescofoAction::draw()
 				ActionGroupHeader *act = *i;
 				act->draw(this);
 				
-				//act->print();
+				act->print();
 				
 				if (0 && movingAction) {
 					ofPushStyle();
@@ -269,9 +269,8 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 			int boxw = c->getWidth();
 			ofRectangle cbounds(ag->header->rect.x, boxy, boxw, boxh);
 			for (int k = 0; k < c->curves.size(); k++) {
-			//for (vector<ActionCurve*>::iterator i = c->curves.begin(); i != c->curves.end(); i++) {
 				ActionCurve *ac = c->curves[k];
-				cbounds.y += boxh * k;
+				if (k) cbounds.y += boxh;
 				for (int iac = 0; iac < ac->beatcurves.size(); iac++) {
 					ac->beatcurves[iac]->setBounds(cbounds);
 					ofRange zr(getZoomBounds());
@@ -553,7 +552,7 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 		ActionCurve *c = (*i);
 		for (int iac = 0; iac < c->beatcurves.size(); iac++) {
 			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
-				if (c->beatcurves.size() == 1 || c->mSplitBtnRect.inside(args.x, args.y)) {
+				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
 					c->beatcurves[iac]->mousePressed(args, millis);
 					cout << "mousePressed_curve_rec: push back one clickedCurve" << endl;
 					clickedCurves.push_back(ac);
@@ -704,7 +703,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 	cout << "mouseReleased: clickedCurves: size:"<< clickedCurves.size() << endl; 
 	bool done = false;
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); !done && j != clickedCurves.end(); j++) {
-		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); !done && i != (*j)->curves.end(); i++) {
+		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
 			cout << "mouseReleased: splitbtn: x:" << c->mSplitBtnRect.x << " y:"<< c->mSplitBtnRect.y << " " << c->mSplitBtnRect.width << "x" << c->mSplitBtnRect.height << endl;
 			// split btn
@@ -716,7 +715,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 			}
 
 			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
-				if (c->beatcurves[iac]->bounds.inside(args.x, args.y)) {
+				if (c->beatcurves.size()) { //c->beatcurves[iac]->bounds.inside(args.x, args.y)) {
 					//if (c->beatcurves.size() == 1) {
 						cout << "mouseReleased: calling beatcurve varname:" << c->varname << endl;
 						c->beatcurves[iac]->mouseReleased(args, millis);
