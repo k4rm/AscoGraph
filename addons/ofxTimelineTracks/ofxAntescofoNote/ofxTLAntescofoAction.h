@@ -161,6 +161,7 @@ class ActionMultiCurves : public ActionGroup {
 		void hide();
 		int getWidth();
 		int getHeight();
+		void setWidth(int w);
 
 		ofxTLAntescofoAction *tlAction;
 		Curve* antescofo_curve;
@@ -189,7 +190,7 @@ class ActionCurve {
 		int getWidth();
 		int getHeight();
 		void setWidth(int w);
-		void getHeight(int h);
+		void setHeight(int h);
 		//bool createTracks_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionGroupHeader* header_, ActionMultiCurves* parentCurve_);
 		bool create_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, /*float delay_, Event *e,*/ ActionMultiCurves* parentCurve_);
 		ofRectangle mSplitBtnRect;

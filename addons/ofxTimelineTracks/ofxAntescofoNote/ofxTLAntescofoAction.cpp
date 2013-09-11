@@ -396,8 +396,15 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 // avoid x overlapping
 void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w)
 {
-	if (g->header->rect.width + g->header->rect.x > w)
+
+	if (g->header->rect.width + g->header->rect.x > w) {
 		g->header->rect.width = w - g->header->rect.x;
+		
+		ActionMultiCurves* c = 0;
+		if ((c = dynamic_cast<ActionMultiCurves*>(g))) {
+			//c->setWidth(g->header->rect.width);
+		}
+	}
 	for (list<ActionGroup*>::const_iterator i = g->sons.begin(); i != g->sons.end(); i++) {
 		update_avoid_overlap_rec(*i, w);
 	}
@@ -539,6 +546,7 @@ void ofxTLAntescofoAction::regionSelected(ofLongRange timeRange, ofRange valueRa
 
 bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis)
 {
+	if (a->header->hidden) return false;
 	ActionMultiCurves* ac = (ActionMultiCurves*)a;
 	bool res = false;
 	for (vector<ActionCurve*>::iterator i = ac->curves.begin(); !res && i != ac->curves.end(); i++) {
@@ -649,15 +657,16 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 			ActionCurve *c = (*i);
 			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
 				//if (c->beatcurves[iac]->bounds.inside(args.x, args.y) {
-					cout << "mouseDragged dyncast ok" << endl;
-					if (c->beatcurves.size() == 1) {
+					//if (c->beatcurves.size() == 1) {
 						int w = c->beatcurves[iac]->bounds.width;
+						cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged" << endl;
 						c->beatcurves[iac]->mouseDragged(args, millis);
 
+						// extend curve box width on mouseDrag
 						if (c->beatcurves[iac]->bounds.width != w)
 							c->setWidth(c->beatcurves[iac]->bounds.width);
 
-					}
+					//}
 				//}
 			}
 		}
@@ -691,6 +700,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 	movingAction = false;
 
 
+	std::unique (clickedCurves.begin(), clickedCurves.end());
 	cout << "mouseReleased: clickedCurves: size:"<< clickedCurves.size() << endl; 
 	bool done = false;
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); !done && j != clickedCurves.end(); j++) {
@@ -706,12 +716,13 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 			}
 
 			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
-				//if (c->beatcurves[iac]->bounds.inside(args.x, args.y)) {
-					if (c->beatcurves.size() == 1) {
+				if (c->beatcurves[iac]->bounds.inside(args.x, args.y)) {
+					//if (c->beatcurves.size() == 1) {
+						cout << "mouseReleased: calling beatcurve varname:" << c->varname << endl;
 						c->beatcurves[iac]->mouseReleased(args, millis);
 						done = true;
-					}
-				//}
+					//}
+				}
 			}
 		}
 	}
@@ -1423,7 +1434,7 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 	// add object
 	if (values.size() && delays.size() && (*(values.begin())).size()) {
 		ofColor color(250, 0, 0, 255);
-		for (int i = 0; i < parentCurve->howmany; i++) {
+		for (int i = 0; i < parentCurve->howmany && i < values.size(); i++) {
 			BeatCurve* curve = new BeatCurve();
 			curve->setTimeline(_timeline);
 
@@ -1439,19 +1450,6 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			int boxy = parentCurve->header->rect.y + parentCurve->header->HEADER_HEIGHT + i * boxh;
 			int boxw = getWidth() + 30;
 			ofRectangle bounds(parentCurve->header->rect.x, boxy, boxw, boxh);
-			/*
-			for (vector<ActionCurve*>::iterator i = c->curves.begin(); i != c->curves.end(); i++) {
-				ActionCurve *ac = (*i);
-				for (int iac = 0; iac < ac->beatcurves.size(); iac++) {
-					bounds.y += boxh * iac;
-					ac->beatcurves[iac]->setBounds(bounds);
-					ofRange zr(getZoomBounds());
-					ac->beatcurves[iac]->setZoomBounds(zr);
-				}
-			}
-			*/
-
-			//ofRectangle bounds(parentCurve->header->rect.x, parentCurve->header->rect.y + parentCurve->header->HEADER_HEIGHT, parentCurve->header->rect.width + 30, curve->tlAction->getBounds().height);
 			curve->setBounds(bounds);
 			ofRange zr = curve->tlAction->getZoomBounds();
 			curve->setZoomBounds(zr);
@@ -1622,7 +1620,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 		//set_dur_val(val, simple_vect->begin());
 		return false;
 	}
-	cout << "ofxTLAntescofoAction:: add keyframe at beat: howmany:" << parentCurve->howmany << endl;
+	cout << "ofxTLAntescofoAction:: add keyframe at beat: " << beat << " howmany:" << parentCurve->howmany << endl;
 	if (parentCurve->howmany > 1) // do not support multicurves editing for now
 		return false;
 
@@ -1785,6 +1783,12 @@ void ActionCurve::moveKeyframeAtBeat(float to_beat, float from_beat, float to_va
 	print();
 }
 
+
+void ActionMultiCurves::setWidth(int w) {
+	for (int i = 0; i < curves.size(); i++) {
+		curves[i]->setWidth(w);
+	}
+}
 
 void ActionCurve::setWidth(int w) {
 	cout << "s--------------------------------etting Width on \'" << parentCurve->header->title << "\" : " << parentCurve->header->rect.width << endl;
