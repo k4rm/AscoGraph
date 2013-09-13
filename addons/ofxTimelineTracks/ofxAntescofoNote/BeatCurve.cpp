@@ -376,6 +376,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 					cout << "BeatCurve::mouseReleased: easingFunc:" << i << " newtype:" << newtype << " easeType:" << easetype <<endl;
 					ref->changeKeyframeEasing(beat, newtype);
 					drawingEasingWindow = false;
+					tlAction->shouldDrawModalContent = false;
 					timeline->dismissedModalContent();
 					bDrawApplyButton = true;
 				}
@@ -392,6 +393,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 		// click is out of easingWindow
 		drawingEasingWindow = false;
 		timeline->dismissedModalContent();
+		tlAction->shouldDrawModalContent = false;
 		return;
 	}
 
@@ -966,7 +968,7 @@ void BeatCurve::draw(){
 		ofPushStyle();
 
 		// draw min bg
-		ofSetColor(200, 0, 0, 160);
+		ofSetColor(0, 0, 250, 20);
 		ofFill();
 		ofRect(bounds);
 

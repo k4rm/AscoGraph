@@ -1,0 +1,416 @@
+
+
+/*Please keep in mind that brief letters of praise, even from famous people, will not be of much use
+Score for P. Manoury's String QuartetVol Daniela-1
+*/
+
+BPM 72	 
+@INSERT "macros_def.asco"	; definition des fonctions et macros
+VARIANCE 0.2
+
+		; deltas_pm.pgm 2 
+		
+		;TEMPO OFF
+		
+			antescofo-mess temposmoothness 0.9
+			
+	; *********
+	; SPAT INIT
+	; *********
+	spat1_dist 1
+	spat2_dist 1
+	spat3_dist 1
+	spat1_pres 90
+	spat3_pres 90
+	spat2_pres 90
+
+
+			 fx_pgm 1 ; maintenant programme 1 clear matrice FX 
+					syn_voices 1 flush 1; turn notes off 
+					syn_voices 2 flush 1; turn notes off 
+					Bsyn_voices 1 flush 1; turn notes off 
+					Bsyn_voices 2 flush 1; turn notes off 
+			 print "Part 1" 
+				obs_gate 1 ;  antescofo input ON 
+			 antescofo-mess	nofharm 10		; was 5	
+			
+			 antescofo-mess analysis 4096 512 
+			
+			; ici messages initialisation si besoin
+			; PFWD	pm4_m24x24_pgm 9
+			
+				;pm4mc_clear bang	; matrice Ã  zero 
+				; fx_pgm 1;
+			
+				bouge 0				; bouge les spats aleatoire 
+		
+			; Set initial pitch bends
+					syn_voices 1 xbend 0; 
+					syn_voices 2 xbend 0; 
+					syn_voices 3 xbend 0; 
+					syn_voices 4 xbend 0; 
+					syn_voices 5 xbend 0;
+					
+					Bsyn_voices 1 xbend 0; 
+					Bsyn_voices 2 xbend 0; 
+					Bsyn_voices 3 xbend 0; 
+					Bsyn_voices 4 xbend 0; 
+					Bsyn_voices 5 xbend 0;
+			
+				synful_vst read strings-ctls4.fxb 
+			
+			 syntosp1 110		; envoie synful dans spat1 
+			 h1tosp1 110			; envoie harm1 dans spat1 
+			 h2tosp1 100			; envoie harm1 dans spat1 
+			
+			 syntoh1 100			; envoie synful dans harm1 
+			 ; smp1toh2 110			; envoie samp1 dans harm2 
+			
+			; set initial vibratos on available channels
+					syn_voices 3 vibrato 0.2, 4 vibrato 0.2, 5 vibrato 0.2, 6 vibrato 0.2	; etc  
+			
+					sampler2 100 
+					smp2tosp2 100 
+			
+					smp1tosp2	120 
+					spat1		100 
+					spat2		100 
+					spat3		100 
+					; spat4		100 
+					sampler1	100 
+					h1	100 
+					h2	100 
+					h3	100 
+					h4	100 
+			
+					master_toupie_freq 0
+					h1_leslie_mode 0 
+					h2_leslie_mode 0 
+					h3_leslie_mode 0 
+					h4_leslie_mode 0 
+			
+				Bsynful 100			; Volume en DB 
+				synful 100			; volume synful et spat1 en DB 
+			
+				partiels_xbend_range 12 
+				
+				; init spat positions
+			
+				spat1_az 0 ; front
+				spat1_dist 2; 5 m
+				spat1_width 30 
+				; spat1_ctl width 30
+				; spat1_aperture 30
+				; spat1_ctl fact rev 55
+				spat1_rev 55
+				
+				spat2_az -30 ; front
+				spat2_dist 0.3; 5 m
+				spat2_width 30
+				;spat2_aperture 20; 5 m
+				
+				spat3_az 0 ; front
+				spat3_dist 5; 5 m
+				spat3_width 30
+				;spat3_aperture 20; 5 m
+				
+			
+
+;**************************************************************	
+;**************************************************************	
+;**************************************************************	
+
+NOTE 0 0.5	
+TRILL ( 8500) 0.5			IA...EVT-1
+
+	group Evt1_main
+	{
+		deltas_pm.pgm 2 
+		master 97
+	
+		
+		; spat1_ctl fact prer 72 	; niveau de reverb 
+		spat1_prer 72
+		; spat1_ctl fact rev 60	; temps de reverb 
+		spat1_rev 60
+		spat1_az 32
+		spat1_dist 0.6
+		
+		
+		spat3_prer 93
+		spat3_rev 94
+		spat3_az -44
+		spat3_dist 2
+		spat3_pres 103
+		h1_leslie_rate	0. ;, 4.  6000 
+		h2_leslie_rate	0. ; 2., 10.  6000 
+		
+		Bsyntosp3 92
+		
+		synful 113 
+		Bsynful 94 
+		
+		syn_voices 2	pgm 40 bnk 0 
+		syn_voices 2	vol 40 attack 30	; arco  (40 & bnk 0) volume 40 et attaque-noise 30
+		syn_voices 2	attack 30 
+		
+		Bsyn_voices 2	pgm 40 bnk 0 
+		Bsyn_voices 2	vol 40 attack 30	; arco  (40 & bnk 0) volume 40 et attaque-noise 30
+		Bsyn_voices 2	attack 30 
+		
+		Bsyn_voices 4 bnk 2	vol 127	; pizz
+		
+		;@cresc(2,85,100,2,100,127,60,127,33)	; VOIX,NOTE,VEL,DUR en beat,VOL1,VOL2,EXPR1,EXPR2
+		@cresc_curve(2,85,100,2,100,127,60,127,33)		
+
+		syn_voices 3	pgm 40 bnk 2 vol 127		; pizz
+		syn_voices 3	 vol 127		; pizz
+	}
+
+		
+	group		arco 
+	{ 
+							syn_voices 1	pgm 40 bnk 7	vol 122		; trem
+							syn_voices 1	56 120 @b(2)
+							syn_voices 1	50 120 @b(2)
+							syn_voices 1	46 120 @b(2)
+							h1_trans 0, 300 @b(2)
+				2.0			syn_voices 1	53 120 @b(0.36) 
+							syn_voices 1	52 120 @b(0.36)
+							syn_voices 1	58 120 @b(0.36)
+							h1_trans 0, 800 @b(0.46)
+				0.36		syn_voices 1	69 120 @b(1.5)
+							syn_voices 1	63 120 @b(1.5)
+							syn_voices 1	59 120 @b(1.5)
+							h1_trans   0, -500 @b(1.5)
+				1.5 		syn_voices 1	66 120 @b(0.8)
+							syn_voices 1	65 120 @b(0.8)
+							syn_voices 1	62 120 @b(0.8)
+							h1_trans 0, 800 @b(0.8)		
+				0.8			syn_voices 1 bnk 7					; 
+							syn_voices 1	72 120 @b(2.5)
+							syn_voices 1	69 120 @b(2.5)
+							syn_voices 1	67 120 @b(2.5)
+							syn_voices 1	61 120 @b(2.5)
+							spat1_rev 80							
+	}
+			
+	curve h1 action:= H1_trans $x grain:=0.03s
+	{
+		$x
+		{
+			{0.0}
+			2.0   {300}
+			0.01	{0}
+			0.44  {500}
+			0.01   {0}
+			1.5    {-500}
+			0.01   { 0}
+			0.49   {600}
+			0.01   {-500}
+			0.99   {0}
+		}	
+	}
+			
+	group		cloches
+	{
+				
+				0.4		sampler1_play  cloche.17_sol#5.wav 0 2
+				0.8		sampler1_play  cloche.17_sol#5.wav -800 2
+				0.4		sampler1_play  cloche.17_sol#5.wav 200 2
+				1.2		sampler1_play  cloche.21_do6.wav -100 2.5
+				0.8		sampler1_play  cloche.21_do6.wav 900 2.5
+				0.4		sampler1_play  cloche.21_do6.wav 300 2.5
+	}
+	
+		
+	0.5 group	Pizzicati
+	{
+							Bsyn_voices 4 vol 127	
+							Bsyn_voices 4	 vol 127
+				0.18			Bsyn_voices 4	85 127 100	
+							Bsyn_voices 4	 vol 127
+				0.18			Bsyn_voices 4	85 127 100
+				0.18			Bsyn_voices 4	85 127 100
+				0.18			Bsyn_voices 4	85 127 100
+				0.18			Bsyn_voices 4	85 127 100
+				0.18			Bsyn_voices 4	85 127 100
+				0.18			Bsyn_voices 4	85 127 100
+	}
+			; print un temps est egal Ã  @b(1) ms ou @b2ms(1) et @b2s(1) seconde	 
+
+NOTE 0 0.5
+TRILL (8100) 0.5
+NOTE 0 0.5
+;**************************************************************	
+TRILL ( 7500) 0.5			IA...EVT-2
+
+		@cresc_curve(2,84,120,2,100,127,80,127,33)	; VOIX,NOTE,VEL,DUR,VOL1,VOL2,EXPR1,EXPR2
+
+TRILL ( 7800) 0.5
+NOTE 0 1.0
+
+;**************************************************************	
+;**************************************************************	
+;**************************************************************	
+
+TRILL (6900) 0.5			IA...EVT-3
+
+		@cresc_curve(2,90,100,3.5,100,127,80,127,33)	; VOIX,NOTE,VEL,DUR en beat,VOL1,VOL2,EXPR1,EXPR2
+		
+		read_traj3 demi_cercle_gauche_droite.traj
+
+TRILL (7200) 0.5	
+
+TRILL (6100) 0.5
+
+;TEMPO OFF		; fermata on silence
+NOTE 0 4.0
+;TEMPO ON
+
+NOTE 5800 0.125
+NOTE 6400 0.125
+NOTE 6900 0.125
+NOTE 7500 0.125
+
+;**************************************************************	
+;**************************************************************	
+;**************************************************************	
+
+
+NOTE 8600 1.5			IB...EVT-4
+
+	group EVT-4
+	{
+	Bsyntosp3 93 
+		
+		synful 113
+
+		smp2tosp1 0 
+		smp2tosp2 100 
+	
+		spat3_rev 85
+		spat3_pres 103
+		spat3_prer 80
+		spat3_aperture 80
+		traj_spat3 1 traj3 @b(3.5) 1 ; on/off, nom de la trajectoire ,durÃÂ©e de la boucle, distance
+		spat3_traj_loop 0
+		
+		;@Bcresc(2,86,100,3.5,100,127,80,127,33)	; VOIX,NOTE,VEL,DUR en beat,VOL1,VOL2,EXPR1,EXPR2
+		@cresc_curve(2,86,100,3.5,100,127,80,127,33)
+		Bsynful 105 @b(3.5)
+		
+	 	smp1toh3 100  
+	 	h3tosp1 110  
+	 	sampler1_play cloche.17_sol#5.wav 0 2; 
+	 	sampler1_play cloche.17_sol#5.wav -900 2; 
+	 	sampler1_play cloche.21_do6.wav 0 2; 
+	 	sampler1_play cloche.21_do6.wav -1300 2; 
+	 	h3_trans -1230 
+	 	h3_leslie_rate 15., 0 3000 
+
+		sampler2_play ricochet.wav 0 1; 
+		smp2tosp1 0; 
+		smp2toh2 110; 
+
+		h2_trans 0; 
+
+		syn_voices 1 bnk 7 vol 100 
+		syn_voices 1	64 100 @b(0.18) 
+		syn_voices 1	63.5 100 @b(0.18) 
+		syn_voices 1	61 100 @b(0.18) 
+
+
+		0.5	syn_voices 1	64 50  
+			syn_voices 1	63.5 50 
+			syn_voices 1	61 50 
+			h1_trans 0 
+			h1_leslie_rate	0., 12. @b(5) 
+			syntoh1 100, 115 4000 
+			h1tosp1 100, 115 4000 
+
+		2.0		Bsyn_voices 2	vol 127  300	; crescendo 
+	}	
+		
+
+NOTE 9200 0.1
+NOTE 8900 0.1
+NOTE 8300 0.1
+NOTE 8200 0.1
+NOTE 7900 0.1
+NOTE 7300 0.1
+NOTE 7100 0.1
+NOTE 6700 0.1
+NOTE 6300 0.1
+NOTE 5700 0.1
+
+NOTE 0 0.8		; 0.5 + 3*0.1
+
+;**************************************************************	
+;**************************************************************	
+;**************************************************************	
+
+NOTE 7600 0.2			IB...EVT-5
+
+	read_traj3 demi_cercle_droite_gauche.traj
+
+
+	sampler2_play ricochet.wav 0 1; 
+	h2_trans -1300; 
+	
+	0.3	Bsyn_voices 2	vol 127 200	;  
+		;@Bcresc(2,70,100,1.5,120,122,60,122,33)	; VOIX,NOTE,VEL,DUR en beat,VOL1,VOL2,EXPR1,EXPR2	
+	@cresc_curve(2,70,100,1.5,120,122,60,122,33)	
+	traj_spat3 1 traj3 @b(1.5) 2 ;
+		
+CHORD (7600 7700)	0.2
+CHORD (7600 7800)	0.2
+CHORD (7600 7900)	0.2
+CHORD (7600 7950)	0.2			
+
+NOTE 0 0.8 
+		
+;**************************************************************	
+;**************************************************************	
+;**************************************************************	
+
+NOTE 7900 0.2			IB...EVT-6
+
+	group EVT-6
+	{
+			; read_traj3 demi_cercle_arriÃÂ¨re_avant.traj	
+			h1_leslie_rate 12., 0. @b(4) 
+	
+			syn_voices 1 xbend -6 100;  changement de pitch par pitch-bend 
+	
+			sampler2_play ricochet.wav 0 1; 
+			syntoh2 110 
+			smp2toh2 90
+			h2_trans -300; 
+			h1 0 500
+			h2 120
+		
+			spat3_rev 100
+			spat3_prer 90
+
+			;@Bcresc(2,79,110,1.3,100,127,60,127,33)	; VOIX,NOTE,VEL,DUR en beat,VOL1,VOL2,EXPR1,EXPR2
+		@cresc_curve(2,79,110,1.3,100,127,60,127,33)	
+		Bsynful 94, 105 @b(1.3)
+			spat3_dist 6, 0 1000
+			spat3_az -224, 0 1000
+			; spat3_pres 60, 100 1000
+		
+		; 0.5 traj_spat3 1 traj3 @b(1.3) 2 ;
+	}
+			
+CHORD (7900 7800)	0.2
+CHORD (7900  7700)	0.2
+CHORD (7900 7600)	0.2
+CHORD (7900	7500)	0.2
+CHORD (7900	7400)	0.2
+
+NOTE 0 1.825			; 0.2 + 1.5 + 0.125=
+
+
+
+

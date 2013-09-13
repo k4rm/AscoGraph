@@ -44,6 +44,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	bEditorShow = false;
 	movingAction = false;
 	movingActionRect = ofRectangle(0, 0, 40, 20);
+	shouldDrawModalContent = false;
 }
 
 
@@ -83,7 +84,7 @@ void ofxTLAntescofoAction::draw()
 				ActionGroupHeader *act = *i;
 				act->draw(this);
 				
-				act->print();
+				//act->print();
 				
 				if (0 && movingAction) {
 					ofPushStyle();
@@ -265,9 +266,12 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 		} else if ((c = dynamic_cast<ActionMultiCurves*>(*g))) {
 			// update curves rectangle bounds
 			int boxy = c->header->rect.y + c->header->HEADER_HEIGHT;
-			int boxh = /*c->header->rect.y +*/ (bounds.height - c->header->HEADER_HEIGHT - curh - 5) / c->curves.size(); //XXX
+			int boxh = (bounds.height - c->header->HEADER_HEIGHT - curh - 5) / c->curves.size();
 			int boxw = c->getWidth();
-			ofRectangle cbounds(ag->header->rect.x, boxy, boxw, boxh);
+			int boxx = ag->header->rect.x;
+			if (c->delay) boxx = get_x((c->header->beatnum + c->header->delay));
+			//cout << "boxx: " << boxx << " delay:" << c->delay << endl;
+			ofRectangle cbounds(boxx, boxy, boxw, boxh);
 			for (int k = 0; k < c->curves.size(); k++) {
 				ActionCurve *ac = c->curves[k];
 				if (k) cbounds.y += boxh;
@@ -359,7 +363,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 		int sizec = mFont.stringWidth(string("_"));
 		int len = sizec * (ag->header->title.size());
 		if (c->delay)
-			len += get_x(c->header->beatnum + m->delay) - get_x(c->header->beatnum);
+			len += get_x(c->header->beatnum + c->delay) - get_x(c->header->beatnum);
 		maxw = len;
 		if (!ag->header->hidden) {
 			maxw = c->getWidth();
@@ -555,6 +559,8 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
 					c->beatcurves[iac]->mousePressed(args, millis);
 					cout << "mousePressed_curve_rec: push back one clickedCurve" << endl;
+					if (c->beatcurves[iac]->drawingEasingWindow)
+						shouldDrawModalContent = true;
 					clickedCurves.push_back(ac);
 					res = true;
 				}
@@ -703,7 +709,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 	cout << "mouseReleased: clickedCurves: size:"<< clickedCurves.size() << endl; 
 	bool done = false;
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); !done && j != clickedCurves.end(); j++) {
-		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
+		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); !done && i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
 			cout << "mouseReleased: splitbtn: x:" << c->mSplitBtnRect.x << " y:"<< c->mSplitBtnRect.y << " " << c->mSplitBtnRect.width << "x" << c->mSplitBtnRect.height << endl;
 			// split btn
@@ -717,9 +723,11 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
 				if (c->beatcurves.size()) { //c->beatcurves[iac]->bounds.inside(args.x, args.y)) {
 					//if (c->beatcurves.size() == 1) {
+						if (shouldDrawModalContent && c->beatcurves[iac]->drawingEasingWindow == false)
+							continue;
 						cout << "mouseReleased: calling beatcurve varname:" << c->varname << endl;
 						c->beatcurves[iac]->mouseReleased(args, millis);
-						done = true;
+						//done = true;
 					//}
 				}
 			}
@@ -1408,23 +1416,24 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			values.push_back(hvalues);
 		}
 		// get delays
+		double groupDelay = parentCurve->header->delay;
 		for (std::vector<AnteDuration*>::const_iterator j = dur_vect->begin(); j != dur_vect->end(); j++) {
 			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
 			if (f) {
-				double dou = f->get_double();
+				double dou = f->get_double() + groupDelay;
 				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
 				delays.push_back(dou);
 			} else {
 				IntValue* in = dynamic_cast<IntValue*>((*j)->value());
 				if (in) {
-					int ii = in->get_int();
+					int ii = in->get_int() + groupDelay;
 					cout << "ofxTLAntescofoAction::add_action: got delay:" << ii << endl;
-					delays.push_back(ii);
+					delays.push_back(ii + parentCurve->header->delay);
 				}
 				else if ((*j)->value()->is_constant()) {
-					double val = eval_double((*j)->value());
+					double val = eval_double((*j)->value()) + groupDelay;
 					cout << "ofxTLAntescofoAction::add_action: got delay:" << val << endl;
-					delays.push_back(val);
+					delays.push_back(val + parentCurve->header->delay);
 				}
 			}
 		}
@@ -1448,10 +1457,15 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			int boxh = (curve->tlAction->getBounds().height - parentCurve->header->HEADER_HEIGHT - 5) / parentCurve->curves.size();
 			int boxy = parentCurve->header->rect.y + parentCurve->header->HEADER_HEIGHT + i * boxh;
 			int boxw = getWidth() + 30;
-			ofRectangle bounds(parentCurve->header->rect.x, boxy, boxw, boxh);
+			int boxx;
+			if (parentCurve->delay) 
+				boxx = curve->tlAction->get_x((parentCurve->header->beatnum + parentCurve->header->delay));
+			else boxx = parentCurve->header->rect.x;
+			ofRectangle bounds(boxx, boxy, boxw, boxh);
 			curve->setBounds(bounds);
 			ofRange zr = curve->tlAction->getZoomBounds();
 			curve->setZoomBounds(zr);
+			curve->viewIsDirty = true;
 			curve->ref = this;
 
 			// set values ranges

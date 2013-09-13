@@ -64,6 +64,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		virtual void mouseDragged(ofMouseEventArgs& args, long millis);//bool snapped);
 		virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 		vector<ActionMultiCurves*> clickedCurves;
+		bool shouldDrawModalContent;
 
 		virtual void keyPressed(ofKeyEventArgs& args);
 		void keyPressed_curve_rec(ActionGroup* a, ofKeyEventArgs& key);

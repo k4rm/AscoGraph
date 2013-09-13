@@ -1176,6 +1176,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	bool bGot_Action = true;
 	ostringstream oss;
 	string actstr;
+	//score->show(cout);
 
 	for (vector<Event *>::iterator i = score->begin(); i != score->end(); i++)
 	{

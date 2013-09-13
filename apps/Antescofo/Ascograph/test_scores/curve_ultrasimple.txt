@@ -28,3 +28,16 @@ Curve slider  @Grain := 0.05s, @Action :=
         0.4 { 1.4 }
     }
 }
+
+
+NOTE C2 10
+curve slider  Grain := 0.05s, Action := print $x $y
+{
+	$x, $y
+	{
+	    { 0. 2. } /*type "exponential"*/
+	1   { 1. 0. }
+	2/5 { 3. 1.4}
+	; ...
+	}
+}
