@@ -551,7 +551,7 @@ void BeatCurve::updateEditorContent()
 
 void BeatCurve::selectedKeySecondaryClick(ofMouseEventArgs& args){
 	if (ref->parentCurve->howmany != 1) return;
-	easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
+	easingWindowPosition = ofVec2f(MIN(args.x, bounds.width + bounds.x - easingBoxWidth),
 			MIN(args.y, timeline->getBottomLeft().y - (tweenBoxHeight*easingFunctions.size())));
 
 	drawingEasingWindow = true;

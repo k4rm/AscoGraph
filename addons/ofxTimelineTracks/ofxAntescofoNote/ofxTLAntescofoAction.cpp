@@ -721,10 +721,12 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 			}
 
 			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
-				if (c->beatcurves.size()) { //c->beatcurves[iac]->bounds.inside(args.x, args.y)) {
+				if (c->beatcurves.size()) { 
 					//if (c->beatcurves.size() == 1) {
 						if (shouldDrawModalContent && c->beatcurves[iac]->drawingEasingWindow == false)
 							continue;
+						if (!shouldDrawModalContent && !c->beatcurves[iac]->bounds.inside(args.x, args.y))
+							c->beatcurves[iac]->unselectAll();
 						cout << "mouseReleased: calling beatcurve varname:" << c->varname << endl;
 						c->beatcurves[iac]->mouseReleased(args, millis);
 						//done = true;
@@ -733,6 +735,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 			}
 		}
 	}
+	//_timeline->unselectAll();
 
 
 	/*
