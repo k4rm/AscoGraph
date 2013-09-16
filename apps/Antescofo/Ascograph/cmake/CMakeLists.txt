@@ -53,7 +53,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/duration.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Event.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Action.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/FakeRuntime.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Antescofo_AscoGraph.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Expression.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function_map.cpp
@@ -68,6 +68,25 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/parser/parsedriver.cpp
 	${ANTESCOFO_PARSER_PATH}/parser/scanner.lll
 	${ANTESCOFO_PARSER_PATH}/parser/parser.yy
+	### Full following:
+	${ANTESCOFO_PARSER_PATH}/sources/AnteScheduler.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/AnteAlign.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/TempoClass.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/exec.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Antescofo.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Attributes.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/ActionFire.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Environment_RunTime.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/TemporalRegex.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Function_map.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Interpolation.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/OscManager.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/IOfile.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/AscoGraph_com.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/exec_when_tregexp.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Proc.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Function_tab.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/AnteClock_standalone.cpp
 )
 
 set (OFX_LIB_PATH ../../../../libs/openFrameworks)
@@ -81,6 +100,7 @@ set (OFX_FREEIMAGE_INCL_PATH ../../../../libs/FreeImage/include/)
 set (OFX_FREETYPE_INCL_PATH ../../../../libs/freetype/include/ ../../../../libs/freetype/include/freetype2/)
 set (OFX_RTAUDIO_INCL_PATH ../../../../libs/rtAudio/include/)
 set (GST_INCL_PATH ../../../../../gstreamer-1.0.2/)
+set (SNDFILE_INCL_PATH ${ANTESCOFO_PARSER_PATH}/../../Mutant-libs/libsndfile-1.0.25/Buildlib/i386/include/)
 
 set (LIB_MUSICXML_PATH ../libmusicxml-3.0-src/src/)
 set (OFX_MUSICXML_INCL_PATH 
@@ -118,6 +138,7 @@ include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_
 					${OFX_LIB_PATH}/video
 					${ANTESCOFO_PARSER_INCL_PATH}
 					${GST_INCL_PATH}
+					${SNDFILE_INCL_PATH}
 )
 
 #set (OFX_LIBS ../../../../libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a)
@@ -473,8 +494,9 @@ endif()
 if ( APPLE )
     set (CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib", ".so")
-    #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m32")
+    #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -mmacosx-version-min=10.6")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_MAC_OS")
     set (CMAKE_OSX_ARCHITECTURES "i386")
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
@@ -691,6 +713,8 @@ SET_SOURCE_FILES_PROPERTIES(
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib)
+
+set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES} ../../../../../Mutant-libs/libsndfile-1.0.25/Buildlib/i386/lib/libsndfile.a)
 
 target_link_libraries(${PROJECT_NAME} ${OPENFRAMEWORKS_LIBRARIES})
 

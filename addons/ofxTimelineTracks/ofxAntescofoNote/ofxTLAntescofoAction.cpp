@@ -1516,7 +1516,8 @@ ActionCurve::~ActionCurve()
 bool ActionCurve::set_dur_val(double d, AnteDuration* a)
 {
 	cout << "ActionCurve::set_dur_val: " << d << endl;
-	assert(d);
+	//assert(d);
+	if (!d) return false;
 	if (Value* v = (Value*)a->value()->is_value()) {
 		*v = FloatValue(d);
 		return true;
@@ -1866,12 +1867,13 @@ void ActionCurve::draw(ofxTLAntescofoAction* tlAction) {
 }
 
 void ActionCurve::drawSplitBtn(ofxTLAntescofoAction *tlAction) {
+	mSplitBtnRect.width = 50;
+	if (parentCurve->header->rect.width < mSplitBtnRect.width) return;
 	ofPushStyle();
 	ofFill();
 	ofSetColor(_timeline->getColors().backgroundColor);
 	mSplitBtnRect.x = beatcurves[0]->bounds.x + beatcurves[0]->bounds.width - 54;
 	mSplitBtnRect.y = beatcurves[0]->bounds.y + 4;
-	mSplitBtnRect.width = 50;
 	mSplitBtnRect.height = 14;
 	ofRect(mSplitBtnRect);
 	ofSetColor(0);

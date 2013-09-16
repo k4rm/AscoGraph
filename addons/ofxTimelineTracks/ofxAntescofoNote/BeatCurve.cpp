@@ -956,7 +956,8 @@ void BeatCurve::draw(){
 				else
 					timeline->getFont().drawString(ofToString(selectedKeyframes[i]->orig_value, 4), screenpoint.x+5, screenpoint.y-5);
 			}
-			ofCircle(screenpoint.x, screenpoint.y, 4);
+			ofSetColor(255, 0, 0, 255);
+			ofCircle(screenpoint.x, screenpoint.y, 6);
                         //if (curve_debug_) cout << "Keyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
 		}
 	}

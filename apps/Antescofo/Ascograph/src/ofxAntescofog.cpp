@@ -1442,7 +1442,19 @@ void ofxAntescofog::draw_error()
     ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
     ofSetColor(255, 255, 255, 240);
 
-    ofDrawBitmapString(ofxAntescofoNote->get_error(), 100, 300);
+    string err = ofxAntescofoNote->get_error();
+    string err2;
+    int c = 0;
+    for (int i = 0; i < err.size(); i++, c++) {
+	    if (c % 120 == 0) {
+		    err2 += "\n";
+		    c = 0;
+	    }
+	    if (err[i] == '\n')
+		    c = 0;
+	    err2 += err[i];
+    }
+    ofDrawBitmapString(err2, 50, 300);
 
     guiError->draw();
 }
@@ -1645,6 +1657,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		// ensure zoom is restored
 		ofxAntescofoNote->setZoomBounds(z); //timeline.getZoomer()->setViewRange(z);
 		ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
+		if (!actiontrack) actiontrack = ofxAntescofoNote->createActionTrack();
 		if (actiontrack) actiontrack->setZoomBounds(z);
 		timeline.getTicker()->setZoomBounds(z);
 

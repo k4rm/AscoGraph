@@ -49,9 +49,7 @@
 #define RT_TEMPO_VAR_OK
 
 #include <Action.h>
-#include <FakeRunTime.h>
-#include <pre_antescofo.h>
-#include <parsedriver.h>
+#include <Antescofo_AscoGraph.h>
 #include <Score.h>
 #include <location.hh>
 #include <position.hh>
@@ -67,24 +65,7 @@ int guiXPadding = 15;
 extern ofxConsole* console;
 
 
-static string str_error; // filled by our error()
-void pre_antescofo::error(const char *fmt,...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-
-	char buf[1024];
-	vsnprintf(buf,sizeof buf,fmt, ap);
-	buf[sizeof buf-1] = 0; // in case of full buffer
-	cerr << "---------------- PARSING ERROR ----------------" << endl;
-	cerr << buf << endl;
-	cerr.flush();
-	str_error += buf;
-	str_error += "\n";
-	va_end(ap);
-}
-
-
+string str_error; // filled by our error()
 
 bool switchsort(ofxTLAntescofoNoteOn* a, ofxTLAntescofoNoteOn* b){
 	return a->beat.min < b->beat.min;
@@ -113,9 +94,9 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	bShowPianoRoll = true;
 	bLockNotes = true;
 
-	mAntescofo = new antescofo();
+	mAntescofo = new antescofo_ascograph_offline();
+	cout << "================= This Name : " << mAntescofo->thisName()<< endl;
 	mNetscore = 0;
-	mParseDriver = new ParseDriver(mAntescofo);
 }
 
 ofxTLAntescofoNote::~ofxTLAntescofoNote(){
@@ -998,7 +979,6 @@ int ofxTLAntescofoNote::loadscoreMusicXML(string filename, string outfilename){
 	return switches.size();
 }
 
-extern string str_error;
 
 string ofxTLAntescofoNote::get_error()
 {
@@ -1151,9 +1131,10 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	clear();
 	//str_error.erase();
 	Score *score;
-	mParseDriver->setVerbosity(0);
-	if (NULL == (score = mParseDriver->parse(filename))) {
-		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
+
+	mAntescofo->setVerbosity(0);
+	if (NULL == (score = mAntescofo->Parse(filename))) {
+		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", filename.c_str());
 		return 0;
 	}
 
@@ -1457,8 +1438,8 @@ bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 	//if (!loadscoreAntescofo(out)) {
 	str_error.erase();
 	Score *score;
-	if (NULL == (score = mParseDriver->parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
-		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
+	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
+		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 		return 0;
 
 		str << "ofxTLAntescofoNote::change_action: display dialog box saying [Error action syntax error]" << endl;
@@ -1488,8 +1469,8 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 	f.close();
 	str_error.erase();
 	Score *score;
-	if (NULL == (score = mParseDriver->parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
-		pre_antescofo::error("Parse error: %s\nCheck the syntax\nAbort loading score\n");
+	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
+		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 		return 0;
 
 		str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: display dialog box saying [Error action syntax error]" << endl;
@@ -1500,10 +1481,11 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 }
 
 
-void ofxTLAntescofoNote::createActionTrack() {
+ofxTLAntescofoAction* ofxTLAntescofoNote::createActionTrack() {
 	ofxAntescofoAction = new ofxTLAntescofoAction(mAntescofog);
 	getTimeline()->addTrack("Actions", ofxAntescofoAction);
 	ofxAntescofoAction->setNoteTrack(this);
+	return ofxAntescofoAction;
 }
 
 

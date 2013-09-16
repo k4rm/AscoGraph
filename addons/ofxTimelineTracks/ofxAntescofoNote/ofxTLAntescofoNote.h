@@ -40,9 +40,9 @@
 
 #pragma once 
 
+#include <Antescofo_AscoGraph.h>
 #include "ofxTLTrack.h"
 #include "ofxMidi.h"
-#include <pre_antescofo.h>
 
 // libmusicxcml includes
 #include "libmusicxml.h"
@@ -52,6 +52,8 @@
 #include "xml2antescofovisitor.h"
 #include "antescofowriter.h"
 #include "ofxTLAntescofoAction.h"
+#include <sndfile.h>    // Sound-file reader
+
 
 #define ANTESCOFO_REST              0
 #define ANTESCOFO_CHORD             1
@@ -163,7 +165,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual int getSelectedItemCount();
 
 	void clear_actions();
-	void createActionTrack();
+	ofxTLAntescofoAction* createActionTrack();
 	void roundedRect(float x, float y, float w, float h, float r);
 	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY);
 
@@ -189,7 +191,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofColor color_resize_note;
 	ofColor color_note_rest;
 	ofColor color_resize_note_rest, color_key, color_text, color_highlight, color_disabled, color_modalBg, color_outline;
-	antescofo   *mAntescofo;
+	antescofo_ascograph_offline *mAntescofo;
 
 	protected:
 	virtual void update(ofEventArgs& args);
@@ -275,7 +277,6 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	// Antescofo score support
 	Score       *mNetscore;
-	ParseDriver *mParseDriver;
 	map<int,int> line2note;
 
 	ofTrueTypeFont mFont;

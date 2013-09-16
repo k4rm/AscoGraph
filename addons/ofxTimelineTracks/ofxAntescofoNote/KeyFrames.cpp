@@ -176,7 +176,8 @@ void Keyframes::draw(){
 				string frameString = timeline->formatTime(selectedKeyframes[i]->time);
 				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
 			}
-			ofCircle(screenpoint.x, screenpoint.y, 4);
+			ofSetColor(255, 0, 0, 255);
+			ofCircle(screenpoint.x, screenpoint.y, 5);
                         // cout << "Keyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
 		}
 	}

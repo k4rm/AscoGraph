@@ -168,7 +168,8 @@ void BeatKeyframes::draw(){
 				string frameString = ofToString(selectedKeyframes[i]->beat);
 				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
 			}
-			ofCircle(screenpoint.x, screenpoint.y, 4);
+			ofSetColor(255, 0, 0, 255);
+			ofCircle(screenpoint.x, screenpoint.y, 6);
 			// cout << "ofxTLKeyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
 		}
 	}
