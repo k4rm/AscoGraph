@@ -1614,6 +1614,7 @@ void ofxAntescofog::newScore() {
 	[ editor clear ];
 	
 	ofxAntescofoNote->clear_actions();
+	mScore_filename = "";
 }
 
 void ofxAntescofog::saveAsScore() {

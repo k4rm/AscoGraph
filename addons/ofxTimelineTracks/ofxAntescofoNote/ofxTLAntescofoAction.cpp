@@ -1922,7 +1922,8 @@ void ActionMessage::print() {
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	ofNoFill();
 	ofSetColor(0, 0, 0, 255);
-	tlAction->mFont.drawString(tlAction->cut_str(header->rect.width, action), x + 1, y + header->LINE_HEIGHT - 6);
+	int strw = header->rect.width + header->rect.x - MAX(x, 0);
+	tlAction->mFont.drawString(tlAction->cut_str(strw, action), x + 1, y + header->LINE_HEIGHT - 6);
 	if (selected) { ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 	ofRect(tlAction->getBoundedRect(header->rect));
 }

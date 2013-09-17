@@ -56,7 +56,7 @@
 
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
-bool debug_loadscore = false;
+bool debug_loadscore = true;
 
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -275,6 +275,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					}
 
 					// glissando : draw line
+#if 0
 					if (switches[i]->type == ANTESCOFO_MULTI && i+1 < switches.size()
 							&& (switches[i+1]->type == ANTESCOFO_MULTI || switches[i+1]->type == ANTESCOFO_MULTI_STOP)) {
 						cout << "draw multi line" << endl;
@@ -283,12 +284,19 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 						float startX2 =  normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i+1]->beat.min), zoomBounds);
 						float endX2 = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i+1]->beat.max), zoomBounds);
 						int whichRow2 = ofMap(abs(switches[i+1]->pitch), noteRange.max, noteRange.min, 0, noteRange.span());
+						/*
 						ofRectangle noteBounds2 = ofRectangle(startX2, bounds.y + whichRow2 * rowHeight, endX2 - startX2, rowHeight);
 
 						ofLine(noteBounds.x + noteBounds.width/2, noteBounds.y + noteBounds.height/2,
 								noteBounds2.x + noteBounds2.width/2, noteBounds2.y + noteBounds2.height/2);
+								*/
 					}
-				} else { // draw a rest note
+					if (switches[i]->type == ANTESCOFO_MULTI || switches[i]->type == ANTESCOFO_MULTI_STOP) {
+						setNoteColor(i);
+					}
+#endif
+				} else if (switches[i]->type == ANTESCOFO_REST) { // draw a rest note
+#if 1
 					ofNoFill();
 					int rest_pseudoPitch_ymin = noteRange.min;
 					int rest_pseudoPitch_ymax = noteRange.max;
@@ -311,7 +319,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 						ofSetColor(color_resize_note_rest, 75);
 						ofLine(noteBounds.x, bounds.y + w/3, noteBounds.x, bounds.y + w/3 + noteBounds.height);
 					}
-
+#endif
 				}
 				if (switches[i]->action.size()) {
 					// ?
@@ -1007,6 +1015,7 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 	if (e) {
 		ostringstream str;
 		if (debug_loadscore) { str << "getNoteType: isMArkov:"<< e->isMarkov << endl; console->addln(str.str()); str.str(""); }
+
 		switch (e->isMarkov)
 		{
 			case 2: // TRILL
@@ -1027,8 +1036,9 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 			case 1:
 			default:
 				{
-					if (1 == e->pitch_list.size() && 0.0 == e->pitch_list[0])
+					if (1 == e->pitch_list.size() && 0.0 == e->pitch_list[0] && e->isSilence()) {
 						return ANTESCOFO_REST;
+					}
 					else
 					{
 						if (0 != e->multi_event)
@@ -1156,12 +1166,12 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	bool bGot_Action = true;
 	ostringstream oss;
 	string actstr;
-	//score->show(cout);
+	score->show(cout);
 
 	for (vector<Event *>::iterator i = score->begin(); i != score->end(); i++)
 	{
 		Event *e = *i;
-		if (!e->isEvent() && i != score->begin()) continue;
+		//if (!e->isEvent() /*&& i != score->begin()*/) continue; // TODO store and display actions on first dummy silence
 		if (e->gfwd) {
 			Gfwd *g = e->gfwd;
 			oss.str(""); oss.clear();
@@ -1176,9 +1186,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		}
 
 		int newtype = getNoteType(e);
-		if (i == score->begin() && !e->beat_duration) {
-				add_action(e->beatcum, actstr, e);
-		}
+		//TODO if (i == score->begin() && !e->beat_duration) { add_action(e->beatcum, actstr, e); }
 		if ((e->pitch_list.size() == 1 && e->beat_duration) || (e->pitch_list.size() && e->pitch_list[0] && !e->beat_duration)) { // NOTE, TRILL, MULTI
 			//if (newtype == -1) continue;
 			if (newtype == ANTESCOFO_MULTI) {
@@ -1331,6 +1339,35 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 				}
 			}
+		} else if (e->isSilence()) { // rest
+			if (debug_loadscore) { str << "GOT REST"; console->addln(str.str()); str.str(""); }
+			ofxTLAntescofoNoteOn *newSwitch = new ofxTLAntescofoNoteOn();
+			newSwitch->type = ANTESCOFO_REST;
+			newSwitch->startSelected = newSwitch->endSelected = false;
+			newSwitch->beat.min = e->beatcum;
+			newSwitch->beat.max = newSwitch->beat.min + e->beat_duration;
+			newSwitch->pitch = 0;
+			newSwitch->velocity = 127;
+			newSwitch->channel = 1;
+			if (bGot_Action)  {
+				newSwitch->action = actstr;
+				add_action(e->beatcum, actstr, e);
+			}
+			// get location in text score
+			if (!e->scloc) cout << *e;
+			newSwitch->label = e->cuename;
+#if 0
+			assert(e->scloc);
+			newSwitch->lineNum_begin = e->scloc->begin.line;
+			newSwitch->colNum_begin = e->scloc->begin.column;
+			newSwitch->lineNum_end = e->scloc->end.line;
+			newSwitch->colNum_end = e->scloc->end.column;
+#endif
+			switches.push_back(newSwitch);
+			line2note[e->scloc->begin.line] = switches.size() - 1;
+			if (debug_loadscore) { str << "added new switch: REST beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max; console->addln(str.str()); str.str(""); }
+			bGot_Action = false;
+
 		}
 
 	}
