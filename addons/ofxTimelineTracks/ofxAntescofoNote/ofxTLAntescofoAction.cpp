@@ -85,7 +85,7 @@ void ofxTLAntescofoAction::draw()
 				act->draw(this);
 				
 				//act->print();
-				
+			
 				if (0 && movingAction) {
 					ofPushStyle();
 					ofFill();
@@ -558,7 +558,6 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
 				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
 					c->beatcurves[iac]->mousePressed(args, millis);
-					cout << "mousePressed_curve_rec: push back one clickedCurve" << endl;
 					if (c->beatcurves[iac]->drawingEasingWindow)
 						shouldDrawModalContent = true;
 					clickedCurves.push_back(ac);
@@ -706,7 +705,6 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 
 
 	std::unique (clickedCurves.begin(), clickedCurves.end());
-	cout << "mouseReleased: clickedCurves: size:"<< clickedCurves.size() << endl; 
 	bool done = false;
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); !done && j != clickedCurves.end(); j++) {
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); !done && i != (*j)->curves.end(); i++) {
@@ -1964,6 +1962,7 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 				lineNum_begin = action->locate()->begin.line;
 				lineNum_end = action->locate()->end.line + 1;
 
+				if (debug_actiongroup) cout << "ActionGroupHeader: adding group" << endl;
 				group = new ActionGroup(g, event, this);
 			}
 		}

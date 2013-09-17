@@ -58,7 +58,6 @@
 
 bool debug_loadscore = false;
 
-
 int bitmapFontSize = 8;
 int guiXPadding = 15;
 
@@ -1162,7 +1161,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	for (vector<Event *>::iterator i = score->begin(); i != score->end(); i++)
 	{
 		Event *e = *i;
-		if (!e->isEvent()) continue;
+		if (!e->isEvent() && i != score->begin()) continue;
 		if (e->gfwd) {
 			Gfwd *g = e->gfwd;
 			oss.str(""); oss.clear();
@@ -1177,6 +1176,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		}
 
 		int newtype = getNoteType(e);
+		if (i == score->begin() && !e->beat_duration) {
+				add_action(e->beatcum, actstr, e);
+		}
 		if ((e->pitch_list.size() == 1 && e->beat_duration) || (e->pitch_list.size() && e->pitch_list[0] && !e->beat_duration)) { // NOTE, TRILL, MULTI
 			//if (newtype == -1) continue;
 			if (newtype == ANTESCOFO_MULTI) {

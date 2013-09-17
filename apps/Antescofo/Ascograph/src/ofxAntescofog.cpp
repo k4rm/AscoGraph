@@ -110,6 +110,8 @@ void ofxAntescofog::menu_item_hit(int n)
 		case INT_CONSTANT_BUTTON_CREATE_CURVE:
 		case INT_CONSTANT_BUTTON_CREATE_CURVES:
 		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
+		case INT_CONSTANT_BUTTON_CREATE_OSCSEND:
+		case INT_CONSTANT_BUTTON_CREATE_OSCRECV:
 			ofLogVerbose("Create Menu hit");
 			createCodeTemplate(n);
 			break;
@@ -332,6 +334,16 @@ void ofxAntescofog::setupUI() {
 	createWheneverMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
 	[createWheneverMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_WHENEVER];
 	[createMenu addItem:createWheneverMenuItem];
+	// oscsend
+	NSMenuItem* createOscsendMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create OSCsend ..." action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	createOscsendMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createOscsendMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_OSCSEND];
+	[createMenu addItem:createOscsendMenuItem];
+	// whenever
+	NSMenuItem* createOscrecvMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create OSCrecv ..." action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	createOscrecvMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createOscrecvMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_OSCRECV];
+	[createMenu addItem:createOscrecvMenuItem];
 
 	[createMenuItem setSubmenu:createMenu];
 	[menubar addItem:createMenuItem];
@@ -1995,6 +2007,16 @@ void ofxAntescofog::createCodeTemplate(int which)
 
 		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
 			str = "whenever(/*expr*/) /* @guard=expr */ {\n\t1. action1\n\t1/4 action2\n\t; ...\n} /*until(expr)*/\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+
+		case INT_CONSTANT_BUTTON_CREATE_OSCSEND:
+			str = "oscsend test \"localhost\" :3004 \"/antescofo/hello2\"";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+
+		case INT_CONSTANT_BUTTON_CREATE_OSCRECV:
+			str = "oscrecv receivername 3007 \"/\" $varname";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
