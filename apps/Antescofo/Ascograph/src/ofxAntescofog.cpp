@@ -7,6 +7,8 @@
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
 
+bool enable_simulate = false;
+
 int _debug = 0;
 static string str_error; // filled by our error()
 
@@ -45,6 +47,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	editor = 0;
 	bShouldRedraw = true;
 	bLineWrapMode = false;
+	bIsSimulating = false;
 	audioTrack = NULL;
 
 	if (argc > 1) mScore_filename = argv[1];
@@ -147,6 +150,14 @@ void ofxAntescofog::menu_item_hit(int n)
 				guiBottom->disable();
 			}
 			break;
+		case INT_CONSTANT_BUTTON_SIMULATE:
+			{
+				if (enable_simulate) {
+					bIsSimulating = true;
+					simulate();
+				}
+				break;
+			}
 		case INT_CONSTANT_BUTTON_PLAY:
 			{
 				ofxOscMessage m;
@@ -356,6 +367,12 @@ void ofxAntescofog::setupUI() {
 	id playMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Play" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[playMenuItem setTag:INT_CONSTANT_BUTTON_PLAY];
 	[transMenu addItem:playMenuItem];
+	if (enable_simulate) {
+	// . Simulate
+	id simulateMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Simulate" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[simulateMenuItem setTag:INT_CONSTANT_BUTTON_SIMULATE];
+	[transMenu addItem:simulateMenuItem];
+	}
 	// . Start
 	id startMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Start" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[startMenuItem setTag:INT_CONSTANT_BUTTON_START];
@@ -498,6 +515,10 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetLeft(b);
 	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
 	guiBottom->addWidgetLeft(b);
+	if (enable_simulate) {
+		b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_SIMULATE, OFX_UI_FONT_SMALL);
+		guiBottom->addWidgetLeft(b);
+	}
 
 	guiElevator = new ofxUICanvas(0, score_y, 17, ofGetWindowHeight() - score_y);
 	elevator = new ofxUIRangeSlider(3, 0*score_y+2, 12, ofGetWindowHeight() - score_y - 6, 1, 255, 200, 255, "elevator", OFX_UI_FONT_SMALL);
@@ -821,6 +842,7 @@ void ofxAntescofog::update() {
 
 //--------------------------------------------------------------
 void ofxAntescofog::draw() {
+	
 	//ofRectangle r = timeline.getDrawRect();
 	//cout << "ofxAntescofog: draw: total draw rect:" << r.x << ", " << r.y << " : " << r.width << "x" << r.height << endl;
 	if (!bSetupDone)
@@ -835,11 +857,23 @@ void ofxAntescofog::draw() {
 	}
 	*/
 
+	if (bIsSimulating) {
+		draw_simulate();
+		guiBottom->draw();
+		if (guiElevator->isEnabled())
+			guiElevator->draw();
+		console->draw();
+		// logos
+		mLogoInria.draw(score_w - 290, 2, 148, 54);
+		mLogoIrcam.draw(score_w - 120, 0, 109, 64);
+
+		return;
+	}
+
 	bool bMayUseCache = false;
 	//cout << "---- " << ofGetSystemTime() - mLastOSCmsgDate << endl;
 	if (ofGetSystemTime() - mLastOSCmsgDate > 15000) 
 		bMayUseCache = true;
-
 
 	ofFill();
 	if (bShowColorSetup) {
@@ -1816,6 +1850,16 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         
         ofxAntescofoNote->setAutoScroll(bAutoScroll);
 	}
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_SIMULATE && enable_simulate)
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Simulate button change: " << b->getValue() << endl;
+	    //TODO set text Edit
+	    if (b->getValue() == 1) {
+	    }
+	    bIsSimulating = true;
+	    simulate();
+    }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_PLAY)
     {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
@@ -1828,6 +1872,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		    b->setValue(false);
 	    }
     }
+
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_START)
     {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
@@ -2026,6 +2071,25 @@ void ofxAntescofog::createCodeTemplate(int which)
 	}
 }
 
+void ofxAntescofog::draw_simulate()
+{
+}
+
+
+
+void ofxAntescofog::simulate()
+{
+	// TODO changer le bouton simulate en edit
+
+	saveScore();
+
+	if (ofxAntescofoNote->mAntescofo->countActions()) {
+		cout << endl << "Launching performance simulation:" << endl;
+		ofxAntescofoNote->mAntescofo->run_playback();
+	} else {
+		//TODO display error no action in score to simulate
+	}
+}
 
 void ofxAntescofog::elevatorEnable()
 {
@@ -2077,3 +2141,29 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 	bringTrackToTop(zoomer);
 	bringTrackToTop(zoomer);
 }
+
+class action_trace {
+  public:
+	action_trace(string name_, string fathername_, double now_, double rnow_, string s_)
+		: name(name_), fathername(fathername_), now(now_), rnow(rnow_), s(s_) 
+	{}
+
+	string name;
+	string fathername;
+	double now, rnow;
+	string s;
+};
+
+static vector<action_trace* > simul_actions;
+
+// called from antescofo when simulating
+void ascograph_send_action_trace(const string& action_name,
+                                 const string& fathername,
+                                 double now,
+                                 double rnow,
+                                 const string& s) 
+{
+	simul_actions.push_back(new action_trace(action_name, fathername, now, rnow, s));
+}
+
+

@@ -39,6 +39,7 @@
 #define	INT_CONSTANT_BUTTON_CREATE_OSCRECV	 23
 #define INT_CONSTANT_BUTTON_PLAYSTRING	24
 #define INT_CONSTANT_BUTTON_NEW		25
+#define INT_CONSTANT_BUTTON_SIMULATE	26
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -59,6 +60,7 @@
 #define TEXT_CONSTANT_BUTTON_AUTOSCROLL         "Auto Scroll"
 #define TEXT_CONSTANT_BUTTON_LINEWRAP		"Toggle line wrapping"
 #define TEXT_CONSTANT_BUTTON_PLAY               "Play"
+#define TEXT_CONSTANT_BUTTON_SIMULATE           "Simulate"
 #define TEXT_CONSTANT_BUTTON_PLAYSTRING         "Play string"
 #define TEXT_CONSTANT_BUTTON_START              "Start"
 #define TEXT_CONSTANT_BUTTON_STOP               "Stop"
@@ -216,6 +218,11 @@ class ofxAntescofog : public ofBaseApp{
 		void newScore();
 		void askToSaveScore();
 		bool edited();
+
+		// simulation
+		bool bIsSimulating;
+		void simulate();
+		void draw_simulate();
 
 		bool bEditorShow;
 
