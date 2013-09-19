@@ -73,7 +73,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/AnteAlign.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/TempoClass.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/exec.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Antescofo.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/AntescofoCore.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Attributes.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/ActionFire.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Environment_RunTime.cpp
@@ -87,6 +87,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/Proc.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function_tab.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/AnteClock_standalone.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Antescofo_standalone.cpp
 )
 
 set (OFX_LIB_PATH ../../../../libs/openFrameworks)

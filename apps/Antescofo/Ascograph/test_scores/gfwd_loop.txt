@@ -3,7 +3,7 @@ NOTE A4 4
 NOTE C4 0.5
 group testgroup 
 {
-	action_one
+	action_one 55
 	action_two 12
 	loop h2_p 2.666
 	{
@@ -13,5 +13,7 @@ group testgroup
 	msg1
 	2 msg2
 }
+NOTE g2 5
 NOTE A2 4
 	msg4
+	kill h2_p

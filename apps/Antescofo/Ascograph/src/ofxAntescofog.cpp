@@ -7,7 +7,7 @@
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
 
-bool enable_simulate = false;
+bool enable_simulate = true;
 
 int _debug = 0;
 static string str_error; // filled by our error()
@@ -2083,9 +2083,13 @@ void ofxAntescofog::simulate()
 
 	saveScore();
 
+	ofxAntescofoNote->mAntescofo->set_score_file(mScore_filename.c_str());
+	ofxAntescofoNote->mAntescofo->set_verbosity_level(1);
+	ofxAntescofoNote->mAntescofo->set_trace(true);
+	//TODO set_audio_file
 	if (ofxAntescofoNote->mAntescofo->countActions()) {
 		cout << endl << "Launching performance simulation:" << endl;
-		ofxAntescofoNote->mAntescofo->run_playback();
+		ofxAntescofoNote->mAntescofo->play_mode();
 	} else {
 		//TODO display error no action in score to simulate
 	}
@@ -2163,6 +2167,7 @@ void ascograph_send_action_trace(const string& action_name,
                                  double rnow,
                                  const string& s) 
 {
+	cout << " now: " << now << " rnow:" << rnow << " action name:" <<  action_name << " father:" << fathername <<  " msg:" << s << endl;
 	simul_actions.push_back(new action_trace(action_name, fathername, now, rnow, s));
 }
 

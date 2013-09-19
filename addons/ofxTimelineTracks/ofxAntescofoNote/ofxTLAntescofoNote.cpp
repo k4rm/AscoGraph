@@ -1141,7 +1141,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	//str_error.erase();
 	Score *score;
 
-	mAntescofo->setVerbosity(0);
+	mAntescofo->set_verbosity_level(0);
 	if (NULL == (score = mAntescofo->Parse(filename))) {
 		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", filename.c_str());
 		return 0;

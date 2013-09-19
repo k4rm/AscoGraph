@@ -1245,7 +1245,7 @@ void ActionCurve::split()
 				// get last y1
 				listexp.push_back((*simple_vect)[simple_vect->size()-1].y1);
 				
-				antescofo *ao = (actionTrack)->mAntescofog->ofxAntescofoNote->mAntescofo;
+				antescofo_ascograph_offline *ao = (actionTrack)->mAntescofog->ofxAntescofoNote->mAntescofo;
 				SeqContFunction* n = new SeqContFunction(ao, *it_var, s->dur_vect, listexp, listinterp, s->grain, *parentCurve->antescofo_curve);
 				listseq.push_back(n);
 			}
