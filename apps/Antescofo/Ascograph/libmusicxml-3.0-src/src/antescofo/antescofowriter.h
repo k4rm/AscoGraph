@@ -68,6 +68,7 @@ class measure_elt {
 		int 			type;
 		rational 		duration;
 		vector<int>		pitches;
+		vector<int>		tiednotes;
 		vector<int>		grace_pitches;
 		int			nMeasure; // measure number
 		rational		m_pos; // position in part, in beats unit
@@ -137,7 +138,7 @@ class antescofowriter {
 
 		void antescofo_abort();
 		void print_duration(ostream &out, rational &du);
-		void writenote(ostream &out, int pitch);
+		void writenote(ostream &out, int pitch, measure_elt& e);
 					
 		void writestream(ostream &out, bool with_header);
 

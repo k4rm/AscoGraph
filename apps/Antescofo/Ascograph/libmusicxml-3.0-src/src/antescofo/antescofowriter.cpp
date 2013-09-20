@@ -142,6 +142,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 		e->duration = dur;
 		e->m_pos = curBeat;
 		e->flags = flag_;
+		if (flag_ == ANTESCOFO_FLAG_TIED_END) e->tiednotes.push_back(pitch);
 		if (flag_ == ANTESCOFO_FLAG_FERMATA) e->bFermata = true;
 		if (fLastBPM != fBPM) { fLastBPM = fBPM; e->bpm = fBPM; }
 		if (type == ANTESCOFO_NOTE || type == ANTESCOFO_CHORD || type == ANTESCOFO_REST) {
@@ -214,6 +215,8 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 							i->second.type = ANTESCOFO_CHORD;
 					} else 
 						i->second.pitches.push_back(pitch);
+
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 					dur.rationalise();
 					i->second.duration = dur;
 					i->second.nMeasure = nmeasure;
@@ -229,6 +232,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 			if (dur.toFloat() == .0) // handle grace notes
 				i->second.grace_pitches.push_back(pitch);
 			else i->second.pitches.push_back(pitch);
+			if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 			i->second.nMeasure = nmeasure;
 			i->second.m_pos = curBeat;
 		} else { // if already present note's duration is different of new one, create it.
@@ -246,6 +250,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 				cout << "; Addnote : expanding note: new_dur:" << new_dur.toFloat();
 				i->second.type = ANTESCOFO_CHORD;
 				i->second.pitches.push_back(pitch);
+				if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 				i->second.nMeasure = nmeasure;
 				i->second.m_pos = curBeat;
 
@@ -266,6 +271,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 				if (i->second.type == ANTESCOFO_REST) { // replace REST by NOTE, then add REST with diff duration
 					cout << "replace REST by NOTE, then add REST with diff duration"<<endl;
 					i->second.pitches.push_back(pitch);
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 					i->second.type = type;
 					i->second.duration = dur;
 					rational newbeat = curBeat + dur;
@@ -283,6 +289,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 						i->second.grace_pitches.push_back(i->second.pitches[0]);
 					i->second.type = type;
 					i->second.pitches.push_back(pitch);
+					//if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 					i->second.duration = dur;
 
 				} else {
@@ -291,6 +298,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 					i->second.duration = MIN(i->second.duration, dur);
 					i->second.type = ANTESCOFO_CHORD;
 					i->second.pitches.push_back(pitch);
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 					i->second.nMeasure = nmeasure;
 					i->second.m_pos = curBeat;
 
@@ -303,6 +311,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 					for (vector<int>::iterator c = v_Notes[tmpbeat].pitches.begin(); c != v_Notes[tmpbeat].pitches.end(); c++)
 						e->pitches.push_back(-(*c));
 					e->pitches.push_back(-pitch);
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 					e->nMeasure = nmeasure;
 					e->m_pos = tmpbeat;
 					e->flags = flag_;
@@ -433,7 +442,10 @@ void antescofowriter::print_duration(ostream &out, rational &du) {
 	}
 }
 
-void antescofowriter::writenote(ostream &out, int pitch) {
+void antescofowriter::writenote(ostream &out, int pitch, measure_elt& e) {
+	if (pitch > 0 && (e.flags == ANTESCOFO_FLAG_TIED_END) 
+			&& std::find(e.tiednotes.begin(), e.tiednotes.end(), pitch) != e.tiednotes.end())
+		pitch = -pitch;
 	if (!print_notes_names) {// || pitch % 100 != 0) {
 		out << pitch << "00";
 	} else {
@@ -533,14 +545,14 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 			//else if (grace_notes > 1) {
 			//	out << "CHORD ( ";
 			for (vector<int>::const_iterator j = i->second.grace_pitches.begin(); j != i->second.grace_pitches.end(); j++) {
-				out << "NOTE "; writenote(out, *j); out << " 0" << endl;
+				out << "NOTE "; writenote(out, *j, i->second); out << " 0" << endl;
 				//writenote(out, *j);//out << *j << "00 "; out << ") 0";// << endl;
 			}
 			//}
 			//if (i->second.pitches.size()) out << endl; // don't print new measure label on grace notes
 		} 
 		if (i->second.type == ANTESCOFO_NOTE && i->second.pitches.size() && i->second.pitches[0]) {
-			out << "NOTE "; writenote(out, i->second.pitches[0]); out << " ";
+			out << "NOTE "; writenote(out, i->second.pitches[0], i->second); out << " ";
 			print_duration(out, i->second.duration);
 		} else if (i->second.type == ANTESCOFO_REST) {
 			out << "NOTE 0 ";
@@ -564,7 +576,7 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 				last_glissando_pitch = 0;
 			} else { // glissando flags may be: start, stop, stop
 				if (last_glissando_pitch && i->second.flags == ANTESCOFO_FLAG_GLISSANDO_STOP) {
-					out << "MULTI ( "; writenote(out, last_glissando_pitch);
+					out << "MULTI ( "; writenote(out, last_glissando_pitch, i->second);
 					out << " ->";
 				}
 				if (i->second.flags == ANTESCOFO_FLAG_GLISSANDO_START || i->second.flags == ANTESCOFO_FLAG_GLISSANDO_STOP)
@@ -572,7 +584,7 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 			}
 			for (vector<int>::const_iterator j = i->second.pitches.begin(); j != i->second.pitches.end(); j++) {
 				if (i->second.flags != ANTESCOFO_FLAG_GLISSANDO_START) {
-					out << " "; writenote(out, *j);// << "00";
+					out << " "; writenote(out, *j, i->second);// << "00";
 				}
 				//if (i->second.type == ANTESCOFO_MULTI && i->second.flags == ANTESCOFO_FLAG_GLISSANDO_START) out << " ->";
 			}

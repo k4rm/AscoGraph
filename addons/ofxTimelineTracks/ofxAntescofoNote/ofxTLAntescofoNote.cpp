@@ -1262,14 +1262,16 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			}
 			// get location in text score
 			if (!e->scloc) cout << *e;
-			assert(e->scloc);
-			newSwitch->lineNum_begin = e->scloc->begin.line;
-			newSwitch->colNum_begin = e->scloc->begin.column;
-			newSwitch->lineNum_end = e->scloc->end.line;
-			newSwitch->colNum_end = e->scloc->end.column;
-			newSwitch->label = e->cuename;
-			switches.push_back(newSwitch);
-			line2note[e->scloc->begin.line] = switches.size() - 1;
+			else {
+				assert(e->scloc); // XXX useless assert
+				newSwitch->lineNum_begin = e->scloc->begin.line;
+				newSwitch->colNum_begin = e->scloc->begin.column;
+				newSwitch->lineNum_end = e->scloc->end.line;
+				newSwitch->colNum_end = e->scloc->end.column;
+				newSwitch->label = e->cuename;
+				switches.push_back(newSwitch);
+				line2note[e->scloc->begin.line] = switches.size() - 1;
+			}
 			if (debug_loadscore) { str << "added new switch: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 			bGot_Action = false;
 		}
