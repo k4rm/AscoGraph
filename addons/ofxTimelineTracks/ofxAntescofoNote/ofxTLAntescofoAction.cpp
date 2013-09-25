@@ -1023,7 +1023,7 @@ ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_)
 				//sons.push_back((ActionGroup*)lu);
 				ActionGroupHeader* nh = new ActionGroupHeader(header->beatnum, d, l->_group, event);//, false);
 				if (nh->group) {
-					if (l->_period && l->_period->value()->is_value())
+					if (l->_period && l->_period->value() && l->_period->value()->is_value())
 						nh->group->period = l->_period->eval();
 					nh->realtitle = nh->title = l->label();
 					sons.push_back(nh->group);
@@ -1091,8 +1091,8 @@ string ActionGroup::dump()
 double ActionGroup::get_delay(Action* tmpa) 
 {
 	double d = 0.;
-	if (tmpa && tmpa->delay() && tmpa->delay()->value()->is_constant()) { //->value() && tmpa->delay()->value()->is_value()) {
-		d = eval_double(tmpa->delay()->value());
+	if (tmpa && tmpa->delay() && tmpa->delay()->is_constant()) { //->value() && tmpa->delay()->value()->is_value()) {
+		d = tmpa->delay()->eval();
 	}
 	return d;
 }
@@ -1419,6 +1419,12 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 		// get delays
 		double groupDelay = parentCurve->header->delay;
 		for (std::vector<AnteDuration*>::const_iterator j = dur_vect->begin(); j != dur_vect->end(); j++) {
+			if ((*j)->is_constant()) {
+				double dou = (*j)->eval() + parentCurve->header->delay + groupDelay;
+				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
+				delays.push_back(dou);
+			}
+			/*
 			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
 			if (f) {
 				double dou = f->get_double() + groupDelay;
@@ -1437,6 +1443,7 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 					delays.push_back(val + parentCurve->header->delay);
 				}
 			}
+			*/
 		}
 	}
 	//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
@@ -1516,7 +1523,8 @@ bool ActionCurve::set_dur_val(double d, AnteDuration* a)
 	cout << "ActionCurve::set_dur_val: " << d << endl;
 	//assert(d);
 	if (!d) return false;
-	if (Value* v = (Value*)a->value()->is_value()) {
+	Value* v;
+	if (a->value() && (v = (Value*)a->value()->is_value())) {
 		*v = FloatValue(d);
 		return true;
 	} else {

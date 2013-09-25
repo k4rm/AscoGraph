@@ -8,6 +8,7 @@
 #include "ofxTLBeatTicker.h"
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
+#include "ofxTLAntescofoSim.h"
 #include "ofxColorPicker.h"
 #include "ofxUI.h"
 #include "ofxOSC.h"
@@ -40,6 +41,7 @@
 #define INT_CONSTANT_BUTTON_PLAYSTRING	24
 #define INT_CONSTANT_BUTTON_NEW		25
 #define INT_CONSTANT_BUTTON_SIMULATE	26
+#define INT_CONSTANT_BUTTON_EDIT	27
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -61,6 +63,7 @@
 #define TEXT_CONSTANT_BUTTON_LINEWRAP		"Toggle line wrapping"
 #define TEXT_CONSTANT_BUTTON_PLAY               "Play"
 #define TEXT_CONSTANT_BUTTON_SIMULATE           "Simulate"
+#define TEXT_CONSTANT_BUTTON_EDIT		"Edit"
 #define TEXT_CONSTANT_BUTTON_PLAYSTRING         "Play string"
 #define TEXT_CONSTANT_BUTTON_START              "Start"
 #define TEXT_CONSTANT_BUTTON_STOP               "Stop"
@@ -69,6 +72,7 @@
 #define TEXT_CONSTANT_BUTTON_BPM                "Tempo: "
 #define TEXT_CONSTANT_BUTTON_SAVE_COLOR         "Save color"
 #define TEXT_CONSTANT_PARSE_ERROR               " /!\\ Antescofo Score parsing error /!\\  "
+#define TEXT_CONSTANT_SIMULATION_ERROR          " /!\\ Antescofo performance simulation error /!\\  "
 #define TEXT_CONSTANT_BUTTON_CANCEL             "Cancel"
 #define TEXT_CONSTANT_BUTTON_BACK               "Back"
 #define TEXT_CONSTANT_BUTTON_FIND               "Find"
@@ -92,6 +96,18 @@ class ofxTLBeatTicker;
 - (void) receiveNotification:(NSNotification *) notification;
 @end
 
+class action_trace {
+  public:
+	action_trace(string name_, string fathername_, double now_, double rnow_, string s_)
+		: name(name_), fathername(fathername_), now(now_), rnow(rnow_), s(s_) 
+	{}
+
+	string name;
+	string fathername;
+	double now, rnow;
+	string s;
+};
+
 class AntescofoTimeline : public ofxTimeline
 {
 	public: 
@@ -109,10 +125,11 @@ class ofxAntescofog : public ofBaseApp{
 		ofxAntescofog(int argc, char* argv[]);
 #endif
 
-		AntescofoTimeline timeline;
+		AntescofoTimeline timeline, timelineSim;
 
 		void setup();
 		void setupTimeline();
+		void setupTimelineSim();
 		void setupUI();
 		void setupOSC();
 		void update();
@@ -140,10 +157,11 @@ class ofxAntescofog : public ofBaseApp{
 		void replaceEditorScore(int linebegin, int lineend, string actstr);
 		void createCodeTemplate(int which);
 
-		ofxTLAntescofoNote* ofxAntescofoNote;
-		ofxTLBeatTicker *ofxAntescofoBeatTicker;
-		ofxTLZoomer2D *ofxAntescofoZoom;
+		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
+		ofxTLBeatTicker *ofxAntescofoBeatTicker, *ofxAntescofoBeatTickerSim;
+		ofxTLZoomer2D *ofxAntescofoZoom, *ofxAntescofoZoomSim;
 		ofxTLAccompAudioTrack* audioTrack;
+		ofxTLAntescofoSim* ofxAntescofoSim;
 
 	protected:
 		// display properties
@@ -170,6 +188,7 @@ class ofxAntescofog : public ofBaseApp{
 		ofxUISlider *mSliderBPM;
 		ofxUILabel  *mLabelBeat, *mLabelPitch, *mLabelAccompSpeed, *mFindReplaceOccur;
 		ofxUILabelButton *mSaveColorButton;
+		ofxUILabelToggle *mEditButton;
 		void exit();
 		void guiEvent(ofxUIEventArgs &e);
 		ofxUIDropDownList *mUImenu;
@@ -222,6 +241,7 @@ class ofxAntescofog : public ofBaseApp{
 		// simulation
 		bool bIsSimulating;
 		void simulate();
+		void stop_simulate_and_goedit();
 		void draw_simulate();
 
 		bool bEditorShow;

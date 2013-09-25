@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.059")
+set(ASCOGRAPH_VERSION_NUMBER "0.060")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -226,7 +226,7 @@ SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQ
 
 #file ( GLOB_RECURSE app_sources_files ../src/*)
 if (APPLE)
-	set (app_sources_files ../src/mainMacOSX.mm ../src/ofxAntescofog.cpp)
+	set (app_sources_files ../src/mainMacOSX.mm ../src/ofxAntescofog.cpp ../src/ofxAntescofoSim.cpp)
 else() 
 	set (app_sources_files ../src/main ../src/ofxAntescofog.cpp )
 endif(APPLE)
@@ -290,6 +290,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLFlags.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/BeatKeyframes.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/Keyframes.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoSim.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoAction.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp
@@ -363,6 +364,8 @@ set (app_sources_files ${app_sources_files}
 SET_SOURCE_FILES_PROPERTIES(../src/mainMacOSX.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxEditor.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofog.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoAction.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
@@ -497,7 +500,7 @@ if ( APPLE )
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib", ".so")
     #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -mmacosx-version-min=10.6")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_MAC_OS")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG=1 -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_MAC_OS")
     set (CMAKE_OSX_ARCHITECTURES "i386")
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_PREFIXES "lib" "")

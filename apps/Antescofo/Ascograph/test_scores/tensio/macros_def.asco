@@ -85,7 +85,7 @@
 	expr{440.0 * exp((X-69) * log(2) / 12 )}
 }
 
-; voix,note,velocit�,dur�e en beat,volume start,volume end, expression start, expression end, pour cent
+; voix,note,velocitÂ,durÂe en beat,volume start,volume end, expression start, expression end, pour cent
 @MACRO_DEF cresc($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT) 
 {	
 	group cresc_$VOIX_$NOTE ; cresc_VOIX 
@@ -102,7 +102,7 @@
 @MACRO_DEF cresc_curve($VOIX,$NOTE,$VEL,$DUR,$VOL1,$VOL2,$EXPR1,$EXPR2,$PCENT) 
 {	
 	syn_voices $VOIX	$NOTE $VEL @b($DUR) ; play note
-	curve cresc_$VOIX_$NOTE action:=syn_voices $VOIX vol $v_$VOIX grain:=0.03s ; cresc_VOIX 
+	curve cresc_$VOIX_$NOTE @action:=syn_voices $VOIX vol $v_$VOIX @grain:=0.03s ; cresc_VOIX 
 	{
 		$v_$VOIX
 		{

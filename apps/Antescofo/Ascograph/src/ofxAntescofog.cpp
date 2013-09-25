@@ -49,6 +49,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bLineWrapMode = false;
 	bIsSimulating = false;
 	audioTrack = NULL;
+	ofxAntescofoSim = 0;
 
 	if (argc > 1) mScore_filename = argv[1];
 
@@ -158,6 +159,15 @@ void ofxAntescofog::menu_item_hit(int n)
 				}
 				break;
 			}
+		case INT_CONSTANT_BUTTON_EDIT:
+			{
+				if (enable_simulate) {
+					bIsSimulating = false;
+					stop_simulate_and_goedit();
+				}
+				break;
+			}
+
 		case INT_CONSTANT_BUTTON_PLAY:
 			{
 				ofxOscMessage m;
@@ -368,10 +378,10 @@ void ofxAntescofog::setupUI() {
 	[playMenuItem setTag:INT_CONSTANT_BUTTON_PLAY];
 	[transMenu addItem:playMenuItem];
 	if (enable_simulate) {
-	// . Simulate
-	id simulateMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Simulate" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-	[simulateMenuItem setTag:INT_CONSTANT_BUTTON_SIMULATE];
-	[transMenu addItem:simulateMenuItem];
+		// . Simulate
+		id simulateMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Simulate" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+		[simulateMenuItem setTag:INT_CONSTANT_BUTTON_SIMULATE];
+		[transMenu addItem:simulateMenuItem];
 	}
 	// . Start
 	id startMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Start" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
@@ -518,6 +528,10 @@ void ofxAntescofog::setupUI() {
 	if (enable_simulate) {
 		b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_SIMULATE, OFX_UI_FONT_SMALL);
 		guiBottom->addWidgetLeft(b);
+		mEditButton = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_EDIT, OFX_UI_FONT_SMALL);
+		guiBottom->addWidgetLeft(mEditButton);
+		mEditButton->setVisible(false);
+		mEditButton->setLabelVisible(false);
 	}
 
 	guiElevator = new ofxUICanvas(0, score_y, 17, ofGetWindowHeight() - score_y);
@@ -856,43 +870,29 @@ void ofxAntescofog::draw() {
 		return;
 	}
 	*/
-
-	if (bIsSimulating) {
-		draw_simulate();
-		guiBottom->draw();
-		if (guiElevator->isEnabled())
-			guiElevator->draw();
-		console->draw();
-		// logos
-		mLogoInria.draw(score_w - 290, 2, 148, 54);
-		mLogoIrcam.draw(score_w - 120, 0, 109, 64);
-
-		return;
-	}
-
 	bool bMayUseCache = false;
 	//cout << "---- " << ofGetSystemTime() - mLastOSCmsgDate << endl;
 	if (ofGetSystemTime() - mLastOSCmsgDate > 15000) 
 		bMayUseCache = true;
 
 	ofFill();
-	if (bShowColorSetup) {
+	if (bShowColorSetup) { // color setup
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_ColorSetup();
-	} else if (bShowOSCSetup) {
+	} else if (bShowOSCSetup) { // osc setup
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_OSCSetup();
-	} else if (bShowError) {
+	} else if (bShowError) { // parsing error display
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_error();
-	} else if (bShowFind) {
+	} else if (bShowFind) { // find/replace
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_FindText();
-	} else {
+	} else { // draw normal
 		if (bMayUseCache && !timeline.getIsPlaying() && !bShouldRedraw) {
 			drawCache.draw(0, 0);
 		} else {
@@ -904,7 +904,10 @@ void ofxAntescofog::draw() {
 			ofSetColor(ofxAntescofoNote->color_staves_bg);
 			ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 
-			timeline.draw();
+			if (bIsSimulating) { // simulation
+				draw_simulate();
+			} else
+				timeline.draw();
 			guiBottom->draw();
 			if (guiElevator->isEnabled())
 				guiElevator->draw();
@@ -1509,11 +1512,13 @@ void ofxAntescofog::display_error()
 {
     bShowError = true;
     timeline.disable();
+    timelineSim.disable();
     guiBottom->disable();
     guiError->enable();
     guiError->setVisible(true);
     if (!bErrorInitDone){
-        guiError->addWidgetRight(new ofxUILabel(ofGetWindowWidth()/2, 100, string(TEXT_CONSTANT_PARSE_ERROR), OFX_UI_FONT_MEDIUM));
+	string hdr(bIsSimulating ? TEXT_CONSTANT_SIMULATION_ERROR : TEXT_CONSTANT_PARSE_ERROR);
+        guiError->addWidgetRight(new ofxUILabel(ofGetWindowWidth()/2, 100, hdr, OFX_UI_FONT_MEDIUM));
         string err = ofxAntescofoNote->get_error();
         /*
          int len = 80, i;
@@ -1854,11 +1859,25 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
     {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
 	    cout << "Simulate button change: " << b->getValue() << endl;
-	    //TODO set text Edit
-	    if (b->getValue() == 1) {
+	    b->setValue(0);
+	    if (!mEditButton) {
+		    cerr << "ERROR: Can not get widget edit"<< endl;
+		    abort();
 	    }
+	    mEditButton->setVisible(true);
+	    mEditButton->setLabelVisible(true);
 	    bIsSimulating = true;
 	    simulate();
+    }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_EDIT && enable_simulate)
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Edit button change: " << b->getValue() << endl;
+	    b->setVisible(false);
+	    b->setLabelVisible(false);
+	    b->setValue(0);
+	    bIsSimulating = false;
+	    stop_simulate_and_goedit();
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_PLAY)
     {
@@ -1920,8 +1939,10 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         e.widget->toggleVisible();
         ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
         b->setValue(false);
-		guiError->disable();
-        timeline.enable();
+	guiError->disable();
+        if (!bIsSimulating)
+		timeline.enable();
+	else timelineSim.enable();
         guiBottom->enable();
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_FIND) {
@@ -2071,30 +2092,6 @@ void ofxAntescofog::createCodeTemplate(int which)
 	}
 }
 
-void ofxAntescofog::draw_simulate()
-{
-}
-
-
-
-void ofxAntescofog::simulate()
-{
-	// TODO changer le bouton simulate en edit
-
-	saveScore();
-
-	ofxAntescofoNote->mAntescofo->set_score_file(mScore_filename.c_str());
-	ofxAntescofoNote->mAntescofo->set_verbosity_level(1);
-	ofxAntescofoNote->mAntescofo->set_trace(true);
-	//TODO set_audio_file
-	if (ofxAntescofoNote->mAntescofo->countActions()) {
-		cout << endl << "Launching performance simulation:" << endl;
-		ofxAntescofoNote->mAntescofo->play_mode();
-	} else {
-		//TODO display error no action in score to simulate
-	}
-}
-
 void ofxAntescofog::elevatorEnable()
 {
 	elevator->setVisible(true);
@@ -2144,31 +2141,6 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 
 	bringTrackToTop(zoomer);
 	bringTrackToTop(zoomer);
-}
-
-class action_trace {
-  public:
-	action_trace(string name_, string fathername_, double now_, double rnow_, string s_)
-		: name(name_), fathername(fathername_), now(now_), rnow(rnow_), s(s_) 
-	{}
-
-	string name;
-	string fathername;
-	double now, rnow;
-	string s;
-};
-
-static vector<action_trace* > simul_actions;
-
-// called from antescofo when simulating
-void ascograph_send_action_trace(const string& action_name,
-                                 const string& fathername,
-                                 double now,
-                                 double rnow,
-                                 const string& s) 
-{
-	cout << " now: " << now << " rnow:" << rnow << " action name:" <<  action_name << " father:" << fathername <<  " msg:" << s << endl;
-	simul_actions.push_back(new action_trace(action_name, fathername, now, rnow, s));
 }
 
 

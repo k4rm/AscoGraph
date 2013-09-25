@@ -57,7 +57,6 @@ NOTE C4 1.	ms93__INIT
 	
 	1Mng BufferSize 500., Clear 0., Direction 2., Dry/wet 100., Fade 5., FilterFreq 1339.38501, FilterGain 0., FilterMode 8., FilterQ 5., Gain 0., GainVar 0., Ingain 6., MaxVoices 20., MinSize 5., Outgain 0., Position 0., RampTime 50., RandPosition 0., Record 1., Separ 10., SeparVar 10., Size 200., SizeVar 10., StereoSpread 50., Transp 0., TranspMode 0., TranspScale -24 -12 0 12 24, TranspVar 5.490966, Voices 20.
 	
-	TGenv "1Mng FilterFreq" #speed random range 100 10. 200. #interp = #value random range 100 1000 10000 5  #out line #metro 1
 	
 	; 1Mng.INIT bang
 	; TGenv "1Mng FilterFreq" reset
@@ -70,10 +69,6 @@ NOTE C4 1.	ms93__INIT
 	
 	1Fsh 1delay 0., 1feed 0., 1freq 15., 1gain 0., 1pan -1., 1side 1., 2delay 0., 2feed 0., 2freq 15., 2gain 0., 2pan 1., 2side 1., 3delay 333., 3feed 0., 3freq 15., 3gain -127., 3pan 0.33, 3side 0., 4delay 555., 4feed 0., 4freq 15., 4gain -127., 4pan 1., 4side 0., Clear 0., Delay 0., Dry/wet 100., Feedback 0., FilterFreq 1000., FilterGain 0., FilterMode 8., FilterQ 0.3, Ingain 10., Outgain 0.
 	
-	TGenv "1Fsh 1freq" #speed random range 100 100. 1000. #interp = #value random range 100 20 300  #out line #metro 1
-	TGenv "1Fsh 2freq" #speed random range 100 100. 1000. #interp = #value random range 100 20 300  #out line #metro 1
-	TGenv "1Fsh FilterFreq" #speed random range 100 100. 1000. #interp = #value random range 100 200 2500 #out line #metro 1
-	TGenv "1Fsh FilterQ" #speed random range 100 100. 1000. #interp = #value random range 100 1 3  #out line #metro 1
 	
 	; 1Fsh.INIT bang
 	; TGenv "1Fsh 1freq" reset
@@ -105,7 +100,6 @@ NOTE C4 1.	ms93__INIT
 	
 	1Fra Dry/wet 100., FilterFreq 3559.595947, FilterGain 5., FilterMode 8., FilterQ 2., Ingain 10., Outgain 0., ampVar 0.818898, bufferSize 276.055115, declick 1., direction 0., dropOut 0.047244, feedback 0.062362, repet 0., speed 1.
 	
-	TGenv "1Fra FilterFreq" #speed random range 100 100. 1000. #interp = #value random range 100 1000 8000 1  #out line #metro 1
 	
 	; 1Fra.INIT bang
 	; TGenv "1Fra FilterFreq" reset

@@ -31,7 +31,7 @@ Curve slider  @Grain := 0.05s, @Action :=
 
 
 NOTE C2 10
-curve slider  Grain := 0.05s, Action := print $x $y
+curve slider  @Grain := 0.05s, Action := print $x $y
 {
 	$x, $y
 	{

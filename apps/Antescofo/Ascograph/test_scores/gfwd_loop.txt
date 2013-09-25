@@ -10,10 +10,10 @@ group testgroup
 			harm2	-50.0	1.333
 		1.333	harm2	3.0	(1.333)
 	}
-	msg1
-	2 msg2
+	msg1 a
+	2 msg2 a
 }
-NOTE g2 5
-NOTE A2 4
-	msg4
+NOTE g2 3
+NOTE A2 1
+	msg4 a
 	kill h2_p
