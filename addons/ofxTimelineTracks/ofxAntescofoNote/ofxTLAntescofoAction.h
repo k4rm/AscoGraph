@@ -169,6 +169,7 @@ class ActionMultiCurves : public ActionGroup {
 		vector<ActionCurve* > curves;
 		int howmany, nbvects;
 		string label;
+		bool isValid;
 };
 
 class ActionCurve {

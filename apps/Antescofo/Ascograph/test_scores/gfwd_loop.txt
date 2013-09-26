@@ -3,7 +3,7 @@ NOTE A4 4
 NOTE C4 0.5
 group testgroup 
 {
-	action_one 55
+	action_one 55 $RT_TEMPO
 	action_two 12
 	loop h2_p 2.666
 	{

@@ -365,7 +365,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 		if (c->delay)
 			len += get_x(c->header->beatnum + c->delay) - get_x(c->header->beatnum);
 		maxw = len;
-		if (!ag->header->hidden) {
+		if (!ag->header->hidden && c->isValid) {
 			maxw = c->getWidth();
 		}
 		if (debugsub) cout << "\tupdate_width: curves msg maxw:" << maxw << endl;
@@ -1136,6 +1136,7 @@ ActionMultiCurves::ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */Curve*
 	header = header_;
 	antescofo_curve = c;
 	period = 0.;
+	isValid = true;
 	if (antescofo_curve) {
 		cout << "got MultiCurve: " << antescofo_curve->label() << endl; 
 		label = antescofo_curve->label();
@@ -1183,13 +1184,14 @@ ActionMultiCurves::ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */Curve*
 			}
 		}
 #endif
+		bool res = true;
 		vector<ActionCurve*>::iterator c;
-		for (c = curves.begin(); c != curves.end(); c++) {
-			//if ((*c)->beatcurves.empty()) { //XXX ?
+		for (c = curves.begin(); res && c != curves.end(); c++) {
 			(*c)->simple_vect = &(*c)->seq->s_vect[0];
-			(*c)->create_from_parser_objects((*c)->vars, (*c)->dur_vect, this);
-			//}
+			res &= (*c)->create_from_parser_objects((*c)->vars, (*c)->dur_vect, this);
 		}
+		if (!res)
+			isValid = false;
 	}
 }
 
@@ -1360,8 +1362,6 @@ int ActionMultiCurves::getHeight() {
 ActionCurve::ActionCurve(list<Var*> &var, SeqContFunction* seq_, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionMultiCurves* parentCurve_)
 	: parentCurve(parentCurve_), vars(var), seq(seq_)
 {
-	/*delay = delay_;
-	event = e;*/
 	vars = var;
 	for (list<Var*>::iterator i = var.begin(); i != var.end(); i++) {
 		varname += (*i)->name();
@@ -1374,7 +1374,6 @@ ActionCurve::ActionCurve(list<Var*> &var, SeqContFunction* seq_, vector<AnteDura
 
 bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, /*float delay_, Event *e, */ ActionMultiCurves* parentCurve_) 
 {
-	//simple_vect = &seq->s_vect[0];
 	dur_vect = dur_vect_;
 	parentCurve = parentCurve_;
 
@@ -1382,6 +1381,7 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 	if (values.empty() && delays.empty()) {
 		for (int i = 0; i < var.size(); i++) {
 			vector<SimpleContFunction>* simple_vect = &(seq->s_vect[i]);
+			IntValue* in;
 			// get values
 			vector<double> hvalues;
 			for (uint j = 0; j != dur_vect->size() - 1; j++) {
@@ -1390,14 +1390,11 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 					double dou = f->get_double();
 					cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
 					hvalues.push_back(dou);
-				} else {
-					IntValue* in = dynamic_cast<IntValue*>((*simple_vect)[j].y0);
-					if (in) {
-						int ii = in->get_int();
-						cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
-						hvalues.push_back(ii);
-					}
-				}
+				} else if ((in = dynamic_cast<IntValue*>((*simple_vect)[j].y0))) {
+					int ii = in->get_int();
+					cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
+					hvalues.push_back(ii);
+				} else return false;
 				//cout << "ActionCurve : got y0:" << s_vect[j].y0->get_double() << " y1:" << s_vect[j].y1->get_double() << " type:"<< s_vect[j].type << endl;
 			} 
 			// get last y1
@@ -1406,14 +1403,11 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 				double dou = f->get_double();
 				cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
 				hvalues.push_back(dou);
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>((*simple_vect)[simple_vect->size()-1].y1);
-				if (in) {
-					int ii = in->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
-					hvalues.push_back(ii);
-				}
-			}
+			} else if ((in = dynamic_cast<IntValue*>((*simple_vect)[simple_vect->size()-1].y1))) {
+				int ii = in->get_int();
+				cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
+				hvalues.push_back(ii);
+			} else return false;
 			values.push_back(hvalues);
 		}
 		// get delays
@@ -1423,7 +1417,7 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 				double dou = (*j)->eval() + parentCurve->header->delay + groupDelay;
 				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
 				delays.push_back(dou);
-			}
+			} else return false;
 			/*
 			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
 			if (f) {
@@ -1507,7 +1501,6 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			}
 			beatcurves.push_back(curve);
 		}
-
 	}
 	return true;
 }
