@@ -172,7 +172,13 @@ bool BeatCurve::mousePressed(ofMouseEventArgs& args, long millis){
 				//			cout << "Min selected " << ofxTimecode::timecodeForMillis(minSelected) << " Mid Selected " << ofxTimecode::timecodeForMillis(midSelection) << " Max selected " << ofxTimecode::timecodeForMillis(maxSelected) << " anchor "  << ofxTimecode::timecodeForMillis(stretchAnchor) << " millis down " << ofxTimecode::timecodeForMillis(millis) << endl;
 				stretchSelectPoint = millis;
 				//don't do anything else, like create or deselect keyframes
-				updateStretchOffsets(screenpoint, timeline->millisecToBeat(millis));
+				stretchAnchor = 0;
+				//updateStretchOffsets(screenpoint, timeline->millisecToBeat(millis));
+				//updateStretchOffsets(screenpoint, timeline->normalizedXToBeat(timeline->screenXtoNormalizedX(args.x, zoomBounds)));//timeline->millisecToBeat());
+				for(int k = 0; k < selectedKeyframes.size(); k++){
+					selectedKeyframes[k]->grabBeatOffset  = selectedKeyframes[k]->beat;
+					selectedKeyframes[k]->grabValueOffset = selectedKeyframes[k]->value;
+				}
 			}
 			return true;
 		}
@@ -187,7 +193,6 @@ bool BeatCurve::mousePressed(ofMouseEventArgs& args, long millis){
 				//settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
 				//didJustDeselect = timeline->getTotalSelectedItems() > 1;
 				didJustDeselect = selectedKeyframes.size() > 1;
-				cout << "--------------------- didJustDeselect:" << didJustDeselect << " getTotalSelectedItems:"<< selectedKeyframes.size() << endl;
 				timeline->unselectAll();
 				selectedKeyframes.clear();
 			}
@@ -225,7 +230,11 @@ bool BeatCurve::mousePressed(ofMouseEventArgs& args, long millis){
 				if (curve_debug_) cout << "--------------------------------------- MOUSEDPRESSED 2 origvalue:" << selectedKeyframe->orig_value << endl;
 
 				if(args.button == 0 && !ofGetModifierSelection() && !ofGetModifierControlPressed()){
-					timeline->setDragTimeOffset(timeline->beatToMillisec(selectedKeyframe->grabBeatOffset));
+					//timeline->setDragTimeOffset(timeline->beatToMillisec(selectedKeyframe->grabBeatOffset));
+					for(int k = 0; k < selectedKeyframes.size(); k++){
+						selectedKeyframes[k]->grabBeatOffset  = selectedKeyframes[k]->beat;
+						selectedKeyframes[k]->grabValueOffset = selectedKeyframes[k]->value;
+					}
 					//move the playhead
 					if(timeline->getMovePlayheadOnDrag()){
 						timeline->setCurrentTimeMillis(timeline->beatToMillisec(selectedKeyframe->beat));
@@ -250,7 +259,9 @@ void BeatCurve::mouseDragged(ofMouseEventArgs& args, long millis){
 	if (ref->parentCurve->howmany != 1) return;
 	//if (!bounds.inside(args.x, args.y)) return;
 	//if(!drawingEasingWindow){ ofxTLBeatKeyframes::mouseDragged(args, millis); }
-	float beat = timeline->millisecToBeat(millis);
+	//float beat = timeline->millisecToBeat(millis);
+	float beat = timeline->normalizedXToBeat(timeline->screenXtoNormalizedX(args.x, zoomBounds));
+	if (curve_debug_) cout << "BeatCurve::mouseDragged: beat clicked:" << beat << endl;
 	if(keysAreStretchable){
 		//cast the stretch anchor to long so that it can be signed
 		float stretchRatio = 1.0*(beat-long(stretchAnchor)) / (1.0*stretchSelectPoint-stretchAnchor);
@@ -284,9 +295,10 @@ void BeatCurve::mouseDragged(ofMouseEventArgs& args, long millis){
 		for(int k = 0; k < selectedKeyframes.size(); k++){
 			ofVec2f newScreenPosition;
 			//cout << "mouseDragged: clamp: " <<   ofClamp(beat - selectedKeyframes[k]->grabBeatOffset, timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))) << endl;
-			setKeyframeBeat(selectedKeyframes[k], ofClamp(beat - selectedKeyframes[k]->grabBeatOffset,
-						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
-						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))));
+			setKeyframeBeat(selectedKeyframes[k], ofClamp(beat,// - selectedKeyframes[k]->grabBeatOffset,
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX(), zoomBounds)),  //XXX FUCKED UP BOUNDS SHIT
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX(), zoomBounds))));
+			if (curve_debug_) cout << "BeatCurve: mouseDragged new beat: " << selectedKeyframes[k]->beat << endl;
 			selectedKeyframes[k]->value = screenYToValue(args.y - selectedKeyframes[k]->grabValueOffset);
 			//selectedKeyframes[k]->orig_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true); // ADDED
 			selectedKeyframes[k]->tmp_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true);
@@ -370,7 +382,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 							easetype = "";
 					}
 
-					cout << "BeatCurve::mouseReleased: easetype:" << easetype << endl;
+					if (curve_debug_) cout << "BeatCurve::mouseReleased: easetype:" << easetype << endl;
 					string newtype = ((TweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name;
 					newtype += easetype;
 					cout << "BeatCurve::mouseReleased: easingFunc:" << i << " newtype:" << newtype << " easeType:" << easetype <<endl;
@@ -421,6 +433,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 			EasingFunction* func = ((TweenBeatKeyframe*)(selectedKeyframes[i]))->easeFunc;
 			EasingType* type = ((TweenBeatKeyframe*)(selectedKeyframes[i]))->easeType;
 
+			
 			ref->deleteKeyframeAtBeat(selectedKeyframes[i]->orig_beat);
 			ref->addKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->tmp_value);
 			string easetype;
@@ -957,7 +970,7 @@ void BeatCurve::draw(){
 					timeline->getFont().drawString(ofToString(selectedKeyframes[i]->orig_value, 4), screenpoint.x+5, screenpoint.y-5);
 			}
 			ofSetColor(255, 0, 0, 255);
-			ofCircle(screenpoint.x, screenpoint.y, 6);
+			ofCircle(screenpoint.x, screenpoint.y, 4);
                         //if (curve_debug_) cout << "Keyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
 		}
 	}

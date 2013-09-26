@@ -396,7 +396,8 @@ bool BeatKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 //update the grabBeatOffset to prepare for stretching keys
 void BeatKeyframes::updateStretchOffsets(ofVec2f screenpoint, float grabBeat){
 	for(int k = 0; k < selectedKeyframes.size(); k++){
-		selectedKeyframes[k]->grabBeatOffset = selectedKeyframes[k]->beat - stretchAnchor;
+		//selectedKeyframes[k]->grabBeatOffset = selectedKeyframes[k]->beat - stretchAnchor;
+		selectedKeyframes[k]->grabBeatOffset = grabBeat - stretchAnchor;
 	}
 }
 
@@ -437,8 +438,8 @@ void BeatKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
 			ofVec2f newScreenPosition;
 			//cout << "mouseDragged: clamp: " <<   ofClamp(beat - selectedKeyframes[k]->grabBeatOffset, timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))) << endl;
 			setKeyframeBeat(selectedKeyframes[k], ofClamp(beat - selectedKeyframes[k]->grabBeatOffset,
-						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX())), 
-						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX()))));
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMinX(), zoomBounds)), 
+						timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(bounds.getMaxX(), zoomBounds))));
 			selectedKeyframes[k]->value = screenYToValue(args.y - selectedKeyframes[k]->grabValueOffset);
 			//selectedKeyframes[k]->orig_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true);
 			selectedKeyframes[k]->tmp_value = ofMap(selectedKeyframes[k]->value, 0, 1.0, valueRange.min, valueRange.max, true);

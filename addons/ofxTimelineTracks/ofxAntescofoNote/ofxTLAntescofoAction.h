@@ -60,6 +60,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
 		virtual bool mousePressed_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis);
+		virtual bool mousePressed_search_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 		virtual void mouseDragged(ofMouseEventArgs& args, long millis);//bool snapped);
 		virtual void mouseReleased(ofMouseEventArgs& args, long millis);

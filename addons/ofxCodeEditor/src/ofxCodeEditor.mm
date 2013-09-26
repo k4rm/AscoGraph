@@ -137,7 +137,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 	//[mEditor setStringProperty: SCI_STYLESETFONT parameter: STYLE_DEFAULT value: @"Helvetica"];
 	// [mEditor setStringProperty: SCI_STYLESETFONT parameter: STYLE_DEFAULT value: @"Monospac821 BT"]; // Very pleasing programmer's font.
 	//[mEditor setGeneralProperty: SCI_STYLESETSIZE parameter: STYLE_DEFAULT value: 14];
-	//[mEditor setColorProperty: SCI_STYLESETFORE parameter: STYLE_DEFAULT value: [NSColor blackColor]];
+	//[mEditor setColorProperty: SCI_STYLESETFORE parameter: STYLE_DEFAULT value: [NSColor blackColor]];//
 
 	//[mEditor setGeneralProperty: SCI_STYLECLEARALL parameter: 0 value: 0];	
 
@@ -233,6 +233,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 	[infoBar setDisplay: IBShowAll];
 	[mEditor setInfoBar: infoBar top: NO];
 
+	[mEditor setGeneralProperty: SCI_SETTABWIDTH parameter: 4 value: 0];
 	[mEditor setStatusText: @"Operation complete"];
 }
 

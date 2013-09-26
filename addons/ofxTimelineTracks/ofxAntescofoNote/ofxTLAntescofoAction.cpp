@@ -547,6 +547,7 @@ void ofxTLAntescofoAction::regionSelected(ofLongRange timeRange, ofRange valueRa
 	cout << "regionSelected:" << timeRange.min << " " << timeRange.max << " y: " << valueRange.min << " " << valueRange.max << endl;
 }
 
+// mousePress curves
 bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis)
 {
 	if (a->header->hidden) return false;
@@ -557,6 +558,8 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 		for (int iac = 0; iac < c->beatcurves.size(); iac++) {
 			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
 				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
+					ofRange zr = getZoomBounds();
+					c->beatcurves[iac]->setZoomBounds(zr);
 					c->beatcurves[iac]->mousePressed(args, millis);
 					if (c->beatcurves[iac]->drawingEasingWindow)
 						shouldDrawModalContent = true;
@@ -574,6 +577,22 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 	return res;
 }
 
+// mousePress recurses through group searching for a multicurve
+bool ofxTLAntescofoAction::mousePressed_search_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis) {
+	bool res = false;
+	ActionMultiCurves* ac = 0;
+	if ((ac = dynamic_cast<ActionMultiCurves* >(a)))
+		res = mousePressed_curve_rec(a, args, millis);
+	for (list<ActionGroup*>::const_iterator j = a->sons.begin(); !res && j != a->sons.end(); j++) {
+		if ((ac = dynamic_cast<ActionMultiCurves* >(*j)))
+			res = mousePressed_curve_rec(*j, args, millis);
+		if (!res)
+			res = mousePressed_search_curve_rec(*j, args, millis);
+		else 
+			break;
+	}
+	return res;
+}
 
 bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 {
@@ -610,13 +629,13 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 					if ((*j)->header &&  mousePressed_In_Arrow(args, (*j)->header->group)) {
 						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end);
 						res = true;
-						return res;
 					} else if (!(*i)->hidden) {
 						// handle curve click
-						ActionMultiCurves* ac = 0;
-						if ((ac = dynamic_cast<ActionMultiCurves* >(*j)))
-							res = mousePressed_curve_rec(*j, args, millis);
+						res = mousePressed_search_curve_rec(*j, args, millis);
 					}
+
+					if (res)
+						return res;
 				}
 			}
 		}
@@ -663,12 +682,15 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 				//if (c->beatcurves[iac]->bounds.inside(args.x, args.y) {
 					//if (c->beatcurves.size() == 1) {
 						int w = c->beatcurves[iac]->bounds.width;
-						cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged" << endl;
+						//cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged" << endl;
 						c->beatcurves[iac]->mouseDragged(args, millis);
 
 						// extend curve box width on mouseDrag
-						if (c->beatcurves[iac]->bounds.width != w)
+						if (c->beatcurves[iac]->bounds.width != w) {
+							cout << "mouseDragged: bounds width:" << c->beatcurves[iac]->bounds.width << " was:" << w << endl;
 							c->setWidth(c->beatcurves[iac]->bounds.width);
+						}
+						return;
 
 					//}
 				//}
@@ -1677,7 +1699,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 					done = true;
 					if (debug_edit_curve) cout << "looping stopped, inserted: " << i << endl;
 				} 
-			} else { cout << "Can not convert to Value." << endl; }
+			} else { cout << "ERROR: Can not convert to Value." << endl; }
 
 			break;
 		} 
@@ -1807,7 +1829,7 @@ void ActionMultiCurves::setWidth(int w) {
 }
 
 void ActionCurve::setWidth(int w) {
-	cout << "s--------------------------------etting Width on \'" << parentCurve->header->title << "\" : " << parentCurve->header->rect.width << endl;
+	cout << "--------------------------------setting Width on \'" << parentCurve->header->title << "\" : " << parentCurve->header->rect.width << endl;
 	parentCurve->header->rect.width = w;
 	for (int i = 0; i < beatcurves.size(); i++) {
 		beatcurves[i]->bounds.width = w;
