@@ -12,8 +12,8 @@ bool enable_simulate = true;
 int _debug = 0;
 static string str_error; // filled by our error()
 
-//int fontsize = OFX_UI_FONT_SMALL;
-int fontsize = OFX_UI_FONT_MEDIUM;
+int fontsize = OFX_UI_FONT_SMALL;
+//int fontsize = OFX_UI_FONT_MEDIUM;
 
 extern ofxConsole* console;
 
@@ -506,8 +506,10 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetRight(mLabelPitch);
 	mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
 	guiBottom->addWidgetDown(mLabelAccompSpeed);
+	mLabelAccompSpeed->setVisible(false);
 	mLabelAccompSpeed = new ofxUILabel("0", fontsize);
 	guiBottom->addWidgetRight(mLabelAccompSpeed);
+	mLabelAccompSpeed->setVisible(false);
 
 	// event buttons
 	space = new ofxUISpacer(3, 1);
@@ -795,6 +797,8 @@ void ofxAntescofog::update() {
 			if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
 			mHasReadMessages = true;
 			if (audioTrack) audioTrack->setFakeSpeed(mOsc_accomp_speed);
+			mLabelAccompSpeed->setVisible(true);
+			guiBottom->getWidget(TEXT_CONSTANT_BUTTON_SPEED)->setVisible(true);
 			bShouldRedraw = true;
 		} else if(m.getAddress() == "/antescofo/loadscore"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
 			string scorefile = m.getArgAsString(0);

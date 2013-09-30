@@ -245,6 +245,9 @@ bool BeatCurve::mousePressed(ofMouseEventArgs& args, long millis){
 				}
 			}
 		}
+
+		if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y))
+			return true;
 		return selectedKeyframe != NULL;
 	}
 }
@@ -425,7 +428,6 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 		//reset these caches because they may no longer be valid
 		lastKeyframeIndex = 1;
 		lastSampleBeat = 0;
-		//TODO timeline->flagTrackModified(this);
 		for (int i = 0; i < selectedKeyframes.size(); i++) {
 			if (curve_debug_) cout << "BeatCurve::mouseReleased: selectedkeyframe: origbeat: " << selectedKeyframes[i]->orig_beat << " beat:" << selectedKeyframes[i]->beat << endl;
 
@@ -490,11 +492,11 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 
 // change keyframe easing type
 void BeatCurve::changeKeyframeEasing(float beat, string type) {
-	float dcumul = 0;
+	float dcumul = 0;//ref->parentCurve->header->beatnum;
 	int i = 0;
 	bool done = false;
 	int easeType = 0;
-	cout << "BeatCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << " easingType:"<< easeType << endl;
+	//cout << "BeatCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << " easingType:"<< easeType << endl;
 	if (type[0] == '\"') type.erase(0, 1);
 	if (type[type.size()-1] == '\"') type.erase(type.size()-1, 1);
 	string roottype = type;
@@ -511,14 +513,14 @@ void BeatCurve::changeKeyframeEasing(float beat, string type) {
 			roottype = type.substr(0, type.size()-3);
 		}
 	}
-	//cout << "BeatCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << " easingType:"<< easeType << endl;
+	cout << "BeatCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << " easingType:"<< easeType << endl;
 
 	//if (type.size() && type[0] == '\"') type = type.substr(1, type.size() - 2);
 
 	for(int i = 0; i < keyframes.size(); i++) {
 		//if (debug_edit_curve) cout << "BeatCurve:: change keyframe easing at beat: looping : " << i << " curdur:" << (*k)->eval() <<  " dcumul:" << dcumul<< endl;
 
-		dcumul += keyframes[i]->beat;
+		dcumul = keyframes[i]->beat;
 		if (dcumul < beat)
 			continue;
 		else {
@@ -527,7 +529,7 @@ void BeatCurve::changeKeyframeEasing(float beat, string type) {
 				string str = easingFunctions[j]->name;
 				//cout << "roottype: "<< roottype<< endl;
 				if(roottype == str) {
-					//cout << "BeatCurve::changeKeyframeEasing: changed to type " << type << endl;
+					//cout << "BeatCurve::changeKeyframeEasing: /!\\ changed to type " << type << " n:"<< i+1 <<endl;
 					// modify easing type
 					((TweenBeatKeyframe*)keyframes[i])->easeFunc = easingFunctions[j];
 					((TweenBeatKeyframe*)keyframes[i])->easeType = easingTypes[easeType];

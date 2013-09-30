@@ -555,7 +555,7 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 	bool res = false;
 	for (vector<ActionCurve*>::iterator i = ac->curves.begin(); !res && i != ac->curves.end(); i++) {
 		ActionCurve *c = (*i);
-		for (int iac = 0; iac < c->beatcurves.size(); iac++) {
+		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
 			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
 				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
 					ofRange zr = getZoomBounds();
@@ -682,7 +682,7 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 				//if (c->beatcurves[iac]->bounds.inside(args.x, args.y) {
 					//if (c->beatcurves.size() == 1) {
 						int w = c->beatcurves[iac]->bounds.width;
-						//cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged" << endl;
+						cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged: howmany:"<< (*j)->howmany << " varname:"<< c->varname << endl;
 						c->beatcurves[iac]->mouseDragged(args, millis);
 
 						// extend curve box width on mouseDrag
@@ -690,7 +690,7 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 							cout << "mouseDragged: bounds width:" << c->beatcurves[iac]->bounds.width << " was:" << w << endl;
 							c->setWidth(c->beatcurves[iac]->bounds.width);
 						}
-						return;
+						//return;
 
 					//}
 				//}
@@ -1854,7 +1854,7 @@ int ActionCurve::getWidth() {
 			maxx = screenpoint_last.x;
 	}
 	int d = maxx - minx - parentCurve->header->rect.x;
-	return d;
+	return d + 5;
 }
 
 int ActionCurve::getHeight() {
