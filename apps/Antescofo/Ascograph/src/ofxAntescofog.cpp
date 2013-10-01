@@ -1627,6 +1627,8 @@ bool ofxAntescofog::edited() {
 	fsize = (int) file.tellg();
 	cout << "file: " << mScore_filename << " fsize=" << fsize << endl;
 	file.seekg (0, ios::beg);
+	if (fsize <= 0)
+		return false;
 	char* memblock = new char[fsize];
 	file.read (memblock, fsize);
 	filecontent = string(memblock);
