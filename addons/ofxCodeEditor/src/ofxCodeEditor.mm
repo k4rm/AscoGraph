@@ -93,6 +93,8 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[window setContentView:splitView];
 	NSLog(@"ofxEditor: setup: window subviews count %d", [[[window contentView] subviews] count]);
 	//[splitView release];
+
+	[self setupEditor];
 }
 
 //--------------------------------------------------------------------------------------------------
