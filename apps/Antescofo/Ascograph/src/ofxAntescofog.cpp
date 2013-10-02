@@ -1762,7 +1762,8 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	} else {
 		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 
-		ofxAntescofoNote->set_error("Zero event found in score.");
+		if (ofxAntescofoNote->get_error().empty())
+			ofxAntescofoNote->set_error("Zero event found in score.");
 		display_error();
 	}
 
