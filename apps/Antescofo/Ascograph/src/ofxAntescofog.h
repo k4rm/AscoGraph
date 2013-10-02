@@ -42,6 +42,8 @@
 #define INT_CONSTANT_BUTTON_NEW		25
 #define INT_CONSTANT_BUTTON_SIMULATE	26
 #define INT_CONSTANT_BUTTON_EDIT	27
+#define INT_CONSTANT_BUTTON_PREVEVENT	28
+#define INT_CONSTANT_BUTTON_NEXTEVENT	29
 
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -115,6 +117,8 @@ class AntescofoTimeline : public ofxTimeline
 	virtual ~AntescofoTimeline(){}
 
 	void setZoomer(ofxTLZoomer *z);
+
+	void keypressed(ofKeyEventArgs& args) {}
 };
 
 class ofxAntescofog : public ofBaseApp{

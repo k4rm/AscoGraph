@@ -205,7 +205,22 @@ void ofxAntescofog::menu_item_hit(int n)
 				mOSCsender.sendMessage(m);
 				break;
 			}
-
+		case INT_CONSTANT_BUTTON_PREVEVENT:
+			{
+				ofxOscMessage m;
+				m.setAddress("/antescofo/cmd");
+				m.addStringArg("previousevent");
+				mOSCsender.sendMessage(m);
+				break;
+			}
+		case INT_CONSTANT_BUTTON_NEXTEVENT:
+			{
+				ofxOscMessage m;
+				m.setAddress("/antescofo/cmd");
+				m.addStringArg("nextevent");
+				mOSCsender.sendMessage(m);
+				break;
+			}
 	}
 
 	bShouldRedraw = true;
@@ -395,6 +410,18 @@ void ofxAntescofog::setupUI() {
 	id playStringMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Play string" action:@selector(menu_item_hit:) keyEquivalent:@"p"] autorelease];
 	[playStringMenuItem setTag:INT_CONSTANT_BUTTON_PLAYSTRING];
 	[transMenu addItem:playStringMenuItem];
+	// . Prev Event
+	unichar left = NSLeftArrowFunctionKey;
+	NSMenuItem *prevEventMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Previous event" action:@selector(menu_item_hit:) keyEquivalent:[NSString stringWithCharacters:&left length:1]] autorelease];
+	prevEventMenuItem.keyEquivalentModifierMask = NSCommandKeyMask;
+	[prevEventMenuItem setTag:INT_CONSTANT_BUTTON_PREVEVENT];
+	[transMenu addItem:prevEventMenuItem];
+	// . Next Event
+	unichar right = NSRightArrowFunctionKey;
+	NSMenuItem *nextEventMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Next event" action:@selector(menu_item_hit:) keyEquivalent:[NSString stringWithCharacters:&right length:1]] autorelease];
+	nextEventMenuItem.keyEquivalentModifierMask = NSCommandKeyMask;
+	[nextEventMenuItem setTag:INT_CONSTANT_BUTTON_NEXTEVENT];
+	[transMenu addItem:nextEventMenuItem];
 
 	[transMenuItem setSubmenu:transMenu];
 	[menubar addItem:transMenuItem];
