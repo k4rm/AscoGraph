@@ -92,23 +92,49 @@
 class ofxCocoaWindow;
 class ofxTLBeatTicker;
 
-
 @interface ofxCocoaDelegate (ofxAntescofogAdditions)
 - (void)menu_item_hit:(id)sender;
 - (void) receiveNotification:(NSNotification *) notification;
 @end
+
+// simulation structures
+class curveval {
+public:
+	curveval(double now_, double rnow_, double val_)
+		: now(now_), rnow(now_), val(val_)
+	{}
+	double now, rnow, val;
+};
+class curve_trace {
+public:
+	curve_trace(string name_, string fathername_, double now_, double rnow_, double val_)
+		: name(name_), fathername(fathername_), now(now_), rnow(rnow_)
+	{
+		values.push_back(new curveval(now, rnow, val_));
+		min = val_; 
+		max = val_;
+	}
+	string name;
+	string fathername;
+	vector<curveval*> values;
+	double now, rnow; // time of first element
+	ofRectangle rect;
+	double min, max;
+	ofPolyline line;
+};
 
 class action_trace {
   public:
 	action_trace(string name_, string fathername_, double now_, double rnow_, string s_)
 		: name(name_), fathername(fathername_), now(now_), rnow(rnow_), s(s_) 
 	{}
-
+	ofRectangle rect;
 	string name;
 	string fathername;
 	double now, rnow;
 	string s;
 };
+
 
 class AntescofoTimeline : public ofxTimeline
 {

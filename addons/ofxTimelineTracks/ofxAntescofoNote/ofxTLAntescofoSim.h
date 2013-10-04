@@ -26,6 +26,7 @@ class action_trace;
 
 using namespace std;
 
+class curve_trace;
 
 
 class ofxTLAntescofoSim : public ofxTLTrack
@@ -38,6 +39,8 @@ class ofxTLAntescofoSim : public ofxTLTrack
 
 		virtual void setup();
 		virtual void draw();
+		virtual void draw_curve(curve_trace* ct);
+		virtual void update_curve(curve_trace* ct);
 		virtual void update();
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
@@ -57,15 +60,21 @@ class ofxTLAntescofoSim : public ofxTLTrack
 		ofxTLAntescofoNote *ofxAntescofoNote;
 
 		int get_x(float beat);
+		int get_y(curve_trace* ct, double v);
 
 		void add_action(action_trace* at);
+		void add_curveval(string str, curve_trace* ct);
+		bool is_in_bounds(action_trace* at);
 		void clear_actions();
+
+		bool isCurve(string act);
 
 		ofTrueTypeFont mFont;
 		Score *mScore;
 		ofxAntescofog *mAntescofog;
 
 		vector<action_trace*> actions;
+		map<string, curve_trace* > curvesmap;
 
 		bool bEditorShow;
 };

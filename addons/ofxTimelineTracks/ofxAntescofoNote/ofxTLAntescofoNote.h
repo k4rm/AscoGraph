@@ -145,6 +145,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	bool getAccompanimentMarkers_rec_group(Gfwd *g, vector<float>& map_index, vector<float>& map_markers);
 
 	ofxTLAntescofoAction* getActionTrack() { return ofxAntescofoAction; }
+	void deleteActionTrack();
 
 	void update_duration();
 	string get_error();

@@ -1529,6 +1529,16 @@ ofxTLAntescofoAction* ofxTLAntescofoNote::createActionTrack() {
 	return ofxAntescofoAction;
 }
 
+void ofxTLAntescofoNote::deleteActionTrack() {
+	if (ofxAntescofoAction) {
+		getTimeline()->removeTrack(ofxAntescofoAction);
+		if (ofxAntescofoAction) {
+			delete ofxAntescofoAction;
+			ofxAntescofoAction = 0;
+		}
+	}
+}
+
 
 string ofxTLAntescofoNote::getXMLStringForSwitches(bool selectedOnly){
 	ofxXmlSettings settings;

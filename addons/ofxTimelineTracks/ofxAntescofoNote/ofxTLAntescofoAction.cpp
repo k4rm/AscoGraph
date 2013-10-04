@@ -1691,7 +1691,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 					if (!ny1) cout << "addKeyframeAtBeat:ERROR : not an constant value in curve...." << endl;
 					FloatValue* ny0 = new FloatValue(val);
 					//s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var));
-					s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var));
+					s = simple_vect->insert(s, SimpleContFunction(sp->antesc, new StringValue("linear"), ad, ny0, ny1, s->var, parentCurve->antescofo_curve));
 					dur_vect->insert(k, ad);
 					// change prev y1
 					s--;
@@ -1710,7 +1710,7 @@ bool ActionCurve::addKeyframeAtBeat(float beat, float val)
 		vector<SimpleContFunction>::iterator s = simple_vect->end();
 		s--;
 		AnteDuration *ad = new AnteDuration(beat - parentCurve->header->beatnum - (*k)->eval());
-		simple_vect->push_back(SimpleContFunction(s->antesc, new StringValue("linear"), ad, get_new_y(s->y1), new FloatValue(val), s->var));
+		simple_vect->push_back(SimpleContFunction(s->antesc, new StringValue("linear"), ad, get_new_y(s->y1), new FloatValue(val), s->var, parentCurve->antescofo_curve));
 		dur_vect->push_back(ad);
 		//set_dur_val(dcumul - beat, *k)
 	}
