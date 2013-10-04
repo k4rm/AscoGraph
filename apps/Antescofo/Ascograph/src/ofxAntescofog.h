@@ -107,14 +107,15 @@ public:
 };
 class curve_trace {
 public:
-	curve_trace(string name_, string fathername_, double now_, double rnow_, double val_)
-		: name(name_), fathername(fathername_), now(now_), rnow(rnow_)
+	curve_trace(string name_, string fathername_, string varname_, double now_, double rnow_, double val_)
+		: name(name_), fathername(fathername_), now(now_), rnow(rnow_), varname(varname_)
 	{
 		values.push_back(new curveval(now, rnow, val_));
 		min = val_; 
 		max = val_;
 	}
 	string name;
+	string varname;
 	string fathername;
 	vector<curveval*> values;
 	double now, rnow; // time of first element
@@ -126,13 +127,14 @@ public:
 class action_trace {
   public:
 	action_trace(string name_, string fathername_, double now_, double rnow_, string s_)
-		: name(name_), fathername(fathername_), now(now_), rnow(rnow_), s(s_) 
+		: name(name_), fathername(fathername_), now(now_), rnow(rnow_), s(s_), nbcurves(0)
 	{}
 	ofRectangle rect;
 	string name;
 	string fathername;
 	double now, rnow;
 	string s;
+	int nbcurves;
 };
 
 

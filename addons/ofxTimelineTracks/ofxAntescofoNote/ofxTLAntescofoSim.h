@@ -40,7 +40,7 @@ class ofxTLAntescofoSim : public ofxTLTrack
 		virtual void setup();
 		virtual void draw();
 		virtual void draw_curve(curve_trace* ct);
-		virtual void update_curve(curve_trace* ct);
+		virtual void update_curves();
 		virtual void update();
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
@@ -63,18 +63,23 @@ class ofxTLAntescofoSim : public ofxTLTrack
 		int get_y(curve_trace* ct, double v);
 
 		void add_action(action_trace* at);
-		void add_curveval(string str, curve_trace* ct);
+		void add_curveval(curve_trace* ct);
 		bool is_in_bounds(action_trace* at);
+		void checkOverlapCurve();
 		void clear_actions();
 
-		bool isCurve(string act);
+		curve_trace* getCurve(string act);
+		string get_fathername(string str);
+		action_trace* getAction(string act);
+		void print_actions();
+		void print_curves();
 
 		ofTrueTypeFont mFont;
 		Score *mScore;
 		ofxAntescofog *mAntescofog;
 
 		vector<action_trace*> actions;
-		map<string, curve_trace* > curvesmap;
+		vector<curve_trace* > curves;
 
 		bool bEditorShow;
 };
