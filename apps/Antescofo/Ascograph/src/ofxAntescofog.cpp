@@ -412,14 +412,14 @@ void ofxAntescofog::setupUI() {
 	[transMenu addItem:playStringMenuItem];
 	// . Prev Event
 	unichar left = NSLeftArrowFunctionKey;
-	NSMenuItem *prevEventMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Previous event" action:@selector(menu_item_hit:) keyEquivalent:[NSString stringWithCharacters:&left length:1]] autorelease];
-	prevEventMenuItem.keyEquivalentModifierMask = NSCommandKeyMask;
+	NSMenuItem *prevEventMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Previous event" action:@selector(menu_item_hit:) keyEquivalent:@"" /*[NSString stringWithCharacters:&left length:1]*/] autorelease];
+	//prevEventMenuItem.keyEquivalentModifierMask = NSCommandKeyMask;
 	[prevEventMenuItem setTag:INT_CONSTANT_BUTTON_PREVEVENT];
 	[transMenu addItem:prevEventMenuItem];
 	// . Next Event
 	unichar right = NSRightArrowFunctionKey;
-	NSMenuItem *nextEventMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Next event" action:@selector(menu_item_hit:) keyEquivalent:[NSString stringWithCharacters:&right length:1]] autorelease];
-	nextEventMenuItem.keyEquivalentModifierMask = NSCommandKeyMask;
+	NSMenuItem *nextEventMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Next event" action:@selector(menu_item_hit:) keyEquivalent:@"" /*[NSString stringWithCharacters:&right length:1]*/] autorelease];
+	//nextEventMenuItem.keyEquivalentModifierMask = NSCommandKeyMask;
 	[nextEventMenuItem setTag:INT_CONSTANT_BUTTON_NEXTEVENT];
 	[transMenu addItem:nextEventMenuItem];
 
@@ -1733,7 +1733,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 
 		n = ofxAntescofoNote->loadscoreAntescofo(antescore);
 	}
-	if (n) {
+	if (n || ofxAntescofoNote->get_error().empty()) {
 		bShowError = false;
 		guiError->disable();
 		timeline.enable();
@@ -1762,8 +1762,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	} else {
 		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 
-		if (ofxAntescofoNote->get_error().empty())
-			ofxAntescofoNote->set_error("Zero event found in score.");
+		//if (ofxAntescofoNote->get_error().empty()) ofxAntescofoNote->set_error("Zero event found in score.");
 		display_error();
 	}
 
