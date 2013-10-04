@@ -189,15 +189,11 @@ void ofxTLAntescofoSim::draw()
 		action_trace* at = *i;
 		if (!is_in_bounds(at)) continue;
 
-		/*
 		curve_trace* ct = getCurve(at->name);
 		if (ct) {
-			if (ct->values.size()) {
-				draw_curve(ct);
-			}
+			//if (ct->values.size()) { draw_curve(ct); }
 			continue;
 		}
-		*/
 		if (at->name.substr(0, 10) == "_topgroup_")
 			continue;
 		//cout << "draw: " << at->name << endl;
