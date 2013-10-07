@@ -1623,11 +1623,12 @@ void ofxAntescofog::exit()
 void ofxAntescofog::saveScore() {
 	// for now just save the content of the text editor
 	if (bEditorShow) {
-		bIsSimulating = false;
-		mEditButton->setVisible(false);
-		mEditButton->setLabelVisible(false);
-
-		stop_simulate_and_goedit();
+		if (bIsSimulating) {
+			bIsSimulating = false;
+			mEditButton->setVisible(false);
+			mEditButton->setLabelVisible(false);
+			stop_simulate_and_goedit();
+		}
 
 		if (mScore_filename.empty()) {
 			saveAsScore();
@@ -1777,8 +1778,8 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		[ editor loadFile:mScore_filename ];
 		cout << "Editor scrolling to pos: " << lineEditor << endl;
 		[ editor gotoPos:lineEditor]; //[ editor scrollLine:lineEditor];
-		int n = [ editor getNbLines ];
-		[ editor scrollLine:(30) ];
+		//int n = [ editor getNbLines ];
+		//[ editor scrollLine:(30) ];
 
 	}
 
