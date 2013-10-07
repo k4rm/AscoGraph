@@ -1623,6 +1623,12 @@ void ofxAntescofog::exit()
 void ofxAntescofog::saveScore() {
 	// for now just save the content of the text editor
 	if (bEditorShow) {
+		bIsSimulating = false;
+		mEditButton->setVisible(false);
+		mEditButton->setLabelVisible(false);
+
+		stop_simulate_and_goedit();
+
 		if (mScore_filename.empty()) {
 			saveAsScore();
 			return;

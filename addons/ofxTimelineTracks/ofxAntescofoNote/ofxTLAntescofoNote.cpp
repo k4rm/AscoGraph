@@ -1534,8 +1534,8 @@ void ofxTLAntescofoNote::deleteActionTrack() {
 		getTimeline()->removeTrack(ofxAntescofoAction);
 		if (ofxAntescofoAction) {
 			delete ofxAntescofoAction;
-			ofxAntescofoAction = 0;
 		}
+		ofxAntescofoAction = 0;
 	}
 }
 
