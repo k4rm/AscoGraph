@@ -264,7 +264,7 @@ class ofxAntescofog : public ofBaseApp{
 
 		// open/save file
 		int loadScore(string filename, bool sendOsc = true);
-		void saveScore();
+		void saveScore(bool stopSimu = true);
 		void saveAsScore();
 		void newScore();
 		void askToSaveScore();

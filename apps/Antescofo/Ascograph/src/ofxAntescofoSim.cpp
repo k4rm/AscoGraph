@@ -172,7 +172,7 @@ void ofxAntescofog::simulate()
 	// TODO changer le bouton simulate en edit
 
 	if (edited())
-		saveScore();
+		saveScore(false);
 
 	timeline.disable();
 

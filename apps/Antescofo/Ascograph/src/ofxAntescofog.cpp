@@ -1620,10 +1620,10 @@ void ofxAntescofog::exit()
 }
 
 
-void ofxAntescofog::saveScore() {
+void ofxAntescofog::saveScore(bool stopSimu) {
 	// for now just save the content of the text editor
 	if (bEditorShow) {
-		if (bIsSimulating) {
+		if (bIsSimulating && stopSimu) {
 			bIsSimulating = false;
 			mEditButton->setVisible(false);
 			mEditButton->setLabelVisible(false);
