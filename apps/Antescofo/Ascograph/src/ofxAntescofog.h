@@ -256,6 +256,7 @@ class ofxAntescofog : public ofBaseApp{
 		bool bShowOSCSetup, bOSCSetupInitDone;
 		map<string, string *> oscString2var;
 		unsigned long long mLastOSCmsgDate;
+		ofxUITextInput* mTextOscPort, *mTextOscHost, *mTextOscPortRemote;
 
 		// error handling
 		void display_error();

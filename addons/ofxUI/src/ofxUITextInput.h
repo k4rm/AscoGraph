@@ -73,6 +73,7 @@ public:
 		triggerType = OFX_UI_TEXTINPUT_ON_FOCUS;
 		cursorWidth = 0; spaceOffset = 0; 		
 		theta = 0;         
+
     }
     
     virtual void setDrawPadding(bool _draw_padded_rect)
@@ -381,6 +382,7 @@ public:
             label->setLabel(textstring);                
         }
         displaystring = textstring; 
+
 	}
 	
 	void setParent(ofxUIWidget *_parent)
@@ -423,8 +425,8 @@ public:
     
 protected:    //inherited: ofxUIRectangle *rect; ofxUIWidget *parent; 
 	string textstring; 
-	string defaultstring; 
     string displaystring; 
+	string defaultstring; 
 	bool clicked; 
 	float theta; 
 	float cursorWidth; 

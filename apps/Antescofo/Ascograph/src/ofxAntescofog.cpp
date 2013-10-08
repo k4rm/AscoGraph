@@ -625,10 +625,10 @@ void ofxAntescofog::setupUI() {
 void ofxAntescofog::setupOSC(){
 	// listen for OSC
 	//mOsc_port = 3002;
-	int port;
+	int port = 0;
 	std::istringstream is(mOsc_port);
 	is >> port;
-	if (! is.good())
+	if (! is.good() && port <= 0)
 	{
 		//cerr << "Not a number, try again." << endl;
 		mOsc_port = "6789";
@@ -652,13 +652,16 @@ void ofxAntescofog::setupOSC(){
 	}
 
 	//mOsc_port_MAX = 3003;
+	is.str("");
 	is.str(mOsc_port_MAX);
+	is.clear();
 	is >> port;
-	if (! is.good())
+	if (! is.good() && port <= 0)
 	{
-		//cerr << "Not a number, try again." << endl;
+		cerr << "Not a number, try again." << endl;
 		mOsc_port_MAX = "5678";
 	}
+	save();
 	std::cout << "Connecting OSC on " << mOsc_host << ":"<< atoi(mOsc_port_MAX.c_str()) << endl;
 	mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
 }
@@ -1329,10 +1332,28 @@ void ofxAntescofog::draw_OSCSetup() {
     if (!bOSCSetupInitDone) {// init and create buttons with color rect
         //guiSetup->addWidgetDown(new ofxUILabel("OSC local port", OFX_UI_FONT_MEDIUM));
         guiSetup_OSC->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
+	/*
         for (map<string, string*>::const_iterator c = oscString2var.begin(); c != oscString2var.end(); c++) {
             guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
-            guiSetup_OSC->addWidgetRight(new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM));
+	    cout << "===============> adding text input:" << c->first << " 2nd:" << *(c->second) << endl;
+
         }
+	*/
+	// host
+	map<string, string*>::const_iterator c = oscString2var.begin();
+	guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
+	mTextOscHost = new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM);
+	guiSetup_OSC->addWidgetRight(mTextOscHost);
+	// port
+	c++;
+	guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
+	mTextOscPort = new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM);
+	guiSetup_OSC->addWidgetRight(mTextOscPort);
+	// port remote
+	c++;
+	guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
+	mTextOscPortRemote = new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM);
+	guiSetup_OSC->addWidgetRight(mTextOscPortRemote);
         
         bOSCSetupInitDone = true;
     } else {
@@ -2024,11 +2045,17 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         cout << "Back pressed" << endl;
         if (bShowColorSetup) {
             bShowColorSetup = false;
+
             guiSetup_Colors->disable();
-						guiSetup_Colors->setVisible(false);
+	    guiSetup_Colors->setVisible(false);
         } else if (bShowOSCSetup) {
             bShowOSCSetup = false;
+
+	    mOsc_host = mTextOscHost->getTextString();
+	    mOsc_port = mTextOscPort->getTextString();
+	    mOsc_port_MAX = mTextOscPortRemote->getTextString();
             guiSetup_OSC->disable();
+	    setupOSC();
         } else if (bShowFind) {
 	    bShowFind = false;
 	    guiFind->disable();
