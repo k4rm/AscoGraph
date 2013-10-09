@@ -1124,8 +1124,8 @@ void ofxAntescofog::load()
       
         // OSC host
         mOsc_host		= settings.getValue("osc:host", "localhost");
-        mOsc_port       = settings.getValue("osc:port", "3002");
-        mOsc_port_MAX   = settings.getValue("osc:portremote", "3003");
+        mOsc_port       = settings.getValue("osc:port", "6789");
+        mOsc_port_MAX   = settings.getValue("osc:portremote", "5678");
         oscString2var["osc:host"] = &mOsc_host;
         oscString2var["osc:port"] = &mOsc_port;
         oscString2var["osc:portremote"] = &mOsc_port_MAX;

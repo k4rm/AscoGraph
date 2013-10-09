@@ -40,6 +40,7 @@
 
 #include <iostream>
 #include <string>
+#include <sys/stat.h>
 
 #include "ofMain.h"
 #include "ofxTLAntescofoNote.h"
@@ -1142,6 +1143,14 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	Score *score;
 
 	mAntescofo->set_verbosity_level(0);
+	// check if filename is really a filename
+	cerr << "check if filename is really a filename" << endl;
+	struct stat st;
+	if (lstat(filename.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
+		cerr << "loadScore: Input is a directory, you stupid... :)" << endl;
+		return 0;
+	}
+
 	if (NULL == (score = mAntescofo->Parse(filename))) {
 		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", filename.c_str());
 		return 0;
@@ -1662,6 +1671,13 @@ vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromMusicXML(string fi
 
 	// parse musicxml files using libmusicxml2
 	using namespace MusicXML2;
+	// check if filename is really a filename
+	cerr << "check if filename is really a filename" << endl;
+	struct stat st;
+	if (lstat(filename.c_str(), &st) == 0 && S_ISDIR(st.st_mode)) {
+		cerr << "loadScore: Input is a directory, you stupid... :)" << endl;
+		return newSwitches;
+	}
 
 	xmlreader r;
 	SXMLFile xmlfile;
