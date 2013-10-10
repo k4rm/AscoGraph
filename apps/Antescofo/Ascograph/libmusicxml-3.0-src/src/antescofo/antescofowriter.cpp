@@ -290,6 +290,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 					if (i->second.pitches.size())
 						i->second.grace_pitches.push_back(i->second.pitches[0]);
 					i->second.type = type;
+					i->second.flags = flag_;
 					i->second.pitches.push_back(pitch);
 					//if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
 					i->second.duration = dur;
@@ -401,9 +402,11 @@ void antescofowriter::final_compress()
 			if (next->second.pitches == i->second.pitches && i->second.flags == ANTESCOFO_FLAG_TIED_START && next->second.flags == ANTESCOFO_FLAG_TIED_END) {
 				cout << "Got tied notes (pos:"<<i->first.toFloat()<<")... merging note." <<endl;
 				merge_notes(i, next);
-			} else if (i->second.type == ANTESCOFO_TRILL && (i->second.flags == ANTESCOFO_FLAG_TREMOLO_START || next->second.flags == ANTESCOFO_FLAG_TREMOLO_STOP )) {
-				cout << "Got trill notes (pos:"<<i->first.toFloat()<<")... merging note." <<endl;
+			} else if (i->second.type == ANTESCOFO_TRILL && (i->second.flags == ANTESCOFO_FLAG_TREMOLO_START && next->second.flags == ANTESCOFO_FLAG_TREMOLO_STOP )) {
+				cout << "Got trill notes (pos:"<<i->first.toFloat()<< " note:" << i->second.pitches[0] << ")... merging note." <<endl;
 				merge_notes(i, next);
+				i->second.flags = ANTESCOFO_FLAG_NULL;
+				//i++, next++;
 			}
 		}
 		i = next;

@@ -935,6 +935,7 @@ bool xmlpart2antescofo::checkWriteMeasure()
 //______________________________________________________________________________
 void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 {
+	fGlissandoStart = fGlissandoStop = fTremoloStart = fTremoloStop = false;
 	checkNotation(elt);
 
 	bool tiedStart = checkTiedBegin (nv.getTied());
@@ -969,6 +970,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 
 	assert(fCurBeat.toFloat() > 0);
 	fCurBeat.rationalise();
+	//cout << "TRILL:" << fTrill << " GlissandoStart:" << fGlissandoStart << " GlissandoStop:"<<fGlissandoStop << " TremoloStart:" << fTremoloStart << " TremoloStop:" << fTremoloStop << endl;
 	if (nv.inChord() && !fTrill && !fGlissandoStart && !fGlissandoStop && !fTremoloStart && !fTremoloStop) {
 		cout << "newNote: isInChord so removing "<< fLastDur.toFloat() << " to curBeat: " << fCurBeat.toFloat() << endl;
 		fCurBeat -= fLastDur; // because fucking MusicXML notation <chord/> is full of shit
