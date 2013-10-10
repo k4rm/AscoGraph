@@ -133,6 +133,8 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 	if (curBeat.getNumerator() == 1. && nmeasure > 1)  { antescofo_abort(); }
 	if (flag_ == ANTESCOFO_FLAG_TIED_START) cout << "tie=Start";
 	if (flag_ == ANTESCOFO_FLAG_TIED_END) cout << "tie=End";
+	if (flag_ == ANTESCOFO_FLAG_TREMOLO_START) cout << "TRILL=Start";
+	if (flag_ == ANTESCOFO_FLAG_TREMOLO_STOP) cout << "TRILL=End";
 	// find note in vector
 	if (( i = findNoteInVector(curBeat, dur)) == v_Notes.end()) { // new note
 		measure_elt *e = new measure_elt();
@@ -395,10 +397,14 @@ void antescofowriter::final_compress()
 	i = next = v_Notes.begin();
 	next++;
 	for (; next != v_Notes.end(); next++) {
-		if (next->second.type == i->second.type && next->second.pitches == i->second.pitches
-				&& i->second.flags == ANTESCOFO_FLAG_TIED_START && next->second.flags == ANTESCOFO_FLAG_TIED_END) {
-			cout << "Got tied notes (pos:"<<i->first.toFloat()<<")... merging note." <<endl;
-			merge_notes(i, next);
+		if (next->second.type == i->second.type) {
+			if (next->second.pitches == i->second.pitches && i->second.flags == ANTESCOFO_FLAG_TIED_START && next->second.flags == ANTESCOFO_FLAG_TIED_END) {
+				cout << "Got tied notes (pos:"<<i->first.toFloat()<<")... merging note." <<endl;
+				merge_notes(i, next);
+			} else if (i->second.type == ANTESCOFO_TRILL && (i->second.flags == ANTESCOFO_FLAG_TREMOLO_START || next->second.flags == ANTESCOFO_FLAG_TREMOLO_STOP )) {
+				cout << "Got trill notes (pos:"<<i->first.toFloat()<<")... merging note." <<endl;
+				merge_notes(i, next);
+			}
 		}
 		i = next;
 	}
@@ -419,6 +425,8 @@ void antescofowriter::merge_notes(map<rational, measure_elt>::iterator a, map<ra
 		//a->second.nMeasure++;
 	}
 	a->second.duration += b->second.duration;
+	if (a->second.pitches != b->second.pitches)
+		a->second.pitches.insert(a->second.pitches.end(), b->second.pitches.begin(), b->second.pitches.end());
 	v_Notes.erase(b);
 }
 
@@ -571,7 +579,7 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 						out << "NOTE";
 					else 
 						out << "CHORD (";
-				} else if (i->second.type == ANTESCOFO_TRILL)
+				} else if (i->second.type == ANTESCOFO_TRILL || i->second.type == ANTESCOFO_FLAG_TREMOLO_START)
 					out << "TRILL (";
 				last_glissando_pitch = 0;
 			} else { // glissando flags may be: start, stop, stop
@@ -590,7 +598,7 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 			}
 
 			if (i->second.flags != ANTESCOFO_FLAG_GLISSANDO_START) {
-				if (i->second.pitches.size() > 1 || i->second.type == ANTESCOFO_TRILL || i->second.flags == ANTESCOFO_FLAG_GLISSANDO_STOP) 
+				if (i->second.pitches.size() > 1 || i->second.type == ANTESCOFO_TRILL || i->second.flags == ANTESCOFO_FLAG_GLISSANDO_STOP || i->second.flags == ANTESCOFO_FLAG_TREMOLO_STOP)
 					out << " )";
 				out << " ";
 				print_duration(out, i->second.duration);// << i->second.duration.getNumerator() << "/" << i->second.duration.getDenominator();

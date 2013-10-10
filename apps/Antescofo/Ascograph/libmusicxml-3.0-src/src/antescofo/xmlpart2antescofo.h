@@ -95,7 +95,7 @@ class EXP xmlpart2antescofo :
 	bool	fInCue, fInGrace, fInhibitNextBar, fPendingBar, fBeamOpened, fMeasureEmpty, fCrescPending;
 
 	S_measure	fCurrentMeasure;  
-	bool    	fTrill, fGlissandoStart, fGlissandoStop, fInBackup, fInForward;
+	bool    	fTrill, fTremoloStart, fTremoloStop, fGlissandoStart, fGlissandoStop, fInBackup, fInForward;
 	bool		fNotesOnly;				// a flag to generate notes only (used for several voices on the same staff)
 	bool		fSkipDirection;			// a flag to skip direction elements (for notes only mode or due to different staff)
 	int		fCurrentStaffIndex;		// the index of the current antescofo staff

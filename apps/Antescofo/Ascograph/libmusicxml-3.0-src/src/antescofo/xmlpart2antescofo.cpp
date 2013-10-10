@@ -64,7 +64,7 @@ void xmlpart2antescofo::reset ()
 	fMeasNum = 0;
 	fCurBeat = rational(1);
 	fLastDur = 0;
-	fTrill = fGlissandoStart = fGlissandoStop = fInBackup = fInForward = false;
+	fTremoloStart = fTremoloStop = fTrill = fGlissandoStart = fGlissandoStop = fInBackup = fInForward = false;
 }
 
 //______________________________________________________________________________
@@ -864,11 +864,17 @@ bool xmlpart2antescofo::checkNotation( S_note& elt )
 								switch (k->getType()) {
 									case k_trill_mark:
 									case k_tremolo:
+										if (k->getAttributeValue("type") == "start") fTremoloStart = true;
+										if (k->getAttributeValue("type") == "stop") fTremoloStop = true;
 										fTrill = true;
-										return true;
+										//return true;
 								}
 							}
 							//break;
+						case k_tremolo:
+							if (j->getAttributeValue("type") == "start") fTremoloStart = true;
+							if (j->getAttributeValue("type") == "stop") fTremoloStop = true;
+							return true;
 						case k_glissando:
 							if (j->getAttributeValue("type") == "start") fGlissandoStart = true;
 							if (j->getAttributeValue("type") == "stop") fGlissandoStop = true;
@@ -941,6 +947,8 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 	if (tiedEnd)            flag = ANTESCOFO_FLAG_TIED_END;
 	if (fGlissandoStart)    flag = ANTESCOFO_FLAG_GLISSANDO_START;
 	if (fGlissandoStop)     flag = ANTESCOFO_FLAG_GLISSANDO_STOP;
+	if (fTremoloStart)	flag = ANTESCOFO_FLAG_TREMOLO_START;
+	if (fTremoloStop)	flag = ANTESCOFO_FLAG_TREMOLO_STOP;
 	if (checkFermata(nv))   flag = ANTESCOFO_FLAG_FERMATA;
 	if (fRepeatForward)     flag = ANTESCOFO_FLAG_REPEAT_FORWARD;
 	if (fRepeatBackward)    flag = ANTESCOFO_FLAG_REPEAT_BACKWARD;
@@ -961,7 +969,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 
 	assert(fCurBeat.toFloat() > 0);
 	fCurBeat.rationalise();
-	if (nv.inChord() && !fTrill && !fGlissandoStart && !fGlissandoStop) {
+	if (nv.inChord() && !fTrill && !fGlissandoStart && !fGlissandoStop && !fTremoloStart && !fTremoloStop) {
 		cout << "newNote: isInChord so removing "<< fLastDur.toFloat() << " to curBeat: " << fCurBeat.toFloat() << endl;
 		fCurBeat -= fLastDur; // because fucking MusicXML notation <chord/> is full of shit
 		fLastDur = 0;
@@ -971,7 +979,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 		w.AddNote(ANTESCOFO_REST, 0, d, fMeasNum, fCurBeat, flag, fRehearsals);
 	else if (fGlissandoStart || fGlissandoStop)
 		w.AddNote(ANTESCOFO_MULTI, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
-	else if (fTrill)
+	else if (fTrill || fTremoloStart || fTremoloStop)
 		w.AddNote(ANTESCOFO_TRILL, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
 	else {
 		if (nv.isGrace()) d = rational(0);
