@@ -1489,7 +1489,7 @@ bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 	str_error.erase();
 	Score *score;
 	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
-		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+		::error("%s\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 		return 0;
 
 		str << "ofxTLAntescofoNote::change_action: display dialog box saying [Error action syntax error]" << endl;
@@ -1520,7 +1520,7 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 	str_error.erase();
 	Score *score;
 	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
-		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+		::error("%s\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 		return 0;
 
 		str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: display dialog box saying [Error action syntax error]" << endl;
