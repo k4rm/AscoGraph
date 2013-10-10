@@ -1152,7 +1152,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	}
 
 	if (NULL == (score = mAntescofo->Parse(filename))) {
-		::error("Parse error: %s\nCheck the syntax\nAbort loading score\n", filename.c_str());
+		::error("%s\n", filename.c_str());
 		return 0;
 	}
 
