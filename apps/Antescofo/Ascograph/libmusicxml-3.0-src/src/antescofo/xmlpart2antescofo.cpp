@@ -798,7 +798,6 @@ float xmlpart2antescofo::getMidiPitch(const notevisitor& nv) const
 }
 
 
-
 //______________________________________________________________________________
 string xmlpart2antescofo::noteName ( const notevisitor& nv )
 {
@@ -817,21 +816,45 @@ string xmlpart2antescofo::noteName ( const notevisitor& nv )
 	return name;
 }
 
+#if 0
+
+// guidostyle:
 //______________________________________________________________________________
+guidonoteduration xmlpart2guido::noteDuration ( const notevisitor& nv )
+{
+	guidonoteduration dur(0,0);
+	if (nv.getType() == kRest) {
+		rational r(nv.getDuration(), fCurrentDivision*4);
+		r.rationalise();
+		dur.set (r.getNumerator(), r.getDenominator());
+	}
+	else {
+		rational r = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
+		if (r.getNumerator() == 0) // graphic type missing or unknown
+			r.set (nv.getDuration(), fCurrentDivision*4);
+		r.rationalise();
+		rational tm = nv.getTimeModification();
+		r *= tm;
+		r.rationalise();
+		dur.set (r.getNumerator(), r.getDenominator(), nv.getDots());
+	}
+	return dur;
+}
+
+// v0.054 version
 rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
 {
 	rational dur(0);
 	if (nv.getType() == kRest) {
-		rational r(nv.getDuration(), fCurrentDivision);
+		rational r(nv.getDuration(), fCurrentDivision*4);
 		r.rationalise();
 		dur.set(r.getNumerator(), r.getDenominator());
+		cout << "#################### noteDuration: isRest: ";
 	} else {
 
 		rational r = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
 		if (r.getNumerator() == 0) { // graphic type missing or unknown
 			r.set (nv.getDuration(), fCurrentDivision);
-			if (nv.getType() == kRest)
-				r /= 4;
 		}
 		r.rationalise();
 		rational tm = nv.getTimeModification();
@@ -845,7 +868,54 @@ rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
 	dur.rationalise();
 	return dur;
 }
-    
+#endif
+
+#if 1
+/// was:
+rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
+{
+	rational dur;
+	if (nv.getType() == kRest) {
+		rational r(nv.getDuration(), fCurrentDivision);
+		r.rationalise();
+		dur.set (r.getNumerator(), r.getDenominator());
+		/*
+		// check for fucking type
+		rational t = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
+		if (t.getNumerator() != 0) { // graphic type missing or unknown
+			t.rationalise();
+			rational tm = nv.getTimeModification();
+			
+			t *= tm;
+			t.rationalise();
+			dur.set (t.getNumerator()*4, t.getDenominator());
+			if (fMeasNum == 2) {
+				cout << "t= " << t.getNumerator() << "/" << t.getDenominator() << endl;
+				cout << "tm= " << tm.getNumerator() << "/" << tm.getDenominator() << endl;
+				cout << "dur= " << dur.getNumerator() << "/" << dur.getDenominator() << endl;
+				abort();
+			}
+		}
+		if (fMeasNum == 2) { cout << "dur= " << dur.getNumerator() << "/" << dur.getDenominator() << endl; abort(); }
+		*/
+	}
+	else {
+		rational r = NoteType::type2rational(NoteType::xml(nv.getGraphicType()));
+		if (r.getNumerator() == 0) // graphic type missing or unknown
+			r.set (nv.getDuration(), fCurrentDivision);
+		r.rationalise();
+		rational tm = nv.getTimeModification();
+		r *= tm;
+		r.rationalise();
+		dur.set (r.getNumerator()*4, r.getDenominator());
+		int dots = nv.getDots();
+		if (dots) 
+			dur += (dur * dots) / 2;
+	}
+	dur.rationalise();
+	return dur;
+}
+#endif
     
 bool xmlpart2antescofo::checkNotation( S_note& elt )
 {

@@ -104,7 +104,8 @@ class antescofowriter {
 		bool print_notes_names;
 		void setBPM(string _bpm) { fBPM = _bpm; }
 
-		map<rational, measure_elt>::iterator findNoteInVector(rational atbeat, rational dur);
+		//map<rational, measure_elt>::iterator findNoteInVector(rational atbeat, rational dur);
+		const rational& findNoteInVector(rational atbeat, rational dur);
 
 		// search for beat&measure in measure2beat map, 
 		// if does not exist
