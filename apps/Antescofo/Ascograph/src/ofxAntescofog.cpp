@@ -1203,7 +1203,7 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 		editor = [ ofxCodeEditor alloc];
 		const char *normal_keywords = "bpm note chord trill multi variance tempo on off transpose variance";
 		const char *major_keywords = "gfwd group lfwd loop cfwd curve kill abort killof abortof whenever closefile openoutfile oscon oscoff oscsend oscrecv";
-		const char *procedure_keywords = "@macro_def @fun_def @insert #include let until expr @tight @grain @action @coef @date @fun_def @proc_def @global @hook @immediate @inlet @jump @label @local @map_history @map_history_date @map_history_rdate @modulate @name @norec @type guard map imap tab loc glob if else do while := s ms port @linear @linear_in @linear_out @linear_in_out @back_in @back_out @back_in_out @bounce_in @bounce_out @bounce_in_out @cubic_in @cubic_out @cubic_in_out @circ_in @circ_out @circ_in_out @elastic_in @elastic_out @elastic_in_out @exp_in @exp_out @exp_in_out @quad_in @quad_out @quad_in_out @quart_in @quart_out @quart_in_out @quint_in @quint_out @quint_in_out @sine_in @sine_out @sine_in_out @is_undef @is_bool @is_int @is_float @is_numeric @is_string @is_symbol @is_map @is_interpolatedmap @is_fct @is_function @sin @asin @sinh @cos @acos @cosh @tan @atan @exp @log10 @log2 @log @rand @sqrt @round @floor @ceil @pow @make_score_map @make_duration_map @is_integer_indexed @is_list @is_vector @is_defined @shift_map @gshift_map @select_map @mapval @merge @concat @compose_map @min_key @max_key @min_val @max_val @listify @map_reverse @tab_map @concat @min_val @max_val @size @clear @tab_reverse @push_back @resize";
+		const char *procedure_keywords = "@macro_def @fun_def @insert #include let until expr @tight @grain @action @coef @date @fun_def @proc_def @global @hook @immediate @inlet @jump @label @local @map_history @map_history_date @map_history_rdate @modulate @name @norec @type during for in map imap tab loc glob if else do while := s ms port @linear @linear_in @linear_out @linear_in_out @back_in @back_out @back_in_out @bounce_in @bounce_out @bounce_in_out @cubic_in @cubic_out @cubic_in_out @circ_in @circ_out @circ_in_out @elastic_in @elastic_out @elastic_in_out @exp_in @exp_out @exp_in_out @quad_in @quad_out @quad_in_out @quart_in @quart_out @quart_in_out @quint_in @quint_out @quint_in_out @sine_in @sine_out @sine_in_out @is_undef @is_bool @is_int @is_float @is_numeric @is_string @is_symbol @is_map @is_interpolatedmap @is_fct @is_function @sin @asin @sinh @cos @acos @cosh @tan @atan @exp @log10 @log2 @log @rand @sqrt @round @floor @ceil @pow @make_score_map @make_duration_map @is_integer_indexed @is_list @is_vector @is_defined @shift_map @gshift_map @select_map @mapval @merge @concat @compose_map @min_key @max_key @min_val @max_val @listify @map_reverse @tab_map @concat @min_val @max_val @size @clear @tab_reverse @push_back @resize";
 		const char *system_keywords = "$rt_tempo $pitch $beat_pos $now $rnow @exp @max @min @log @integrate @normalize @bounded_integrate @add_pair @date @rdate";
 
 		[ editor  set_normal_keywords: normal_keywords ];
@@ -2122,17 +2122,17 @@ void ofxAntescofog::createCodeTemplate(int which)
 
 	switch (which) {
 		case INT_CONSTANT_BUTTON_CREATE_GROUP:
-			str = "0. group /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) @guard = expr */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n}\n";
+			str = "0. group /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n}\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_LOOP:
-			str = "0. loop 6.66 /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) @guard = expr */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n} /*until(expr)*/\n";
+			str = "0. loop 6.66 /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n} /*until(expr)*/\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_CURVE:
-			str = "curve slider  @Grain := 0.05s, @Action := print $x $y\n{\n\t$x, $y\n\t{\n\t    { 0. 2. } /*type \"exponential\"*/\n\t1   { 1. 0. }\n\t2/5 { 3. 1.4}\n\t; ...\n\t}\n}\n";
+			str = "curve slider  @Grain := 0.05s, @Action := print $x $y\n{\n\t$x, $y\n\t{\n\t    { 0. 2. } /*@type \"exp\"*/\n\t1   { 1. 0. }\n\t2/5 { 3. 1.4}\n\t; ...\n\t}\n}\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
@@ -2142,7 +2142,7 @@ void ofxAntescofog::createCodeTemplate(int which)
 			break;
 
 		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
-			str = "whenever(/*expr*/) /* @guard=expr */ {\n\t1. action1\n\t1/4 action2\n\t; ...\n} /*until(expr)*/\n";
+			str = "whenever(/*expr*/) {\n\t1. action1\n\t1/4 action2\n\t; ...\n} /*until(expr)*/\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 

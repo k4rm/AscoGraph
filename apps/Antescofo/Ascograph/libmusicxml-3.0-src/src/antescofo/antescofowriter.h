@@ -93,7 +93,7 @@ class antescofowriter {
 		antescofowriter() : fLastBPM("0"), fBPM("120"), nBeats(4), print_notes_names(true) { }
 		~antescofowriter() {}
 
-		map<rational, measure_elt> v_Notes;
+		vector<measure_elt> v_Notes;
                 map<int, rational> measure2beat;
 		int nBeats, nBeat_type; // nBeats is the number of beats per measure
 		string fBPM, fLastBPM;
@@ -106,6 +106,9 @@ class antescofowriter {
 
 		//map<rational, measure_elt>::iterator findNoteInVector(rational atbeat, rational dur);
 		const rational& findNoteInVector(rational atbeat, rational dur);
+		void v_Notesfind(rational& atbeat, vector<measure_elt>::iterator& i);
+		//bool v_Notesless(vector<measure_elt>::iterator& a, vector<measure_elt>::iterator& b);
+		bool v_Noteserase(rational& atbeat);
 
 		// search for beat&measure in measure2beat map, 
 		// if does not exist
@@ -137,7 +140,7 @@ class antescofowriter {
 		void final_compress();
 
 		// merge 2 notes a and b (add durations) in a, and delete b
-		void merge_notes(map<rational, measure_elt>::iterator a, map<rational, measure_elt>::iterator b);
+		void merge_notes(vector<measure_elt>::iterator a, vector<measure_elt>::iterator b);
 
 		void antescofo_abort();
 		void print_duration(ostream &out, rational &du);

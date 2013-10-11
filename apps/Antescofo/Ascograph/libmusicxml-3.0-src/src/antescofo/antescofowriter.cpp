@@ -28,23 +28,47 @@ namespace MusicXML2
 
 const rational RATIONAL_INVALID(-1);
 
+void antescofowriter::v_Notesfind(rational& atbeat, vector<measure_elt>::iterator& i) {
+	for (i = v_Notes.begin(); i != v_Notes.end(); i++) {
+		if (i->m_pos == atbeat)
+			break;
+	}
+}
+
+bool antescofowriter::v_Noteserase(rational& atbeat) {
+	for (vector<measure_elt>::iterator i = v_Notes.begin(); i != v_Notes.end(); i++) {
+		if (i->m_pos == atbeat) {
+			v_Notes.erase(i);
+			return true;
+		}
+	}
+	return false;
+}
+
+
+bool v_Notesless(const measure_elt& a, const measure_elt& b) {
+	return a.m_pos.toFloat() < b.m_pos.toFloat();
+}
+
 //map<rational, measure_elt>::iterator antescofowriter::findNoteInVector(rational atbeat, rational dur) 
 const rational& antescofowriter::findNoteInVector(rational atbeat, rational dur) 
 {
-	map<rational, measure_elt>::iterator i;
-	if (((i = v_Notes.find(atbeat))) != v_Notes.end()) 
+	vector<measure_elt>::iterator i;
+	v_Notesfind(atbeat, i);
+	if (i != v_Notes.end()) 
+	//if (((i = v_Notes.find(atbeat))) != v_Notes.end()) 
 	{	
-		return i->first;
+		return i->m_pos;
 	}
 	else { // if exact note doesn't exist, maybe a note, began before
 		for (i = v_Notes.begin(); i != v_Notes.end(); i++) {
 			// note could be before
-			i->second.m_pos.rationalise();
-			rational ra(i->second.m_pos + i->second.duration);
+			i->m_pos.rationalise();
+			rational ra(i->m_pos + i->duration);
 			ra.rationalise();
 			atbeat.rationalise();
 			// use toFloat() to compare because there seem to be some bugs without ....
-			if ((i->second.m_pos.toFloat() <= atbeat.toFloat()) && (ra.toFloat() > atbeat.toFloat())) {
+			if ((i->m_pos.toFloat() <= atbeat.toFloat()) && (ra.toFloat() > atbeat.toFloat())) {
 				/*
 				cout <<endl << endl << "FUCKING HERE: i->second.m_pos:"<<i->second.m_pos.toFloat() << " atbeat:" << atbeat.toFloat() << " duration:" << i->second.duration.toFloat()  << endl;
 				cout << "i->second.m_pos + i->second.duration = " << (i->second.m_pos + i->second.duration).toFloat() << endl;
@@ -58,7 +82,7 @@ const rational& antescofowriter::findNoteInVector(rational atbeat, rational dur)
 				r2 = (ra > atbeat);
 				cout << "raT > atbeat: " << r2 << " ra= " << ra.toFloat() << endl;
 				*/
-				return i->first;
+				return i->m_pos;
 			}
 		}
 	}
@@ -106,7 +130,7 @@ rational antescofowriter::AddBeat(rational beat, int nmeasure) {
 // so if nmeasure>1 we suppose notes were added before,
 // and the curBeat in absolute beats can be found.
 void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasure, rational &curBeat, int flag_, string rehearsal) {
-	map<rational, measure_elt>::iterator i;
+	vector<measure_elt>::iterator i;
 	cout << "; Addnote(beat:"<<curBeat.getNumerator() << "/" << curBeat.getDenominator() << ", meas:" << nmeasure <<" pitch:"<<pitch << " dur:"<< dur.getNumerator()<<"/"<<dur.getDenominator() << " type:"<<  type << " bpm:"<<fBPM<<") ";
 	//cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl; print(false);
 
@@ -123,9 +147,9 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 		if (pitch == 0.)
 			return;
 		cerr << "AntescofoWriter: something went wrong with note beats, trying to figure out current beat from measure number." << endl;
-		for (map<rational, measure_elt>::const_iterator i = v_Notes.begin(); i != v_Notes.end(); i++) {
-			if (i->second.nMeasure == nmeasure) {
-				abs_curBeat = i->second.m_pos + curBeat - rational(1);
+		for (vector<measure_elt>::const_iterator i = v_Notes.begin(); i != v_Notes.end(); i++) {
+			if (i->nMeasure == nmeasure) {
+				abs_curBeat = i->m_pos + curBeat - rational(1);
 				break;
 			}
 		}
@@ -135,14 +159,14 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 		} else {
 			// try to find nearest measure, and add beats...
 			rational diffb = 0;
-			for (map<rational, measure_elt>::const_iterator i = v_Notes.begin(); !abs_curBeat.toFloat() && i != v_Notes.end(); i++) {
+			for (vector<measure_elt>::const_iterator i = v_Notes.begin(); !abs_curBeat.toFloat() && i != v_Notes.end(); i++) {
 				for (int diffm = 1; diffm != 4; diffm++) {
-					if (i->second.nMeasure - diffm == nmeasure) {
-						diffb += i->second.duration;
+					if (i->nMeasure - diffm == nmeasure) {
+						diffb += i->duration;
 						for (int d = 0; d != diffm && i != v_Notes.end(); d++, i--) {
-							diffb += i->second.duration;
+							diffb += i->duration;
 						}
-						abs_curBeat = i->second.m_pos + diffb;
+						abs_curBeat = i->m_pos + diffb;
 						break;
 					}
 				}
@@ -171,10 +195,10 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 	else {
 		if (curBeat != thebeat) {
 			cout << "FUCKING DIFFERENT ???? curBeat:" << curBeat.toFloat() << " theBeat:" << thebeat.toFloat() << endl;
-			abort();
+			//abort();
 		}
-		i = v_Notes.find(thebeat);
-		//v_Notesfind(curBeat, i);
+		//i = v_Notes.find(thebeat);
+		v_Notesfind(curBeat, i);
 	}
 	if (i == v_Notes.end()) { // new note
 		measure_elt *e = new measure_elt();
@@ -201,32 +225,33 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 			e->pitches.push_back(pitch);
 			cout << "; AddNote: MULTI note: " << curBeat.toFloat() <<endl;
 		}
-		v_Notes[curBeat] = *e;
+		//v_Notes[curBeat] = *e;
+		v_Notes.push_back(*e);
 		cout << endl;
 	} else { // note already exists at this position
 		if (type == ANTESCOFO_REST) return;
 
-		if (i->second.m_pos != curBeat) { // if note was there, but not on the exact same beat
+		if (i->m_pos != curBeat) { // if note was there, but not on the exact same beat
 			cout << "!!!!!!!!!!!! Inserting note in the middle of a previous one. !!!!!!!!!!!!!!" << endl;
-			cout << "<<<<<<<< WTF: prevBeat:" << i->second.m_pos.getNumerator() << "/" << i->second.m_pos.getDenominator() << " curBeat:" << curBeat.getNumerator() << "/" << curBeat.getDenominator() << " prevdur:"<< i->second.duration.toFloat() << " dur:" << dur.toFloat() << endl;
-			if (i->first != curBeat)
-				cout << "i->first=" << i->first.toFloat() << " != " << curBeat.toFloat() << " ### secondmpos:"<< i->second.m_pos.toFloat() <<" ###############################################################"; 
+			cout << "<<<<<<<< WTF: prevBeat:" << i->m_pos.getNumerator() << "/" << i->m_pos.getDenominator() << " curBeat:" << curBeat.getNumerator() << "/" << curBeat.getDenominator() << " prevdur:"<< i->duration.toFloat() << " dur:" << dur.toFloat() << endl;
+			if (i->m_pos != curBeat)
+				cout << "i->m_pos=" << i->m_pos.toFloat() << " != " << curBeat.toFloat() << " ### mpos:"<< i->m_pos.toFloat() <<" ###############################################################"; 
 			print(true);
 			abort();
-			if (i->second.type == ANTESCOFO_REST) { // XXX only handle REST for now
-				rational d = i->second.duration;
-				cout << "!!!!!!!!!!!! Inserting note: previous note: beat:"<< i->second.m_pos.toFloat() << " dur:"<< i->second.duration.toFloat() << endl;
-				if (i->second.m_pos.getNumerator() == 0 && i->second.duration.getNumerator() == 0) return;
-				i->second.duration = curBeat - i->second.m_pos;//rational(curBeat*1000, 1000) - rational(i->second.m_pos * 1000, 1000);// shorten previous note duration
-				cout << "!!!!!!!!!!!! Inserting note: reducing first one dur:"<< i->second.duration.toFloat() << endl;
-				if (i->second.duration + dur < d) { // if prev dur < dur add note
+			if (i->type == ANTESCOFO_REST) { // XXX only handle REST for now
+				rational d = i->duration;
+				cout << "!!!!!!!!!!!! Inserting note: previous note: beat:"<< i->m_pos.toFloat() << " dur:"<< i->duration.toFloat() << endl;
+				if (i->m_pos.getNumerator() == 0 && i->duration.getNumerator() == 0) return;
+				i->duration = curBeat - i->m_pos;//rational(curBeat*1000, 1000) - rational(i->m_pos * 1000, 1000);// shorten previous note duration
+				cout << "!!!!!!!!!!!! Inserting note: reducing first one dur:"<< i->duration.toFloat() << endl;
+				if (i->duration + dur < d) { // if prev dur < dur add note
 					rational tmpcurbeat = curBeat + dur;//.toFloat();
 					rational bkpbeat = curBeat;
-					cout << "!!!!!!!!!!!!  Inserting note: dur:"<< (d - i->second.duration - dur).toFloat() << " atbeat:"<< tmpcurbeat.toFloat() << " !!!!!!!!!!!!!!" << endl;
-					if (((d - i->second.duration - dur).toFloat()) <= 0 ) {
+					cout << "!!!!!!!!!!!!  Inserting note: dur:"<< (d - i->duration - dur).toFloat() << " atbeat:"<< tmpcurbeat.toFloat() << " !!!!!!!!!!!!!!" << endl;
+					if (((d - i->duration - dur).toFloat()) <= 0 ) {
 						abort(); return; 
 					}
-					AddNote(ANTESCOFO_REST, 0, d - i->second.duration - dur, nmeasure, tmpcurbeat);
+					AddNote(ANTESCOFO_REST, 0, d - i->duration - dur, nmeasure, tmpcurbeat);
 					curBeat = bkpbeat;
 				} // XXX > ?
 				dur.rationalise();
@@ -236,53 +261,53 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 
 		}
 
-		if (i->second.duration == dur || dur.toFloat() == .0) { // if already present note's duration is same than new one, merge it
-			if (i->second.type == ANTESCOFO_REST) { // replace REST by NOTE
+		if (i->duration == dur || dur.toFloat() == .0) { // if already present note's duration is same than new one, merge it
+			if (i->type == ANTESCOFO_REST) { // replace REST by NOTE
 				if (dur.toFloat() == .0) { // grace
 					cout << "Replace rest by grace note" << endl;
-					i->second.grace_pitches.push_back(pitch);
-					i->second.type = type;
+					i->grace_pitches.push_back(pitch);
+					i->type = type;
 				} else {
 					cout << "Replace rest by note" << endl;
-					i->second.pitches.push_back(pitch);
-					i->second.type = type;
+					i->pitches.push_back(pitch);
+					i->type = type;
 					dur.rationalise();
-					i->second.duration = dur;
+					i->duration = dur;
 				}
-				i->second.nMeasure = nmeasure;
-				i->second.m_pos = curBeat;
-				i->second.flags = flag_;
-				if (flag_ == ANTESCOFO_FLAG_FERMATA) i->second.bFermata = true;
+				i->nMeasure = nmeasure;
+				i->m_pos = curBeat;
+				i->flags = flag_;
+				if (flag_ == ANTESCOFO_FLAG_FERMATA) i->bFermata = true;
 				return;
-			} else if (type != ANTESCOFO_REST && (i->second.type == ANTESCOFO_NOTE || i->second.type == ANTESCOFO_CHORD)) { // change NOTE to CHORD
-				if (i->second.duration.toFloat() == .0) // previous note was a grace note, so just add note.
+			} else if (type != ANTESCOFO_REST && (i->type == ANTESCOFO_NOTE || i->type == ANTESCOFO_CHORD)) { // change NOTE to CHORD
+				if (i->duration.toFloat() == .0) // previous note was a grace note, so just add note.
 				{
 					if (dur.toFloat() == .0) {
-						i->second.grace_pitches.push_back(pitch);
-						if (i->second.grace_pitches.size() > 1)
-							i->second.type = ANTESCOFO_CHORD;
+						i->grace_pitches.push_back(pitch);
+						if (i->grace_pitches.size() > 1)
+							i->type = ANTESCOFO_CHORD;
 					} else 
-						i->second.pitches.push_back(pitch);
+						i->pitches.push_back(pitch);
 
-					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
 					dur.rationalise();
-					i->second.duration = dur;
-					i->second.nMeasure = nmeasure;
-					i->second.m_pos = curBeat;
-					i->second.flags = flag_;
-					if (flag_ == ANTESCOFO_FLAG_FERMATA) i->second.bFermata = true;
+					i->duration = dur;
+					i->nMeasure = nmeasure;
+					i->m_pos = curBeat;
+					i->flags = flag_;
+					if (flag_ == ANTESCOFO_FLAG_FERMATA) i->bFermata = true;
 					cout << "; Addnote : handling grace note." << endl;
 					return;
 				}
 			}
 			// else :
-			i->second.type = ANTESCOFO_CHORD;
+			i->type = ANTESCOFO_CHORD;
 			if (dur.toFloat() == .0) // handle grace notes
-				i->second.grace_pitches.push_back(pitch);
-			else i->second.pitches.push_back(pitch);
-			if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
-			i->second.nMeasure = nmeasure;
-			i->second.m_pos = curBeat;
+				i->grace_pitches.push_back(pitch);
+			else i->pitches.push_back(pitch);
+			if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
+			i->nMeasure = nmeasure;
+			i->m_pos = curBeat;
 		} else { // if already present note's duration is different of new one, create it.
 			/*
 				 i->second.type = ANTESCOFO_CHORD;
@@ -291,22 +316,22 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 				 i->second.m_pos = curBeat;
 				 */
 
-			rational new_beat = curBeat + i->second.duration;
+			rational new_beat = curBeat + i->duration;
 			int new_measure = nmeasure;
-			rational new_dur = i->second.duration - dur;
+			rational new_dur = i->duration - dur;
 			if (new_dur > rational(0)) { // note (or chord) already in the list is longer than new note: new note is shorter
 				cout << "; Addnote : expanding note: new_dur:" << new_dur.toFloat();
-				i->second.type = ANTESCOFO_CHORD;
-				i->second.pitches.push_back(pitch);
-				if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
-				i->second.nMeasure = nmeasure;
-				i->second.m_pos = curBeat;
+				i->type = ANTESCOFO_CHORD;
+				i->pitches.push_back(pitch);
+				if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
+				i->nMeasure = nmeasure;
+				i->m_pos = curBeat;
 
 				// on the beat: old + new
-				i->second.duration = dur;
-				cout << " shorten note: beat "<< i->second.m_pos.toFloat() << ", dur: "<< i->second.duration.toFloat() << " and new beat:"<< (curBeat+i->second.duration).toFloat()<<  ", dur:"<<new_dur.toFloat()<< endl;
+				i->duration = dur;
+				cout << " shorten note: beat "<< i->m_pos.toFloat() << ", dur: "<< i->duration.toFloat() << " and new beat:"<< (curBeat+i->duration).toFloat()<<  ", dur:"<<new_dur.toFloat()<< endl;
 
-				for (vector<int>::iterator c = i->second.pitches.begin(); c != i->second.pitches.end() && *c != pitch; c++) {
+				for (vector<int>::iterator c = i->pitches.begin(); c != i->pitches.end() && *c != pitch; c++) {
 					cout << "=============== ADDING NOTE: "<< *c << " b:"<< (new_beat - new_dur).toFloat()<< endl;
 					rational tmpcurbeat = new_beat - new_dur;
 					new_dur.rationalise();
@@ -319,63 +344,73 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 				new_dur = rational(0) - new_dur;
 				cout << "; Addnote : expanding new longer note: new_dur:" << new_dur.toFloat() << endl;
 
-				if (i->second.type == ANTESCOFO_REST) { // replace REST by NOTE, then add REST with diff duration
+				if (i->type == ANTESCOFO_REST) { // replace REST by NOTE, then add REST with diff duration
 					cout << "replace REST by NOTE, then add REST with diff duration"<<endl;
-					i->second.pitches.push_back(pitch);
-					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
-					i->second.type = type;
-					i->second.duration = dur;
+					i->pitches.push_back(pitch);
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
+					i->type = type;
+					i->duration = dur;
 					rational newbeat = curBeat + dur;
 					// check if next note(?s) needs to be shortened
-					map<rational, measure_elt>::iterator n = i;
+					vector<measure_elt>::iterator n = i;
 					n++;
-					if (n != v_Notes.end() && n->second.type == ANTESCOFO_REST) {
+					if (n != v_Notes.end() && n->type == ANTESCOFO_REST) {
 						cout << "erasing " << newbeat.toFloat() << " SILENCE " << endl;
-						v_Notes.erase(n->first);
+						//v_Notes.erase(n->first);
+						v_Noteserase(n->m_pos);
 						new_dur.rationalise();
 						AddNote(ANTESCOFO_REST, 0, new_dur, nmeasure, newbeat);
 					}
-				} else if (i->second.duration.toFloat() == 0) { // handle grace notes
-					if (i->second.pitches.size())
-						i->second.grace_pitches.push_back(i->second.pitches[0]);
-					i->second.type = type;
-					i->second.flags = flag_;
-					i->second.pitches.push_back(pitch);
-					//if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
-					i->second.duration = dur;
+				} else if (i->duration.toFloat() == 0) { // handle grace notes
+					if (i->pitches.size())
+						i->grace_pitches.push_back(i->pitches[0]);
+					i->type = type;
+					i->flags = flag_;
+					i->pitches.push_back(pitch);
+					//if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
+					i->duration = dur;
 
 				} else {
 					// on the beat: old + new
-					//if (i->second.duration = ANTESCOFO_REST) i->second.duration = dur; else
-					i->second.duration = MIN(i->second.duration, dur);
-					i->second.type = ANTESCOFO_CHORD;
-					i->second.pitches.push_back(pitch);
-					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
-					i->second.nMeasure = nmeasure;
-					i->second.m_pos = curBeat;
+					//if (i->duration = ANTESCOFO_REST) i->duration = dur; else
+					i->duration = MIN(i->duration, dur);
+					i->type = ANTESCOFO_CHORD;
+					i->pitches.push_back(pitch);
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
+					i->nMeasure = nmeasure;
+					i->m_pos = curBeat;
 
 					// on the beat+prevdur: only new
 					measure_elt *e = new measure_elt();
-					e->type = (v_Notes[curBeat].pitches.size() + 1 > 1 ? ANTESCOFO_CHORD : ANTESCOFO_NOTE);
+					// get measure_elt to know its type
+					//e->type = (v_Notes[curBeat].pitches.size() + 1 > 1 ? ANTESCOFO_CHORD : ANTESCOFO_NOTE);
+					vector<measure_elt>::iterator j; v_Notesfind(curBeat, j);
+					e->type = (j->pitches.size() + 1 > 1 ? ANTESCOFO_CHORD : ANTESCOFO_NOTE);
 					new_dur.rationalise();
 					e->duration = new_dur;
-					rational tmpbeat = curBeat + i->second.duration; tmpbeat.rationalise();
-					for (vector<int>::iterator c = v_Notes[tmpbeat].pitches.begin(); c != v_Notes[tmpbeat].pitches.end(); c++)
+					rational tmpbeat = curBeat + i->duration; tmpbeat.rationalise();
+					v_Notesfind(tmpbeat, j);
+					//for (vector<int>::iterator c = v_Notes[tmpbeat].pitches.begin(); c != v_Notes[tmpbeat].pitches.end(); c++)
+					for (vector<int>::iterator c = j->pitches.begin(); c != j->pitches.end(); c++)
 						e->pitches.push_back(-(*c));
 					e->pitches.push_back(-pitch);
-					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->second.tiednotes.push_back(pitch);
+					if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
 					e->nMeasure = nmeasure;
 					e->m_pos = tmpbeat;
 					e->flags = flag_;
 					if (flag_ == ANTESCOFO_FLAG_FERMATA) e->bFermata = true;
 					if (fLastBPM != fBPM) { fLastBPM = fBPM; e->bpm = fBPM; }
-					v_Notes[tmpbeat] = *e;// XXX que nenni si la note existe deja a cette position
+					//v_Notes[tmpbeat] = *e;
+					v_Notes.push_back(*e);// XXX que nenni si la note existe deja a cette position
 				}
 			}
 		}
 
 	}
-	v_Notes[curBeat].rehearsal = rehearsal;
+	//v_Notes[curBeat].rehearsal = rehearsal;
+	v_Notesfind(curBeat, i);
+	i->rehearsal = rehearsal;
+	std::sort(v_Notes.begin(), v_Notes.end(), v_Notesless);
 }
 
 void antescofowriter::print(bool with_header) {
@@ -425,13 +460,13 @@ void antescofowriter::final_compress()
 {
 	// - compress
 	if (v_Notes.size() < 2) return;
-	map<rational, measure_elt>::iterator next = v_Notes.begin();
-	map<rational, measure_elt>::iterator i = next;
+	vector<measure_elt>::iterator next = v_Notes.begin();
+	vector<measure_elt>::iterator i = next;
 	next++;
 	for (; next != v_Notes.end(); ) {
 		bool compressed = false;
-		if (next->second.type == i->second.type) {
-			if (next->second.type == ANTESCOFO_REST) {
+		if (next->type == i->type) {
+			if (next->type == ANTESCOFO_REST) {
 				merge_notes(i, next);
 				compressed = true;
 			}
@@ -445,19 +480,22 @@ void antescofowriter::final_compress()
 	// - compress tied notes
 	if (v_Notes.size() < 2) return;
 	i = next = v_Notes.begin();
-	next++;
+	if (next != v_Notes.end())
+		next++;
 	for (; next != v_Notes.end(); next++) {
-		if (next->second.type == i->second.type) {
-			if (next->second.pitches == i->second.pitches && i->second.flags == ANTESCOFO_FLAG_TIED_START && next->second.flags == ANTESCOFO_FLAG_TIED_END) {
-				cout << "Got tied notes (pos:"<<i->first.toFloat()<<")... merging note." <<endl;
+		if (next->type == i->type) {
+			if (next->pitches == i->pitches && i->flags == ANTESCOFO_FLAG_TIED_START && next->flags == ANTESCOFO_FLAG_TIED_END) {
+				cout << "Got tied notes (pos:"<<i->m_pos.toFloat()<<")... merging note." <<endl;
 				merge_notes(i, next);
-			} else if (i->second.type == ANTESCOFO_TRILL && (i->second.flags == ANTESCOFO_FLAG_TREMOLO_START && next->second.flags == ANTESCOFO_FLAG_TREMOLO_STOP )) {
-				cout << "Got trill notes (pos:"<<i->first.toFloat()<< " note:" << i->second.pitches[0] << ")... merging note." <<endl;
+			} else if (i->type == ANTESCOFO_TRILL && (i->flags == ANTESCOFO_FLAG_TREMOLO_START && next->flags == ANTESCOFO_FLAG_TREMOLO_STOP )) {
+				cout << "Got trill notes (pos:"<<i->m_pos.toFloat()<< " note:" << i->pitches[0] << ")... merging note." <<endl;
 				merge_notes(i, next);
-				i->second.flags = ANTESCOFO_FLAG_NULL;
+				i->flags = ANTESCOFO_FLAG_NULL;
 				//i++, next++;
 			}
 		}
+		if (i == v_Notes.end())
+			break;
 		i = next;
 	}
 
@@ -465,20 +503,20 @@ void antescofowriter::final_compress()
 
 
 // merge 2 notes a and b (add durations) in a, and delete b
-void antescofowriter::merge_notes(map<rational, measure_elt>::iterator a, map<rational, measure_elt>::iterator b) {
-	cout << "merge_notes " << a->first.toFloat() << " and " << b->first.toFloat() << endl;
-	if (a->second.bpm.size()) {
-		if (b->second.bpm.size())
+void antescofowriter::merge_notes(vector<measure_elt>::iterator a, vector<measure_elt>::iterator b) {
+	cout << "merge_notes " << a->m_pos.toFloat() << " and " << b->m_pos.toFloat() << endl;
+	if (a->bpm.size()) {
+		if (b->bpm.size())
 			return; // do nothing if two note are separated by different tempos
-	} else if (b->second.bpm.size())
-		a->second.bpm = b->second.bpm;
-	if (a->second.nMeasure != b->second.nMeasure) { //tied note between different measures
+	} else if (b->bpm.size())
+		a->bpm = b->bpm;
+	if (a->nMeasure != b->nMeasure) { //tied note between different measures
 		//cout << "-------- jumping next measure: "<< a->second.nMeasure << "  ----------" << endl; 
 		//a->second.nMeasure++;
 	}
-	a->second.duration += b->second.duration;
-	if (a->second.pitches != b->second.pitches)
-		a->second.pitches.insert(a->second.pitches.end(), b->second.pitches.begin(), b->second.pitches.end());
+	a->duration += b->duration;
+	if (a->pitches != b->pitches)
+		a->pitches.insert(a->pitches.end(), b->pitches.begin(), b->pitches.end());
 	v_Notes.erase(b);
 }
 
@@ -556,7 +594,7 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 		out << "; Antescofo score generated using libmusicxml and embedded xml2antescofo converter." <<std::endl;
 		out << "; Copyright (c) Thomas Coffy - IRCAM 2013" <<std::endl;
 	}
-	if (v_Notes.size()) fBPM = v_Notes.begin()->second.bpm;
+	if (v_Notes.size()) fBPM = v_Notes.begin()->bpm;
 	if (!fBPM.size()) fBPM = string("120");
 	fLastBPM = fBPM;
 	out << "BPM " << fBPM << endl;
@@ -564,106 +602,106 @@ void antescofowriter::writestream(ostream &out, bool with_header) {
 	rational fCurrBeat = rational(1);
 
 	int last_glissando_pitch = 0;
-	for (map<rational, measure_elt>::iterator i = v_Notes.begin(); i != v_Notes.end(); i++) { 
-		if (i->second.nMeasure == 0 && i->second.m_pos.getNumerator() == 0 && i->second.duration.getNumerator() == 0)
+	for (vector<measure_elt>::iterator i = v_Notes.begin(); i != v_Notes.end(); i++) { 
+		if (i->nMeasure == 0 && i->m_pos.getNumerator() == 0 && i->duration.getNumerator() == 0)
 			continue;
 
 		// check we want to write this measure
 		bool bad = write_measures.empty() ? false : true;
 		for (vector<int>::const_iterator v = write_measures.begin(); v != write_measures.end(); v++) {
-			if (*v == i->second.nMeasure)
+			if (*v == i->nMeasure)
 				bad = false;
 		}
 		if (bad) continue;
 
 		// display measure comment
-		if (cur_meas != i->second.nMeasure) {
+		if (cur_meas != i->nMeasure) {
 			bNewMeasure = true;
-			cur_meas = i->second.nMeasure;
-			out << endl << "; ----------- measure " << cur_meas << " --- beat " << i->first.getNumerator();
-			if (i->first.getDenominator() != 1)
-				out << "/" << i->first.getDenominator()<< " ------";
+			cur_meas = i->nMeasure;
+			out << endl << "; ----------- measure " << cur_meas << " --- beat " << i->m_pos.getNumerator();
+			if (i->m_pos.getDenominator() != 1)
+				out << "/" << i->m_pos.getDenominator()<< " ------";
 			out << endl;
 		}
-		if (i->second.bFermata) {
+		if (i->bFermata) {
 			out << "TEMPO OFF" << endl;
 			bPendingFermata = true;
 		} else if (bPendingFermata) {
 			out << "TEMPO ON" << endl;
 			bPendingFermata = false;
 		}
-		if (i->second.bpm.size() && i->second.bpm != fBPM) {
-			fBPM = i->second.bpm ;
+		if (i->bpm.size() && i->bpm != fBPM) {
+			fBPM = i->bpm ;
 			out << "BPM " << fBPM << " @modulate" << endl; 
 		}
-		if (i->second.duration.getNumerator()) i->second.duration.rationalise();
+		if (i->duration.getNumerator()) i->duration.rationalise();
 
 		// grace notes
-		int grace_notes = i->second.grace_pitches.size();
+		int grace_notes = i->grace_pitches.size();
 		if (grace_notes) {
-			//if (grace_notes == 1) { out << "NOTE "; writenote(out, i->second.grace_pitches[0]); out << " 0"; }
+			//if (grace_notes == 1) { out << "NOTE "; writenote(out, i->grace_pitches[0]); out << " 0"; }
 			//else if (grace_notes > 1) {
 			//	out << "CHORD ( ";
-			for (vector<int>::const_iterator j = i->second.grace_pitches.begin(); j != i->second.grace_pitches.end(); j++) {
-				out << "NOTE "; writenote(out, *j, i->second); out << " 0" << endl;
+			for (vector<int>::const_iterator j = i->grace_pitches.begin(); j != i->grace_pitches.end(); j++) {
+				out << "NOTE "; writenote(out, *j, *i); out << " 0" << endl;
 				//writenote(out, *j);//out << *j << "00 "; out << ") 0";// << endl;
 			}
 			//}
 			//if (i->second.pitches.size()) out << endl; // don't print new measure label on grace notes
 		} 
-		if (i->second.type == ANTESCOFO_NOTE && i->second.pitches.size() && i->second.pitches[0]) {
-			out << "NOTE "; writenote(out, i->second.pitches[0], i->second); out << " ";
-			print_duration(out, i->second.duration);
-		} else if (i->second.type == ANTESCOFO_REST) {
+		if (i->type == ANTESCOFO_NOTE && i->pitches.size() && i->pitches[0]) {
+			out << "NOTE "; writenote(out, i->pitches[0], *i); out << " ";
+			print_duration(out, i->duration);
+		} else if (i->type == ANTESCOFO_REST) {
 			out << "NOTE 0 ";
-			print_duration(out, i->second.duration);
+			print_duration(out, i->duration);
 		}
-		else if (i->second.pitches.size() && i->second.pitches[0]) {
+		else if (i->pitches.size() && i->pitches[0]) {
 			// sort
-			std::sort(i->second.pitches.begin(), i->second.pitches.end());
+			std::sort(i->pitches.begin(), i->pitches.end());
 			// remove duplicates pitches
-			vector<int>::iterator u = std::unique(i->second.pitches.begin(), i->second.pitches.end());
-			i->second.pitches.resize(u - i->second.pitches.begin());
+			vector<int>::iterator u = std::unique(i->pitches.begin(), i->pitches.end());
+			i->pitches.resize(u - i->pitches.begin());
 
-			if (i->second.type != ANTESCOFO_MULTI) {
-				if (i->second.type == ANTESCOFO_CHORD) {
-					if (i->second.pitches.size() == 1) 
+			if (i->type != ANTESCOFO_MULTI) {
+				if (i->type == ANTESCOFO_CHORD) {
+					if (i->pitches.size() == 1) 
 						out << "NOTE";
 					else 
 						out << "CHORD (";
-				} else if (i->second.type == ANTESCOFO_TRILL || i->second.type == ANTESCOFO_FLAG_TREMOLO_START)
+				} else if (i->type == ANTESCOFO_TRILL || i->type == ANTESCOFO_FLAG_TREMOLO_START)
 					out << "TRILL (";
 				last_glissando_pitch = 0;
 			} else { // glissando flags may be: start, stop, stop
-				if (last_glissando_pitch && i->second.flags == ANTESCOFO_FLAG_GLISSANDO_STOP) {
-					out << "MULTI ( "; writenote(out, last_glissando_pitch, i->second);
+				if (last_glissando_pitch && i->flags == ANTESCOFO_FLAG_GLISSANDO_STOP) {
+					out << "MULTI ( "; writenote(out, last_glissando_pitch, *i);
 					out << " ->";
 				}
-				if (i->second.flags == ANTESCOFO_FLAG_GLISSANDO_START || i->second.flags == ANTESCOFO_FLAG_GLISSANDO_STOP)
-					last_glissando_pitch = i->second.pitches[0];
+				if (i->flags == ANTESCOFO_FLAG_GLISSANDO_START || i->flags == ANTESCOFO_FLAG_GLISSANDO_STOP)
+					last_glissando_pitch = i->pitches[0];
 			}
-			for (vector<int>::const_iterator j = i->second.pitches.begin(); j != i->second.pitches.end(); j++) {
-				if (i->second.flags != ANTESCOFO_FLAG_GLISSANDO_START) {
-					out << " "; writenote(out, *j, i->second);// << "00";
+			for (vector<int>::const_iterator j = i->pitches.begin(); j != i->pitches.end(); j++) {
+				if (i->flags != ANTESCOFO_FLAG_GLISSANDO_START) {
+					out << " "; writenote(out, *j, *i);// << "00";
 				}
 				//if (i->second.type == ANTESCOFO_MULTI && i->second.flags == ANTESCOFO_FLAG_GLISSANDO_START) out << " ->";
 			}
 
-			if (i->second.flags != ANTESCOFO_FLAG_GLISSANDO_START) {
-				if (i->second.pitches.size() > 1 || i->second.type == ANTESCOFO_TRILL || i->second.flags == ANTESCOFO_FLAG_GLISSANDO_STOP || i->second.flags == ANTESCOFO_FLAG_TREMOLO_STOP)
+			if (i->flags != ANTESCOFO_FLAG_GLISSANDO_START) {
+				if (i->pitches.size() > 1 || i->type == ANTESCOFO_TRILL || i->flags == ANTESCOFO_FLAG_GLISSANDO_STOP || i->flags == ANTESCOFO_FLAG_TREMOLO_STOP)
 					out << " )";
 				out << " ";
-				print_duration(out, i->second.duration);// << i->second.duration.getNumerator() << "/" << i->second.duration.getDenominator();
+				print_duration(out, i->duration);// << i->second.duration.getNumerator() << "/" << i->second.duration.getDenominator();
 			}
 		}
-		if (bNewMeasure && i->second.flags != ANTESCOFO_FLAG_GLISSANDO_START) {
+		if (bNewMeasure && i->flags != ANTESCOFO_FLAG_GLISSANDO_START) {
 			out << " measure"<< cur_meas;;
 			bNewMeasure = false;
 		}
-		if (i->second.rehearsal.size()) 
-			out << " ; marker: " << i->second.rehearsal;
+		if (i->rehearsal.size()) 
+			out << " ; marker: " << i->rehearsal;
 
-		if (i->second.flags != ANTESCOFO_FLAG_GLISSANDO_START) {
+		if (i->flags != ANTESCOFO_FLAG_GLISSANDO_START) {
 			out << endl;
 		}
 	}
