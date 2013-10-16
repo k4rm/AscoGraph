@@ -197,8 +197,8 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 			cout << "FUCKING DIFFERENT ???? curBeat:" << curBeat.toFloat() << " theBeat:" << thebeat.toFloat() << endl;
 			//abort();
 		}
-		//i = v_Notes.find(thebeat);
 		v_Notesfind(curBeat, i);
+		//v_Notesfind(thebeat, i);
 	}
 	if (i == v_Notes.end()) { // new note
 		measure_elt *e = new measure_elt();
@@ -236,8 +236,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 			cout << "<<<<<<<< WTF: prevBeat:" << i->m_pos.getNumerator() << "/" << i->m_pos.getDenominator() << " curBeat:" << curBeat.getNumerator() << "/" << curBeat.getDenominator() << " prevdur:"<< i->duration.toFloat() << " dur:" << dur.toFloat() << endl;
 			if (i->m_pos != curBeat)
 				cout << "i->m_pos=" << i->m_pos.toFloat() << " != " << curBeat.toFloat() << " ### mpos:"<< i->m_pos.toFloat() <<" ###############################################################"; 
-			print(true);
-			abort();
+			//print(true); abort();
 			if (i->type == ANTESCOFO_REST) { // XXX only handle REST for now
 				rational d = i->duration;
 				cout << "!!!!!!!!!!!! Inserting note: previous note: beat:"<< i->m_pos.toFloat() << " dur:"<< i->duration.toFloat() << endl;
@@ -335,9 +334,11 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 					cout << "=============== ADDING NOTE: "<< *c << " b:"<< (new_beat - new_dur).toFloat()<< endl;
 					rational tmpcurbeat = new_beat - new_dur;
 					new_dur.rationalise();
+					tmpcurbeat.rationalise();
 					//XXX ??? if (*c < 0) break;
 					if (*c)
 					AddNote(ANTESCOFO_CHORD, -(*c), new_dur, new_measure, tmpcurbeat);
+					//AddNote(ANTESCOFO_CHORD, (*c), new_dur, new_measure, tmpcurbeat);
 					else break;
 				}
 			} else { // new note is longer than already present one, so copy present pitches into new note with new_dur duration
