@@ -35,7 +35,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bSnapToGrid = true;
 	mHasReadMessages = false;
 	fAntescofoTimeSeconds = 0;
-	bAutoScroll = false;
+	bAutoScroll = true;
 	bColorSetupInitDone = false;
 	bFindTextInitDone = false;
 	bOSCSetupInitDone = false;
@@ -200,9 +200,13 @@ void ofxAntescofog::menu_item_hit(int n)
 				string msg = [editor getSelection];
 				cout << "<<<<<<<<<<<<<<<<<<<< sending playstring >>>>>>>>>>>>>>>>>>>>>" << endl;
 				cout << msg << endl;
+				msg += "\n";
 				m.addStringArg("playstring");
 				m.addStringArg(msg);
-				mOSCsender.sendMessage(m);
+				try {
+					mOSCsender.sendMessage(m);
+				} catch(...)
+				{}
 				break;
 			}
 		case INT_CONSTANT_BUTTON_PREVEVENT:
@@ -636,7 +640,7 @@ void ofxAntescofog::setupOSC(){
 	std::cout << "Listening on OSC port " << port << endl;
 	try {
 		mOSCreceiver.setup(atoi(mOsc_port.c_str()));
-	} catch(exception& e) { 
+	} catch(...) { //} catch(exception& e) { 
 		ofSetColor(0, 0, 0, 100);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		ofSetColor(255, 255, 255, 240);
@@ -663,7 +667,10 @@ void ofxAntescofog::setupOSC(){
 	}
 	save();
 	std::cout << "Connecting OSC on " << mOsc_host << ":"<< atoi(mOsc_port_MAX.c_str()) << endl;
-	mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
+	try {
+		mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
+	} catch (...)
+	{ cerr << "ERROR OSC EXCEPTION" << endl; }
 }
 
 
@@ -783,93 +790,98 @@ void ofxAntescofog::update() {
 	} // else if (elevator->isVisible() && ) elevatorDisable();
 
 	// check for waiting messages
-	while( mOSCreceiver.hasWaitingMessages() )
-	{
-		// get the next message
-		ofxOscMessage m;
-		mOSCreceiver.getNextMessage( &m );
-		if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
-		for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
-		if(m.getAddress() == "/antescofo/stop"){
-			if (audioTrack) audioTrack->fakeStop();
-			mHasReadMessages = true;
-		}else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
-			mOsc_tempo = m.getArgAsFloat(0);
-			if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
-			bpm = mOsc_tempo;
-			//if (bpm) timeline.setBPM(bpm);
-			mSliderBPM->setValue(bpm);
-			mHasReadMessages = true;
-		} else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-			mOsc_beat = m.getArgAsFloat(0);
-			mLabelBeat->setLabel(ofToString(mOsc_beat));
-			if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
-			if (mOsc_beat == 0)
-				ofxAntescofoNote->missedAll();
-			mHasReadMessages = true;
-		} else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-			mOsc_rnow = m.getArgAsFloat(0);
-			//mLabelBeat->setLabel(ofToString(mOsc_rnow));
-			if (_debug) cout << "OSC received: rnow: "<< mOsc_rnow << endl;
-			//mHasReadMessages = true;
-		} else if(m.getAddress() == "/antescofo/pitch"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-			mOsc_pitch = m.getArgAsFloat(0);
-			mLabelPitch->setLabel(ofToString(mOsc_pitch));
-			if (_debug) cout << "OSC received: pitch: "<< mOsc_pitch << endl;
-			mHasReadMessages = true;
-		} else if(m.getAddress() == "/antescofo/accomp_pos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
-			if (_debug) cout << "OSC received: accomp_pos: "<<  m.getArgAsFloat(0) << endl;
-			mHasReadMessages = true;
-			if (audioTrack) audioTrack->fakePlay(m.getArgAsFloat(0));
-		} else if(m.getAddress() == "/antescofo/accomp_speed"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
-			mOsc_accomp_speed= m.getArgAsFloat(0);
-			mLabelAccompSpeed->setLabel(ofToString(mOsc_accomp_speed));
-			if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
-			mHasReadMessages = true;
-			if (audioTrack) audioTrack->setFakeSpeed(mOsc_accomp_speed);
-			mLabelAccompSpeed->setVisible(true);
-			guiBottom->getWidget(TEXT_CONSTANT_BUTTON_SPEED)->setVisible(true);
-			bShouldRedraw = true;
-		} else if(m.getAddress() == "/antescofo/loadscore"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
-			string scorefile = m.getArgAsString(0);
-			if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
-			mHasReadMessages = true;
-			loadScore(scorefile, false);
-			bShouldRedraw = true;
-		} else {
-			mHasReadMessages = false;
-			// unrecognized message: display on the bottom of the screen
-			string msg_string;
-			msg_string = m.getAddress();
-			msg_string += ": ";
-			for(int i = 0; i < m.getNumArgs(); i++){
-				// get the argument type
-				msg_string += m.getArgTypeName(i);
-				msg_string += ":";
-				// display the argument - make sure we get the right type
-				if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-					msg_string += ofToString(m.getArgAsInt32(i));
+	try {
+		while( mOSCreceiver.hasWaitingMessages() )
+		{
+			// get the next message
+			ofxOscMessage m;
+			mOSCreceiver.getNextMessage( &m );
+			if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
+			for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
+			if(m.getAddress() == "/antescofo/stop"){
+				if (audioTrack) audioTrack->fakeStop();
+				mHasReadMessages = true;
+			}else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+				mOsc_tempo = m.getArgAsFloat(0);
+				if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
+				bpm = mOsc_tempo;
+				//if (bpm) timeline.setBPM(bpm);
+				mSliderBPM->setValue(bpm);
+				mHasReadMessages = true;
+			} else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+				mOsc_beat = m.getArgAsFloat(0);
+				mLabelBeat->setLabel(ofToString(mOsc_beat));
+				if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
+				if (mOsc_beat == 0)
+					ofxAntescofoNote->missedAll();
+				mHasReadMessages = true;
+			} else if(m.getAddress() == "/antescofo/rnow" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+				mOsc_rnow = m.getArgAsFloat(0);
+				//mLabelBeat->setLabel(ofToString(mOsc_rnow));
+				if (_debug) cout << "OSC received: rnow: "<< mOsc_rnow << endl;
+				//mHasReadMessages = true;
+			} else if(m.getAddress() == "/antescofo/pitch"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+				mOsc_pitch = m.getArgAsFloat(0);
+				mLabelPitch->setLabel(ofToString(mOsc_pitch));
+				if (_debug) cout << "OSC received: pitch: "<< mOsc_pitch << endl;
+				mHasReadMessages = true;
+			} else if(m.getAddress() == "/antescofo/accomp_pos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+				if (_debug) cout << "OSC received: accomp_pos: "<<  m.getArgAsFloat(0) << endl;
+				mHasReadMessages = true;
+				if (audioTrack) audioTrack->fakePlay(m.getArgAsFloat(0));
+			} else if(m.getAddress() == "/antescofo/accomp_speed"  && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
+				mOsc_accomp_speed= m.getArgAsFloat(0);
+				mLabelAccompSpeed->setLabel(ofToString(mOsc_accomp_speed));
+				if (_debug) cout << "OSC received: accomp speed: "<< mOsc_accomp_speed << endl;
+				mHasReadMessages = true;
+				if (audioTrack) audioTrack->setFakeSpeed(mOsc_accomp_speed);
+				mLabelAccompSpeed->setVisible(true);
+				guiBottom->getWidget(TEXT_CONSTANT_BUTTON_SPEED)->setVisible(true);
+				bShouldRedraw = true;
+			} else if(m.getAddress() == "/antescofo/loadscore"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
+				string scorefile = m.getArgAsString(0);
+				if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
+				mHasReadMessages = true;
+				loadScore(scorefile, false);
+				bShouldRedraw = true;
+			} else {
+				mHasReadMessages = false;
+				// unrecognized message: display on the bottom of the screen
+				string msg_string;
+				msg_string = m.getAddress();
+				msg_string += ": ";
+				for(int i = 0; i < m.getNumArgs(); i++){
+					// get the argument type
+					msg_string += m.getArgTypeName(i);
+					msg_string += ":";
+					// display the argument - make sure we get the right type
+					if(m.getArgType(i) == OFXOSC_TYPE_INT32){
+						msg_string += ofToString(m.getArgAsInt32(i));
+					}
+					else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
+						msg_string += ofToString(m.getArgAsFloat(i));
+					}
+					else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
+						msg_string += m.getArgAsString(i);
+					}
+					else{
+						msg_string += "unknown";
+					}
 				}
-				else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-					msg_string += ofToString(m.getArgAsFloat(i));
-				}
-				else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-					msg_string += m.getArgAsString(i);
-				}
-				else{
-					msg_string += "unknown";
-				}
+				// add to the list of strings to display
+				/*	msg_string[current_msg_string] = msg_string;
+					timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
+					current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
+				// clear the next line
+				msg_strings[current_msg_string] = "";
+				*/
+				cout << "OSC received: unknown msg: "<< msg_string << endl;
 			}
-			// add to the list of strings to display
-			/*	msg_string[current_msg_string] = msg_string;
-				timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
-				current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
-			// clear the next line
-			msg_strings[current_msg_string] = "";
-			*/
-			cout << "OSC received: unknown msg: "<< msg_string << endl;
+			break;
 		}
-		break;
+	}
+	catch (exception& e) {
+		cerr << "OSC HasWaitingMessage exception raised" <<  endl;
 	}
 
 	// if we read something, advance playhead
