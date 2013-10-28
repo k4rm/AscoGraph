@@ -73,6 +73,7 @@
 #define TEXT_CONSTANT_BUTTON_PREV_EVENT         "prev event"
 #define TEXT_CONSTANT_BUTTON_BPM                "Tempo: "
 #define TEXT_CONSTANT_BUTTON_SAVE_COLOR         "Save color"
+#define TEXT_CONSTANT_BUTTON_CUEPOINTS		"cue points"
 #define TEXT_CONSTANT_PARSE_ERROR               " /!\\ Antescofo Score parsing error /!\\  "
 #define TEXT_CONSTANT_SIMULATION_ERROR          " /!\\ Antescofo performance simulation error /!\\  "
 #define TEXT_CONSTANT_BUTTON_CANCEL             "Cancel"
@@ -228,6 +229,8 @@ class ofxAntescofog : public ofBaseApp{
 		bool bShouldRedraw;
 		//ofRectangle logoInria;
 		ofImage mLogoInria, mLogoIrcam;
+		vector<string> cuepoints;
+		ofxUIDropDownList* mCuepointsDdl;
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;

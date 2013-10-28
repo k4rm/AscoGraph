@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.072")
+set(ASCOGRAPH_VERSION_NUMBER "0.073")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -41,6 +41,8 @@ flex_target(anteflex ${ANTESCOFO_PARSER_PATH}/parser/scanner.lll ${ANTESCOFO_PAR
 add_flex_bison_dependency(anteflex anteyacc)
 
 
+set (PATH_MACOS_SDK "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/")
+set(CMAKE_OSX_SYSROOT ${PATH_MACOS_SDK})
 
 #message(STATUS "Using incl path: ${ANTESCOFO_PARSER_INCL_PATH}")
 message(STATUS "Using bison flags: ${BISON_anteyacc_COMPILE_FLAGS} ; outputs: ${BISON_anteyacc_OUTPUTS} ")
@@ -507,7 +509,7 @@ elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 endif ()
 
-set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} /usr/lib /usr/local/lib )
+set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib )
 set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /usr/include /usr/local/include )
 
 message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
@@ -585,6 +587,7 @@ endmacro(of_find_glut)
 if ( APPLE )
     of_find_library("quicktime")
     of_find_library("accelerate")
+    of_find_library("veclib")
     of_find_library("qtkit")
     of_find_library("coreaudio")
     of_find_library("corevideo")
@@ -615,6 +618,7 @@ if ( APPLE )
     of_find_library("rtAudio")
     of_find_library("sndfile")
     of_find_library("openal")
+    of_find_library("stdc++")
     #of_find_library("openFrameWorksDebug")
 endif(APPLE)
 

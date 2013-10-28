@@ -612,8 +612,10 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		movingActionRect.x = args.x;
 		movingActionRect.y = args.y;
 		*/
-		if (clickedGroup->header)
+		if (clickedGroup->header) {
+			cout << "show selection: lineNum_begin:" << clickedGroup->header->lineNum_begin << " lineNum_end:" << clickedGroup->header->lineNum_end << endl;
 			mAntescofog->editorShowLine(clickedGroup->header->lineNum_begin, clickedGroup->header->lineNum_end);
+		}
 	}
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 

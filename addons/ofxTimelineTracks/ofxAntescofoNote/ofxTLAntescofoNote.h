@@ -114,7 +114,6 @@ typedef struct {
 } ofxTLAntescofoNoteOn;
 
 
-
 class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 {
 	public:
@@ -193,6 +192,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofColor color_note_rest;
 	ofColor color_resize_note_rest, color_key, color_text, color_highlight, color_disabled, color_modalBg, color_outline;
 	antescofo_ascograph_offline *mAntescofo;
+	vector<string> cuepoints;
 
 	protected:
 	virtual void update(ofEventArgs& args);
@@ -265,6 +265,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	MusicXML2::antescofowriter* AntescofoWriter;
 	float mDur_in_secs, mCurSecs;
 	int getNoteType(Event *e);
+	void getcues();
 
 	void draw_showPianoRoll();
 	void draw_showStaves();

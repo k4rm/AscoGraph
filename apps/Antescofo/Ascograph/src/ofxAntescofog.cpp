@@ -536,11 +536,14 @@ void ofxAntescofog::setupUI() {
 	mLabelPitch = new ofxUILabel("0", fontsize);
 	guiBottom->addWidgetRight(mLabelPitch);
 	mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
-	guiBottom->addWidgetDown(mLabelAccompSpeed);
-	mLabelAccompSpeed->setVisible(false);
-	mLabelAccompSpeed = new ofxUILabel("0", fontsize);
-	guiBottom->addWidgetRight(mLabelAccompSpeed);
-	mLabelAccompSpeed->setVisible(false);
+
+	 
+	// drop down list
+	//guiBottom->addWidgetDown(new ofxUILabel("Cue points", OFX_UI_FONT_MEDIUM)); 
+	mCuepointsDdl = new ofxUIDropDownList(100, TEXT_CONSTANT_BUTTON_CUEPOINTS, cuepoints, OFX_UI_FONT_SMALL);
+	mCuepointsDdl->setAllowMultiple(false);
+	mCuepointsDdl->setAutoClose(true);
+	guiBottom->addWidgetDown(mCuepointsDdl);
 
 	// event buttons
 	space = new ofxUISpacer(3, 1);
@@ -566,6 +569,12 @@ void ofxAntescofog::setupUI() {
 		mEditButton->setVisible(false);
 		mEditButton->setLabelVisible(false);
 	}
+
+	guiBottom->addWidgetDown(mLabelAccompSpeed);
+	mLabelAccompSpeed->setVisible(false);
+	mLabelAccompSpeed = new ofxUILabel("0", fontsize);
+	guiBottom->addWidgetRight(mLabelAccompSpeed);
+	mLabelAccompSpeed->setVisible(false);
 
 	guiElevator = new ofxUICanvas(0, score_y, 17, ofGetWindowHeight() - score_y);
 	elevator = new ofxUIRangeSlider(3, 0*score_y+2, 12, ofGetWindowHeight() - score_y - 6, 1, 255, 200, 255, "elevator", OFX_UI_FONT_SMALL);
@@ -1788,6 +1797,11 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 
 		bpm = timeline.getBPM();
 		mSliderBPM->setValue(bpm);
+		// get cuepoints
+		mCuepointsDdl->clearToggles();
+		for (vector<string>::iterator i = ofxAntescofoNote->cuepoints.begin(); i != ofxAntescofoNote->cuepoints.end(); i++) {
+			mCuepointsDdl->addToggle(*i);
+		}
 		update();
 
 		if (sendOsc) {
@@ -2093,7 +2107,22 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		    ny = ofGetWindowHeight() + topy - score_h;
 	    score_y = ny;
     }
-
+    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_CUEPOINTS) {
+	    cout << "Cuepoints Drop Down List hit: " << endl; 
+	    vector<ofxUIWidget *> &selected = mCuepointsDdl->getSelected(); 
+	    for(int i = 0; i < selected.size(); i++)
+	    {
+		    string s = selected[i]->getName();
+		    cout << "Sending OSC: gotolabel " << s << endl; 
+		    ofxOscMessage m;
+		    m.setAddress("/antescofo/cmd");
+		    m.addStringArg("gotolabel");
+		    m.addStringArg(s);
+		    mOSCsender.sendMessage(m);
+		    break;
+	    }
+	    mCuepointsDdl->clearSelected();
+    }
 }
 
 void ofxAntescofog::editorDoubleclicked(int line)

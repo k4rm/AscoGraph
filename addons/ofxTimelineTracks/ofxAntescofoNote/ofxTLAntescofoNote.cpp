@@ -1391,7 +1391,27 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	sort(switches.begin(), switches.end(), switchsort);
 
 	update_duration();
+	getcues();
 	return switches.size();
+}
+
+
+void ofxTLAntescofoNote::getcues() {
+
+	if (switches.size())
+	{
+		cout << "Getting cue points:";
+		for (uint iter=1; iter < mNetscore->size(); ++iter)
+		{
+			if (!(mNetscore->at(iter)->cuename.empty()))
+			{
+				cout << " " << mNetscore->at(iter)->cuename << endl;
+				cuepoints.push_back(mNetscore->at(iter)->cuename);
+			}
+		}
+		cout << endl;
+	}
+
 }
 
 void ofxTLAntescofoNote::update_duration() {
