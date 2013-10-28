@@ -1400,6 +1400,7 @@ void ofxTLAntescofoNote::getcues() {
 
 	if (switches.size())
 	{
+		cuepoints.clear();
 		cout << "Getting cue points:";
 		for (uint iter=1; iter < mNetscore->size(); ++iter)
 		{

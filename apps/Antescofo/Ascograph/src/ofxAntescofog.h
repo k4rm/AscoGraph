@@ -230,6 +230,7 @@ class ofxAntescofog : public ofBaseApp{
 		//ofRectangle logoInria;
 		ofImage mLogoInria, mLogoIrcam;
 		vector<string> cuepoints;
+		string mPlayLabel;
 		ofxUIDropDownList* mCuepointsDdl;
 
 		// OpenSoundControl communication with MAX/MSP or PureData

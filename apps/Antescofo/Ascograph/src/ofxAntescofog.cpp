@@ -191,6 +191,7 @@ void ofxAntescofog::menu_item_hit(int n)
 				m.setAddress("/antescofo/cmd");
 				m.addStringArg("stop");
 				mOSCsender.sendMessage(m);
+				mPlayLabel.clear();
 				break;
 			}
 		case INT_CONSTANT_BUTTON_PLAYSTRING:
@@ -851,6 +852,7 @@ void ofxAntescofog::update() {
 				string scorefile = m.getArgAsString(0);
 				if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
 				mHasReadMessages = true;
+				mCuepointsDdl->clearToggles();
 				loadScore(scorefile, false);
 				bShouldRedraw = true;
 			} else {
@@ -1975,7 +1977,12 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
-		    m.addStringArg("play");
+		    cout << "mPlayLabel: " << mPlayLabel << endl;
+		    if (mPlayLabel.size()) {
+			    m.addStringArg("playfrom");
+			    m.addStringArg(mPlayLabel);
+		    } else
+			    m.addStringArg("play");
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
 	    }
@@ -2017,6 +2024,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
             ofxOscMessage m;
             m.setAddress("/antescofo/cmd");
             m.addStringArg("stop");
+	    mPlayLabel.clear();
             mOSCsender.sendMessage(m);
             b->setValue(false);
         }
@@ -2112,12 +2120,12 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    vector<ofxUIWidget *> &selected = mCuepointsDdl->getSelected(); 
 	    for(int i = 0; i < selected.size(); i++)
 	    {
-		    string s = selected[i]->getName();
-		    cout << "Sending OSC: gotolabel " << s << endl; 
+		    mPlayLabel = selected[i]->getName();
+		    cout << "Sending OSC: gotolabel " << mPlayLabel << endl; 
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
 		    m.addStringArg("gotolabel");
-		    m.addStringArg(s);
+		    m.addStringArg(mPlayLabel);
 		    mOSCsender.sendMessage(m);
 		    break;
 	    }
