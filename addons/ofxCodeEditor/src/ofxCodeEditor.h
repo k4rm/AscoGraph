@@ -32,6 +32,7 @@
 - (int) getNbLines;
 - (int) getLenght;
 - (string) getSelection;
+- (void) braceMatch;
 //- (void) showAutocompletion;
 - (void) loadFile: (string) filename;
 - (void) getEditorContent: (string&) content;

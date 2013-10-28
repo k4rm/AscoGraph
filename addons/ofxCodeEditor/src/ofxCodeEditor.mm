@@ -345,6 +345,14 @@ static const char * box_xpm[] = {
 	return string("");
 }
 
+- (void) braceMatch //:  (int) pos
+{
+	int pos = [mEditor getGeneralProperty:SCI_GETCURRENTPOS];
+	cout << pos << endl;
+	int pm = (int)[mEditor getGeneralProperty:SCI_BRACEMATCH parameter:pos];
+	cout << "pm= " << pm << endl;
+}
+
 
 - (void) searchText: (string) str
 {
@@ -362,7 +370,7 @@ static const char * box_xpm[] = {
 	//if (!res) return;
 	long matchStart = [mEditor getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
 	long matchEnd = [mEditor getGeneralProperty: SCI_GETSELECTIONEND parameter: 0];
-	[mEditor setGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd];
+	[mEditor getGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd];
 	cout << "searchText: " << str << "-->"<< matchStart<< ":" << matchEnd << endl;
 	//[ self showLine:matchStart lineb:matchEnd ];
 
