@@ -59,7 +59,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 
 void ofxAntescofog::menu_item_hit(int n)
 {
-	cout << "menu = " << n << endl;
+	//cout << "menu = " << n << endl;
 	switch (n) {
 		case INT_CONSTANT_BUTTON_LOAD:
 			{
@@ -93,7 +93,7 @@ void ofxAntescofog::menu_item_hit(int n)
 			saveAsScore();
 			break;
 		case INT_CONSTANT_BUTTON_COLORSETUP:
-			if (!bShowColorSetup) {
+			if (!bShowColorSetup && !bShowOSCSetup) {
 				timeline.disable();
 				bShowColorSetup = true;
 				bShowOSCSetup = false;
@@ -102,7 +102,7 @@ void ofxAntescofog::menu_item_hit(int n)
 			} 
 			break;
 		case INT_CONSTANT_BUTTON_OSCSETUP:
-			if (!bShowOSCSetup) {
+			if (!bShowOSCSetup && !bShowColorSetup) {
 				timeline.disable();
 				bShowColorSetup = false;
 				bShowOSCSetup = true;
@@ -2128,6 +2128,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 void ofxAntescofog::editorDoubleclicked(int line)
 {
 	ofxAntescofoNote->showNote(line);
+	[ editor braceMatch ];
 	bShouldRedraw = true;
 }
 
