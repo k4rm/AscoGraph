@@ -118,10 +118,11 @@ void ofxTLTrack::_draw(){
 	ofPushStyle();
 	
 	if(focused){
-		ofFill();
+		//ofFill();
+		ofNoFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
-		//ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-		ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4);
+		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		//ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4);
 	}
 	
 	ofNoFill();
@@ -131,8 +132,8 @@ void ofxTLTrack::_draw(){
 	else{
 		ofSetColor(timeline->getColors().outlineColor);
 	}	
-	//ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-	ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4);
+	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	//ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4);
 	ofPopStyle();
 
 	ofPushStyle();

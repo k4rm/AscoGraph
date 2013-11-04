@@ -201,6 +201,7 @@ class ActionCurve {
 		SeqContFunction* seq;
 		vector<double> delays;
 		list<Var*> &vars;
+		bool is_resizing;
 		
 		// parser strucs:
 		vector<SimpleContFunction>* simple_vect;

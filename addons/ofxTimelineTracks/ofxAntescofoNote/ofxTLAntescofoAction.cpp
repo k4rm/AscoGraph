@@ -17,6 +17,7 @@
 #include <location.hh>
 #include <position.hh>
 #include <ofxAntescofog.h>
+#include "ofxHotKeys.h"
 #include "ofxCodeEditor.h"
 #include "BeatCurve.h"
 
@@ -556,6 +557,13 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 	for (vector<ActionCurve*>::iterator i = ac->curves.begin(); !res && i != ac->curves.end(); i++) {
 		ActionCurve *c = (*i);
 		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
+			if (ofGetModifierSelection()) { // resize curve box
+				int xc = c->beatcurves[iac]->bounds.x; 
+				int yc = c->beatcurves[iac]->bounds.y; 
+				if ((xc - 5 <= args.x || args.x <= xc + 5) && (yc - 5 <= args.y || args.y <= yc + 5)) {
+					cout << "Resizing curve box !" << endl;
+				}
+			}
 			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
 				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
 					ofRange zr = getZoomBounds();
@@ -1384,7 +1392,7 @@ int ActionMultiCurves::getHeight() {
 }
 
 ActionCurve::ActionCurve(list<Var*> &var, SeqContFunction* seq_, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionMultiCurves* parentCurve_)
-	: parentCurve(parentCurve_), vars(var), seq(seq_)
+	: parentCurve(parentCurve_), vars(var), seq(seq_), is_resizing(false)
 {
 	vars = var;
 	for (list<Var*>::iterator i = var.begin(); i != var.end(); i++) {

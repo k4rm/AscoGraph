@@ -541,7 +541,7 @@ elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 endif ()
 
 set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib )
-set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /usr/include /usr/local/include )
+set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain//usr/include/ /usr/include /usr/local/include )
 
 message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
 #message(STATUS "Looking for includes in  :" ${CMAKE_INCLUDE_PATH})

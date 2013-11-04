@@ -99,10 +99,11 @@ void ofxTLTrackHeader::draw(){
 	ofPushStyle();
 	
 	if(track->hasFocus()){
-		ofFill();
+		//ofFill();
+		ofNoFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
-		//ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-		ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4);
+		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		//ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4);
 	}
 
 	ofNoFill();
@@ -129,9 +130,10 @@ void ofxTLTrackHeader::draw(){
     nameField.bounds.y = bounds.y;
     nameField.draw();
 	
+	ofNoFill();
 	ofSetColor(track->getTimeline()->getColors().outlineColor);
-	//ofRect(bounds);
-	ofRoundRect(bounds, 4);
+	ofRect(bounds);
+	//ofRoundRect(bounds, 4);
 	
 	//draw grippy lines on the footer draggable element
 	if(draggingSize){

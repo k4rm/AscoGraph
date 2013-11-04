@@ -562,6 +562,8 @@ inline void ofQuadraticBezierVertex(float cpx, float cpy, float x, float y, floa
 }
 
 inline void ofRoundRect(float x, float y, float w, float h, float r = 0.) {
+	ofNoFill();
+	ofSetLineWidth(1);
 	ofBeginShape();
 	ofVertex(x+r, y);
 	ofVertex(x+w-r, y);
