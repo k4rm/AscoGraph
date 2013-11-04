@@ -551,3 +551,31 @@ class ofxTimeline : ofThread {
 	bool isFrameBased;
 	float durationInSeconds;
 };
+
+inline void ofQuadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY) {
+	float cp1x = prevX + 2.0/3.0*(cpx - prevX);
+	float cp1y = prevY + 2.0/3.0*(cpy - prevY);
+	float cp2x = cp1x + (x - prevX)/3.0;
+	float cp2y = cp1y + (y - prevY)/3.0;
+	// finally call cubic Bezier curve function
+	ofBezierVertex(cp1x, cp1y, cp2x, cp2y, x, y);
+}
+
+inline void ofRoundRect(float x, float y, float w, float h, float r = 0.) {
+	ofBeginShape();
+	ofVertex(x+r, y);
+	ofVertex(x+w-r, y);
+	ofQuadraticBezierVertex(x+w, y, x+w, y+r, x+w-r, y);
+	ofVertex(x+w, y+h-r);
+	ofQuadraticBezierVertex(x+w, y+h, x+w-r, y+h, x+w, y+h-r);
+	ofVertex(x+r, y+h);
+	ofQuadraticBezierVertex(x, y+h, x, y+h-r, x+r, y+h);
+	ofVertex(x, y+r);
+	ofQuadraticBezierVertex(x, y, x+r, y, x, y+r);
+	ofEndShape();
+}
+
+inline void ofRoundRect(ofRectangle& r, float ra = 0.) {
+	ofRoundRect(r.x, r.y, r.width, r.height, ra);
+}
+

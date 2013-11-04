@@ -784,6 +784,9 @@ void ofxAntescofog::setup(){
 	drawCache.end();
 
 	bSetupDone = true;
+
+	if (mScore_filename.size())
+		loadScore(mScore_filename);
 }
 
 //--------------------------------------------------------------

@@ -15,23 +15,14 @@
 #include "Score.h"
 #include "Action.h"
 
+using namespace std;
+
 class ofxAntescofog;
 class Score;
 class ofxTLAntescofoNote;
 class Curve;
 class ActionRect;
 class BeatCurve;
-
-using namespace std;
-
-class Display_cfwd {
-	public:
-		string label;
-		double grain;
-		vector< vector<double> > values;
-		vector<double> delays;
-};
-
 class ActionGroupHeader;
 class ActionGroup;
 class ActionMessage;

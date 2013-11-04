@@ -1345,8 +1345,9 @@ void ofxTimeline::draw(){
 		ofSetLineWidth(1);
 		ofNoFill();
 		ofSetColor(0);
-		ofRect(totalDrawRect);
-		ofSetColor(0);
+		//ofRect(totalDrawRect);
+		//ofRoundRect(totalDrawRect, 3);
+		//ofSetColor(0);
 
 		if (pages.size() > 1) {
 			tabs->draw();		
@@ -1941,3 +1942,4 @@ float ofxTimeline::beatToNormalizedX(float b) {
 float ofxTimeline::normalizedXToBeat(float x) {
     return x * getDurationInSeconds() * getBPM() / 60;
 }
+
