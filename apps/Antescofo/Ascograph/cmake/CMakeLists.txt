@@ -353,12 +353,40 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm
-
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxCodeEditor.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/ofxConsole.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/ofOpenALSoundPlayer_TimelineAdditions/ofOpenALSoundPlayer_TimelineAdditions.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fft.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
+	# midi
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_advancedsequencer.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_driver.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_driverdump.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_edittrack.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_file.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_fileread.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_filereadmultitrack.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_fileshow.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_filewrite.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_filewritemultitrack.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_keysig.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_manager.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_matrix.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_midi.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_msg.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_multitrack.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_parser.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_process.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_queue.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_sequencer.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_showcontrol.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_showcontrolhandler.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_smpte.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_sysex.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_tempo.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_tick.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_track.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_utils.cpp
 
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
@@ -437,6 +465,9 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/include
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexlib
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/cocoa
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/include/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/include/jdksmidi/
 
 	#${OPENFRAMEWORKS_ROOT}/libs/fmodex/include
         #${OPENFRAMEWORKS_ROOT}/libs/FreeImage/include
@@ -499,7 +530,7 @@ endif()
 
 if ( APPLE )
     set (CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
-    set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib", ".so")
+    set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
     #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -mmacosx-version-min=10.6")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG=1 -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_MAC_OS")

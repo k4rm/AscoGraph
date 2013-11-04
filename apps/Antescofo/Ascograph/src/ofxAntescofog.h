@@ -275,6 +275,9 @@ class ofxAntescofog : public ofBaseApp{
 		void askToSaveScore();
 		bool edited();
 
+		// MIDI file conversion
+		void setup_Midi(string& midifile);
+
 		// simulation
 		bool bIsSimulating;
 		void simulate();

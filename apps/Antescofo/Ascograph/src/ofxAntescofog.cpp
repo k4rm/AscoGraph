@@ -6,6 +6,7 @@
 #include "ofxAntescofog.h"
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
+#include "ofxMidiFilePlayer.h"
 
 bool enable_simulate = true;
 
@@ -1773,7 +1774,13 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 
 	// save editor position
 	int lineEditor = [ editor getCurrentPos];
-	cout << "Editor cur line: " << lineEditor << endl;
+
+
+	// if it's a midi file, convert it to Antescofo language
+	string ext = ofFilePath::getFileExt(filename);
+	if (ext == "MID" || ext == "mid") {
+		setup_Midi(filename);
+	}
 
 	string antescore = filename;
 	ofxAntescofoNote->clear_actions();
@@ -2262,4 +2269,29 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 	bringTrackToTop(zoomer);
 }
 
+
+
+///////////////////////////////////
+//// MIDI conversion
+//////////////////////////////////
+void ofxAntescofog::setup_Midi(string& filename)
+{
+	ofxMidiFilePlayer * midif = new ofxMidiFilePlayer();
+	bool shouldSequenceLoop = false;
+	int midiPortNumber = 0;
+	cout << "Trying to convert a MIDI file: " << filename << endl;
+	midif->setup(filename, midiPortNumber, shouldSequenceLoop);
+
+	string outstr = midif->createAntecofoNotes();
+	cerr << "converted score is:" << endl << outstr << endl;
+
+	ofstream outfile;
+	string outfilename = TEXT_CONSTANT_TEMP_FILENAME;
+
+	outfile.open(outfilename.c_str());
+	outfile << outstr;
+	outfile.close();
+	
+	filename = outfilename;
+}
 
