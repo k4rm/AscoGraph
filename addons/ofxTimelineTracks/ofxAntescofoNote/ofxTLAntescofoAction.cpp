@@ -268,9 +268,10 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 			// update curves rectangle bounds
 			int boxy = c->header->rect.y + c->header->HEADER_HEIGHT;
 			int boxh = (bounds.height - c->header->HEADER_HEIGHT - curh - 5) / c->curves.size();
+			boxh *= c->resize_factor;
 			int boxw = c->getWidth();
 			int boxx = ag->header->rect.x;
-			if (c->delay) boxx = get_x((c->header->beatnum + c->header->delay));
+			if (c->delay) boxx = get_x(c->header->beatnum + c->header->delay);
 			//cout << "boxx: " << boxx << " delay:" << c->delay << endl;
 			ofRectangle cbounds(boxx, boxy, boxw, boxh);
 			for (int k = 0; k < c->curves.size(); k++) {
@@ -558,9 +559,10 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 		ActionCurve *c = (*i);
 		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
 			if (ofGetModifierSelection()) { // resize curve box
-				int xc = c->beatcurves[iac]->bounds.x; 
-				int yc = c->beatcurves[iac]->bounds.y; 
-				if ((xc - 5 <= args.x || args.x <= xc + 5) && (yc - 5 <= args.y || args.y <= yc + 5)) {
+				int xc = c->beatcurves[iac]->bounds.x;
+				int xw = c->beatcurves[iac]->bounds.width;
+				int yc = c->beatcurves[iac]->bounds.y + c->beatcurves[iac]->bounds.height;
+				if ((xc - 2 <= args.x || args.x <= xc + xw + 2) && (yc - 5 <= args.y || args.y <= yc + 5)) {
 					cout << "Resizing curve box !" << endl;
 				}
 			}
@@ -689,10 +691,28 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
 			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
+				if (ofGetModifierSelection()) { // is cmd pressed for resizing curve...
+					int xc = c->beatcurves[iac]->bounds.x;
+					int xw = c->beatcurves[iac]->bounds.width;
+					int yc = c->beatcurves[iac]->bounds.y + c->beatcurves[iac]->bounds.height;
+
+					if ((xc - 2 <= args.x || args.x <= xc + xw + 2)) {
+						if (yc - 5 <= args.y) {
+							//cout << "Resizing curve box !" << endl;
+							c->parentCurve->resize_factor += 0.01;
+						} else if (args.y <= yc + 5)
+							c->parentCurve->resize_factor -= 0.01;
+
+						if (c->parentCurve->resize_factor == 1.) {
+							// TODO c->beatcurves[iac]->bounds.height -= selectionRangeAnchor.y;
+						}
+					}
+				}
+
 				//if (c->beatcurves[iac]->bounds.inside(args.x, args.y) {
 					//if (c->beatcurves.size() == 1) {
 						int w = c->beatcurves[iac]->bounds.width;
-						cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged: howmany:"<< (*j)->howmany << " varname:"<< c->varname << endl;
+						//cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged: howmany:"<< (*j)->howmany << " varname:"<< c->varname << endl;
 						c->beatcurves[iac]->mouseDragged(args, millis);
 
 						// extend curve box width on mouseDrag
@@ -1162,6 +1182,7 @@ void ActionGroup::drawModalContent(ofxTLAntescofoAction *tlAction)
    Curve
  */
 ActionMultiCurves::ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */Curve* c, float delay_, Event *e, ActionGroupHeader* header_)
+	: resize_factor(0.5)
 {
 	//tlAction = tlAction_;
 	delay = delay_;
@@ -1392,7 +1413,7 @@ int ActionMultiCurves::getHeight() {
 }
 
 ActionCurve::ActionCurve(list<Var*> &var, SeqContFunction* seq_, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionMultiCurves* parentCurve_)
-	: parentCurve(parentCurve_), vars(var), seq(seq_), is_resizing(false)
+	: parentCurve(parentCurve_), vars(var), seq(seq_)
 {
 	vars = var;
 	for (list<Var*>::iterator i = var.begin(); i != var.end(); i++) {

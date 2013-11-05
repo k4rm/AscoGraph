@@ -156,6 +156,7 @@ class ActionMultiCurves : public ActionGroup {
 		int getHeight();
 		void setWidth(int w);
 
+		float resize_factor;
 		ofxTLAntescofoAction *tlAction;
 		Curve* antescofo_curve;
 		vector<ActionCurve* > curves;
@@ -201,7 +202,6 @@ class ActionCurve {
 		SeqContFunction* seq;
 		vector<double> delays;
 		list<Var*> &vars;
-		bool is_resizing;
 		
 		// parser strucs:
 		vector<SimpleContFunction>* simple_vect;

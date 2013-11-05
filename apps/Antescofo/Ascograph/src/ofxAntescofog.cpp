@@ -3,6 +3,7 @@
 #include <sys/time.h>
 
 //#include "ofxConsole.h"
+#include "ofxHotKeys.h"
 #include "ofxAntescofog.h"
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
@@ -1648,7 +1649,7 @@ void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 
 			//.addPatch( dragInfo.files[i], dragInfo.position );
 			ofxAntescofoNote->clear(); // TODO ask for Saving file
-			string str = "ofxAntescofog: trying to load Music XML file :" + dragInfo.files[i];
+			string str = "ofxAntescofog: trying to load file :" + dragInfo.files[i];
 			console->addln(str);
 			int n = loadScore(string(dragInfo.files[i]));
 
@@ -1782,7 +1783,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	// if it's a midi file, convert it to Antescofo language
 	string ext = ofFilePath::getFileExt(filename);
 	if (ext == "MID" || ext == "mid") {
-		setup_Midi(filename);
+		setup_Midi(filename, ofGetModifierSelection());
 	}
 
 	string antescore = filename;
@@ -2277,7 +2278,7 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 ///////////////////////////////////
 //// MIDI conversion
 //////////////////////////////////
-void ofxAntescofog::setup_Midi(string& filename)
+void ofxAntescofog::setup_Midi(string& filename, bool do_actions)
 {
 	ofxMidiFilePlayer * midif = new ofxMidiFilePlayer();
 	bool shouldSequenceLoop = false;
@@ -2285,7 +2286,12 @@ void ofxAntescofog::setup_Midi(string& filename)
 	cout << "Trying to convert a MIDI file: " << filename << endl;
 	midif->setup(filename, midiPortNumber, shouldSequenceLoop);
 
-	string outstr = midif->createAntecofoNotes();
+	string outstr;
+	if (do_actions)
+		outstr = midif->createAntecofoActions();
+	else
+		outstr = midif->createAntecofoNotes();
+
 	cerr << "converted score is:" << endl << outstr << endl;
 
 	ofstream outfile;
