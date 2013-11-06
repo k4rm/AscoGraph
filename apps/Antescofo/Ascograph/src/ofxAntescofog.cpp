@@ -53,7 +53,8 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	audioTrack = NULL;
 	ofxAntescofoSim = 0;
 
-	if (argc > 1) mScore_filename = argv[1];
+	if (argc > 1 && argv[1][0] != '-')
+		mScore_filename = argv[1];
 
 	gettimeofday(&last_draw_time, 0);
 }
