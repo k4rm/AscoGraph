@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.073")
+set(ASCOGRAPH_VERSION_NUMBER "0.074")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -387,7 +387,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_tick.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_track.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_utils.cpp
-
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
 
@@ -417,6 +417,8 @@ SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofx
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/GLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/GLWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/ofxCocoa.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
 # scintilla
 file ( GLOB_RECURSE SCINTILLA_SOURCES
@@ -465,9 +467,10 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/include
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexlib
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/cocoa
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/include/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/include/jdksmidi/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidifile/include/
 
 	#${OPENFRAMEWORKS_ROOT}/libs/fmodex/include
         #${OPENFRAMEWORKS_ROOT}/libs/FreeImage/include

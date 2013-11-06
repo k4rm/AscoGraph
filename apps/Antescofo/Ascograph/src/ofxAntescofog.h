@@ -277,6 +277,8 @@ class ofxAntescofog : public ofBaseApp{
 
 		// MIDI file conversion
 		void setup_Midi(string& midifile, bool do_actions);
+		string convertMidiFileToActions(string& midifile);
+		string convertMidiFileToNotes(string& midifile);
 
 		// simulation
 		bool bIsSimulating;

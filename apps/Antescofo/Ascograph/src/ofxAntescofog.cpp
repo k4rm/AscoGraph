@@ -7,7 +7,8 @@
 #include "ofxAntescofog.h"
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
-#include "ofxMidiFilePlayer.h"
+#include "ofxMidiparser.h"
+//#include "ofxMidiFilePlayer.h"
 
 bool enable_simulate = true;
 
@@ -2280,17 +2281,28 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 //////////////////////////////////
 void ofxAntescofog::setup_Midi(string& filename, bool do_actions)
 {
+#if 0
 	ofxMidiFilePlayer * midif = new ofxMidiFilePlayer();
 	bool shouldSequenceLoop = false;
 	int midiPortNumber = 0;
+#endif
 	cout << "Trying to convert a MIDI file: " << filename << endl;
-	midif->setup(filename, midiPortNumber, shouldSequenceLoop);
 
 	string outstr;
+
+	if (do_actions)
+		outstr = convertMidiFileToActions(filename);
+	else
+		outstr = convertMidiFileToNotes(filename);
+
+#if 0
+	midif->setup(filename, midiPortNumber, shouldSequenceLoop);
+
 	if (do_actions)
 		outstr = midif->createAntecofoActions();
 	else
 		outstr = midif->createAntecofoNotes();
+#endif
 
 	cerr << "converted score is:" << endl << outstr << endl;
 
@@ -2303,4 +2315,29 @@ void ofxAntescofog::setup_Midi(string& filename, bool do_actions)
 	
 	filename = outfilename;
 }
+
+string ofxAntescofog::convertMidiFileToNotes(string& midifile) {
+	NSString *midifileNS = [NSString stringWithCString:midifile.c_str() encoding:[NSString defaultCStringEncoding]];
+	NSData* midicontent = [NSData dataWithContentsOfFile:midifileNS ];
+	ofxMidiParser* midiParser = [[ofxMidiParser alloc] init];
+	
+	int num = -1;
+	NSString *ret = [midiParser getAntescofoNotesForTrack:midicontent trackWanted:num];
+
+	string rets([ret UTF8String]);
+	return rets;
+}
+
+string ofxAntescofog::convertMidiFileToActions(string& midifile) {
+	NSString *midifileNS = [NSString stringWithCString:midifile.c_str() encoding:[NSString defaultCStringEncoding]];
+	NSData* midicontent = [NSData dataWithContentsOfFile:midifileNS ];
+	ofxMidiParser* midiParser = [[ofxMidiParser alloc] init];
+	
+	int num = -1;
+	NSString *ret = [midiParser getAntescofoActionsForTrack:midicontent trackWanted:num];
+
+	string rets([ret UTF8String]);
+	return rets;
+}
+
 
