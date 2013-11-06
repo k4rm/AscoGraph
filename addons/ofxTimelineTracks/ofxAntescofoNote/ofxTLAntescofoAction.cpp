@@ -10,7 +10,6 @@
 #include <string>
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
-//#include "ofxTLMultiCurves.h"
 #include "Score.h"
 #include "Values.h"
 #include "Action.h"

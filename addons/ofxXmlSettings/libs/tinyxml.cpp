@@ -1078,7 +1078,7 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 
 	Parse( data.c_str(), 0, encoding );
 
-	if (  Error() )
+	if (  XMLError() )
         return false;
     else
 		return true;

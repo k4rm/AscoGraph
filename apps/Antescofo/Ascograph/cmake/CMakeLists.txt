@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.074")
+set(ASCOGRAPH_VERSION_NUMBER "0.076")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -55,6 +55,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/duration.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Event.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Action.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/pre_Antescofo.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Antescofo_AscoGraph.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Expression.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Function.cpp
@@ -358,35 +359,6 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/ofOpenALSoundPlayer_TimelineAdditions/ofOpenALSoundPlayer_TimelineAdditions.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fft.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
-	# midi
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_advancedsequencer.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_driver.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_driverdump.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_edittrack.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_file.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_fileread.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_filereadmultitrack.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_fileshow.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_filewrite.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_filewritemultitrack.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_keysig.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_manager.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_matrix.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_midi.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_msg.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_multitrack.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_parser.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_process.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_queue.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_sequencer.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_showcontrol.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_showcontrolhandler.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_smpte.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_sysex.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_tempo.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_tick.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_track.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/src/jdksmidi_utils.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
@@ -468,9 +440,6 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexlib
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/cocoa
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/include/
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiFilePlayer/src/jdksmidi/include/jdksmidi/
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidifile/include/
 
 	#${OPENFRAMEWORKS_ROOT}/libs/fmodex/include
         #${OPENFRAMEWORKS_ROOT}/libs/FreeImage/include

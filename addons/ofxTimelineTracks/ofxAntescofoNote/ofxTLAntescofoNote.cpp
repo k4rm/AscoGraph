@@ -42,6 +42,14 @@
 #include <string>
 #include <sys/stat.h>
 
+// libmusicxcml includes
+#include "libmusicxml.h"
+#include "xml.h"
+#include "xmlfile.h"
+#include "xmlreader.h"
+#include "xml2antescofovisitor.h"
+#include "antescofowriter.h"
+
 #include "ofMain.h"
 #include "ofxTLAntescofoNote.h"
 #include <ofxAntescofog.h>
@@ -63,6 +71,7 @@ int bitmapFontSize = 8;
 int guiXPadding = 15;
 
 extern ofxConsole* console;
+//extern unsigned int error_counter;
 
 
 string str_error; // filled by our error()
@@ -1150,7 +1159,11 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		cerr << "loadScore: Input is a directory, you stupid... :)" << endl;
 		return 0;
 	}
+	//error_counter = 0;
+	cout << "Getting error counter: " << get_error_counter() << endl;
+	reset_error_counter();
 
+	mAntescofo->reset_error_count();
 	if (NULL == (score = mAntescofo->Parse(filename))) {
 		::error("%s\n", filename.c_str());
 		return 0;
@@ -1540,6 +1553,7 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 	f.close();
 	str_error.erase();
 	Score *score;
+	reset_error_counter();
 	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
 		::error("%s\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 		return 0;

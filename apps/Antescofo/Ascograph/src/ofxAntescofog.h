@@ -92,6 +92,7 @@
 @class ofxCodeEditor;
 class ofxCocoaWindow;
 class ofxTLBeatTicker;
+class rational;
 
 @interface ofxCocoaDelegate (ofxAntescofogAdditions)
 - (void)menu_item_hit:(id)sender;

@@ -1458,7 +1458,7 @@ public:
 		- The ErrorDesc() method will return the name of the error. (very useful)
 		- The ErrorRow() and ErrorCol() will return the location of the error (if known)
 	*/	
-	bool Error() const						{ return error; }
+	bool XMLError() const						{ return error; }
 
 	/// Contains a textual (english) description of the error if one occurs.
 	const char * ErrorDesc() const	{ return errorDesc.c_str (); }

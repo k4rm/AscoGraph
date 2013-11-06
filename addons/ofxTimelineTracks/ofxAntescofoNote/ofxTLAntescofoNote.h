@@ -41,17 +41,10 @@
 #pragma once 
 
 #include <Antescofo_AscoGraph.h>
-#include "ofxTLTrack.h"
 #include "ofxMidi.h"
-
-// libmusicxcml includes
-#include "libmusicxml.h"
-#include "xml.h"
-#include "xmlfile.h"
-#include "xmlreader.h"
-#include "xml2antescofovisitor.h"
-#include "antescofowriter.h"
 #include "ofxTLAntescofoAction.h"
+#include "antescofowriter.h"
+#include "rational.h"
 #include <sndfile.h>    // Sound-file reader
 
 

@@ -1712,7 +1712,7 @@ bool TiXmlDocument::ReadFromMemory( const char* pBuf, size_t sz, TiXmlEncoding e
 
     Parse( data.c_str(), 0, encoding );
 
-    if (  Error() )
+    if (  XMLError() )
 			return false;
     else
 	return true;
