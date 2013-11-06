@@ -8,7 +8,6 @@
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
 #include "ofxMidiparser.h"
-//#include "ofxMidiFilePlayer.h"
 
 bool enable_simulate = true;
 
@@ -2281,11 +2280,6 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 //////////////////////////////////
 void ofxAntescofog::setup_Midi(string& filename, bool do_actions)
 {
-#if 0
-	ofxMidiFilePlayer * midif = new ofxMidiFilePlayer();
-	bool shouldSequenceLoop = false;
-	int midiPortNumber = 0;
-#endif
 	cout << "Trying to convert a MIDI file: " << filename << endl;
 
 	string outstr;
@@ -2294,15 +2288,6 @@ void ofxAntescofog::setup_Midi(string& filename, bool do_actions)
 		outstr = convertMidiFileToActions(filename);
 	else
 		outstr = convertMidiFileToNotes(filename);
-
-#if 0
-	midif->setup(filename, midiPortNumber, shouldSequenceLoop);
-
-	if (do_actions)
-		outstr = midif->createAntecofoActions();
-	else
-		outstr = midif->createAntecofoNotes();
-#endif
 
 	cerr << "converted score is:" << endl << outstr << endl;
 
