@@ -10,6 +10,7 @@
 #include "ofxMidiparser.h"
 
 bool enable_simulate = true;
+bool disable_httpd = false;
 
 int _debug = 0;
 static string str_error; // filled by our error()
@@ -789,6 +790,9 @@ void ofxAntescofog::setup(){
 
 	if (mScore_filename.size())
 		loadScore(mScore_filename);
+
+	if (!disable_httpd)
+		setup_httpd();
 }
 
 //--------------------------------------------------------------
@@ -828,6 +832,8 @@ void ofxAntescofog::update() {
 				mOsc_beat = m.getArgAsFloat(0);
 				mLabelBeat->setLabel(ofToString(mOsc_beat));
 				if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
+				if (!disable_httpd)
+					httpd_update_beatpos();
 				if (mOsc_beat == 0)
 					ofxAntescofoNote->missedAll();
 				mHasReadMessages = true;
@@ -915,6 +921,9 @@ void ofxAntescofog::update() {
 		bShouldRedraw = true;
 	}
 	//guiBottom->update();
+
+	// http update
+	update_http_image();
 }
 
 //--------------------------------------------------------------
@@ -989,6 +998,9 @@ void ofxAntescofog::draw() {
 			bShouldRedraw = false;
 		}
 	}
+
+	// http draw
+	draw_http_image();
 }
 
 void ofxAntescofog::load()
@@ -1845,6 +1857,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	}
 
 	bShouldRedraw = true;
+	imageSaved = false;
 	return n;
 }
 
@@ -2325,5 +2338,92 @@ string ofxAntescofog::convertMidiFileToActions(string& midifile) {
 	string rets([ret UTF8String]);
 	return rets;
 }
+
+
+//////////////////////////////////////
+///// HTTP server
+//////////////////////////////////////
+void ofxAntescofog::draw_http_image() {
+	if(!imageSaved){
+		int x = 4;
+		int y = ofxAntescofoNote->getBounds().y - x + 5;
+		int w = ofxAntescofoNote->getBounds().width;
+		int h = ofxAntescofoNote->getBounds().height + 30;
+		image.grabScreen(x, y, w, h);
+
+		image.saveImage("www/screen.jpg");
+		imageSaved = true;
+	}
+
+}
+
+void ofxAntescofog::update_http_image() {
+	if(postedImgFile!=prevPostedImg){
+		postedImg.loadImage("upload/" + postedImgFile);
+		prevPostedImg = postedImgFile;
+	}
+}
+
+
+void ofxAntescofog::setup_httpd() {
+	image.allocate(score_w+10 , ofGetWindowHeight(),OF_IMAGE_COLOR);
+	imageSaved  = false;
+	httpd_server = ofxHTTPServer::getServer(); // get the instance of the server
+	httpd_server->setServerRoot("www");		 // folder with files to be served
+	httpd_server->setUploadDir("upload");		 // folder to save uploaded files
+	httpd_server->setCallbackExtensions("of");	 // extension of urls that aren't files but will generate a post or get event
+	httpd_server->setListener(*this);
+
+	httpd_server->start(8888);
+
+	mOSCsender_www.setup("localhost", 8889);
+}
+
+void ofxAntescofog::getRequest(ofxHTTPServerResponse & response){
+	//if(response.url=="/showScreen.of"){
+	cout << "++++++++++ got request: " << response.url << endl;
+	if(response.url=="/"){
+		response.response="<html> \
+			<script type='text/javascript' src='barTest.js'> \
+				   function beginrefresh(){ \
+					   setTimeout(\"window.location.reload();\",83); \
+				   }\
+				   window.onload=beginrefresh; \
+				BarTest(); \
+			</script>\
+			</head> <body> <img src=\"screen.jpg\"/> </body></html>";
+
+
+		imageSaved  = false;
+	}
+}
+
+void ofxAntescofog::postRequest(ofxHTTPServerResponse & response){
+	cout << "++++++++++ got post request: " << response.url << endl;
+	if(response.url=="/postImage.of"){
+		postedImgName = response.requestFields["name"];
+		postedImgFile = response.uploadedFiles[0];
+		response.response = "<html> <head> oF http server </head> <body> image " + response.uploadedFiles[0] + " received correctly <body> </html>";
+	}
+}
+
+void ofxAntescofog::httpd_update_beatpos()
+{
+	ofxOscMessage m;
+	cout<< "Sending OSC event beat pos: " << mOsc_beat << endl;
+	m.setAddress("/antescofo/event_beatpos");
+	m.addFloatArg(mOsc_beat);
+	mOSCsender_www.sendMessage(m);
+
+	char b[200];
+	getcwd(b, 200);
+	cout << b << endl;
+	ofstream ofs ("../Resources/www/pos", ofstream::trunc);
+
+	ofs << mOsc_beat << endl;
+
+	ofs.close();
+}
+
 
 

@@ -337,7 +337,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 					tmpcurbeat.rationalise();
 					//XXX ??? if (*c < 0) break;
 					if (*c)
-					AddNote(ANTESCOFO_CHORD, -(*c), new_dur, new_measure, tmpcurbeat);
+						AddNote(ANTESCOFO_CHORD, -(*c), new_dur, new_measure, tmpcurbeat);
 					//AddNote(ANTESCOFO_CHORD, (*c), new_dur, new_measure, tmpcurbeat);
 					else break;
 				}
@@ -485,7 +485,8 @@ void antescofowriter::final_compress()
 		next++;
 	for (; next != v_Notes.end(); next++) {
 		if (next->type == i->type) {
-			if (next->pitches == i->pitches && i->flags == ANTESCOFO_FLAG_TIED_START && next->flags == ANTESCOFO_FLAG_TIED_END) {
+			if (next->pitches == i->pitches && i->flags == ANTESCOFO_FLAG_TIED_START && next->flags == ANTESCOFO_FLAG_TIED_END
+					&& (next->flags != ANTESCOFO_FLAG_TREMOLO_START && next->flags != ANTESCOFO_FLAG_TREMOLO_STOP )) { // merge tied notes but not with tremolo
 				cout << "Got tied notes (pos:"<<i->m_pos.toFloat()<<")... merging note." <<endl;
 				merge_notes(i, next);
 			} else if (i->type == ANTESCOFO_TRILL && (i->flags == ANTESCOFO_FLAG_TREMOLO_START && next->flags == ANTESCOFO_FLAG_TREMOLO_STOP )) {
@@ -580,62 +581,62 @@ void antescofowriter::writenote(ostream &out, int pitch, measure_elt& e) {
 		if (p == 11) c = "B";
 		out << prefix << c << o;
 	}
-}
-
-
-			
-void antescofowriter::writestream(ostream &out, bool with_header) {
-	//expand();
-	//std::sort(v_Notes.begin(), v_Notes.end(), rationalless);
-	//cout << "notes sz:" << v_Notes.size() << endl;
-	bool bNewMeasure = false;
-	bool bPendingFermata = false;
-	if (with_header) {
-		final_compress();
-		out << "; Antescofo score generated using libmusicxml and embedded xml2antescofo converter." <<std::endl;
-		out << "; Copyright (c) Thomas Coffy - IRCAM 2013" <<std::endl;
 	}
-	if (v_Notes.size()) fBPM = v_Notes.begin()->bpm;
-	if (!fBPM.size()) fBPM = string("120");
-	fLastBPM = fBPM;
-	out << "BPM " << fBPM << endl;
-	int cur_meas = 0;
-	rational fCurrBeat = rational(1);
 
-	int last_glissando_pitch = 0;
-	for (vector<measure_elt>::iterator i = v_Notes.begin(); i != v_Notes.end(); i++) { 
-		if (i->nMeasure == 0 && i->m_pos.getNumerator() == 0 && i->duration.getNumerator() == 0)
-			continue;
 
-		// check we want to write this measure
-		bool bad = write_measures.empty() ? false : true;
-		for (vector<int>::const_iterator v = write_measures.begin(); v != write_measures.end(); v++) {
-			if (*v == i->nMeasure)
-				bad = false;
-		}
-		if (bad) continue;
 
-		// display measure comment
-		if (cur_meas != i->nMeasure) {
-			bNewMeasure = true;
-			cur_meas = i->nMeasure;
-			out << endl << "; ----------- measure " << cur_meas << " --- beat " << i->m_pos.getNumerator();
-			if (i->m_pos.getDenominator() != 1)
-				out << "/" << i->m_pos.getDenominator()<< " ------";
-			out << endl;
+	void antescofowriter::writestream(ostream &out, bool with_header) {
+		//expand();
+		//std::sort(v_Notes.begin(), v_Notes.end(), rationalless);
+		//cout << "notes sz:" << v_Notes.size() << endl;
+		bool bNewMeasure = false;
+		bool bPendingFermata = false;
+		if (with_header) {
+			final_compress();
+			out << "; Antescofo score generated using libmusicxml and embedded xml2antescofo converter." <<std::endl;
+			out << "; Copyright (c) Thomas Coffy - IRCAM 2013" <<std::endl;
 		}
-		if (i->bFermata) {
-			out << "TEMPO OFF" << endl;
-			bPendingFermata = true;
-		} else if (bPendingFermata) {
-			out << "TEMPO ON" << endl;
-			bPendingFermata = false;
-		}
-		if (i->bpm.size() && i->bpm != fBPM) {
-			fBPM = i->bpm ;
-			out << "BPM " << fBPM << " @modulate" << endl; 
-		}
-		if (i->duration.getNumerator()) i->duration.rationalise();
+		if (v_Notes.size()) fBPM = v_Notes.begin()->bpm;
+		if (!fBPM.size()) fBPM = string("120");
+		fLastBPM = fBPM;
+		out << "BPM " << fBPM << endl;
+		int cur_meas = 0;
+		rational fCurrBeat = rational(1);
+
+		int last_glissando_pitch = 0;
+		for (vector<measure_elt>::iterator i = v_Notes.begin(); i != v_Notes.end(); i++) { 
+			if (i->nMeasure == 0 && i->m_pos.getNumerator() == 0 && i->duration.getNumerator() == 0)
+				continue;
+
+			// check we want to write this measure
+			bool bad = write_measures.empty() ? false : true;
+			for (vector<int>::const_iterator v = write_measures.begin(); v != write_measures.end(); v++) {
+				if (*v == i->nMeasure)
+					bad = false;
+			}
+			if (bad) continue;
+
+			// display measure comment
+			if (cur_meas != i->nMeasure) {
+				bNewMeasure = true;
+				cur_meas = i->nMeasure;
+				out << endl << "; ----------- measure " << cur_meas << " --- beat " << i->m_pos.getNumerator();
+				if (i->m_pos.getDenominator() != 1)
+					out << "/" << i->m_pos.getDenominator()<< " ------";
+				out << endl;
+			}
+			if (i->bFermata) {
+				out << "TEMPO OFF" << endl;
+				bPendingFermata = true;
+			} else if (bPendingFermata) {
+				out << "TEMPO ON" << endl;
+				bPendingFermata = false;
+			}
+			if (i->bpm.size() && i->bpm != fBPM) {
+				fBPM = i->bpm ;
+				out << "BPM " << fBPM << " @modulate" << endl; 
+			}
+			if (i->duration.getNumerator()) i->duration.rationalise();
 
 		// grace notes
 		int grace_notes = i->grace_pitches.size();

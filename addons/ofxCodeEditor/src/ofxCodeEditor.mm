@@ -397,7 +397,7 @@ static const char * box_xpm[] = {
 		ofType: @"" inDirectory: nil];
 
 	NSString* sql = [NSString stringWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]
-		encoding: nil//NSUTF8StringEncoding
+		encoding:NSUTF8StringEncoding
 		error: &error];
 	if (error && [[error domain] isEqual: NSCocoaErrorDomain])
 		NSLog(@"%@", error);

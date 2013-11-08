@@ -919,6 +919,7 @@ rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
     
 bool xmlpart2antescofo::checkNotation( S_note& elt )
 {
+	bool res = false;
 	fTrill = fGlissandoStart = fGlissandoStop = false;
 	ctree<xmlelement>::iterator next;
 	for (ctree<xmlelement>::iterator i = elt->begin(); i != elt->end(); ) {
@@ -944,22 +945,25 @@ bool xmlpart2antescofo::checkNotation( S_note& elt )
 						case k_tremolo:
 							if (j->getAttributeValue("type") == "start") fTremoloStart = true;
 							if (j->getAttributeValue("type") == "stop") fTremoloStop = true;
-							return true;
+							res = true;
+							break;
 						case k_glissando:
 							if (j->getAttributeValue("type") == "start") fGlissandoStart = true;
 							if (j->getAttributeValue("type") == "stop") fGlissandoStop = true;
-							return true;
+							res = true;
+							break;
 						case k_slide:
 							if (j->getAttributeValue("type") == "start") fGlissandoStart = true;
 							if (j->getAttributeValue("type") == "stop") fGlissandoStop = true;
-							return true;
+							res = true;
+							break;
 					}
 				}
 				break;
 		}
 		i = next;
 	}
-	return false;
+	return res;
 }
 
 //______________________________________________________________________________
@@ -1049,10 +1053,10 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 	}
 	else if (nv.getType() == notevisitor::kRest)
 		w.AddNote(ANTESCOFO_REST, 0, d, fMeasNum, fCurBeat, flag, fRehearsals);
-	else if (fGlissandoStart || fGlissandoStop)
-		w.AddNote(ANTESCOFO_MULTI, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
 	else if (fTrill || fTremoloStart || fTremoloStop)
 		w.AddNote(ANTESCOFO_TRILL, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
+	else if (fGlissandoStart || fGlissandoStop)
+		w.AddNote(ANTESCOFO_MULTI, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
 	else {
 		if (nv.isGrace()) d = rational(0);
 		w.AddNote(ANTESCOFO_NOTE, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);

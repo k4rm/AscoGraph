@@ -1489,6 +1489,13 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 }
 
 
+ofRectangle ofxTLAntescofoNote::getBounds()
+{
+	return bounds;
+}
+
+
+
 // called from ofxTLAntescofoAction with a modified action string from the text editor
 // -> save the action
 // -> save a backup of current score

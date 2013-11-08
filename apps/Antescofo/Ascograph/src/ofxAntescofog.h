@@ -13,6 +13,8 @@
 #include "ofxUI.h"
 #include "ofxOSC.h"
 #include "ofxConsole.h"
+#include "ofxHTTPServer.h"
+
 
 #define INT_CONSTANT_BUTTON_RELOAD      0
 #define INT_CONSTANT_BUTTON_LOAD        1
@@ -151,7 +153,7 @@ class AntescofoTimeline : public ofxTimeline
 	void keypressed(ofKeyEventArgs& args) {}
 };
 
-class ofxAntescofog : public ofBaseApp{
+class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 	public:
 #ifdef TARGET_OSX
 		ofxAntescofog(int argc, char* argv[], ofxCocoaWindow* window);
@@ -236,7 +238,7 @@ class ofxAntescofog : public ofBaseApp{
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;
-		ofxOscSender    mOSCsender;
+		ofxOscSender    mOSCsender, mOSCsender_www;
 		bool            mHasReadMessages;
 		string          mOsc_host, mOsc_port, mOsc_port_MAX;
 		char            mOSCmsg_string[20];
@@ -294,4 +296,25 @@ class ofxAntescofog : public ofBaseApp{
 		// find text
 		bool bFindTextInitDone, bShowFind;
 		void draw_FindText();
+
+		// httpd
+		ofxHTTPServer * httpd_server;
+		ofPoint radius[20]; // for drawing
+		ofImage image;
+		bool imageServed;
+		bool imageSaved;
+		void setup_httpd();
+		void getRequest(ofxHTTPServerResponse & response);
+		void postRequest(ofxHTTPServerResponse & response);
+		void fileNotFound(ofxHTTPServerResponse& response){}
+		void draw_http_image();
+		void update_http_image();
+		void httpd_update_beatpos();
+
+
+		string postedImgName;
+		string postedImgFile;
+		string prevPostedImg;
+		ofImage postedImg;
+
 };

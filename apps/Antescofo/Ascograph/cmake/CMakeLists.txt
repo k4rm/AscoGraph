@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.076")
+set(ASCOGRAPH_VERSION_NUMBER "0.077")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -360,6 +360,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fft.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
 
@@ -440,6 +441,10 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexlib
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/cocoa
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/microhttpd/include
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/src/
+
+
 
 	#${OPENFRAMEWORKS_ROOT}/libs/fmodex/include
         #${OPENFRAMEWORKS_ROOT}/libs/FreeImage/include
@@ -476,6 +481,8 @@ if(APPLE)
                                      ${OPENFRAMEWORKS_ROOT}/libs/unicap/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/videoInput/lib/osx
                                      ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/sndfile/lib/osx/${SUBLIBDIRSUFFIX}
+				     # ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//libs/microhttpd/lib/macosx
+				     ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/
 
                                      CACHE STRING "OpenFrameworks library search paths")
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
@@ -504,9 +511,11 @@ if ( APPLE )
     set (CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
     #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64")
+    #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m32 -arch i386")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -mmacosx-version-min=10.6")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG=1 -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DTARGET_MAXSDK -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_MAC_OS")
     set (CMAKE_OSX_ARCHITECTURES "i386")
+    #set (CMAKE_OSX_ARCHITECTURES "x86_64")
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
@@ -620,6 +629,9 @@ if ( APPLE )
     of_find_library("glut")
     of_find_library("rtAudio")
     of_find_library("sndfile")
+    set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
+    of_find_library("microhttpd")
+    set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
     of_find_library("openal")
     of_find_library("stdc++")
     #of_find_library("openFrameWorksDebug")
@@ -730,7 +742,11 @@ SET_SOURCE_FILES_PROPERTIES(
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib)
 
-set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES} ../../../../../Mutant-libs/libsndfile-1.0.25/Buildlib/i386/lib/libsndfile.a)
+set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES} 
+	../../../../../Mutant-libs/libsndfile-1.0.25/Buildlib/i386/lib/libsndfile.a 
+	# ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//libs/microhttpd/lib/macosx/libmicrohttpd.a 
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/libmicrohttpd.a )
+	# /opt/local/lib/libmicrohttpd.a)
 
 target_link_libraries(${PROJECT_NAME} ${OPENFRAMEWORKS_LIBRARIES})
 

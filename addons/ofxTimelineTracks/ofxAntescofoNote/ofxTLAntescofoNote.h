@@ -171,6 +171,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void setAutoScroll(bool active);
 	void toggleView();
 	void showNote(int line);
+	ofRectangle getBounds();
 
 	bool change_action(float beatnum, string action);
 
