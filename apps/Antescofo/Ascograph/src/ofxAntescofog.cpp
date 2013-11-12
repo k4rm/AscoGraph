@@ -10,7 +10,7 @@
 #include "ofxMidiparser.h"
 
 bool enable_simulate = true;
-bool disable_httpd = false;
+bool disable_httpd = true;
 
 int _debug = 0;
 static string str_error; // filled by our error()
