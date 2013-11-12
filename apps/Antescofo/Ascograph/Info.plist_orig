@@ -1,0 +1,15 @@
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleIdentifier</key>
+	<string>fr.ircam.antescofo.ascograph/string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>ASCOGRAPHVERSION</string>
+	<key>CFBundleName</key>
+	<string>AscoGraph</string>
+	<key>CFBundleVersion</key>
+	<string>ASCOGRAPHVERSION</string>
+</dict>
+</plist>
+

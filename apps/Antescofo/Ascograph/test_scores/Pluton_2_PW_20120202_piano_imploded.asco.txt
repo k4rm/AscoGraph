@@ -144,6 +144,7 @@ NOTE 0 9/2 measure46
 ; ----------- measure 47 --- beat 201.25 ------
 NOTE 0 5 measure47
 
+//
 ; ----------- measure 48 --- beat 206.25 ------
 NOTE 0 1 measure48
 
@@ -155,6 +156,7 @@ NOTE 0 2 measure50
 
 ; ----------- measure 51 --- beat 211.25 ------
 NOTE 0 2 measure51
+
 
 ; ----------- measure 52 --- beat 213.25 ------
 NOTE 0 2 measure52
@@ -170,6 +172,7 @@ NOTE 0 3 measure55
 
 ; ----------- measure 56 --- beat 223.25 ------
 NOTE 0 3 measure56
+
 
 ; ----------- measure 57 --- beat 226.25 ------
 NOTE 0 4 measure57

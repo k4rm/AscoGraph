@@ -1844,7 +1844,6 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		}
 	} else {
 		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
-
 		//if (ofxAntescofoNote->get_error().empty()) ofxAntescofoNote->set_error("Zero event found in score.");
 		display_error();
 	}
@@ -1855,9 +1854,10 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		cout << "Editor scrolling to pos: " << lineEditor << " scroll:"<< lineEditorScroll << endl;
 		[ editor gotoPos:lineEditorPos];
 		int totLines = [ editor getMaxLines ];
-		if (lineEditor > totLines/2)
-			//[ editor setCurrentPos:lineEditorPos]; //[ editor scrollLine:lineEditor];
-		[ editor scrollLine:totLines/2]; //[ editor scrollLine:lineEditor];
+		if (lineEditor > totLines/2) {
+			[ editor setCurrentPos:lineEditorPos]; //[ editor scrollLine:lineEditor];
+			[ editor scrollLine:totLines/2]; //[ editor scrollLine:lineEditor];
+		}
 		//int n = [ editor getNbLines ];
 		//[ editor scrollLine:(30) ];
 

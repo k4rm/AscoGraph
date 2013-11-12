@@ -1,7 +1,7 @@
 ; Antescofo score generated using libmusicxml and embedded xml2antescofo converter.
 ; Copyright (c) Thomas Coffy - IRCAM 2012
 BPM 384
-/*
+
 ; ----------- measure 1 --- beat 1 ------
 NOTE 0 2041/1000 measure1
 
@@ -115,6 +115,7 @@ NOTE 0 0/1 measure0
 ; ----------- measure 124 --- beat 22.7917 ------
 CHORD ( 4600 5800 ) 1/2 measure124
 
+
 ; ----------- measure 0 --- beat 23.0417 ------
 NOTE 0 0/1 measure0
 
@@ -153,6 +154,7 @@ NOTE 9100 1/2 measure138
 NOTE 3800 1/2 measure108
 NOTE 3800 1/2
 NOTE 3800 1/4
+
 
 ; ----------- measure 151 --- beat 28.0417 ------
 CHORD ( 5100 7100 ) 1/4 measure151
@@ -470,6 +472,7 @@ NOTE 0 1/2
 NOTE 0 1/1
 NOTE 9400 1/2
 NOTE 0 1/2
+
 NOTE 0 1/1
 
 ; ----------- measure 60 --- beat 242.25 ------
@@ -489,11 +492,13 @@ NOTE 8100  1/1
 TEMPO ON
 NOTE 8100 1/1 measure61
 
+
 ; ----------- measure 62 --- beat 248.125 ------
 NOTE 0 1083/500 measure62
 
 ; ----------- measure 61 --- beat 250.292 ------
 NOTE 3700 8/1 measure61
+
 
 ; ----------- measure 63 --- beat 256.125 ------
 NOTE 0 2/1 measure63
@@ -649,6 +654,7 @@ CHORD ( 3000 5300 5800 5900 6400 ) 1/2 measure109
 ; ----------- measure 71 --- beat 290.625 ------
 NOTE 0 1/16 measure71
 
+
 ; ----------- measure 109 --- beat 290.875 ------
 NOTE 3000  1/2 measure109
 
@@ -753,6 +759,7 @@ CHORD ( 5800 5900 ) 1/4 measure75
 
 ; ----------- measure 114 --- beat 308.875 ------
 NOTE 5500 3/2 measure114
+
 
 ; ----------- measure 75 --- beat 309.125 ------
 CHORD ( 5500 5600 6100 6200 ) 1/1 measure75
@@ -917,6 +924,7 @@ CHORD ( 3900 4800 5300 5800 5900 6400 ) 1/1 measure137
 TEMPO ON
 CHORD ( 3900 4800 5900 6400 ) 2/1
 
+
 ; ----------- measure 138 --- beat 351.125 ------
 ;CHORD 5400 6200 6500 7300 0
 NOTE 0 1/1 measure138
@@ -1017,7 +1025,6 @@ NOTE 8500  1/4
 
 ; ----------- measure 145 --- beat 369.125 ------
 CHORD ( 5700 8300 ) 1/4 measure145
-
 ; ----------- measure 0 --- beat 369.167 ------
 NOTE 0 0/1 measure0
 
@@ -1413,6 +1420,7 @@ NOTE 7200 1/1
 NOTE 9400 1/2
 NOTE 0 2/1
 
+
 ; ----------- measure 137 --- beat 553.625 ------
 NOTE 0 1/1 measure137
 NOTE 5100 1/4
@@ -1507,4 +1515,3 @@ CHORD ( 4800 5200 5800 6700 7300 ) 1/1
 
 ; ----------- measure 153 --- beat 614.125 ------
 NOTE 0 2/1 measure153
-*/

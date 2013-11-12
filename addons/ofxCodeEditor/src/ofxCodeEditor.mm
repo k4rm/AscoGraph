@@ -433,6 +433,8 @@ static const char * box_xpm[] = {
 - (void) setCurrentPos:(int)pos
 {
 	[mEditor setGeneralProperty:SCI_SETCURRENTPOS parameter:pos value:pos];
+	[mEditor setGeneralProperty:SCI_SETSEL parameter:pos value:pos];
+	[mEditor setGeneralProperty:SCI_SCROLLCARET parameter:pos value:pos];
 
 }
 
@@ -455,8 +457,8 @@ static const char * box_xpm[] = {
 	/*
 	[mEditor setGeneralProperty:SCI_SETANCHOR parameter:pos value:pos];
 	[mEditor setGeneralProperty:SCI_SETCURRENTPOS parameter:pos value:pos];
-	[mEditor setGeneralProperty:SCI_SETSEL parameter:pos value:pos];
 	*/
+	[mEditor setGeneralProperty:SCI_SETSEL parameter:pos value:pos];
 
 
 }

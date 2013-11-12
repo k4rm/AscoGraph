@@ -5,13 +5,16 @@
 	oscsend osc_tempo "129.102.64.181" :3002 "/antescofo/tempo"
 
 	oscsend test "localhost" :3004 "/antescofo/hello2"
+NOTE A2 2
 
 	test $PITCH $RNOW $RT_TEMPO
+NOTE A2 2
 
 whenever($var1)
 {
 	print yes $var1
 }
+NOTE A2 2
 
 whenever($PITCH)
 {
