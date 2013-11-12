@@ -350,7 +350,7 @@ static const char * box_xpm[] = {
 	int pos = [mEditor getGeneralProperty:SCI_GETCURRENTPOS];
 	cout << pos << endl;
 	int pm = (int)[mEditor getGeneralProperty:SCI_BRACEMATCH parameter:pos];
-	cout << "pm= " << pm << endl;
+	//cout << "pm= " << pm << endl;
 }
 
 
@@ -370,7 +370,7 @@ static const char * box_xpm[] = {
 	//if (!res) return;
 	long matchStart = [mEditor getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
 	long matchEnd = [mEditor getGeneralProperty: SCI_GETSELECTIONEND parameter: 0];
-	[mEditor getGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd];
+	[mEditor setGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd];
 	cout << "searchText: " << str << "-->"<< matchStart<< ":" << matchEnd << endl;
 	//[ self showLine:matchStart lineb:matchEnd ];
 
@@ -413,9 +413,26 @@ static const char * box_xpm[] = {
 	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:line];
 }
 
+- (int) getMaxLines
+{
+	return [mEditor getGeneralProperty:SCI_LINESONSCREEN];
+}
+
 - (int) getCurrentPos
 {
 	return [mEditor getGeneralProperty:SCI_GETCURRENTPOS];
+
+}
+- (int) getCurrentLine
+{
+	return [mEditor getGeneralProperty:SCI_LINEFROMPOSITION parameter:[mEditor getGeneralProperty:SCI_GETCURRENTPOS]];
+
+}
+
+
+- (void) setCurrentPos:(int)pos
+{
+	[mEditor setGeneralProperty:SCI_SETCURRENTPOS parameter:pos value:pos];
 
 }
 

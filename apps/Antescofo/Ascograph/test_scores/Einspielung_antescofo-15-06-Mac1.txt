@@ -136,6 +136,7 @@ CHORD ( 6600 6800 ) 1/6
 ; ---------- measure 3 beat 1.50 ---------
 BPM 60.00
 
+
 NOTE 6200 0.1250	Mesure3
 
 	Mac-1 ADC1-del 0

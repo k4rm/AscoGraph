@@ -24,7 +24,10 @@
 - (void) die;
 - (void) setupEditor;
 - (void) showLine: (int) linea lineb: (int) lineb;
+- (void) setCurrentPos:(int) pos;
+- (int) getCurrentLine;
 - (int) getCurrentPos;
+- (int) getMaxLines;
 - (void) scrollLine: (int) line;
 - (void) gotoPos:(int) pos;
 - (int) modified;

@@ -1790,13 +1790,16 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	ofRange z = ofxAntescofoZoom->getViewRange(); 
 
 	// save editor position
-	int lineEditor = [ editor getCurrentPos];
+	int lineEditorPos = [ editor getCurrentPos];
+	int lineEditor = [ editor getCurrentLine];
+	int lineEditorScroll = 0; //[ editor getCurrentPosScroll];
 
+	cout << "loadScore: lineEditor: " << lineEditor <<" linEScroll: " << lineEditorScroll << endl;
 
 	// if it's a midi file, convert it to Antescofo language
 	string ext = ofFilePath::getFileExt(filename);
 	if (ext == "MID" || ext == "mid") {
-		setup_Midi(filename, ofGetModifierSelection());
+		setup_Midi(filename, ofGetModifierPressed(OF_MODIFIER_KEY_SPECIAL));
 	}
 
 	string antescore = filename;
@@ -1849,8 +1852,12 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	// update editor if opened
 	if (bEditorShow) {
 		[ editor loadFile:mScore_filename ];
-		cout << "Editor scrolling to pos: " << lineEditor << endl;
-		[ editor gotoPos:lineEditor]; //[ editor scrollLine:lineEditor];
+		cout << "Editor scrolling to pos: " << lineEditor << " scroll:"<< lineEditorScroll << endl;
+		[ editor gotoPos:lineEditorPos];
+		int totLines = [ editor getMaxLines ];
+		if (lineEditor > totLines/2)
+			//[ editor setCurrentPos:lineEditorPos]; //[ editor scrollLine:lineEditor];
+		[ editor scrollLine:totLines/2]; //[ editor scrollLine:lineEditor];
 		//int n = [ editor getNbLines ];
 		//[ editor scrollLine:(30) ];
 
@@ -2410,17 +2417,20 @@ void ofxAntescofog::postRequest(ofxHTTPServerResponse & response){
 void ofxAntescofog::httpd_update_beatpos()
 {
 	ofxOscMessage m;
-	cout<< "Sending OSC event beat pos: " << mOsc_beat << endl;
 	m.setAddress("/antescofo/event_beatpos");
-	m.addFloatArg(mOsc_beat);
+	float n = (mOsc_beat - 1.) / ofxAntescofoNote->get_max_note_beat();
+	cout<< "Sending OSC event beat pos: " << mOsc_beat << " :" << n << " : " << ofxAntescofoNote->get_max_note_beat() << endl;
+/*
+	m.addFloatArg(n );
 	mOSCsender_www.sendMessage(m);
+	*/
 
 	char b[200];
 	getcwd(b, 200);
 	cout << b << endl;
 	ofstream ofs ("../Resources/www/pos", ofstream::trunc);
-
-	ofs << mOsc_beat << endl;
+	
+	ofs << n << endl;
 
 	ofs.close();
 }

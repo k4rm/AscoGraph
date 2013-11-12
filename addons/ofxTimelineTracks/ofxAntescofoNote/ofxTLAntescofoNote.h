@@ -172,6 +172,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void toggleView();
 	void showNote(int line);
 	ofRectangle getBounds();
+	float get_max_note_beat();
 
 	bool change_action(float beatnum, string action);
 

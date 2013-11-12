@@ -1931,3 +1931,15 @@ ofRectangle ofxTLAntescofoNote::getBoundsEastOf(ofRectangle anchor, string label
 }
 
 
+
+float ofxTLAntescofoNote::get_max_note_beat()
+{
+	float maxbeat = 0.;
+	if (switches.size() > 1) {
+		vector<ofxTLAntescofoNoteOn*>::iterator i = switches.end();
+		i--;
+		maxbeat = (*i)->beat.max;
+	}
+	return maxbeat;
+}
+
