@@ -1795,23 +1795,24 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	int lineEditorScroll = 0; //[ editor getCurrentPosScroll];
 
 	cout << "loadScore: lineEditor: " << lineEditor <<" linEScroll: " << lineEditorScroll << endl;
+	string antescore = filename;
+	ofxAntescofoNote->clear_actions();
 
 	// if it's a midi file, convert it to Antescofo language
 	string ext = ofFilePath::getFileExt(filename);
+	int n = 0;
+	bool wasxml = false;
 	if (ext == "MID" || ext == "mid") {
 		setup_Midi(filename, ofGetModifierPressed(OF_MODIFIER_KEY_SPECIAL));
+	} else if (ext == "XML" || ext == "xml") {
+		n = ofxAntescofoNote->loadscoreMusicXML(filename, TEXT_CONSTANT_TEMP_FILENAME);
+		wasxml = true;
+		mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 	}
-
-	string antescore = filename;
-	ofxAntescofoNote->clear_actions();
-	int n = ofxAntescofoNote->loadscoreMusicXML(filename, TEXT_CONSTANT_TEMP_FILENAME);
-	mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 	if (!n) {
 		mScore_filename = antescore = filename;
-
 		n = ofxAntescofoNote->loadscoreAntescofo(antescore);
-		if (!n)
-			mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
+		if (!n && wasxml) mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 	}
 	if (n || ofxAntescofoNote->get_error().empty()) {
 		bShowError = false;
