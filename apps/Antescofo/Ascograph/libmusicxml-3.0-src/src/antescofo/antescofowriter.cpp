@@ -671,8 +671,15 @@ void antescofowriter::writenote(ostream &out, int pitch, measure_elt& e) {
 						out << "NOTE";
 					else 
 						out << "CHORD (";
-				} else if (i->type == ANTESCOFO_TRILL || i->type == ANTESCOFO_FLAG_TREMOLO_START)
+				} else if (i->type == ANTESCOFO_TRILL || i->type == ANTESCOFO_FLAG_TREMOLO_START) {
 					out << "TRILL (";
+					if (i->pitches.size() == 1) {
+						int p = *(i->pitches.begin());
+						int s = 1;
+						if (p > 1000) s = 500;
+						i->pitches.push_back(p + s);
+					}
+				}
 				last_glissando_pitch = 0;
 			} else { // glissando flags may be: start, stop, stop
 				if (last_glissando_pitch && i->flags == ANTESCOFO_FLAG_GLISSANDO_STOP) {

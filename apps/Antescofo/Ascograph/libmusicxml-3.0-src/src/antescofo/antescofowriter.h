@@ -62,6 +62,7 @@ namespace MusicXML2
 #   define ANTESCOFO_FLAG_REPEAT_FORWARD    7
 #   define ANTESCOFO_FLAG_TREMOLO_START	    8
 #   define ANTESCOFO_FLAG_TREMOLO_STOP	    9
+#   define ANTESCOFO_FLAG_TRILL		    10
 
 
 class measure_elt {

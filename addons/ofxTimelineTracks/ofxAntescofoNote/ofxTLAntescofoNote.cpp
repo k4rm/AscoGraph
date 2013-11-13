@@ -65,7 +65,7 @@
 
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
-bool debug_loadscore = true;
+bool debug_loadscore = false;
 
 int bitmapFontSize = 8;
 int guiXPadding = 15;

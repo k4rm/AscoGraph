@@ -18,7 +18,7 @@ BPM 92	; tempo a la croche attention
 		
 		ir1 0
 
-;	FWD antescofo-gamma	-0.5
+;	FWD antescofo-gamma	-0.5 Ã 
 	 print Intro_ready_for_label_1 
 	; %%%%%%%%%%%%%%%%%%%%%
 	 running_section s1  ; running_section is the variable that tells the current section 
@@ -46,7 +46,7 @@ NOTE 7500 0.25 ;	NBT
 
 ;	PFWD 0.1 s1-t1-trait2 bang
 
-; BPM 46	; gn 03IX09 car partition ˆ la noire god damned arshia !
+; BPM 46	; gn 03IX09 car partition  la noire god damned arshia !
 TEMPO OFF
 TRILL ( 7400 7500 )	8.0	Q2	;second_trait ; old_e2; Trill_1
 	 	cue_nb 2; 

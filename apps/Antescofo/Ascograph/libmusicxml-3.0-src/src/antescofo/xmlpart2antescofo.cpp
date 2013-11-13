@@ -927,7 +927,6 @@ bool xmlpart2antescofo::checkNotation( S_note& elt )
 		next++;
 		switch (i->getType()) {                
 			case k_notations:
-				//case k_lyric:
 				for (ctree<xmlelement>::iterator j = elt->begin(); j != elt->end(); j++) {
 					switch (j->getType()) {
 						case k_ornaments:
@@ -941,7 +940,7 @@ bool xmlpart2antescofo::checkNotation( S_note& elt )
 										//return true;
 								}
 							}
-							//break;
+							break;
 						case k_tremolo:
 							if (j->getAttributeValue("type") == "start") fTremoloStart = true;
 							if (j->getAttributeValue("type") == "stop") fTremoloStop = true;
@@ -1022,6 +1021,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 	if (tiedEnd)            flag = ANTESCOFO_FLAG_TIED_END;
 	if (fGlissandoStart)    flag = ANTESCOFO_FLAG_GLISSANDO_START;
 	if (fGlissandoStop)     flag = ANTESCOFO_FLAG_GLISSANDO_STOP;
+	if (fTrill)	        flag = ANTESCOFO_FLAG_TRILL;
 	if (fTremoloStart)	flag = ANTESCOFO_FLAG_TREMOLO_START;
 	if (fTremoloStop)	flag = ANTESCOFO_FLAG_TREMOLO_STOP;
 	if (checkFermata(nv))   flag = ANTESCOFO_FLAG_FERMATA;

@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <sstream>
+#include <iostream>
 using namespace std;
 #import "ofxMidiParser.h"
 
@@ -394,14 +395,13 @@ using namespace std;
             [self.log appendFormat:@"Track %d : %d bytes\n", track, (unsigned int)trackSize];
             
             UInt32 trackEnd = offset + trackSize;
-            UInt32 deltaTime, timestamp = 0;
+            UInt32 deltaTime = 0, timestamp = 0;
             UInt8 nextByte = 0;
             UInt8 peekByte = 0;
             while(offset < trackEnd)
             {
-                deltaTime = [self readVariableValue];
+                deltaTime += [self readVariableValue];
                 [self.log appendFormat:@"  (%05d): ", (unsigned int)deltaTime];
-                timestamp += deltaTime;
                 // Peak at next byte
                 peekByte = [self readByteAtRelativeOffset:0];
                 
@@ -503,20 +503,33 @@ using namespace std;
 		    int curPitch;
 		    float delay_i;
                     NSString *delay, *duration, *s;
+
+
                     switch (eventType)
                     {
                         case CHANNEL_NOTE_ON:
+				timestamp += deltaTime;
                             p1 = [self readByte];
                             p2 = [self readByte];
                             [self readNoteOn:channel parameter1:p1 parameter2:p2];
 
-			    noteson[p1] = timestamp;
+			    curPitch = p1;
                             delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
+                            delay_i = deltaTime; //timestamp - noteson[curPitch];
                             duration = [self getBeatDuration:1 resolution:ticksPerBeat];
-                           // s = [NSString stringWithFormat:@"\t%@ mnote %d %d\t; noteoff\n", delay, p1, p2];
-                            //if (trackWanted == -1 || trackWanted == track) [out appendString:s];
+
+			    if (delay_i > 0.) {
+				    pitchList.push_back(0);
+				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+				    noteson.erase(curPitch);
+				    pitchList.clear();
+				    deltaTime = 0;
+			    }
+
+			    noteson[p1] = timestamp;
                             break;
                         case CHANNEL_NOTE_OFF:
+		    timestamp += deltaTime;
                             p1 = [self readByte];
                             p2 = [self readByte];
 
@@ -529,7 +542,8 @@ using namespace std;
 				    pitchList.push_back(curPitch);
 				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
 			    }
-			    noteson.erase(curPitch);
+			    //noteson.erase(curPitch);
+			    noteson[curPitch] = timestamp;
 			    pitchList.clear();
 
 			    delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
@@ -540,6 +554,7 @@ using namespace std;
                             duration = [self getBeatDuration:1 resolution:ticksPerBeat];
                            // s = [NSString stringWithFormat:@"\t%@ mnote %d %d\n", delay, p1, p2];
                             //if (trackWanted == -1 || trackWanted == track) [out appendString:s];
+			    deltaTime = 0;
                             break;
 
                         case CHANNEL_NOTE_AFTERTOUCH:
@@ -688,6 +703,7 @@ using namespace std;
         
         // Try to parse tracks
         UInt32 expectedTrackOffset = offset;
+	UInt32 timestamp = 0;
         for(UInt16 track = 0; track < trackCount; track++)
         {
             if(offset != expectedTrackOffset)
@@ -710,12 +726,12 @@ using namespace std;
             [self.log appendFormat:@"Track %d : %d bytes\n", track, (unsigned int)trackSize];
             
             UInt32 trackEnd = offset + trackSize;
-            UInt32 deltaTime, timestamp = 0;
+            UInt32 deltaTime = 0;
             UInt8 nextByte = 0;
             UInt8 peekByte = 0;
             while(offset < trackEnd)
             {
-                deltaTime = [self readVariableValue];
+                deltaTime += [self readVariableValue];
                 [self.log appendFormat:@"  (%05d): ", (unsigned int)deltaTime];
                 timestamp += deltaTime;
                 // Peak at next byte
@@ -824,9 +840,10 @@ using namespace std;
                             [self readNoteOn:channel parameter1:p1 parameter2:p2];
                             delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
                             duration = [self getBeatDuration:1 resolution:ticksPerBeat];
-                            s = [NSString stringWithFormat:@"\t%@ mnote %d %d\t; noteoff\n", delay, p1, p2];
+                            s = [NSString stringWithFormat:@"\t%@ mnote %d %d\n", delay, p1, p2];
                             if (trackWanted == -1 || trackWanted == track)
                                 [out appendString:s];
+			    deltaTime = 0;
                             break;
 
 			case CHANNEL_NOTE_OFF:
@@ -838,9 +855,10 @@ using namespace std;
                             //[self.log appendFormat:@"CHANNEL_NOTE_OFF: timestamp:%d, ticksPerBeat:%d, deltaTime:%d\n", (unsigned int)timestamp, ticksPerBeat, deltaTime];
                             delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
                             duration = [self getBeatDuration:1 resolution:ticksPerBeat];
-                            s = [NSString stringWithFormat:@"\t%@ mnote %d %d\n", delay, p1, p2];
+                            s = [NSString stringWithFormat:@"\t%@ mnote %d %d\t; noteoff\n", delay, p1, p2];
                             if (trackWanted == -1 || trackWanted == track)
                                 [out appendString:s];
+			    deltaTime = 0;
                             break;
 
                         case CHANNEL_NOTE_AFTERTOUCH:

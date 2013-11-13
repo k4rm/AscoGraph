@@ -19,25 +19,27 @@ Curve slider  @Grain := 0.05s, @Action :=
         1.34472 { 2.17164 } @type "linear"
         0.753275 { 2.03731 } @type "linear"
         0.173361 { 1.29746 } @type "linear"
-        4.54464 { 2.64179 }
+        4.54464 { 2.64179 } @type "linear"
+        6.42562 { 1.90209 }
     }
     $y
     {
           { 2.0 } @type "linear"
         1 { 0.0 } @type "linear"
-        10.4 { 1.4 }
+        2.89537 { 1.36 } @type "linear"
+        7.50463 { 1.4 }
     }
 }
 
-
 NOTE C2 10
-curve slider2  @Grain := 0.05s, Action := print $x $y
-{
-	$x, $y
-	{
-	    { 0. 2. } /*type "exponential"*/
-	1   { 1. 0. }
-	2/5 { 3. 1.4}
-	; ...
+curve @action := plot $NOW $x $y $z {
+	$x
+	{		{ 2.0 }
+		1.0	{ 4.0 }
+		1.0	{ 1.4 }
+	}
+	$y, $z
+	{		{5.0, 4.0}
+		3.0	{0.3 ,7.0}
 	}
 }
