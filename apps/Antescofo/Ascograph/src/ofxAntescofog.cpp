@@ -1810,6 +1810,8 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		mScore_filename = antescore = filename;
 
 		n = ofxAntescofoNote->loadscoreAntescofo(antescore);
+		if (!n)
+			mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 	}
 	if (n || ofxAntescofoNote->get_error().empty()) {
 		bShowError = false;
