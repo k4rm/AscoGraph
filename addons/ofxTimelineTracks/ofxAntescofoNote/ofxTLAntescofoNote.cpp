@@ -1159,9 +1159,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		cerr << "loadScore: Input is a directory, you stupid... :)" << endl;
 		return 0;
 	}
-	//error_counter = 0;
-	cout << "Getting error counter: " << get_error_counter() << endl;
-	reset_error_counter();
+	reset_global_error_counter();
 
 	mAntescofo->reset_error_count();
 	if (NULL == (score = mAntescofo->Parse(filename))) {
@@ -1560,7 +1558,7 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 	f.close();
 	str_error.erase();
 	Score *score;
-	reset_error_counter();
+	reset_global_error_counter();
 	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
 		::error("%s\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 		return 0;

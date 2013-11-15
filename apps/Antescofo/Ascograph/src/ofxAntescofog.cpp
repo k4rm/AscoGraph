@@ -1803,7 +1803,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	int n = 0;
 	bool wasxml = false;
 	if (ext == "MID" || ext == "mid") {
-		setup_Midi(filename, ofGetModifierPressed(OF_MODIFIER_KEY_SPECIAL));
+		setup_Midi(filename, ofGetModifierPressed(OF_MODIFIER_KEY_SHIFT) || ofGetModifierPressed(OF_MODIFIER_KEY_SPECIAL));
 	} else if (ext == "XML" || ext == "xml") {
 		n = ofxAntescofoNote->loadscoreMusicXML(filename, TEXT_CONSTANT_TEMP_FILENAME);
 		wasxml = true;
