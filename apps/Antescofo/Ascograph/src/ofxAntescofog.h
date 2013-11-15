@@ -46,7 +46,8 @@
 #define INT_CONSTANT_BUTTON_EDIT	27
 #define INT_CONSTANT_BUTTON_PREVEVENT	28
 #define INT_CONSTANT_BUTTON_NEXTEVENT	29
-
+#define INT_CONSTANT_BUTTON_ZOOM_IN	30
+#define INT_CONSTANT_BUTTON_ZOOM_OUT	31
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
 #define TEXT_CONSTANT_BUTTON_LOAD               "Load score"

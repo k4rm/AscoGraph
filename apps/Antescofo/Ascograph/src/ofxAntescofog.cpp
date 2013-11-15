@@ -230,6 +230,16 @@ void ofxAntescofog::menu_item_hit(int n)
 				mOSCsender.sendMessage(m);
 				break;
 			}
+		case INT_CONSTANT_BUTTON_ZOOM_IN:
+			{
+				((ofxTLZoomer2D*)timeline.getZoomer())->zoomin();
+				break;
+			}
+		case INT_CONSTANT_BUTTON_ZOOM_OUT:
+			{
+				((ofxTLZoomer2D*)timeline.getZoomer())->zoomout();
+				break;
+			}
 	}
 
 	bShouldRedraw = true;
@@ -459,6 +469,15 @@ void ofxAntescofog::setupUI() {
 	id lineWrapModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Line Wrapping" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[lineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
 	[viewMenu addItem:lineWrapModeMenuItem];
+	// zoom +
+	id zoomInMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Zoom in" action:@selector(menu_item_hit:) keyEquivalent:@"+"] autorelease];
+	[zoomInMenuItem setTag:INT_CONSTANT_BUTTON_ZOOM_IN];
+	[viewMenu addItem:zoomInMenuItem];
+	// zoom -
+	id zoomOutMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Zoom out" action:@selector(menu_item_hit:) keyEquivalent:@"-"] autorelease];
+	[zoomOutMenuItem setTag:INT_CONSTANT_BUTTON_ZOOM_OUT];
+	[viewMenu addItem:zoomOutMenuItem];
+
 
 	[viewMenuItem setSubmenu:viewMenu];
 	[menubar addItem:viewMenuItem];

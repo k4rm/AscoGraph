@@ -104,6 +104,33 @@ void ofxTLZoomer2D::load() {
 	notifyZoomEnded();
 }
 
+void ofxTLZoomer2D::zoomin()
+{
+	notifyZoomStarted();
+	float r = currentViewRange.max - currentViewRange.min;
+	
+	currentViewRange.min += r/100.;
+	currentViewRange.max -= r/100.;
+	currentViewRange.min = fmax(0., currentViewRange.min);
+	currentViewRange.max = fmin(currentViewRange.max, 1.);
+
+	notifyZoomEnded();
+}
+
+void ofxTLZoomer2D::zoomout()
+{
+	notifyZoomStarted();
+	float r = currentViewRange.max - currentViewRange.min;
+	
+	currentViewRange.min -= r/100.;
+	currentViewRange.max += r/100.;
+	currentViewRange.min = fmax(0., currentViewRange.min);
+	currentViewRange.max = fmin(currentViewRange.max, 1.);
+
+	notifyZoomEnded();
+}
+
+
 void ofxTLZoomer2D::save() {
 	ofxXmlSettings savedSettings;
 	savedSettings.addTag("zoom");
