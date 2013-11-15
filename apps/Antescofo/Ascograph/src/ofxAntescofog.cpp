@@ -552,33 +552,10 @@ void ofxAntescofog::setupUI() {
 	//guiBottom->addWidgetDown(mSliderBPM);
 	mBPMbuffer = new float[256];
 	for (int i = 0; i < 256; i++) mBPMbuffer[i] = 0.;
-	ofxUISpectrum* tempoCurve = new ofxUISpectrum(100, 64, mBPMbuffer, 256, 0., 290.0, "bpm");
-	guiBottom->addWidgetDown(tempoCurve);
-	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
-	tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
 
-	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
-	ofxUIButton *b = new ofxUIButton("NOTE", false, 30, 15);
-	guiBottom->addWidgetEastOf(b, "bpm");
-	b->setColorBack(ofxAntescofoNote->color_note);
-
-	b = new ofxUIButton(30, 15, false, "CHORD");
-	guiBottom->addWidgetRight(b);
-	b->setColorBack(ofxAntescofoNote->color_note_chord);
-
-	b = new ofxUIButton(30, 15, false, "MULTI"); 
-	guiBottom->addWidgetRight(b);
-	b->setColorBack(ofxAntescofoNote->color_note_multi);
-
-	b = new ofxUIButton(30, 15, false, "TRILL"); 
-	guiBottom->addWidgetRight(b);
-	b->setColorBack(ofxAntescofoNote->color_note_trill);
-
-	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
-	space->setVisible(false);
-	guiBottom->addWidgetDown(space);
 	mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
-	guiBottom->addWidgetSouthOf(mLabelBPM, "NOTE");
+	//guiBottom->addWidgetSouthOf(mLabelBPM, TEXT_CONSTANT_BUTTON_START);
+	guiBottom->addWidgetDown(mLabelBPM);
 	mLabelBPM = new ofxUILabel("120", fontsize);
 	guiBottom->addWidgetEastOf(mLabelBPM, TEXT_CONSTANT_BUTTON_BPM);
 
@@ -593,6 +570,55 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetEastOf(mLabelPitch, TEXT_CONSTANT_BUTTON_PITCH);
 	mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
 
+	ofxUISpectrum* tempoCurve = new ofxUISpectrum(313, 64, mBPMbuffer, 256, 0., 290.0, "bpm");
+	guiBottom->addWidgetDown(tempoCurve);
+	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
+	tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
+	ofRectangle* r = tempoCurve->getRect();
+	r->x = 3; r->y = 3;
+
+	ofxUILabelToggle* b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetEastOf(b, "bpm");
+	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetRight(b);
+	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetRight(b);
+	
+	b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetRight(b);
+	b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetRight(b);
+	if (enable_simulate) {
+		//b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_SIMULATE, OFX_UI_FONT_SMALL);
+		//guiBottom->addWidgetRight(b);
+		mEditButton = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_EDIT, OFX_UI_FONT_SMALL);
+		guiBottom->addWidgetRight(mEditButton);
+		mEditButton->setVisible(false);
+		mEditButton->setLabelVisible(false);
+	}
+/*
+	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
+	space->setVisible(false);
+	guiBottom->addWidgetDown(space);
+*/
+
+	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
+	ofxUIButton *bu = new ofxUIButton("NOTE", false, 30, 15);
+	guiBottom->addWidgetSouthOf(bu, "bpm");
+	bu->setColorBack(ofxAntescofoNote->color_note);
+
+	bu = new ofxUIButton(30, 15, false, "CHORD");
+	guiBottom->addWidgetRight(bu);
+	bu->setColorBack(ofxAntescofoNote->color_note_chord);
+
+	bu = new ofxUIButton(30, 15, false, "MULTI"); 
+	guiBottom->addWidgetRight(bu);
+	bu->setColorBack(ofxAntescofoNote->color_note_multi);
+
+	bu = new ofxUIButton(30, 15, false, "TRILL"); 
+	guiBottom->addWidgetRight(bu);
+	bu->setColorBack(ofxAntescofoNote->color_note_trill);
+
 /*
 	// drop down list
 	//guiBottom->addWidgetDown(new ofxUILabel("Cue points", OFX_UI_FONT_MEDIUM)); 
@@ -602,29 +628,12 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetDown(mCuepointsDdl);
 */
 	// event buttons
-	space = new ofxUISpacer(3, 1);
+	/*
+	space = new ofxUISpacer(1, 1);
 	space->setVisible(false);
-	guiBottom->addWidgetLeft(space, OFX_UI_ALIGN_RIGHT);
-
-	b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_NEXT_EVENT, OFX_UI_FONT_SMALL);
+	guiBottom->addWidgetDown(space);//, OFX_UI_ALIGN_RIGHT);
+	*/
 	//guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
-	guiBottom->addWidgetLeft(b);
-	b = new ofxUILabelToggle(90, false, TEXT_CONSTANT_BUTTON_PREV_EVENT, OFX_UI_FONT_SMALL);
-	guiBottom->addWidgetLeft(b);
-	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
-	guiBottom->addWidgetLeft(b);
-	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
-	guiBottom->addWidgetLeft(b);
-	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_PLAY, OFX_UI_FONT_SMALL);
-	guiBottom->addWidgetLeft(b);
-	if (enable_simulate) {
-		b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_SIMULATE, OFX_UI_FONT_SMALL);
-		guiBottom->addWidgetLeft(b);
-		mEditButton = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_EDIT, OFX_UI_FONT_SMALL);
-		guiBottom->addWidgetLeft(mEditButton);
-		mEditButton->setVisible(false);
-		mEditButton->setLabelVisible(false);
-	}
 
 	guiBottom->addWidgetDown(mLabelAccompSpeed);
 	mLabelAccompSpeed->setVisible(false);
@@ -1042,8 +1051,9 @@ void ofxAntescofog::draw() {
 			ofPopStyle();
 
 			// logos
-			mLogoInria.draw(score_w - 290, 2, 148, 54);
-			mLogoIrcam.draw(score_w - 120, 0, 109, 64);
+			//mLogoInria.draw(score_w - 290, 2, 148, 54);
+			mLogoInria.draw(score_w - 290, 14, 142, 52);
+			mLogoIrcam.draw(score_w - 120, 20, 102, 61);
 			//mLogoIrcam.draw(score_w - 170, 0, 109, 64);
 		
 			drawCache.end();
