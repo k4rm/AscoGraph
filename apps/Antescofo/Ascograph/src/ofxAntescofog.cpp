@@ -817,7 +817,6 @@ void ofxAntescofog::update() {
 			ofxOscMessage m;
 			mOSCreceiver.getNextMessage( &m );
 			if (_debug) cout << "OSC received: '" << m.getAddress() <<"' ";// << "' args:"<<m.getNumArgs()<< endl;
-			for (int i = 0; i < 20; i++) mOSCmsg_string[i] = 0;
 			if(m.getAddress() == "/antescofo/stop"){
 				if (audioTrack) audioTrack->fakeStop();
 				mHasReadMessages = true;
@@ -900,7 +899,7 @@ void ofxAntescofog::update() {
 				*/
 				cout << "OSC received: unknown msg: "<< msg_string << endl;
 			}
-			break;
+			//break;
 		}
 	}
 	catch (exception& e) {
@@ -923,7 +922,8 @@ void ofxAntescofog::update() {
 	//guiBottom->update();
 
 	// http update
-	update_http_image();
+	if (!disable_httpd)
+		update_http_image();
 }
 
 //--------------------------------------------------------------
@@ -1000,7 +1000,8 @@ void ofxAntescofog::draw() {
 	}
 
 	// http draw
-	draw_http_image();
+	if (!disable_httpd)
+		draw_http_image();
 }
 
 void ofxAntescofog::load()

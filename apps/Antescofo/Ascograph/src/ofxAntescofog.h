@@ -241,7 +241,6 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 		ofxOscSender    mOSCsender, mOSCsender_www;
 		bool            mHasReadMessages;
 		string          mOsc_host, mOsc_port, mOsc_port_MAX;
-		char            mOSCmsg_string[20];
 		float           mOsc_beat, mOsc_tempo, mOsc_pitch, mOsc_rnow, mOsc_accomp_speed;
 		float           fAntescofoTimeSeconds;
 
