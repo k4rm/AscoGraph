@@ -537,6 +537,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = ofxUIDynamicDropDownDebug;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -623,6 +624,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = ofxUIDynamicDropDown;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

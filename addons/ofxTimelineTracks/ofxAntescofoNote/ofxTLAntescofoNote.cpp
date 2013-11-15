@@ -144,7 +144,6 @@ void ofxTLAntescofoNote::setAutoScroll(bool active)
 	bAutoScroll = active;
 }
 
-
 void ofxTLAntescofoNote::toggleView(){
 	bShowPianoRoll = !bShowPianoRoll;
 	trimRange();
@@ -1167,6 +1166,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		return 0;
 	}
 
+	mNetscore = score;
 	ostringstream str;
 	str << "Duration ------------------ score size : " << score->size() << "."<< endl;
 	vector<Event *>::iterator i = score->end();
@@ -1187,8 +1187,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	ostringstream oss;
 	string actstr;
 	score->show(cout);
+	int evt_nb = 0;
 
-	for (vector<Event *>::iterator i = score->begin(); i != score->end(); i++)
+	for (vector<Event *>::iterator i = score->begin(); i != score->end(); i++, evt_nb++)
 	{
 		Event *e = *i;
 		//if (!e->isEvent() /*&& i != score->begin()*/) continue; // TODO store and display actions on first dummy silence
@@ -1389,9 +1390,19 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			line2note[e->scloc->begin.line] = switches.size() - 1;
 			if (debug_loadscore) { str << "added new switch: REST beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max; console->addln(str.str()); str.str(""); }
 			bGot_Action = false;
-
 		}
 
+		// copy jumps
+		std::map<int, std::vector<int> >::iterator ito;
+		ito = mNetscore->jump_index.find(evt_nb);
+		if (ito != mNetscore->jump_index.end())
+		{
+			for (vector<int>::iterator v = ito->second.begin(); v != ito->second.end(); v++) {
+				ofxTLAntescofoNoteOn *newSwitch = switches.back();
+				newSwitch->jump_dests.push_back(*v);
+				cout << "added for event "<< evt_nb << " jump dest: " << *v << endl;
+			}
+		}
 	}
 	setScore(score);
 	str << "Score tempo : " << 60/score->tempo;
@@ -1403,9 +1414,22 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 	update_duration();
 	getcues();
+	//getjumps()
 	return switches.size();
 }
-
+/*
+void ofxTLAntescofoNote::getjumps() {
+	for(uint i=0; i < mNetscore.size(); i++)
+	{
+		std::map<int, std::vector<int> >::iterator ito;
+		ito = mNetscore[i]->jump_index.find(i);
+		if (ito != jump_index.end())
+		{
+		}
+	}
+	
+}
+*/
 
 void ofxTLAntescofoNote::getcues() {
 

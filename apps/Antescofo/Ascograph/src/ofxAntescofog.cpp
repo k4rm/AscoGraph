@@ -241,7 +241,20 @@ void ofxAntescofog::menu_item_hit(int n)
 				break;
 			}
 	}
-
+	
+	if (n >= INT_CONSTANT_BUTTON_CUES_INDEX) {
+		cout << "Cuepoints Drop Down List hit: " << endl; 
+		map<int, string>::iterator li = mCuesIndexToString.find(n - INT_CONSTANT_BUTTON_CUES_INDEX);
+		if (li != mCuesIndexToString.end()) {
+			mPlayLabel = li->second;
+			cout << "Sending OSC: gotolabel " << mPlayLabel << endl; 
+			ofxOscMessage m;
+			m.setAddress("/antescofo/cmd");
+			m.addStringArg("gotolabel");
+			m.addStringArg(mPlayLabel);
+			mOSCsender.sendMessage(m);
+		}
+	}
 	bShouldRedraw = true;
 }
 
@@ -482,6 +495,18 @@ void ofxAntescofog::setupUI() {
 	[viewMenuItem setSubmenu:viewMenu];
 	[menubar addItem:viewMenuItem];
 
+	//////////////////
+	// Cues
+	mCuesMenu = [[[NSMenu new] autorelease] initWithTitle:@"Cues"];
+	mCuesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Cues" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	/*
+	id toggleViewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[toggleViewMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEVIEW];
+	[cuesMenu addItem:toggleViewMenuItem];
+	*/
+
+	[mCuesMenuItem setSubmenu:mCuesMenu];
+	[menubar addItem:mCuesMenuItem];
 
 	//////////////////
 	// Help
@@ -523,17 +548,18 @@ void ofxAntescofog::setupUI() {
 	//                    ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_gui_bg);
 
 	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
-	mSliderBPM = new ofxUISlider(16*4*10, 0, 70, 12, 30, 300, 120, TEXT_CONSTANT_BUTTON_BPM);
-	guiBottom->addWidgetDown(mSliderBPM);
+	//mSliderBPM = new ofxUISlider(16*4*10, 0, 70, 12, 30, 300, 120, TEXT_CONSTANT_BUTTON_BPM);
+	//guiBottom->addWidgetDown(mSliderBPM);
+	mBPMbuffer = new float[256];
+	for (int i = 0; i < 256; i++) mBPMbuffer[i] = 0.;
+	ofxUISpectrum* tempoCurve = new ofxUISpectrum(100, 64, mBPMbuffer, 256, 0., 290.0, "bpm");
+	guiBottom->addWidgetDown(tempoCurve);
+	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
+	tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
 
-
-#if NO_UIBUTTONS
-	guiBottom->addWidgetRight(new ofxUILabelToggle(bSnapToGrid, TEXT_CONSTANT_BUTTON_SNAP, OFX_UI_FONT_SMALL));
-	guiBottom->addWidgetRight(new ofxUILabelToggle(bAutoScroll, TEXT_CONSTANT_BUTTON_AUTOSCROLL, OFX_UI_FONT_SMALL));
-#endif
 	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
 	ofxUIButton *b = new ofxUIButton("NOTE", false, 30, 15);
-	guiBottom->addWidgetRight(b);
+	guiBottom->addWidgetEastOf(b, "bpm");
 	b->setColorBack(ofxAntescofoNote->color_note);
 
 	b = new ofxUIButton(30, 15, false, "CHORD");
@@ -551,24 +577,30 @@ void ofxAntescofog::setupUI() {
 	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
 	space->setVisible(false);
 	guiBottom->addWidgetDown(space);
+	mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
+	guiBottom->addWidgetSouthOf(mLabelBPM, "NOTE");
+	mLabelBPM = new ofxUILabel("120", fontsize);
+	guiBottom->addWidgetEastOf(mLabelBPM, TEXT_CONSTANT_BUTTON_BPM);
+
 	mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, fontsize);
-	guiBottom->addWidgetDown(mLabelBeat);
+	guiBottom->addWidgetSouthOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BPM);
 	mLabelBeat = new ofxUILabel("0", fontsize);
-	guiBottom->addWidgetRight(mLabelBeat);
+	guiBottom->addWidgetEastOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BEAT);
+
 	mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, fontsize);
-	guiBottom->addWidgetDown(mLabelPitch);
+	guiBottom->addWidgetSouthOf(mLabelPitch, TEXT_CONSTANT_BUTTON_BEAT);
 	mLabelPitch = new ofxUILabel("0", fontsize);
-	guiBottom->addWidgetRight(mLabelPitch);
+	guiBottom->addWidgetEastOf(mLabelPitch, TEXT_CONSTANT_BUTTON_PITCH);
 	mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
 
-	 
+/*
 	// drop down list
 	//guiBottom->addWidgetDown(new ofxUILabel("Cue points", OFX_UI_FONT_MEDIUM)); 
 	mCuepointsDdl = new ofxUIDropDownList(100, TEXT_CONSTANT_BUTTON_CUEPOINTS, cuepoints, OFX_UI_FONT_SMALL);
 	mCuepointsDdl->setAllowMultiple(false);
 	mCuepointsDdl->setAutoClose(true);
 	guiBottom->addWidgetDown(mCuepointsDdl);
-
+*/
 	// event buttons
 	space = new ofxUISpacer(3, 1);
 	space->setVisible(false);
@@ -818,6 +850,7 @@ void ofxAntescofog::setup(){
 void ofxAntescofog::update() {
 	if (!bSetupDone)
 		return;
+
 	//if (!bEditorShow) score_w = ofGetWindowWidth() - score_x;
 	//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
 	timeline.setWidth(score_w);
@@ -843,8 +876,9 @@ void ofxAntescofog::update() {
 				mOsc_tempo = m.getArgAsFloat(0);
 				if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
 				bpm = mOsc_tempo;
+				mLabelBPM->setLabel(ofToString(mOsc_tempo));
 				//if (bpm) timeline.setBPM(bpm);
-				mSliderBPM->setValue(bpm);
+				//mSliderBPM->setValue(bpm);
 				mHasReadMessages = true;
 			} else if(m.getAddress() == "/antescofo/event_beatpos" && m.getArgType(0) == OFXOSC_TYPE_FLOAT){
 				mOsc_beat = m.getArgAsFloat(0);
@@ -882,7 +916,8 @@ void ofxAntescofog::update() {
 				string scorefile = m.getArgAsString(0);
 				if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
 				mHasReadMessages = true;
-				mCuepointsDdl->clearToggles();
+				// mCuepointsDdl->clearToggles();
+				cues_clear_menu();
 				loadScore(scorefile, false);
 				bShouldRedraw = true;
 			} else {
@@ -939,6 +974,7 @@ void ofxAntescofog::update() {
 		bShouldRedraw = true;
 	}
 	//guiBottom->update();
+	push_tempo_value();
 
 	// http update
 	if (!disable_httpd)
@@ -1848,11 +1884,13 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		timeline.getTicker()->setZoomBounds(z);
 
 		bpm = timeline.getBPM();
-		mSliderBPM->setValue(bpm);
+		//mSliderBPM->setValue(bpm);
 		// get cuepoints
-		mCuepointsDdl->clearToggles();
+		cues_clear_menu();
+		//mCuepointsDdl->clearToggles();
 		for (vector<string>::iterator i = ofxAntescofoNote->cuepoints.begin(); i != ofxAntescofoNote->cuepoints.end(); i++) {
-			mCuepointsDdl->addToggle(*i);
+			//mCuepointsDdl->addToggle(*i);
+			cues_add_menu(*i);
 		}
 		update();
 
@@ -2170,6 +2208,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		    ny = ofGetWindowHeight() + topy - score_h;
 	    score_y = ny;
     }
+    /*
     if (e.widget->getName() == TEXT_CONSTANT_BUTTON_CUEPOINTS) {
 	    cout << "Cuepoints Drop Down List hit: " << endl; 
 	    vector<ofxUIWidget *> &selected = mCuepointsDdl->getSelected(); 
@@ -2186,6 +2225,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    }
 	    mCuepointsDdl->clearSelected();
     }
+    */
 }
 
 void ofxAntescofog::editorDoubleclicked(int line)
@@ -2458,5 +2498,37 @@ void ofxAntescofog::httpd_update_beatpos()
 	ofs.close();
 }
 
+
+
+void ofxAntescofog::push_tempo_value() {
+	static unsigned long long lasttime_pushed = ofGetSystemTimeMicros();
+	
+	unsigned long long nownow;
+	nownow = ofGetSystemTimeMicros();
+
+	if (nownow - lasttime_pushed > 50000) {
+		lasttime_pushed = nownow;
+		// shift buffer values by one to the left
+		for (int i = 0; i < 255; i++)
+			mBPMbuffer[i] = mBPMbuffer[i+1];
+		mBPMbuffer[255] = mOsc_tempo;
+	}
+}
+
+void ofxAntescofog::cues_clear_menu() {
+	mCuesIndexToString.clear();
+	mCuesMaxIndex = 0;
+
+	[mCuesMenu removeAllItems];
+}
+
+void ofxAntescofog::cues_add_menu(string c) {
+	mCuesMaxIndex++;
+	mCuesIndexToString[mCuesMaxIndex] = c;
+	id menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithUTF8String:c.c_str()] action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[menuItem setTag:mCuesMaxIndex + INT_CONSTANT_BUTTON_CUES_INDEX];
+
+	[mCuesMenu addItem:menuItem];
+}
 
 

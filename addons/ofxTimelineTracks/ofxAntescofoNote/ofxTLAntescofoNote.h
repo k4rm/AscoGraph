@@ -64,12 +64,12 @@ class ParseDriver;
 class score_elt {
 	public:
 		score_elt() { pitches.reserve(10); }
-		int 				type;
-		rational 			duration;
+		int 		    type;
+		rational 	    duration;
 		vector<int>         pitches;
 		vector<int>         grace_pitches;
-		int					nMeasure; // measure number
-		float				m_pos; // position in part, in beats unit
+		int		    nMeasure; // measure number
+		float		    m_pos; // position in part, in beats unit
 		int                 flags; // handles tied notes..
 		string              bpm;
 
@@ -104,6 +104,7 @@ typedef struct {
 	unsigned int colNum_begin;
 	unsigned int lineNum_end;
 	unsigned int colNum_end;
+	vector<int>	    jump_dests;
 } ofxTLAntescofoNoteOn;
 
 

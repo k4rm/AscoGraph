@@ -48,6 +48,7 @@
 #define INT_CONSTANT_BUTTON_NEXTEVENT	29
 #define INT_CONSTANT_BUTTON_ZOOM_IN	30
 #define INT_CONSTANT_BUTTON_ZOOM_OUT	31
+#define INT_CONSTANT_BUTTON_CUES_INDEX  300
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
 #define TEXT_CONSTANT_BUTTON_LOAD               "Load score"
@@ -61,7 +62,8 @@
 #define TEXT_CONSTANT_BUTTON_TOGGLE_VIEW        "Toggle view"
 #define TEXT_CONSTANT_BUTTON_TOGGLE_EDITOR      "Toggle Editor"
 #define TEXT_CONSTANT_BUTTON_BEAT               "Position in score (in beats): "
-#define TEXT_CONSTANT_BUTTON_PITCH              "Detected Pitch : "
+#define TEXT_CONSTANT_BUTTON_PITCH              "Detected Pitch: "
+#define TEXT_CONSTANT_BUTTON_BPM              	"Detected BPM: "
 #define TEXT_CONSTANT_BUTTON_SPEED              "Accompaniment speed : "
 #define TEXT_CONSTANT_BUTTON_SNAP               "Snap to grid"
 #define TEXT_CONSTANT_BUTTON_AUTOSCROLL         "Auto Scroll"
@@ -74,7 +76,6 @@
 #define TEXT_CONSTANT_BUTTON_STOP               "Stop"
 #define TEXT_CONSTANT_BUTTON_NEXT_EVENT         "next event"
 #define TEXT_CONSTANT_BUTTON_PREV_EVENT         "prev event"
-#define TEXT_CONSTANT_BUTTON_BPM                "Tempo: "
 #define TEXT_CONSTANT_BUTTON_SAVE_COLOR         "Save color"
 #define TEXT_CONSTANT_BUTTON_CUEPOINTS		"cue points"
 #define TEXT_CONSTANT_PARSE_ERROR               " /!\\ Antescofo Score parsing error /!\\  "
@@ -219,11 +220,12 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 #endif
 
 		// UI
+		id mCuesMenuItem, mCuesMenu;
 		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC, *guiElevator;
 		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;
 		ofxUISlider *mSliderBPM;
-		ofxUILabel  *mLabelBeat, *mLabelPitch, *mLabelAccompSpeed, *mFindReplaceOccur;
+		ofxUILabel  *mLabelBeat, *mLabelBPM, *mLabelPitch, *mLabelAccompSpeed, *mFindReplaceOccur;
 		ofxUILabelButton *mSaveColorButton;
 		ofxUILabelToggle *mEditButton;
 		void exit();
@@ -236,6 +238,12 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 		vector<string> cuepoints;
 		string mPlayLabel;
 		ofxUIDropDownList* mCuepointsDdl;
+		float* mBPMbuffer;
+		void push_tempo_value();
+		map<int, string> mCuesIndexToString;
+		int mCuesMaxIndex;
+		void cues_clear_menu();
+		void cues_add_menu(string s);
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;
