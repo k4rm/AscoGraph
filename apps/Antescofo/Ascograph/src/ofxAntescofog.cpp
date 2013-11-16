@@ -570,6 +570,7 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetEastOf(mLabelPitch, TEXT_CONSTANT_BUTTON_PITCH);
 	mLabelAccompSpeed = new ofxUILabel(TEXT_CONSTANT_BUTTON_SPEED, fontsize);
 
+	// tempo curve
 	ofxUISpectrum* tempoCurve = new ofxUISpectrum(313, 64, mBPMbuffer, 256, 0., 290.0, "bpm");
 	guiBottom->addWidgetDown(tempoCurve);
 	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
@@ -577,6 +578,35 @@ void ofxAntescofog::setupUI() {
 	ofRectangle* r = tempoCurve->getRect();
 	r->x = 3; r->y = 3;
 
+	// transport btns
+
+	int wi = 32;
+	int xi = 382, yi = 32, dxi = 12;
+	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/prev_.png", TEXT_CONSTANT_BUTTON_PREV_EVENT);
+	prevToggle->setLabelVisible(false);
+	guiBottom->addWidgetEastOf(prevToggle, "bpm");
+	r = prevToggle->getRect(); r->x = xi; r->y = yi;
+
+	ofxUIMultiImageToggle* stopToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/stop_.png", TEXT_CONSTANT_BUTTON_STOP);
+	stopToggle->setLabelVisible(false);
+	guiBottom->addWidgetEastOf(stopToggle, TEXT_CONSTANT_BUTTON_PREV_EVENT);
+	r = stopToggle->getRect(); r->x = xi + wi + dxi; r->y = yi;
+
+	ofxUIMultiImageToggle* playToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/play_.png", TEXT_CONSTANT_BUTTON_PLAY);
+	playToggle->setLabelVisible(false);
+	guiBottom->addWidgetEastOf(playToggle, TEXT_CONSTANT_BUTTON_STOP);
+	r = playToggle->getRect(); r->x = xi + 2*(wi+dxi); r->y = yi;
+
+	ofxUIMultiImageToggle* startToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/start_.png", TEXT_CONSTANT_BUTTON_START);
+	startToggle->setLabelVisible(false);
+	guiBottom->addWidgetEastOf(startToggle, TEXT_CONSTANT_BUTTON_PLAY);
+	r = startToggle->getRect(); r->x = xi + 3*(wi+dxi); r->y = yi;
+
+	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/next_.png", TEXT_CONSTANT_BUTTON_NEXT_EVENT);
+	nextToggle->setLabelVisible(false);
+	guiBottom->addWidgetEastOf(nextToggle, TEXT_CONSTANT_BUTTON_START);
+	r = nextToggle->getRect(); r->x = xi + 4*(wi+dxi); r->y = yi;
+#if 0
 	ofxUILabelToggle* b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_START, OFX_UI_FONT_SMALL);
 	guiBottom->addWidgetEastOf(b, "bpm");
 	b = new ofxUILabelToggle(50, false, TEXT_CONSTANT_BUTTON_STOP, OFX_UI_FONT_SMALL);
@@ -596,6 +626,7 @@ void ofxAntescofog::setupUI() {
 		mEditButton->setVisible(false);
 		mEditButton->setLabelVisible(false);
 	}
+#endif
 /*
 	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
 	space->setVisible(false);
@@ -604,7 +635,7 @@ void ofxAntescofog::setupUI() {
 
 	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
 	ofxUIButton *bu = new ofxUIButton("NOTE", false, 30, 15);
-	guiBottom->addWidgetSouthOf(bu, "bpm");
+	guiBottom->addWidgetEastOf(bu, "bpm");
 	bu->setColorBack(ofxAntescofoNote->color_note);
 
 	bu = new ofxUIButton(30, 15, false, "CHORD");
@@ -811,7 +842,7 @@ void ofxAntescofog::setup(){
 
 	fog = this;
 	score_x = 5;
-	score_y = 81+10;
+	score_y = 72;////81;//+10;
 	mUIbottom_y = 40;
 
 	bpm = 120; 
@@ -1052,8 +1083,8 @@ void ofxAntescofog::draw() {
 
 			// logos
 			//mLogoInria.draw(score_w - 290, 2, 148, 54);
-			mLogoInria.draw(score_w - 290, 14, 142, 52);
-			mLogoIrcam.draw(score_w - 120, 20, 102, 61);
+			mLogoInria.draw(score_w - 290, 9, 142, 52);
+			mLogoIrcam.draw(score_w - 120, 8, 102, 61);
 			//mLogoIrcam.draw(score_w - 170, 0, 109, 64);
 		
 			drawCache.end();

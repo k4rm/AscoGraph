@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.080")
+set(ASCOGRAPH_VERSION_NUMBER "0.081")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -686,6 +686,26 @@ set( MACOSX_RESOURCE_FILES_FONTS
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 
 	${CMAKE_SOURCE_DIR}/../bin/data/timeline0_Page_One_trackPositions.xml 
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/stop_.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/stop_down.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/stop_over.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/stop_on.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/play_.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/play_on.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/play_over.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/play_down.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/prev_.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/prev_on.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/prev_down.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/prev_over.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/next_.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/next_on.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/next_over.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/next_down.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_on.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_over.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_down.png
 )
 
 
