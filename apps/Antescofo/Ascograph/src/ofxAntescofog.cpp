@@ -553,6 +553,10 @@ void ofxAntescofog::setupUI() {
 	mBPMbuffer = new float[256];
 	for (int i = 0; i < 256; i++) mBPMbuffer[i] = 0.;
 
+	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
+	space->setVisible(false);
+	guiBottom->addWidgetDown(space);
+
 	mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
 	//guiBottom->addWidgetSouthOf(mLabelBPM, TEXT_CONSTANT_BUTTON_START);
 	guiBottom->addWidgetDown(mLabelBPM);
@@ -572,6 +576,7 @@ void ofxAntescofog::setupUI() {
 
 	// tempo curve
 	ofxUISpectrum* tempoCurve = new ofxUISpectrum(313, 64, mBPMbuffer, 256, 0., 290.0, "bpm");
+	//tempoCurve->setDrawOutline(true);
 	guiBottom->addWidgetDown(tempoCurve);
 	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
 	tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
@@ -581,29 +586,34 @@ void ofxAntescofog::setupUI() {
 	// transport btns
 
 	int wi = 32;
-	int xi = 382, yi = 32, dxi = 12;
+	int xi = 358, yi = 28, dxi = 12;
 	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/prev_.png", TEXT_CONSTANT_BUTTON_PREV_EVENT);
 	prevToggle->setLabelVisible(false);
+	prevToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(prevToggle, "bpm");
 	r = prevToggle->getRect(); r->x = xi; r->y = yi;
 
 	ofxUIMultiImageToggle* stopToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/stop_.png", TEXT_CONSTANT_BUTTON_STOP);
 	stopToggle->setLabelVisible(false);
+	stopToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(stopToggle, TEXT_CONSTANT_BUTTON_PREV_EVENT);
 	r = stopToggle->getRect(); r->x = xi + wi + dxi; r->y = yi;
 
 	ofxUIMultiImageToggle* playToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/play_.png", TEXT_CONSTANT_BUTTON_PLAY);
 	playToggle->setLabelVisible(false);
+	playToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(playToggle, TEXT_CONSTANT_BUTTON_STOP);
 	r = playToggle->getRect(); r->x = xi + 2*(wi+dxi); r->y = yi;
 
 	ofxUIMultiImageToggle* startToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/start_.png", TEXT_CONSTANT_BUTTON_START);
 	startToggle->setLabelVisible(false);
+	startToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(startToggle, TEXT_CONSTANT_BUTTON_PLAY);
 	r = startToggle->getRect(); r->x = xi + 3*(wi+dxi); r->y = yi;
 
 	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/next_.png", TEXT_CONSTANT_BUTTON_NEXT_EVENT);
 	nextToggle->setLabelVisible(false);
+	nextToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(nextToggle, TEXT_CONSTANT_BUTTON_START);
 	r = nextToggle->getRect(); r->x = xi + 4*(wi+dxi); r->y = yi;
 #if 0
