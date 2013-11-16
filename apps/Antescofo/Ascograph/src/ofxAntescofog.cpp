@@ -429,6 +429,9 @@ void ofxAntescofog::setupUI() {
 		id simulateMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Simulate" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 		[simulateMenuItem setTag:INT_CONSTANT_BUTTON_SIMULATE];
 		[transMenu addItem:simulateMenuItem];
+		id editMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+		[editMenuItem setTag:INT_CONSTANT_BUTTON_EDIT];
+		[transMenu addItem:editMenuItem];
 	}
 	// . Start
 	id startMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Start" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
