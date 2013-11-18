@@ -240,6 +240,19 @@ void ofxAntescofog::menu_item_hit(int n)
 				((ofxTLZoomer2D*)timeline.getZoomer())->zoomout();
 				break;
 			}
+		case INT_CONSTANT_BUTTON_OPEN_ALL_CURVES:
+			{
+
+				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
+				if (actiontrack) actiontrack->show_all_curves();
+				break;
+			}
+		case INT_CONSTANT_BUTTON_OPEN_ALL_GROUPS:
+			{
+				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
+				if (actiontrack) actiontrack->show_all_groups();
+				break;
+			}
 	}
 	
 	if (n >= INT_CONSTANT_BUTTON_CUES_INDEX) {
@@ -485,6 +498,14 @@ void ofxAntescofog::setupUI() {
 	id lineWrapModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Line Wrapping" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[lineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
 	[viewMenu addItem:lineWrapModeMenuItem];
+	// open all curves
+	id openAllCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Open all curves" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[openAllCurvesMenuItem setTag:INT_CONSTANT_BUTTON_OPEN_ALL_CURVES];
+	[viewMenu addItem:openAllCurvesMenuItem];
+	// open all groups
+	id openAllGroupsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Open all groups" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[openAllGroupsMenuItem setTag:INT_CONSTANT_BUTTON_OPEN_ALL_GROUPS];
+	[viewMenu addItem:openAllGroupsMenuItem];
 	// zoom +
 	id zoomInMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Zoom in" action:@selector(menu_item_hit:) keyEquivalent:@"+"] autorelease];
 	[zoomInMenuItem setTag:INT_CONSTANT_BUTTON_ZOOM_IN];

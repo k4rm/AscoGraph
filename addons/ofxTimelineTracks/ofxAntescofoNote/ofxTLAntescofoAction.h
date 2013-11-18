@@ -104,6 +104,9 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		ActionGroup* groupFromScreenPoint(int x, int y);
 		ActionGroup* groupFromScreenPoint_rec(ActionGroup* group, int x, int y);
 		void regionSelected(ofLongRange timeRange, ofRange valueRange);
+		void show_all_curves();
+		void show_all_groups(bool bJustCurves=false);
+		void show_all_groups_rec(bool bJustCurves, ActionGroup* gf);
 };
 
 class ActionGroup {

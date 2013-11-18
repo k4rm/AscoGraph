@@ -1025,6 +1025,35 @@ void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
 
 }
 
+void ofxTLAntescofoAction::show_all_curves()
+{
+	show_all_groups(true);
+}
+
+void ofxTLAntescofoAction::show_all_groups_rec(bool bJustCurves, ActionGroup* gf)
+{
+	list<ActionGroup*>::const_iterator i;
+	for (i = gf->sons.begin(); i != gf->sons.end(); i++) {
+		ActionGroup* g = *i;
+		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g)) {
+			g->header->hidden = false;
+			continue;
+		}
+		show_all_groups_rec(bJustCurves, g);
+	}
+
+}
+
+void ofxTLAntescofoAction::show_all_groups(bool bJustCurves)
+{
+	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		ActionGroup* g = (*i)->group;
+		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g))
+			(*i)->hidden = false;
+		show_all_groups_rec(bJustCurves, g);
+	}
+}
+
 ////////////////////////////////////////////////////
 
 ActionGroup::ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_) 
