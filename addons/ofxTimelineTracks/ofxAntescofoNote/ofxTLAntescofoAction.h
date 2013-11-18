@@ -122,6 +122,7 @@ class ActionGroup {
 		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		virtual string dump();
+		virtual int getHeight();
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
 
 		list<ActionGroup*> sons;
@@ -158,7 +159,7 @@ class ActionMultiCurves : public ActionGroup {
 		void show();
 		void hide();
 		int getWidth();
-		int getHeight();
+		virtual int getHeight();
 		void setWidth(int w);
 
 		float resize_factor;

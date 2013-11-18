@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.082")
+set(ASCOGRAPH_VERSION_NUMBER "0.083")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -91,6 +91,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/Function_tab.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/AnteClock_standalone.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Antescofo_standalone.cpp
+	${ANTESCOFO_PARSER_PATH}/sources/Track.cpp
 )
 
 set (OFX_LIB_PATH ../../../../libs/openFrameworks)

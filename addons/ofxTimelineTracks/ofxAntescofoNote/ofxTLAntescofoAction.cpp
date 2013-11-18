@@ -247,14 +247,14 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 		return ag->header->HEADER_HEIGHT;
 	} else if (!ag->header->top_level_group) {
 		cury += ag->header->HEADER_HEIGHT;
-		curh += ag->header->HEADER_HEIGHT;
+		curh += /*ag->getHeight() +*/ ag->header->HEADER_HEIGHT;
 		toth += curh;
 	}
 
 	ActionMessage *m = 0;
 	ActionMultiCurves *c = 0;
 
-	list<ActionGroup*>::const_iterator g;
+	list<ActionGroup*>::iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		if ((m = dynamic_cast<ActionMessage*>(*g))) {
 			//if (debugsub) cout << "ag->header-> " << ag->header->realtitle << endl;
@@ -264,13 +264,16 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 			m->y = cury;
 			//if (debugsub) cout << m->action << "m->x=" << m->x << " m->y=" << m->y << " curh:" << curh << " toth:" << toth << endl;
 		} else if ((c = dynamic_cast<ActionMultiCurves*>(*g))) {
+			c->header->rect.y = cury;
 			// update curves rectangle bounds
 			int boxy = c->header->rect.y + c->header->HEADER_HEIGHT;
 			int boxh = (bounds.height - c->header->HEADER_HEIGHT - curh - 5) / c->curves.size();
 			boxh *= c->resize_factor;
 			int boxw = c->getWidth();
 			int boxx = ag->header->rect.x;
-			if (c->delay) boxx = get_x(c->header->beatnum + c->header->delay);
+			//int boxx = get_x(ag->header->beatnum + ag->header->delay + c->delay);
+			if (c->delay) boxx = get_x(c->header->beatnum + c->header->delay + c->delay);
+			//g->header->rect.x = boxx;
 			//cout << "boxx: " << boxx << " delay:" << c->delay << endl;
 			ofRectangle cbounds(boxx, boxy, boxw, boxh);
 			for (int k = 0; k < c->curves.size(); k++) {
@@ -285,13 +288,9 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 			}
 
 			int h = c->getHeight();
-			toth += h;
+			//toth += h;
 			if (debugsub) cout << "toth: " << toth << " h:" << h << endl;
-			c->header->rect.height = toth;
-			
-			//} else if ((ac = dynamic_cast<ActionCurve*>(*g))) {
-			//toth += ac->getHeight();
-			//continue;
+			c->header->rect.height = h;//toth;
 		}
 
 		if (!m && !(*g)->header->top_level_group) {
@@ -306,6 +305,7 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 		toth += curh;
 		cury += curh;
 	}
+	if (ag->sons.empty()) toth += ag->getHeight();
 	if (debugsub) cout << "update_sub_height: returning " << toth << endl;
 	if (!toth) // leaf elmt -> message 
 		toth = ag->header->LINE_HEIGHT;
@@ -1129,6 +1129,11 @@ ActionGroup::~ActionGroup()
 	}
 }
 
+int ActionGroup::getHeight()
+{
+	return 0;
+}
+
 
 string ActionGroup::dump()
 {
@@ -1210,7 +1215,7 @@ void ActionGroup::drawModalContent(ofxTLAntescofoAction *tlAction)
    Curve
  */
 ActionMultiCurves::ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */Curve* c, float delay_, Event *e, ActionGroupHeader* header_)
-	: resize_factor(0.5)
+	: resize_factor(0.6)
 {
 	//tlAction = tlAction_;
 	delay = delay_;
@@ -1437,7 +1442,7 @@ int ActionMultiCurves::getHeight() {
 	for (j = curves.begin(); j != curves.end(); j++) {
 		h += (*j)->getHeight();
 	}
-	return h;
+	return h ;//* resize_factor;
 }
 
 ActionCurve::ActionCurve(list<Var*> &var, SeqContFunction* seq_, vector<AnteDuration*>* dur_vect_, float delay_, Event *e, ActionMultiCurves* parentCurve_)
@@ -2096,6 +2101,12 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 			inrect.height = inrect.height - 2;
 			if (!top_level_group) { inrect.height -= HEADER_HEIGHT; inrect.y += HEADER_HEIGHT; }
 			inrect.width = inrect.width - 2;
+			//cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
+			list<ActionGroup*>::const_iterator i;
+			for (i = group->sons.begin(); i != group->sons.end(); i++) {
+				if ((*i)->is_in_bounds(tlAction))
+					(*i)->draw(tlAction);
+			}
 			ofRect(tlAction->getBoundedRect(inrect));
 			if (!top_level_group) {
 				ofFill(); // rect color filled
@@ -2114,12 +2125,6 @@ void ActionGroupHeader::draw(ofxTLAntescofoAction *tlAction)
 				ofNoFill(); // black border
 				//if (group->selected) {ofSetColor(255, 0, 0, 255); ofSetLineWidth(3); }
 				ofRect(tlAction->getBoundedRect(rect));
-			} 
-			//cout << "ActionGroupHeader.draw !hidden: ("<<rect.x<<","<<rect.y<<", "<< rect.width << "x"<< rect.height << ") : " << title << endl;
-			list<ActionGroup*>::const_iterator i;
-			for (i = group->sons.begin(); i != group->sons.end(); i++) {
-				if ((*i)->is_in_bounds(tlAction))
-					(*i)->draw(tlAction);
 			}
 		}
 	} else { // hidden, just draw header and arrow
