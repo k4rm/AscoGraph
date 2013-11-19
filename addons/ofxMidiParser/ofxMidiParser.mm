@@ -918,9 +918,11 @@ using namespace std;
 // calculate note duration
 - (float) getBeatDuration_float:(double)ms resolution:(int)resolution
 {
+
     double io = ms / resolution;
     io = round(io * (bpm / 60) * pow(10, 4)) / pow(10, 4);
     if (io < 0) io = 0;
+    //NSLog(@" getBeat Duration Float: ----------------------------- ms=%.4f res=%d bpm=%u res=%.4f", ms, resolution, bpm, io);
 
     return io;
 }

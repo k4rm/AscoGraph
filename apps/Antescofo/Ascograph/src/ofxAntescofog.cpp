@@ -1818,8 +1818,8 @@ void ofxAntescofog::saveScore(bool stopSimu) {
 	if (bEditorShow) {
 		if (bIsSimulating && stopSimu) {
 			bIsSimulating = false;
-			mEditButton->setVisible(false);
-			mEditButton->setLabelVisible(false);
+			//mEditButton->setVisible(false);
+			//mEditButton->setLabelVisible(false);
 			stop_simulate_and_goedit();
 		}
 
@@ -2119,12 +2119,13 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
 	    cout << "Simulate button change: " << b->getValue() << endl;
 	    b->setValue(0);
-	    if (!mEditButton) {
+	    /*if (!mEditButton) {
 		    cerr << "ERROR: Can not get widget edit"<< endl;
 		    abort();
 	    }
 	    mEditButton->setVisible(true);
 	    mEditButton->setLabelVisible(true);
+	    */
 	    bIsSimulating = true;
 	    simulate();
     }
