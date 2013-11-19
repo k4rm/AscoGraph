@@ -51,11 +51,14 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bShouldRedraw = true;
 	bLineWrapMode = false;
 	bIsSimulating = false;
+	bScoreFromCommandLine = false;
 	audioTrack = NULL;
 	ofxAntescofoSim = 0;
 
-	if (argc > 1 && argv[1][0] != '-')
+	if (argc > 1 && argv[1][0] != '-') {
+		bScoreFromCommandLine = true;
 		mScore_filename = argv[1];
+	}
 
 	gettimeofday(&last_draw_time, 0);
 }
@@ -1969,7 +1972,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		}
 		update();
 
-		if (sendOsc) {
+		if (sendOsc && !bScoreFromCommandLine) {
 			// send OSC read msg to Antescofo
 			ofxOscMessage m;
 			m.setAddress("/antescofo/cmd");

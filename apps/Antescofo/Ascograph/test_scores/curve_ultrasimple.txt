@@ -15,21 +15,28 @@ Curve slider  @Grain := 0.05s, @Action :=
     $x
     {
           { 0.0 } @type "linear"
-        1 { 1.0 } @type "linear"
-        1.34472 { 2.17164 } @type "linear"
-        0.753275 { 2.03731 } @type "linear"
-        0.173361 { 1.29746 } @type "linear"
-        4.54464 { 2.64179 } @type "linear"
-        6.42562 { 1.90209 }
+        0.163528 { 0.0581815 } @type "quart"
+        0.836472 { 1.0 } @type "quart"
+        0.105055 { 2.09805 } @type "linear"
+        0.198215 { 2.46621 } @type "sine"
+        1.48662 { 2.0912 } @type "linear"
+        0.346878 { 1.99181 } @type "circ"
+        0.134586 { 1.29746 } @type "linear"
+        10.9703 { 1.90209 }
     }
     $y
     {
           { 2.0 } @type "linear"
-        1 { 0.0 } @type "linear"
-        2.89537 { 1.36 } @type "linear"
-        7.50463 { 1.4 }
+        6.15956 { 0.743436 } @type "bounce"
+        0.491187 { 1.2502 } @type "bounce"
+        4.76154 { 1.21932 } @type "linear"
+        4.36075 { 1.66255 } @type "back"
+        6.93806 { 0.742857 }
     }
 }
+NOTE A1 4
+
+CHORD (G2 E4) 10
 
 NOTE C2 10
 curve @action := plot $NOW $x $y $z {

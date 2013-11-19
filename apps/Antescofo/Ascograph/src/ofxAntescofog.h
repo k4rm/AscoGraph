@@ -211,7 +211,7 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 		int score_line_space;
 
 		int bpm;
-		bool bSnapToGrid, bAutoScroll, bSetupDone, bLineWrapMode;
+		bool bSnapToGrid, bAutoScroll, bSetupDone, bLineWrapMode, bScoreFromCommandLine;
 		string tmpfilename; // file to store converted MusicXML file to Antescofo score
 		string mScore_filename;
 
