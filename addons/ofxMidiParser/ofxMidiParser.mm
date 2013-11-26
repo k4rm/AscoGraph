@@ -364,11 +364,12 @@ using namespace std;
 
 	class Notes {
 	public:
-		Notes(vector<int>& pitchList_, float dur_) : pitchList(pitchList_), dur(dur_) {}
+		Notes(vector<int>& pitchList_, float dur_, float o) : pitchList(pitchList_), dur(dur_), offset(o) {}
 		vector<int> pitchList;
 		float dur;
 		float tempo, tempo32;
 		float vel;
+		float offset;
 	};
 	vector<Notes*> antescofo_notes;
 
@@ -402,6 +403,7 @@ using namespace std;
             {
                 deltaTime += [self readVariableValue];
                 [self.log appendFormat:@"  (%05d): ", (unsigned int)deltaTime];
+		timestamp += deltaTime;
                 // Peak at next byte
                 peekByte = [self readByteAtRelativeOffset:0];
                 
@@ -503,12 +505,10 @@ using namespace std;
 		    int curPitch;
 		    float delay_i;
                     NSString *delay, *duration, *s;
-
-
+		    bool debug_ = false;
                     switch (eventType)
                     {
                         case CHANNEL_NOTE_ON:
-				timestamp += deltaTime;
                             p1 = [self readByte];
                             p2 = [self readByte];
                             [self readNoteOn:channel parameter1:p1 parameter2:p2];
@@ -516,38 +516,69 @@ using namespace std;
 			    curPitch = p1;
                             delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
                             delay_i = deltaTime; //timestamp - noteson[curPitch];
-                            duration = [self getBeatDuration:1 resolution:ticksPerBeat];
-
-			    if (delay_i > 0.) {
-				    pitchList.push_back(0);
-				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
-				    noteson.erase(curPitch);
-				    pitchList.clear();
-				    deltaTime = 0;
+			    if (delay_i > 0.) { // handle rests
+				    if (noteson.empty()) {
+					    pitchList.push_back(0);
+					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding REST note dur=%f\n", delay_i];
+					    antescofo_notes.push_back(new Notes(pitchList, delay_i, timestamp - delay_i));
+					    pitchList.clear();
+				    } else { // if we were already in a note/chord, add current chord
+					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+						    pitchList.push_back(it->first);
+					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n", delay_i];
+					    antescofo_notes.push_back(new Notes(pitchList, delay_i, timestamp - delay_i));
+					    pitchList.clear();
+				    }
 			    }
 
-			    noteson[p1] = timestamp;
+			    noteson[curPitch] = timestamp;
+			    deltaTime = 0;
                             break;
                         case CHANNEL_NOTE_OFF:
-		    timestamp += deltaTime;
                             p1 = [self readByte];
                             p2 = [self readByte];
+                            [self readNoteOff: channel parameter1: p1 parameter2: p2];
 
 			    curPitch = p1;
-			    delay_i = [self getBeatDuration_float:deltaTime resolution:ticksPerBeat];
-			    if (deltaTime == 0) {
-				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
-			    } else {
-			    	    delay_i = timestamp - noteson[curPitch];
-				    pitchList.push_back(curPitch);
-				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+			    pitchList.push_back(curPitch);
+			    if (noteson.size() > 1) { // if we were already in a note/chord, shut if off
+				    // calculate Chord duration: timestamp - maxoffset
+				    /*
+				    float chordDur = 0., maxOffset = 0.;
+				    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+					    if (maxOffset < it->second) { maxOffset = it->second; }
+				    }
+				    chordDur = timestamp - maxOffset;
+				    */
+				    if (deltaTime) {
+					    // add current note
+					    delay_i = timestamp - noteson[curPitch] - deltaTime; //chordDur;
+					    if (delay_i) {
+						    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding current NOTE(%d) dur=%.4f\n", curPitch, delay_i];
+						    antescofo_notes.push_back(new Notes(pitchList, delay_i, noteson[curPitch]));
+					    }
+					    // then add chord
+					    pitchList.clear();
+					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+						    pitchList.push_back(it->first);
+					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding CHORD dur=%d\n", (unsigned int)deltaTime];
+					    antescofo_notes.push_back(new Notes(pitchList, deltaTime, timestamp - deltaTime)); //chordDur));
+				    } else { // get last antescofo_notes, and add to pitchList
+					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : (!deltaTime) adding previous note:%d\n", curPitch];
+					    Notes* n = antescofo_notes.back();
+					    n->pitchList.push_back(curPitch);
+				    }
+			    } else { // simple note
+				    delay_i = timestamp - noteson[curPitch];// [self getBeatDuration_float:deltaTime resolution:ticksPerBeat];
+				    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding NOTE(%d) dur=%.4f\n", curPitch, delay_i];
+				    antescofo_notes.push_back(new Notes(pitchList, delay_i, noteson[curPitch]));
 			    }
-			    //noteson.erase(curPitch);
-			    noteson[curPitch] = timestamp;
+
+			    //noteson[curPitch] = timestamp;
 			    pitchList.clear();
+			    noteson.erase(curPitch);
 
 			    delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
-                            [self readNoteOff: channel parameter1: p1 parameter2: p2];
                             //NSLog(@"parseMIDI Event - timestamp: %f Channel: %d %f %d %d %d", timestamp, note->channel, note->duration, note->note, note->releaseVelocity, note->velocity);
                             //NSString *delay = [self getBeatDuration:(timestamp - last_ts) resolution:resolution_];
                             //[self.log appendFormat:@"CHANNEL_NOTE_OFF: timestamp:%d, ticksPerBeat:%d, deltaTime:%d\n", (unsigned int)timestamp, ticksPerBeat, deltaTime];
@@ -593,15 +624,32 @@ using namespace std;
                 }
             }
         }
+	// factorize chords
+	/*
+	vector<Notes*> fact_notes;
+	float curof = 0.;
+	for (int i = 0; i < antescofo_notes.size(); i++) {
+		Notes* n = antescofo_notes[i];
+		if (n->offset > curof) {
+
+			curof += n->offset;
+		}
+	}*/
+
 	// dump antescofo notes
 	stringstream ret;
-
 	float d = 0.;
 	for (int i = 0; i < antescofo_notes.size(); i++) {
 		Notes* n = antescofo_notes[i];
+		// sort
+		std::sort(n->pitchList.begin(), n->pitchList.end());
+		// remove duplicates pitches
+		vector<int>::iterator u = std::unique(n->pitchList.begin(), n->pitchList.end());
+		n->pitchList.resize(u - n->pitchList.begin());
+
 		if (n->pitchList.size() == 1) { // NOTE
 			ret << "NOTE ";
-			int p = *n->pitchList.begin(); 
+			int p = *n->pitchList.begin();
 			ret << p;
 			if (p) ret << "00";
 			d = [self getBeatDuration_float:n->dur resolution:ticksPerBeat];

@@ -132,6 +132,14 @@ void ofxAntescofog::menu_item_hit(int n)
 		case INT_CONSTANT_BUTTON_TOGGLEEDIT:
 			setEditorMode(!bEditorShow, 0);
 			break;
+		case INT_CONSTANT_BUTTON_SHOWHIDE_ACTION:
+			if (ofxAntescofoNote->getActionTrack()) {
+				ofxAntescofoNote->deleteActionTrack();
+			} else {
+				ofxAntescofoNote->createActionTrack();
+				loadScore(mScore_filename);
+			}
+			break;
 		case INT_CONSTANT_BUTTON_SNAP:
 			bSnapToGrid = !bSnapToGrid;
 			cout << "Setting SnapToGrid to : " << bSnapToGrid << endl;
@@ -489,6 +497,10 @@ void ofxAntescofog::setupUI() {
 	id toggleEditorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Editor" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[toggleEditorMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEEDIT];
 	[viewMenu addItem:toggleEditorMenuItem];
+	// . show/hide action track
+	id showhideActiontrackMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle actions track display" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[showhideActiontrackMenuItem setTag:INT_CONSTANT_BUTTON_SHOWHIDE_ACTION];
+	[viewMenu addItem:showhideActiontrackMenuItem];
 	// . snap grid
 	id snapMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Snap to grid" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[snapMenuItem setTag:INT_CONSTANT_BUTTON_SNAP];

@@ -428,26 +428,23 @@ static int 			diffMillis;
 
 - (NSRect) getViewFrame
 {
-    if( windowMode == OF_WINDOW )
-        return [ self.openGLView frame ];
-    else if( windowMode == OF_FULLSCREEN )
+    if( windowMode == OF_FULLSCREEN )
         return [ self.fullScreenView frame ];
+    else return [ self.openGLView frame ];
 }
 
 - (NSRect) getWindowFrame
 {
-    if( windowMode == OF_WINDOW )
-        return [ self.openGLWindow frame ];
-    else if( windowMode == OF_FULLSCREEN )
+    if( windowMode == OF_FULLSCREEN )
         return [ self.fullScreenWindow frame ];
+    else return [ self.openGLWindow frame ];
 }
 
 - (NSRect) getScreenFrame
 {
-    if( windowMode == OF_WINDOW )
-        return [ [ self.openGLWindow screen ] frame ];
-    else if( windowMode == OF_FULLSCREEN )
+    if( windowMode == OF_FULLSCREEN )
         return [ [ self.fullScreenWindow screen ] frame ];
+    else return [ [ self.openGLWindow screen ] frame ];
 }
 
 - (void) setWindowPosition : (NSPoint)position

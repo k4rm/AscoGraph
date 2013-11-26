@@ -745,7 +745,8 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 	if (mRectCross.inside(args.x, args.y)) {
 		cout << "ofxTLAntescofoAction::mouseReleased: should close track" << endl;
 		disable();
-		timeline->removeTrack(this);
+		ofxAntescofoNote->deleteActionTrack();
+		//timeline->removeTrack(this);
 		return;
 	}
 	//if (!bounds.inside(args.x, args.y)) return;

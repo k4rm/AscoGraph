@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.083")
+set(ASCOGRAPH_VERSION_NUMBER "0.084")
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -791,7 +791,7 @@ ADD_CUSTOM_COMMAND(
 		COMMAND cp -f ${CMAKE_SOURCE_DIR}/../../../../libs/fmodex/lib/osx/libfmodex.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks
 		COMMAND install_name_tool -change ./libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
 		COMMAND sed "s/ASCOGRAPHVERSION/${ASCOGRAPH_VERSION_NUMBER}/g" Info.plist_orig > Info.plist
-		COMMAND codesign -s "Thomas Coffy" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
-		COMMAND codesign -s "Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
+		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
+		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
 )
 
