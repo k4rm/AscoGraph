@@ -116,6 +116,6 @@
 </colors>
 <osc>
     <host>localhost</host>
-    <port>3002</port>
-    <portremote>3003</portremote>
+    <port>6789</port>
+    <portremote>5678</portremote>
 </osc>

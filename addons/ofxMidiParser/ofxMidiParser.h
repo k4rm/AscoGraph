@@ -8,6 +8,17 @@ typedef enum tagMidiTimeFormat
     MidiTimeFormatFramesPerSecond
 } MidiTimeFormat;
 
+
+class Notes {
+	public:
+		Notes(vector<int>& pitchList_, float dur_) : pitchList(pitchList_), dur(dur_) {}
+		vector<int> pitchList;
+		float dur;
+		float tempo, tempo32;
+		float vel;
+		float offset;
+};
+
 @interface ofxMidiParser : NSObject
 {
     NSMutableString *log;
@@ -34,7 +45,6 @@ typedef enum tagMidiTimeFormat
 - (BOOL) parseData: (NSData *) midiData;
 - (NSString*) getAntescofoActionsForTrack:(NSData*)midiData trackWanted:(int)trackWanted;
 - (NSString*) getAntescofoNotesForTrack:(NSData*)midiData trackWanted:(int)trackWanted;
+- (void) print_notes: (vector<Notes*>&)antescofo_notes;
 
 @end
-
-

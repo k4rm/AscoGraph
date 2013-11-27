@@ -301,8 +301,6 @@ using namespace std;
     NSMutableString *out = [[NSMutableString alloc] init];
     
     //NSString *s = [NSString stringWithFormat:@"BPM %d\ngroup midiactions @tight @local {\n\t; delay msgrecvr pitch velocity\n", (unsigned int)bpm];
-    NSString *s = [NSString stringWithFormat:@"BPM 120\n\n"];
-    [out appendString:s];
 
     BOOL success = YES;
     self.log = [[NSMutableString alloc] init];
@@ -361,16 +359,6 @@ using namespace std;
         
         // Try to parse tracks
 	map<int, unsigned long> noteson;
-
-	class Notes {
-	public:
-		Notes(vector<int>& pitchList_, float dur_, float o) : pitchList(pitchList_), dur(dur_), offset(o) {}
-		vector<int> pitchList;
-		float dur;
-		float tempo, tempo32;
-		float vel;
-		float offset;
-	};
 	vector<Notes*> antescofo_notes;
 
         UInt32 expectedTrackOffset = offset;
@@ -461,9 +449,12 @@ using namespace std;
                             break;
                             
                         case META_SET_TEMPO:
+			{
                             [self readMetaSetTempo];
+			    NSString *s = [NSString stringWithFormat:@"BPM %u\n\n", (unsigned int)bpm];
+			    [out appendString:s];
                             break;
-                            
+			}
                         case META_SMPTE_OFFSET:
                             [self readMetaSMPTEOffset];
                             break;
@@ -520,13 +511,15 @@ using namespace std;
 				    if (noteson.empty()) {
 					    pitchList.push_back(0);
 					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding REST note dur=%f\n", delay_i];
-					    antescofo_notes.push_back(new Notes(pitchList, delay_i, timestamp - delay_i));
+					    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+					    if (debug_) [ self print_notes:antescofo_notes];
 					    pitchList.clear();
 				    } else { // if we were already in a note/chord, add current chord
 					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
 						    pitchList.push_back(it->first);
 					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n", delay_i];
-					    antescofo_notes.push_back(new Notes(pitchList, delay_i, timestamp - delay_i));
+					    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+					    if (debug_) [ self print_notes:antescofo_notes];
 					    pitchList.clear();
 				    }
 			    }
@@ -555,23 +548,31 @@ using namespace std;
 					    delay_i = timestamp - noteson[curPitch] - deltaTime; //chordDur;
 					    if (delay_i) {
 						    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding current NOTE(%d) dur=%.4f\n", curPitch, delay_i];
-						    antescofo_notes.push_back(new Notes(pitchList, delay_i, noteson[curPitch]));
+						    if (noteson.size() > 2) {
+							    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+								    pitchList.push_back(it->first);
+						    }
+						    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+						    if (debug_) [ self print_notes:antescofo_notes];
 					    }
 					    // then add chord
 					    pitchList.clear();
 					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
 						    pitchList.push_back(it->first);
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding CHORD dur=%d\n", (unsigned int)deltaTime];
-					    antescofo_notes.push_back(new Notes(pitchList, deltaTime, timestamp - deltaTime)); //chordDur));
+					    antescofo_notes.push_back(new Notes(pitchList, deltaTime)); //chordDur));
+					    if (debug_) [ self print_notes:antescofo_notes];
 				    } else { // get last antescofo_notes, and add to pitchList
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : (!deltaTime) adding previous note:%d\n", curPitch];
 					    Notes* n = antescofo_notes.back();
 					    n->pitchList.push_back(curPitch);
+					    if (debug_) [ self print_notes:antescofo_notes];
 				    }
 			    } else { // simple note
 				    delay_i = timestamp - noteson[curPitch];// [self getBeatDuration_float:deltaTime resolution:ticksPerBeat];
 				    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding NOTE(%d) dur=%.4f\n", curPitch, delay_i];
-				    antescofo_notes.push_back(new Notes(pitchList, delay_i, noteson[curPitch]));
+				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+				    if (debug_) [ self print_notes:antescofo_notes];
 			    }
 
 			    //noteson[curPitch] = timestamp;
@@ -685,13 +686,48 @@ using namespace std;
     return out;
 }
 
+// print antescofo notes
+- (void) print_notes: (vector<Notes*>&)antescofo_notes
+{
+	stringstream ret;
+	float d = 0.;
+	for (int i = 0; i < antescofo_notes.size(); i++) {
+		Notes* n = antescofo_notes[i];
+		// sort
+		std::sort(n->pitchList.begin(), n->pitchList.end());
+		// remove duplicates pitches
+		vector<int>::iterator u = std::unique(n->pitchList.begin(), n->pitchList.end());
+		n->pitchList.resize(u - n->pitchList.begin());
+
+		if (n->pitchList.size() == 1) { // NOTE
+			ret << "NOTE ";
+			int p = *n->pitchList.begin();
+			ret << p;
+			if (p) ret << "00";
+			d = [self getBeatDuration_float:n->dur resolution:ticksPerBeat];
+			ret << " " << d << endl;
+		} else if (n->pitchList.size() > 1) {
+			ret << "CHORD (";
+			for (int c = 0; c < n->pitchList.size(); c++) {
+				ret << n->pitchList[c];
+				if (c + 1 != antescofo_notes.size()) ret << "00 ";
+			}
+			ret << ") ";
+			d = [self getBeatDuration_float:n->dur resolution:ticksPerBeat];
+			ret << d << endl;
+		}
+	}
+
+	[self.log appendFormat:@"%@", [NSString stringWithCString:ret.str().c_str() encoding:[NSString defaultCStringEncoding]]];
+}
+
 - (NSString*) getAntescofoActionsForTrack:(NSData*)midiData trackWanted:(int)trackWanted
 {
     bpm = 120.;
     NSMutableString *out = [[NSMutableString alloc] init];
     
     //NSString *s = [NSString stringWithFormat:@"BPM %d\ngroup midiactions @tight @local {\n\t; delay msgrecvr pitch velocity\n", (unsigned int)bpm];
-    NSString *s = [NSString stringWithFormat:@"BPM 120\n\ngroup midiactions @tight @local {\n\t; delay msgrecvr pitch velocity\n"];
+    NSString *s = [NSString stringWithFormat:@"group midiactions @tight @local {\n\t; delay msgrecvr pitch velocity\n"];
     [out appendString:s];
 
     BOOL success = YES;
@@ -839,9 +875,11 @@ using namespace std;
                             break;
                             
                         case META_SET_TEMPO:
+			{
                             [self readMetaSetTempo];
+			    out = [NSMutableString stringWithFormat:@"BPM %u\n\n%@", (unsigned int)bpm, out];
                             break;
-                            
+			}
                         case META_SMPTE_OFFSET:
                             [self readMetaSMPTEOffset];
                             break;
