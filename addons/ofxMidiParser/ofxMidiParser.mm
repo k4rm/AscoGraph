@@ -515,8 +515,10 @@ using namespace std;
 					    if (debug_) [ self print_notes:antescofo_notes];
 					    pitchList.clear();
 				    } else { // if we were already in a note/chord, add current chord
-					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+						    it->second = timestamp;
 						    pitchList.push_back(it->first);
+					    }
 					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n", delay_i];
 					    antescofo_notes.push_back(new Notes(pitchList, delay_i));
 					    if (debug_) [ self print_notes:antescofo_notes];
@@ -535,30 +537,28 @@ using namespace std;
 			    curPitch = p1;
 			    pitchList.push_back(curPitch);
 			    if (noteson.size() > 1) { // if we were already in a note/chord, shut if off
-				    // calculate Chord duration: timestamp - maxoffset
-				    /*
-				    float chordDur = 0., maxOffset = 0.;
-				    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
-					    if (maxOffset < it->second) { maxOffset = it->second; }
-				    }
-				    chordDur = timestamp - maxOffset;
-				    */
 				    if (deltaTime) {
 					    // add current note
 					    delay_i = timestamp - noteson[curPitch] - deltaTime; //chordDur;
 					    if (delay_i) {
-						    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding current NOTE(%d) dur=%.4f\n", curPitch, delay_i];
-						    if (noteson.size() > 2) {
-							    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
-								    pitchList.push_back(it->first);
+						    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding current NOTEorCHORD(%d) dur=%.4f\n", curPitch, delay_i];
+						    if (noteson.size() > 1) {
+							    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+								    if (curPitch != it->first) {
+									    it->second = timestamp;
+									    pitchList.push_back(it->first);
+								    }
+							    }
 						    }
 						    antescofo_notes.push_back(new Notes(pitchList, delay_i));
 						    if (debug_) [ self print_notes:antescofo_notes];
 					    }
 					    // then add chord
 					    pitchList.clear();
-					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+						    it->second = timestamp;
 						    pitchList.push_back(it->first);
+					    }
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding CHORD dur=%d\n", (unsigned int)deltaTime];
 					    antescofo_notes.push_back(new Notes(pitchList, deltaTime)); //chordDur));
 					    if (debug_) [ self print_notes:antescofo_notes];
