@@ -941,7 +941,7 @@ using namespace std;
                             //[self.log appendFormat:@"CHANNEL_NOTE_OFF: timestamp:%d, ticksPerBeat:%d, deltaTime:%d\n", (unsigned int)timestamp, ticksPerBeat, deltaTime];
                             delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
                             duration = [self getBeatDuration:1 resolution:ticksPerBeat];
-                            s = [NSString stringWithFormat:@"\t%@ mnote %d %d\t; noteoff\n", delay, p1, p2];
+                            s = [NSString stringWithFormat:@"\t%@ mnote %d %d\t; noteoff\n", delay, p1, 0];
                             if (trackWanted == -1 || trackWanted == track)
                                 [out appendString:s];
 			    deltaTime = 0;
