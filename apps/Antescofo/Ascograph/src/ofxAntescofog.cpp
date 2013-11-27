@@ -384,9 +384,10 @@ void ofxAntescofog::setupUI() {
 	id editMenu = [[[NSMenu new] autorelease] initWithTitle:@"Edit"];
 	id editMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit" action:NULL keyEquivalent:@""] autorelease];
 	// . select all
-	id selectMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(menu_item_hit:) keyEquivalent:@"a"] autorelease];
+	/*id selectMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(menu_item_hit:) keyEquivalent:@"a"] autorelease];
 	[editMenuItem setTag:INT_CONSTANT_BUTTON_SELECTALL];
 	[editMenu addItem:selectMenuItem];
+	*/
 	// . find
 	id findMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Find text" action:@selector(menu_item_hit:) keyEquivalent:@"f"] autorelease];
 	[findMenuItem setTag:INT_CONSTANT_BUTTON_FIND];
