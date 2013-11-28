@@ -538,20 +538,20 @@ using namespace std;
 			    pitchList.push_back(curPitch);
 			    if (noteson.size() > 1) { // if we were already in a note/chord, shut if off
 				    if (deltaTime) {
-					    // add current note
-					    delay_i = timestamp - noteson[curPitch] - deltaTime; //chordDur;
-					    if (delay_i) {
-						    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding current NOTEorCHORD(%d) dur=%.4f\n", curPitch, delay_i];
-						    if (noteson.size() > 1) {
+					    if (noteson.size() > 2) {
+						    // add current note
+						    delay_i = timestamp - noteson[curPitch] - deltaTime; //chordDur;
+						    if (delay_i) {
+							    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding current NOTEorCHORD(%d) dur=%.4f\n", curPitch, delay_i];
 							    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
 								    if (curPitch != it->first) {
 									    it->second = timestamp;
 									    pitchList.push_back(it->first);
 								    }
 							    }
+							    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+							    if (debug_) [ self print_notes:antescofo_notes];
 						    }
-						    antescofo_notes.push_back(new Notes(pitchList, delay_i));
-						    if (debug_) [ self print_notes:antescofo_notes];
 					    }
 					    // then add chord
 					    pitchList.clear();
@@ -560,7 +560,7 @@ using namespace std;
 						    pitchList.push_back(it->first);
 					    }
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding CHORD dur=%d\n", (unsigned int)deltaTime];
-					    antescofo_notes.push_back(new Notes(pitchList, deltaTime)); //chordDur));
+					    if (pitchList.size()) antescofo_notes.push_back(new Notes(pitchList, deltaTime)); //chordDur));
 					    if (debug_) [ self print_notes:antescofo_notes];
 				    } else { // get last antescofo_notes, and add to pitchList
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : (!deltaTime) adding previous note:%d\n", curPitch];
@@ -577,7 +577,8 @@ using namespace std;
 
 			    //noteson[curPitch] = timestamp;
 			    pitchList.clear();
-			    noteson.erase(curPitch);
+			    if (noteson.find(curPitch) != noteson.end())
+			    	noteson.erase(curPitch);
 
 			    delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
                             //NSLog(@"parseMIDI Event - timestamp: %f Channel: %d %f %d %d %d", timestamp, note->channel, note->duration, note->note, note->releaseVelocity, note->velocity);
@@ -649,12 +650,14 @@ using namespace std;
 		n->pitchList.resize(u - n->pitchList.begin());
 
 		if (n->pitchList.size() == 1) { // NOTE
-			ret << "NOTE ";
-			int p = *n->pitchList.begin();
-			ret << p;
-			if (p) ret << "00";
 			d = [self getBeatDuration_float:n->dur resolution:ticksPerBeat];
-			ret << " " << d << endl;
+			if (d) {
+				ret << "NOTE ";
+				int p = *n->pitchList.begin();
+				ret << p;
+				if (p) ret << "00";
+				ret << " " << d << endl;
+			}
 		} else if (n->pitchList.size() > 1) {
 			ret << "CHORD (";
 			for (int c = 0; c < n->pitchList.size(); c++) {
