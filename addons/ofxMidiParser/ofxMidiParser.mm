@@ -538,7 +538,7 @@ using namespace std;
 			    pitchList.push_back(curPitch);
 			    if (noteson.size() > 1) { // if we were already in a note/chord, shut if off
 				    if (deltaTime) {
-					    if (noteson.size() > 2) {
+					    /*if (noteson.size() > 2) {
 						    // add current note
 						    delay_i = timestamp - noteson[curPitch] - deltaTime; //chordDur;
 						    if (delay_i) {
@@ -552,7 +552,7 @@ using namespace std;
 							    antescofo_notes.push_back(new Notes(pitchList, delay_i));
 							    if (debug_) [ self print_notes:antescofo_notes];
 						    }
-					    }
+*/
 					    // then add chord
 					    pitchList.clear();
 					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
@@ -562,6 +562,7 @@ using namespace std;
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding CHORD dur=%d\n", (unsigned int)deltaTime];
 					    if (pitchList.size()) antescofo_notes.push_back(new Notes(pitchList, deltaTime)); //chordDur));
 					    if (debug_) [ self print_notes:antescofo_notes];
+	//				    }
 				    } else { // get last antescofo_notes, and add to pitchList
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : (!deltaTime) adding previous note:%d\n", curPitch];
 					    Notes* n = antescofo_notes.back();
@@ -641,6 +642,7 @@ using namespace std;
 	// dump antescofo notes
 	stringstream ret;
 	float d = 0.;
+	vector<int> curPitches;
 	for (int i = 0; i < antescofo_notes.size(); i++) {
 		Notes* n = antescofo_notes[i];
 		// sort
