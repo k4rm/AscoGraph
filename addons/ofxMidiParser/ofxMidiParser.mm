@@ -358,7 +358,7 @@ using namespace std;
         [self.log appendFormat:@"Getting notes from track:%d\n", trackWanted];
         
         // Try to parse tracks
-	map<int, unsigned long> noteson;
+	map<int, long> noteson;
 	vector<Notes*> antescofo_notes;
 
         UInt32 expectedTrackOffset = offset;
@@ -515,9 +515,15 @@ using namespace std;
 					    if (debug_) [ self print_notes:antescofo_notes];
 					    pitchList.clear();
 				    } else { // if we were already in a note/chord, add current chord
-					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
-						    it->second = timestamp;
-						    pitchList.push_back(it->first);
+					    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+						    int p = it->first;
+						    if (curPitch != it->first && it->second < 0) { p = (-1) * p; }
+						    if (it->first != curPitch) 
+							    it->second = - timestamp;
+						    else
+							    it->second = timestamp;
+
+						    pitchList.push_back(p);
 					    }
 					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n", delay_i];
 					    antescofo_notes.push_back(new Notes(pitchList, delay_i));
@@ -527,6 +533,8 @@ using namespace std;
 			    }
 
 			    noteson[curPitch] = timestamp;
+			    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+				    if(deltaTime && it->first != curPitch) it->second = - abs(it->second);
 			    deltaTime = 0;
                             break;
                         case CHANNEL_NOTE_OFF:
@@ -555,9 +563,12 @@ using namespace std;
 */
 					    // then add chord
 					    pitchList.clear();
-					    for (map<int, unsigned long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+					    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+						    int p = it->first;
+						    if (it->second < 0) { p = (-1) * p; }
 						    it->second = timestamp;
-						    pitchList.push_back(it->first);
+						    pitchList.push_back(p);
+						    if(it->first != curPitch) it->second = - abs(it->second);
 					    }
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding CHORD dur=%d\n", (unsigned int)deltaTime];
 					    if (pitchList.size()) antescofo_notes.push_back(new Notes(pitchList, deltaTime)); //chordDur));
@@ -569,9 +580,14 @@ using namespace std;
 					    n->pitchList.push_back(curPitch);
 					    if (debug_) [ self print_notes:antescofo_notes];
 				    }
+				    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+				    	if(it->first != curPitch)
+						it->second = - abs(it->second);
+				    }
 			    } else { // simple note
-				    delay_i = timestamp - noteson[curPitch];// [self getBeatDuration_float:deltaTime resolution:ticksPerBeat];
-				    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding NOTE(%d) dur=%.4f\n", curPitch, delay_i];
+				    delay_i = timestamp - abs(noteson[curPitch]);// [self getBeatDuration_float:deltaTime resolution:ticksPerBeat];
+				    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding NOTE(%d) dur=%.4f :noteson:%ld\n", curPitch, delay_i, noteson[curPitch]];
+				    if (noteson[curPitch] < 0.) { pitchList.clear(); pitchList.push_back(- curPitch); }
 				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
 				    if (debug_) [ self print_notes:antescofo_notes];
 			    }
@@ -580,6 +596,8 @@ using namespace std;
 			    pitchList.clear();
 			    if (noteson.find(curPitch) != noteson.end())
 			    	noteson.erase(curPitch);
+			    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+				   if (deltaTime) it->second = - abs(it->second);
 
 			    delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
                             //NSLog(@"parseMIDI Event - timestamp: %f Channel: %d %f %d %d %d", timestamp, note->channel, note->duration, note->note, note->releaseVelocity, note->velocity);
@@ -646,9 +664,9 @@ using namespace std;
 	for (int i = 0; i < antescofo_notes.size(); i++) {
 		Notes* n = antescofo_notes[i];
 		// sort
-		std::sort(n->pitchList.begin(), n->pitchList.end());
+		std::sort(n->pitchList.begin(), n->pitchList.end(), mylt);
 		// remove duplicates pitches
-		vector<int>::iterator u = std::unique(n->pitchList.begin(), n->pitchList.end());
+		vector<int>::iterator u = std::unique(n->pitchList.begin(), n->pitchList.end(), myequal);
 		n->pitchList.resize(u - n->pitchList.begin());
 
 		if (n->pitchList.size() == 1) { // NOTE
@@ -691,6 +709,13 @@ using namespace std;
     return out;
 }
 
+bool myequal (long i, long j) {
+  return (abs(i)==abs(j));
+}
+
+bool mylt (long i, long j) {
+  return (abs(i) < abs(j));
+}
 // print antescofo notes
 - (void) print_notes: (vector<Notes*>&)antescofo_notes
 {
@@ -699,9 +724,9 @@ using namespace std;
 	for (int i = 0; i < antescofo_notes.size(); i++) {
 		Notes* n = antescofo_notes[i];
 		// sort
-		std::sort(n->pitchList.begin(), n->pitchList.end());
+		std::sort(n->pitchList.begin(), n->pitchList.end(), mylt);
 		// remove duplicates pitches
-		vector<int>::iterator u = std::unique(n->pitchList.begin(), n->pitchList.end());
+		vector<int>::iterator u = std::unique(n->pitchList.begin(), n->pitchList.end(), myequal);
 		n->pitchList.resize(u - n->pitchList.begin());
 
 		if (n->pitchList.size() == 1) { // NOTE
