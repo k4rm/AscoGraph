@@ -2,6 +2,8 @@
 
 set(ASCOGRAPH_VERSION_NUMBER "0.085")
 
+set(FAUST 0)
+
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
 cmake_minimum_required(VERSION 2.8)
@@ -92,8 +94,10 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/AnteClock_standalone.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Antescofo_standalone.cpp
 	${ANTESCOFO_PARSER_PATH}/sources/Track.cpp
-	#${ANTESCOFO_PARSER_PATH}/sources/DspDef.cpp
 )
+if (FAUST)
+	set (ANTESCOFO_PARSER_SOURCES "${ANTESCOFO_PARSER_SOURCES} ${ANTESCOFO_PARSER_PATH}/sources/DspDef.cpp")
+endif(FAUST)
 
 set (OFX_LIB_PATH ../../../../libs/openFrameworks)
 set (OFX_LIB_INCL_PATH ../../../../libs/openFrameworks)
@@ -406,7 +410,35 @@ file ( GLOB_RECURSE SCINTILLA_SOURCES
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/ PROPERTIES COMPILE_FLAGS "-x objective-c++")
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/ofxModifierKeys/src/ofxModifierKeys_impl_mac.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
+# Faust/LLVM
+if (FAUST)
+	set (LLVM_CONFIG "/opt/local/bin/llvm-config")
+	execute_process(COMMAND ${LLVM_CONFIG} "--version" OUTPUT_VARIABLE LLVM_VERSION)
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_VERSION "${LLVM_VERSION}")
+	message(STATUS "LLVM_VERSION: ${LLVM_VERSION}")
 
+	set (FAUST_DIR "${ANTESCOFO_PARSER_PATH}/../Mutant-libs/Faust2/llvm-${LLVM_VERSION}")
+	set (LLVM_CFLAGS "-I/opt/local/libexec/llvm-${LLVM_VERSION}/include")
+
+	execute_process(COMMAND ${LLVM_CONFIG} "--ldflags" OUTPUT_VARIABLE LLVM_LDFLAGS)
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS "${LLVM_LDFLAGS}")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+
+	execute_process(COMMAND ${LLVM_CONFIG} "--libs" "all" OUTPUT_VARIABLE LLVM_LDFLAGS2)
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS2 "${LLVM_LDFLAGS2}")
+	set (LLVM_LDFLAGS "${LLVM_LDFLAGS} ${LLVM_LDFLAGS2}")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS "${LLVM_LDFLAGS}")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+	set (LLVM_LDFLAGS "${LLVM_LDFLAGS} -lLLVMX86AsmParser -lc++ -lstdc++")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+
+	set (FAUST_CFLAGS "-I${FAUST_DIR}/include -DUSE_FAUST=1")
+	set (FAUST_LDFLAGS "${FAUST_DIR}/lib/faust/libfaust.a")
+	set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
+	set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FAUST_CFLAGS}")
+endif(FAUST)
 
 
 set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS 
@@ -445,7 +477,6 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/microhttpd/include
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/src/
-
 
 
 	#${OPENFRAMEWORKS_ROOT}/libs/fmodex/include
@@ -531,7 +562,6 @@ message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PAT
 #message(STATUS "Looking for Scintilla in : ${SCINTILLA_SOURCES}")
 
 include_directories(${CMAKE_INCLUDE_PATH})
-
 
 #######################################################
 #
@@ -755,6 +785,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 message("fmodex: ${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/osx/libfmodex.dylib")
 message("resources: ${MACOSX_RESOURCE_FILES}")
+
+message(STATUS "CFLAGS: ${CMAKE_CXX_FLAGS}")
+message(STATUS "LDLAGS: ${CMAKE_LD_FLAGS}")
 # install_name_tool -change ./libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib bin/Contents/MacOS/ofxAntescofog 
 
 SET_SOURCE_FILES_PROPERTIES(
