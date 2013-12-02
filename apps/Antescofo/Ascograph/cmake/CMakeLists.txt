@@ -829,3 +829,14 @@ ADD_CUSTOM_COMMAND(
 		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
 )
 
+
+###################################################################
+SET_SOURCE_FILES_PROPERTIES(../src/midiconvert.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+find_library(MIDICONVERT_LIB NAMES cocoa PATHS ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS})
+add_executable( midi2antescofo
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
+	../src/midiconvert.cpp
+	${MIDICONVERT_LIB}
+)
+
+target_link_libraries(midi2antescofo ${MIDICONVERT_LIB})
