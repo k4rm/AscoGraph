@@ -1993,7 +1993,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 			m.addStringArg(mScore_filename);
 			cout << "Sending OSC \"read "<< mScore_filename << "\" to Antescofo Patch." << endl;
 			mOSCsender.sendMessage(m);
-		}
+		} else bScoreFromCommandLine = false;
 	} else {
 		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 		//if (ofxAntescofoNote->get_error().empty()) ofxAntescofoNote->set_error("Zero event found in score.");
