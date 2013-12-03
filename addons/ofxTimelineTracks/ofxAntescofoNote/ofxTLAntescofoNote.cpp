@@ -700,7 +700,7 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 	console->addln(str.str()); str.str("");
 	// deja selected
 	if(clickedSwitchA != NULL){
-		mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end);
+		mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
 		if(!ofGetModifierKeyShift()){
 			timeline->unselectAll();
 		}
@@ -727,7 +727,7 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 		float normalizedCoord = screenXtoNormalizedX(args.x, zoomBounds);
 		clickedSwitchA = switchForScreenXY(args.x, args.y);
 		if(clickedSwitchA != NULL){
-			mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end);
+			mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
 			//if we haven't already selected these, flag deselect
 			if((!clickedSwitchA->startSelected || !clickedSwitchA->endSelected) && !ofGetModifierKeyShift()){
 				timeline->unselectAll();
@@ -1504,7 +1504,7 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 	}
 
 	if(switchA != NULL && bAutoScroll)
-		mAntescofog->editorShowLine(switchA->lineNum_begin, switchA->lineNum_end);
+		mAntescofog->editorShowLine(switchA->lineNum_begin, switchA->lineNum_end, switchA->colNum_begin, switchA->colNum_end);
 
 	// TODO : save detectedPitch = mOsc_pitch; in order to display it in a purple color in draw()
 	return r;

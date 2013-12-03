@@ -464,6 +464,22 @@ static const char * box_xpm[] = {
 }
 
 //void ofxCodeEditor::showLine(int linea, int lineb)
+- (void) showLine: (int) linea lineb:(int)lineb cola:(int)cola colb:(int)colb
+{
+	//[mEditor mBackend]->ScrollText(-1000); [mEditor mBackend]->ScrollText(linea);
+
+	cout << "ofxCodeEditor: showLine: " << linea << ":"<< cola << " -> " << lineb << ":"<< colb << endl;
+	// line scroll ok
+	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:0];
+	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:linea];
+
+	[mEditor setGeneralProperty: SCI_CLEARSELECTIONS value:0];
+
+	[mEditor setGeneralProperty: SCI_SETSEL 
+		parameter: [mEditor getGeneralProperty: SCI_FINDCOLUMN parameter:lineb extra:colb]
+		value: [mEditor getGeneralProperty: SCI_FINDCOLUMN parameter:linea extra:cola]];
+}
+
 - (void) showLine: (int) linea lineb: (int) lineb
 {
 	//[mEditor mBackend]->ScrollText(-1000); [mEditor mBackend]->ScrollText(linea);
@@ -479,7 +495,6 @@ static const char * box_xpm[] = {
 		parameter: [mEditor getGeneralProperty: SCI_FINDCOLUMN parameter:lineb]
 		value: [mEditor getGeneralProperty: SCI_FINDCOLUMN parameter:linea]];
 }
-
 - (int) getNbLines
 {
 	return [mEditor getGeneralProperty: SCI_GETLINECOUNT];

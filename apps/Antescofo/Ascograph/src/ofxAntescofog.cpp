@@ -2328,10 +2328,10 @@ void ofxAntescofog::editorDoubleclicked(int line)
 }
 
 
-void ofxAntescofog::editorShowLine(int linea, int lineb)
+void ofxAntescofog::editorShowLine(int linea, int lineb, int cola, int colb)
 {
 	if (bEditorShow) {
-		[ editor showLine:linea-1 lineb:lineb-1 ];
+		[ editor showLine:linea-1 lineb:lineb-1 cola:cola colb:colb];
 		int n = [ editor getNbLines ];
 		if (linea + 35 < n)
 			[ editor scrollLine:(-35) ];

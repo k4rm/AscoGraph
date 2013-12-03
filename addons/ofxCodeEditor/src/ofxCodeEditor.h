@@ -24,6 +24,7 @@
 - (void) die;
 - (void) setupEditor;
 - (void) showLine: (int) linea lineb: (int) lineb;
+- (void) showLine: (int) linea lineb:(int)lineb cola:(int)cola colb:(int)colb;
 - (void) setCurrentPos:(int) pos;
 - (int) getCurrentLine;
 - (int) getCurrentPos;

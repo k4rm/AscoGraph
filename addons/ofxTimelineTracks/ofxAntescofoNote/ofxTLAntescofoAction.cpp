@@ -622,14 +622,15 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		movingActionRect.y = args.y;
 		*/
 		if (clickedGroup->header) {
-			cout << "show selection: lineNum_begin:" << clickedGroup->header->lineNum_begin << " lineNum_end:" << clickedGroup->header->lineNum_end << endl;
-			mAntescofog->editorShowLine(clickedGroup->header->lineNum_begin, clickedGroup->header->lineNum_end);
+			cout << "show selection: lineNum_begin:" << clickedGroup->header->lineNum_begin << " lineNum_end:" << clickedGroup->header->lineNum_end << endl
+			     << "\tcolNum_begin:" << clickedGroup->header->colNum_begin << " colNum_end:" << clickedGroup->header->colNum_end << endl;
+			mAntescofog->editorShowLine(clickedGroup->header->lineNum_begin, clickedGroup->header->lineNum_end, clickedGroup->header->colNum_begin, clickedGroup->header->colNum_end);
 		}
 	}
 	for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 
 		if (!(*i)->top_level_group && mousePressed_In_Arrow(args, (*i)->group)) {
-			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end);
+			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 			res = true;
 			return res;
 		} else if ((*i)->group) { // look for subgroups
@@ -638,7 +639,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 				for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					// handle arrow click
 					if ((*j)->header &&  mousePressed_In_Arrow(args, (*j)->header->group)) {
-						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end);
+						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 						res = true;
 					} else if (!(*i)->hidden) {
 						// handle curve click
@@ -1230,6 +1231,8 @@ ActionMultiCurves::ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */Curve*
 
 		header->lineNum_begin = antescofo_curve->locate()->begin.line;
 		header->lineNum_end = antescofo_curve->locate()->end.line;
+		header->colNum_begin = antescofo_curve->locate()->begin.column;
+		header->colNum_end = antescofo_curve->locate()->end.column;
 
 		nbvects = antescofo_curve->seq_vect.size();
 
@@ -2036,7 +2039,9 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 			rect.height = HEADER_HEIGHT;
 			cout << "ActionGroupHeader : -----create curve ----" << endl;
 			lineNum_begin = action->locate()->begin.line;
-			lineNum_end = action->locate()->end.line + 1;
+			lineNum_end = action->locate()->end.line;// + 1; // XXX
+			colNum_begin = action->locate()->begin.column;
+			colNum_end = action->locate()->end.column;
 
 			//ActionMultiCurves *cu = new ActionMultiCurves(c, d, event, nh); 
 			group = new ActionMultiCurves(c, delay, event, this); 
@@ -2049,7 +2054,9 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 			Gfwd *g = dynamic_cast<Gfwd*>(action);
 			if (g) {
 				lineNum_begin = action->locate()->begin.line;
-				lineNum_end = action->locate()->end.line + 1;
+				lineNum_end = action->locate()->end.line;// + 1; //XXX
+				colNum_begin = action->locate()->begin.column;
+				colNum_end = action->locate()->end.column;
 
 				if (debug_actiongroup) cout << "ActionGroupHeader: adding group" << endl;
 				group = new ActionGroup(g, event, this);

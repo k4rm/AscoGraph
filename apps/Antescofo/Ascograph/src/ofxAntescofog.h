@@ -193,7 +193,7 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 		void parse_AntescofoScore(const string filename);
 		void setEditorMode(bool state, float beatn);
 		ofxCodeEditor* editor;
-		void editorShowLine(int linea, int lineb);
+		void editorShowLine(int linea, int lineb, int cola, int colb);
 		void editorDoubleclicked(int line);
 		void replaceEditorScore(int linebegin, int lineend, string actstr);
 		void createCodeTemplate(int which);

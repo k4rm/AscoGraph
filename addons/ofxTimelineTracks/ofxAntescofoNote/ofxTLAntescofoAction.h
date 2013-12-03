@@ -247,6 +247,8 @@ class ActionGroupHeader {
 		Event *event;
 		unsigned int lineNum_begin;
 		unsigned int lineNum_end;
+		unsigned int colNum_begin;
+		unsigned int colNum_end;
 };
 
 
