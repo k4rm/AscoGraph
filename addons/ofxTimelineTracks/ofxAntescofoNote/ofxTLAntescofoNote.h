@@ -104,7 +104,7 @@ typedef struct {
 	unsigned int colNum_begin;
 	unsigned int lineNum_end;
 	unsigned int colNum_end;
-	vector<int>	    jump_dests;
+	vector<float>	    jump_dests;
 } ofxTLAntescofoNoteOn;
 
 
@@ -189,7 +189,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofColor color_resize_note_rest, color_key, color_text, color_highlight, color_disabled, color_modalBg, color_outline;
 	antescofo_ascograph_offline *mAntescofo;
 	vector<string> cuepoints;
-
+	vector<ofxTLAntescofoNoteOn*>& getSwitches() {return switches;}
 	protected:
 	virtual void update(ofEventArgs& args);
 	bool isSwitchInBounds(ofxTLAntescofoNoteOn* s);
@@ -252,6 +252,8 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofxTLAntescofoNoteOn* switchForPoint(float percent, int y);
 	ofxTLAntescofoNoteOn* nearestGrowingNoteBeforePointWithPitch(float percent, int pitch);
 	ofxTLAntescofoNoteOn* switchHandleForScreenPoint(ofPoint screenPos, bool& startTimeSelected);
+	ofxTLAntescofoNoteOn* get_switch_for_beatnum(float beatnum);
+	
 
 	vector<ofxTLAntescofoNoteOn*> switches;
 	ofxTLAntescofoNoteOn* hoverSwitch;

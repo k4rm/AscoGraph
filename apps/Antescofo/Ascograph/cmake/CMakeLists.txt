@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.085")
+set(ASCOGRAPH_VERSION_NUMBER "0.086")
 
 set(FAUST 0)
 
@@ -303,6 +303,7 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoAction.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatJump.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/BeatCurve.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatCurves.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatKeyframes.cpp
@@ -378,6 +379,7 @@ SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxA
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoAction.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatJump.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
 # ofxCocoaWindowNibless sucks
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindowNibless/src/GLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")

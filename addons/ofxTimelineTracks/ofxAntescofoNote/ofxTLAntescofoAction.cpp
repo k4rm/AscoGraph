@@ -84,7 +84,7 @@ void ofxTLAntescofoAction::draw()
 				ActionGroupHeader *act = *i;
 				act->draw(this);
 				
-				//act->print();
+				if (debug_actiongroup) act->print();
 			
 				if (0 && movingAction) {
 					ofPushStyle();
@@ -983,7 +983,8 @@ void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
 	if (actioncurve) {
 		actioncurve->parentCurve->antescofo_curve->show(oss);
 		actstr = oss.str();
-		mAntescofog->replaceEditorScore(actioncurve->parentCurve->header->lineNum_begin, actioncurve->parentCurve->header->lineNum_end, actstr);
+		mAntescofog->replaceEditorScore(actioncurve->parentCurve->header->lineNum_begin, actioncurve->parentCurve->header->lineNum_end,
+				actioncurve->parentCurve->header->colNum_begin, actioncurve->parentCurve->header->colNum_end, actstr);
 	}
 	
 	/*
@@ -2033,31 +2034,23 @@ ActionGroupHeader::ActionGroupHeader(float beatnum_, float delay_, Action* a_, E
 			top_level_group = true;
 			hidden = false;
 		}
+		lineNum_begin = action->locate()->begin.line;
+		lineNum_end = action->locate()->end.line;
+		colNum_begin = action->locate()->begin.column;
+		colNum_end = action->locate()->end.column;
+		if (debug_actiongroup) cout << "ActionGroupHeader: location : " << lineNum_begin << ":" << colNum_begin << " -> "<< lineNum_end << ":" << colNum_end << endl;
+
 		Curve* c = dynamic_cast<Curve*>(action);
 		if (c) {
 			title = "Curve " + action->label() + "   ";
 			rect.height = HEADER_HEIGHT;
 			cout << "ActionGroupHeader : -----create curve ----" << endl;
-			lineNum_begin = action->locate()->begin.line;
-			lineNum_end = action->locate()->end.line;// + 1; // XXX
-			colNum_begin = action->locate()->begin.column;
-			colNum_end = action->locate()->end.column;
-
-			//ActionMultiCurves *cu = new ActionMultiCurves(c, d, event, nh); 
 			group = new ActionMultiCurves(c, delay, event, this); 
-
-			//group = new ActionGroup(g, event, this);
-
 		} else {
 			title = "Group " + action->label();
 			rect.height = HEADER_HEIGHT;
 			Gfwd *g = dynamic_cast<Gfwd*>(action);
 			if (g) {
-				lineNum_begin = action->locate()->begin.line;
-				lineNum_end = action->locate()->end.line;// + 1; //XXX
-				colNum_begin = action->locate()->begin.column;
-				colNum_end = action->locate()->end.column;
-
 				if (debug_actiongroup) cout << "ActionGroupHeader: adding group" << endl;
 				group = new ActionGroup(g, event, this);
 			}
@@ -2194,7 +2187,7 @@ void ActionGroupHeader::drawArrow() {
 }
 
 void ActionGroupHeader::print() {
-	cout << "***** ActionGroup Header:" << realtitle << " line:" << lineNum_begin << ":"<< lineNum_end<< " beat:" << beatnum << " delay:"<< delay <<" dur:" << duration << " hidden:"<< hidden 
+	cout << "***** ActionGroup Header:" << realtitle << " line:" << lineNum_begin << ":" << colNum_begin << " -> "<< lineNum_end<< ":" << colNum_end << " beat:" << beatnum << " delay:"<< delay <<" dur:" << duration << " hidden:"<< hidden 
 	     << " x:" << rect.x << " y:" << rect.y << " w:" << rect.width << " h:" << rect.height << endl; //" height:" << get_height(tlAction);
 	if (top_level_group && group)
 		group->print();

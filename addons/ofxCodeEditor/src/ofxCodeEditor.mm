@@ -522,7 +522,15 @@ static const char * box_xpm[] = {
 	}
 }
 
-- (void) replaceString:(int)linea lineb:(int)lineb str:(const char*)str;
+- (void) replaceString:(int)linea lineb:(int)lineb cola:(int)cola colb:(int)colb str:(const char*)str
+{
+	cout << "editor::replacestring: from " << linea << ":" << cola << " -> " << lineb << ":" << colb << endl;
+	[ self showLine:linea lineb:lineb cola:cola colb:colb];
+	[ mEditor setGeneralProperty: SCI_REPLACESEL parameter:0 value:(long)str ];
+	//[ self showLine:linea lineb:lineb ];
+}
+
+- (void) replaceString:(int)linea lineb:(int)lineb str:(const char*)str
 {
 	cout << "editor::replacestring: from " << linea << " to " << lineb << endl;
 	[ self showLine:linea lineb:lineb ];

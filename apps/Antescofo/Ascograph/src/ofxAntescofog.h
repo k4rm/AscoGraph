@@ -14,6 +14,7 @@
 #include "ofxOSC.h"
 #include "ofxConsole.h"
 #include "ofxHTTPServer.h"
+#include "ofxTLBeatJump.h"
 
 
 #define INT_CONSTANT_BUTTON_RELOAD      0
@@ -195,14 +196,16 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 		ofxCodeEditor* editor;
 		void editorShowLine(int linea, int lineb, int cola, int colb);
 		void editorDoubleclicked(int line);
-		void replaceEditorScore(int linebegin, int lineend, string actstr);
+		void replaceEditorScore(int linebegin, int lineend, int cola, int colb, string actstr);
 		void createCodeTemplate(int which);
-
+		void showJumpTrack();
+		
 		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker, *ofxAntescofoBeatTickerSim;
 		ofxTLZoomer2D *ofxAntescofoZoom, *ofxAntescofoZoomSim;
 		ofxTLAccompAudioTrack* audioTrack;
 		ofxTLAntescofoSim* ofxAntescofoSim;
+		ofxTLBeatJump* ofxJumpTrack;
 
 	protected:
 		// display properties

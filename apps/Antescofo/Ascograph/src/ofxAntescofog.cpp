@@ -52,6 +52,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bLineWrapMode = false;
 	bIsSimulating = false;
 	bScoreFromCommandLine = false;
+	ofxJumpTrack = 0;
 	audioTrack = NULL;
 	ofxAntescofoSim = 0;
 
@@ -851,8 +852,8 @@ void ofxAntescofog::setupTimeline(){
 	// use custom zoomer :
 	timeline.addTrack("zoom", ofxAntescofoZoom);
 	timeline.setZoomer(ofxAntescofoZoom);
-
 	timeline.addTrack("Beats", ofxAntescofoBeatTicker);
+	//timeline.addTrack("Jumps", ofxJumpTrack);
 	timeline.addTrack("Notes", ofxAntescofoNote);
 	ofxAntescofoNote->setDrawRect(ofRectangle(0, 0, score_w, 300));
 	ofxAntescofoBeatTicker->setup();
@@ -904,6 +905,8 @@ void ofxAntescofog::setup(){
 	ofAddListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
 
 	ofxAntescofoZoom = new ofxTLZoomer2D();
+	//ofxJumpTrack = new ofxTLBeatJump(this);
+
 	ofxAntescofoNote = new ofxTLAntescofoNote(this);
 	ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
 
@@ -2012,14 +2015,38 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		}
 		//int n = [ editor getNbLines ];
 		//[ editor scrollLine:(30) ];
-
 	}
+
+	// jumps track
+	showJumpTrack();
 
 	bShouldRedraw = true;
 	imageSaved = false;
 	return n;
 }
 
+void ofxAntescofog::showJumpTrack() {
+	if (ofxJumpTrack == 0) {
+		ofxJumpTrack = new ofxTLBeatJump(this);
+		timeline.addTrack("Jumps", ofxJumpTrack);
+		timeline.bringTrackToPos(ofxJumpTrack, 2);
+	}
+
+	ofxJumpTrack->setZoomBounds(ofxAntescofoZoom->getViewRange());
+	ofxJumpTrack->clear_jumps();
+
+	// for every events
+	vector<ofxTLAntescofoNoteOn*>& switches = ofxAntescofoNote->getSwitches();
+	for (vector<ofxTLAntescofoNoteOn*>::iterator i = switches.begin();
+			i!= switches.end(); i++) {
+		// for every jump dest
+		for (int n = 0; n < (*i)->jump_dests.size(); n++) {
+			float destBeat = (*i)->jump_dests[n];
+			cout << "showJumpTrack: adding jump: beat:" << (*i)->beat.min << " destBeat:" << destBeat << " label:" << (*i)->label <<endl;
+			ofxJumpTrack->add_jump((*i)->beat.min, destBeat, ""); //(*i)->label);
+		}
+	}
+}
 
 void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 {
@@ -2341,10 +2368,10 @@ void ofxAntescofog::editorShowLine(int linea, int lineb, int cola, int colb)
 }
 
 
-void ofxAntescofog::replaceEditorScore(int linebegin, int lineend, string actstr) {
+void ofxAntescofog::replaceEditorScore(int linebegin, int lineend, int cola, int colb, string actstr) {
 	if (bEditorShow && actstr.size() && linebegin <= lineend) {
-		cout << "ofxAntescofog::replaceEditorScore: replacing between line " << linebegin << " - " << lineend << " str:" << actstr << endl;
-		[ editor replaceString:linebegin-1 lineb:lineend str:actstr.c_str()];
+		cout << "ofxAntescofog::replaceEditorScore: replacing between line " << linebegin-1 << ":" << cola << " -> " << lineend-1 << ":" << colb << " str:" << actstr << endl;
+		[ editor replaceString:linebegin-1 lineb:lineend-1 cola:cola colb:colb str:actstr.c_str()];
 		//editorShowLine(linebegin, lineend);
 
 		bShouldRedraw = true;

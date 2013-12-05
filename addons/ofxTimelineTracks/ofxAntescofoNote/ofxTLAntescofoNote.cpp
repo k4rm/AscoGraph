@@ -1150,7 +1150,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	//str_error.erase();
 	Score *score;
 
-	mAntescofo->set_verbosity_level(0);
+	mAntescofo->set_verbosity_level(5);
 	// check if filename is really a filename
 	cerr << "check if filename is really a filename" << endl;
 	struct stat st;
@@ -1392,18 +1392,32 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			bGot_Action = false;
 		}
 
-		// copy jumps
-		std::map<int, std::vector<int> >::iterator ito;
-		ito = mNetscore->jump_index.find(evt_nb);
-		if (ito != mNetscore->jump_index.end())
-		{
-			for (vector<int>::iterator v = ito->second.begin(); v != ito->second.end(); v++) {
-				ofxTLAntescofoNoteOn *newSwitch = switches.back();
-				newSwitch->jump_dests.push_back(*v);
-				cout << "added for event "<< evt_nb << " jump dest: " << *v << endl;
+	}
+	// copy jumps
+	/*
+	   std::map<int, std::vector<int> >::iterator ito;
+	   ito = mNetscore->jump_index.find(evt_nb);
+	   if (ito != mNetscore->jump_index.end())
+	   {
+	   	for (vector<int>::iterator v = ito->second.begin(); v != ito->second.end(); v++) {
+	   		ofxTLAntescofoNoteOn *newSwitch = switches.back();
+			newSwitch->jump_dests.push_back(*v);
+			cout << "added for event "<< evt_nb << " jump dest: " << *v << endl;
 			}
+			}*/
+	map<int, std::vector<std::string> >::iterator ito;
+	for (ito = mNetscore->jump_labels.begin(); ito != mNetscore->jump_labels.end(); ito++) {
+		vector< int> jindz;
+		for (uint i=0; i< ito->second.size(); i++)
+		{
+			int index = mNetscore->labelPosition(ito->second.at(i));
+			cout << "Jump at " << ito->first << " : " << ito->second.at(i).c_str() << " index:"<< index << endl;
+			//int index = mNetscore->labelPosition(ito->second.at(ito->first));
+			float pos = (*mNetscore)[index]->beatcum;
+			get_switch_for_beatnum((*mNetscore)[ito->first]->notenum)->jump_dests.push_back(pos);
 		}
 	}
+
 	setScore(score);
 	str << "Score tempo : " << 60/score->tempo;
 	console->addln(str.str()); str.str("");
@@ -1417,6 +1431,19 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	//getjumps()
 	return switches.size();
 }
+
+ofxTLAntescofoNoteOn* ofxTLAntescofoNote::get_switch_for_beatnum(float beatnum) {
+	int n = 0;
+	for (vector<ofxTLAntescofoNoteOn*>::iterator i = switches.begin(); i != switches.end(); i++, n++) {
+		cout << "getting switch for beat:" << beatnum << " current beat:" << (*i)->beat.min << endl;
+		if (n == beatnum)
+		//if ((*i)->beat.min  == beatnum)
+			return *i;
+	}
+	cout << "get_switch_for_beatnum: ERROR : note not found: "<< beatnum << endl;
+	return NULL;
+}
+
 /*
 void ofxTLAntescofoNote::getjumps() {
 	for(uint i=0; i < mNetscore.size(); i++)

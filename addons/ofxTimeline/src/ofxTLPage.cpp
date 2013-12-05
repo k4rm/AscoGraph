@@ -528,7 +528,7 @@ void ofxTLPage::bringTrackToTop(ofxTLTrack* track){
     for(int i = 0; i < headers.size(); i++){
         if(track == headers[i]->getTrack()){
             ofxTLTrackHeader* header = headers[i];
-			for(int j = i; j > 0; j--){
+	    for(int j = i; j > 0; j--){
                 headers[j] = headers[j-1];
             }
             headers[0] = header;
@@ -539,10 +539,26 @@ void ofxTLPage::bringTrackToTop(ofxTLTrack* track){
     ofLogError("ofxTLPage::bringTrackToTop -- track " + track->getName() + " not found");
 }
 
+void ofxTLPage::bringTrackToPos(ofxTLTrack* track, int pos){
+	for(int i = 0; i < headers.size(); i++){
+		if(track == headers[i]->getTrack()){
+			ofxTLTrackHeader* header = headers[i];
+			for(int j = i; j > pos; j--){
+				headers[j] = headers[j-1];
+			}
+			headers[pos] = header;
+			recalculateHeight();
+			return;
+		}
+	}
+	ofLogError("ofxTLPage::bringTrackToPos -- track " + track->getName() + " not found");
+
+}
+
 void ofxTLPage::bringTrackToBottom(ofxTLTrack* track){
     for(int i = 0; i < headers.size(); i++){
         if(track == headers[i]->getTrack()){
-        	ofxTLTrackHeader* header = headers[i];
+            ofxTLTrackHeader* header = headers[i];
             for(int j = i; j < headers.size()-1; j++){
                 headers[j] = headers[j+1];
             }

@@ -373,6 +373,7 @@ class ofxTimeline : ofThread {
     void removeTrack(ofxTLTrack* track);
     
     //ordering the track
+    void bringTrackToPos(ofxTLTrack* track, int pos);
     void bringTrackToTop(string name);
     void bringTrackToTop(ofxTLTrack* track);
     void bringTrackToBottom(string name);

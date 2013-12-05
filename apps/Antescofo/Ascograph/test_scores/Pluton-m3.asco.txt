@@ -5,16 +5,16 @@ BPM 60
 VARIANCE 0.2
 
 ; ATTRACTOR
-NOTE 0.0	8.0	ATTRACTOR	@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A3 A4 A5 E M S
+NOTE 0.0	8.0	 @jump  R1, R2, R3, R4, R5, R6, R7, R8, R9, A1, A2, A3, A4, A5, E, M, S_	ATTRACTOR
 
 ; Part R1
 
 CHORD (F#3 C4 Eb4 B4 D5 Bb5)	4.0		R1
 	cue21 1
 CHORD (C#3 F#3 C4 Eb4)	0.5
-CHORD (D2 G2 C#3 F#3 C4 Eb4)	4.0	R1_fin	@jump  A1 A2 A3 A4 A5	E M S
+CHORD (D2 G2 C#3 F#3 C4 Eb4)	4.0	R1_fin	@jump  A1, A2, A3, A4, A5, E, M, S_
 	cue21 3
-NOTE 0 4.0									@jump  A1 A2 A3 A4 A5	E M S
+NOTE 0 4.0									@jump  A1, A2, A3, A4, A5, E, M, S_
 
 ; Part R2
 	
@@ -30,7 +30,7 @@ CHORD ( G6 C7)	0.75
 CHORD (D6 G#6 A6 C#7)	0.125
 CHORD (Bb7 E7)	2.0		R2_fin
 	cue21 8
-NOTE 0 4.0									@jump  A1 A2 A3 A4 A5	E M S
+NOTE 0 4.0									@jump  A1, A2, A3, A4, A5, E, M, S_
 
 ; Part R3
 CHORD (C4 D4 Gb4 Bb4 D#5 B5)	4.0	R3
@@ -42,19 +42,19 @@ CHORD (C4 F#4 G#4 D5 E5 A5 B5 Eb6 Ab6 Cb7 ) 4.0
 NOTE 0	2.0
 CHORD (Bb2 F#3 C4 F5 C#6 D#6  G6)	4.0		R3_fin
 	cue21 12
-NOTE 0	2.0									@jump  A1 A2 A3 A4 A5	E M S
+NOTE 0	2.0									@jump  A1 A2 A3 A4 A5	E M S_
 
 ; Part R4
 
 TRILL ( (C4 F#6 B4 Ab5) (C4 F#6 Bb4 G5) )	4.0		R4
 	cue21 13
-NOTE 0	4.0		R4_fin						@jump  A1 A2 A3 A4 A5	E M S
+NOTE 0	4.0		R4_fin						@jump  A1 A2 A3 A4 A5	E M S_
 	cue21 14				
 
 ; Part R5
 CHORD (C4 Ab4 D5 A6 Cb7 G7)		8.0		R5
 	cue21 15
-NOTE 0	4.0		R5_fin								@jump  A1 A2 A3 A4 A5	E M S
+NOTE 0	4.0		R5_fin								@jump  A1 A2 A3 A4 A5	E M S_
 	cue21 16								
 	
 ; Part R6
@@ -65,7 +65,7 @@ CHORD (D2 C#3 F#3)	0.75
 CHORD (D2 C#3 F#3 G#4 E5 A5 B5 F6 Eb6)	3.0	R6_fin
 ;CHORD (G#4 E5 A5 B5 F6 Eb6)	3.0	R6_fin
 	2.0	cue21 18
-NOTE 0	4.0									@jump  A1 A2 A3 A4 A5	E M S
+NOTE 0	4.0									@jump  A1 A2 A3 A4 A5	E M "S"
 
 NOTE C4 0.1		R7
 	cue21 23
@@ -77,7 +77,7 @@ NOTE Bb4 0.1
 NOTE C#5 0.1
 NOTE D5	0.1			
 
-CHORD (G5 Ab5 B5    C4)	4.0	R7_fin				@jump  A1 A2 A3 A4 A5	E M S
+CHORD (G5 Ab5 B5    C4)	4.0	R7_fin				@jump  A1 A2 A3 A4 A5	E M "S"
 	3.0 cue21 24
 
 NOTE 0 8.0									
@@ -85,7 +85,7 @@ NOTE 0 8.0
 CHORD (E2 G2 Eb3  G3 C4 F#3 )	0.25		R8	;+fin  is in reality E2 G2 Eb3 F#3 G3 C4 
 	cue21 25
 	
-NOTE 0 4.0									@jump  A1 A2 A3 A4 A5	E M S
+NOTE 0 4.0									@jump  A1 A2 A3 A4 A5	E M "S"
 
 NOTE C4 1/6		R9							
 	cue21 27
@@ -189,9 +189,9 @@ NOTE Db6	0.5
 NOTE A3		0.5
 NOTE F#3	0.25
 NOTE Eb4	0.5
-NOTE D5		4.0		A2_fin					@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A4 A5 E M S
+NOTE D5		4.0		A2_fin					@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A4 A5 E M "S"
 	cue21 6
-NOTE 0		4.0		@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A4 A5	E M S
+NOTE 0		4.0		@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A4 A5	E M "S"
 
 ; Part A3
 BPM 60		@modulate						
@@ -257,10 +257,10 @@ NOTE G5 0.125
 NOTE A6 0.125
 NOTE F#7 0.125
 
-NOTE Bb5 0.125	A3_fin								@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A5	E M S
+NOTE Bb5 0.125	A3_fin								@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A5	E M "S"
 	cue21 4
 
-NOTE 0	4.0											@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A5	E M S
+NOTE 0	4.0											@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A5	E M "S"
 
 ; Part A4
 BPM 60
@@ -323,7 +323,7 @@ NOTE F3		1/6
 NOTE C#3	1/6
 NOTE F#4 1.0	A4_fin		
 	cue21 20
-NOTE 0		8.0		@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A3	E M S
+NOTE 0		8.0		@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A3	E M "S"
 
 
 ; Part A5
@@ -346,7 +346,7 @@ CHORD (G2 F3 A3   C4 A#4 B4 D5 ) 2.0
 
 CHORD ( G5 Bb5 E6 A6 E7 F7 Gb7 B7 )	4.0		
 	cue21 22
-NOTE 0	8.0					@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A3 A4	E M S
+NOTE 0	8.0					@jump  R1 R2 R3 R4 R5 R6 R7 R8 R9 A1 A2 A3 A4	E M "S"
 	
 ; Part E
 
@@ -371,7 +371,7 @@ NOTE E1		0.5		M_fin
 NOTE 0	8.0
 
 ; STOP Part S
-NOTE	Bb0		0.5 	S
+NOTE	Bb0		0.5 	S_
 	sol# 1
 TRILL	( C#4	F2	A5	)	8.0	Permute_S
 NOTE	B0		4.0

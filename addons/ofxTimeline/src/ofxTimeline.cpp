@@ -1776,6 +1776,14 @@ ofxTLTrackHeader* ofxTimeline::getTrackHeader(ofxTLTrack* track){
     return trackNameToPage[track->getName()]->getTrackHeader(track);
 }
 
+void ofxTimeline::bringTrackToPos(ofxTLTrack* track, int pos){
+    if(track != NULL){
+		trackNameToPage[track->getName()]->bringTrackToPos(track, pos);
+		ofEventArgs args;
+		ofNotifyEvent(events().viewWasResized, args);
+    }
+}
+
 void ofxTimeline::bringTrackToTop(string trackName){
     bringTrackToTop(getTrack(trackName));
 }

@@ -108,7 +108,9 @@ class ofxTLPage {
     virtual void timelineLostFocus();
     
     void bringTrackToTop(ofxTLTrack* track);
+    void bringTrackToPos(ofxTLTrack* track, int pos);
     void bringTrackToBottom(ofxTLTrack* track);
+
 
 	//copy paste
 	virtual void copyRequest(vector<string>& bufs);
