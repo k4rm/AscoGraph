@@ -113,7 +113,7 @@ void ofxTLBeatJump::draw(){
 		ofEndShape(false);
 
 		// draw arrow
-		float headSize = 6.;
+		float headSize = 3.;
 		ofMatrix4x4 mat;
 		mat.makeRotationMatrix(end - start, ofVec3f(0,0,1));
 		ofPushMatrix();

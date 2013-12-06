@@ -2026,6 +2026,23 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 }
 
 void ofxAntescofog::showJumpTrack() {
+	// check if we need to show jump tracks:
+	bool bShowJumpTrack = false; 
+	vector<ofxTLAntescofoNoteOn*>& switches = ofxAntescofoNote->getSwitches();
+	for (vector<ofxTLAntescofoNoteOn*>::iterator i = switches.begin();
+			i!= switches.end(); i++)
+		if ((*i)->jump_dests.size()) {
+			bShowJumpTrack = true;
+			break;
+		}
+
+	if (!bShowJumpTrack) {
+		if (ofxJumpTrack) timeline.removeTrack(ofxJumpTrack);
+		if (ofxJumpTrack) delete ofxJumpTrack;
+		ofxJumpTrack = NULL;
+		return;
+	}
+
 	if (ofxJumpTrack == 0) {
 		ofxJumpTrack = new ofxTLBeatJump(this);
 		timeline.addTrack("Jumps", ofxJumpTrack);
@@ -2036,7 +2053,7 @@ void ofxAntescofog::showJumpTrack() {
 	ofxJumpTrack->clear_jumps();
 
 	// for every events
-	vector<ofxTLAntescofoNoteOn*>& switches = ofxAntescofoNote->getSwitches();
+	switches = ofxAntescofoNote->getSwitches();
 	for (vector<ofxTLAntescofoNoteOn*>::iterator i = switches.begin();
 			i!= switches.end(); i++) {
 		// for every jump dest

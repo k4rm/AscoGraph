@@ -1023,7 +1023,8 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 {
 	if (e) {
 		ostringstream str;
-		if (debug_loadscore) { str << "getNoteType: isMArkov:"<< e->isMarkov << endl; console->addln(str.str()); str.str(""); }
+		if (debug_loadscore) { str << "getNoteType: isMArkov:"<< e->isMarkov << " multi_event:"<< e->multi_event 
+			<< " pitches:" << e->pitch_list.size() << endl; console->addln(str.str()); str.str(""); }
 
 		switch (e->isMarkov)
 		{
@@ -1033,7 +1034,7 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 					{
 						if(e->multi_event>0)
 						{
-							return ANTESCOFO_MULTI; // MULTI TRILL XXX
+							return ANTESCOFO_TRILL; // MULTI TRILL XXX
 						}
 						return ANTESCOFO_TRILL;
 					} else return ANTESCOFO_TRILL; // MULTI wtf?;
@@ -1050,17 +1051,17 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 					}
 					else
 					{
-						if (0 != e->multi_event)
+						if (0. != e->multi_event)
 						{
-							if(e->multi_event>0)
+							if(e->multi_event > 0)
 							{
 								return ANTESCOFO_MULTI;
-							}
+							} else return ANTESCOFO_MULTI;//TRILL;
 						} else {
 							if (1 == e->pitch_list.size())
 								return ANTESCOFO_NOTE;
 							else
-								return ANTESCOFO_CHORD;
+								return ANTESCOFO_MULTI;
 						}
 					}
 				}
@@ -1068,8 +1069,8 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 			//case 1:  // DummySilence
 			//	return -1;
 		}
+		cerr << "ofxTLAntescofoNote::getNoteType: unknown type: multi_event:"<< e->multi_event << " pitches:" << e->pitch_list.size()<< endl;
 	}
-	cerr << "ofxTLAntescofoNote::getNoteType: unknown type" << endl;
 	return -1;
 }
 
@@ -1390,6 +1391,8 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			line2note[e->scloc->begin.line] = switches.size() - 1;
 			if (debug_loadscore) { str << "added new switch: REST beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max; console->addln(str.str()); str.str(""); }
 			bGot_Action = false;
+		} else {
+			if (debug_loadscore) { cerr << "ERROR: unhandled event!!!!"<< endl; }
 		}
 
 	}
