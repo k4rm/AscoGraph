@@ -92,7 +92,7 @@ void ofxTLBeatJump::draw(){
 			if (radiusY*circlePolyline[i].y+y < y)
 				circlePoints[i].set(radiusX*circlePolyline[i].x+x, radiusY*circlePolyline[i].y+y, z);
 			else  {
-				if (i < circleCache.size()/2)
+				if (i <= circleCache.size()/2)
 					circlePoints[i].set(start);
 				else 
 					circlePoints[i].set(end);
