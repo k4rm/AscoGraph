@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.086")
+set(ASCOGRAPH_VERSION_NUMBER "0.087")
 
 set(FAUST 0)
 
@@ -96,7 +96,7 @@ set (ANTESCOFO_PARSER_SOURCES
 	${ANTESCOFO_PARSER_PATH}/sources/Track.cpp
 )
 if (FAUST)
-	set (ANTESCOFO_PARSER_SOURCES "${ANTESCOFO_PARSER_SOURCES} ${ANTESCOFO_PARSER_PATH}/sources/DspDef.cpp")
+	set (ANTESCOFO_PARSER_SOURCES ${ANTESCOFO_PARSER_SOURCES} ${ANTESCOFO_PARSER_PATH}/sources/DspDef.cpp)
 endif(FAUST)
 
 set (OFX_LIB_PATH ../../../../libs/openFrameworks)

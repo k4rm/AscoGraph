@@ -1905,6 +1905,12 @@ void ofxAntescofog::newScore() {
 	[ editor clear ];
 	
 	ofxAntescofoNote->clear_actions();
+	if (ofxJumpTrack) {
+		ofxJumpTrack->clear_jumps();
+		if (ofxJumpTrack) timeline.removeTrack(ofxJumpTrack);
+		if (ofxJumpTrack) delete ofxJumpTrack;
+		ofxJumpTrack = NULL;
+	}
 	mScore_filename = "";
 }
 
