@@ -13,7 +13,9 @@
 #include "ofxUI.h"
 #include "ofxOSC.h"
 #include "ofxConsole.h"
+#ifdef USE_HTTPD
 #include "ofxHTTPServer.h"
+#endif
 #include "ofxTLBeatJump.h"
 
 
@@ -159,7 +161,11 @@ class AntescofoTimeline : public ofxTimeline
 	void keypressed(ofKeyEventArgs& args) {}
 };
 
-class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
+class ofxAntescofog : public ofBaseApp
+#ifdef USE_HTTPD
+		      , public ofxHTTPServerListener
+#endif
+{
 	public:
 #ifdef TARGET_OSX
 		ofxAntescofog(int argc, char* argv[], ofxCocoaWindow* window);
@@ -311,6 +317,7 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 		bool bFindTextInitDone, bShowFind;
 		void draw_FindText();
 
+#ifdef USE_HTTPD
 		// httpd
 		ofxHTTPServer * httpd_server;
 		ofPoint radius[20]; // for drawing
@@ -324,11 +331,10 @@ class ofxAntescofog : public ofBaseApp, public ofxHTTPServerListener{
 		void draw_http_image();
 		void update_http_image();
 		void httpd_update_beatpos();
-
-
 		string postedImgName;
 		string postedImgFile;
 		string prevPostedImg;
 		ofImage postedImg;
+#endif
 
 };

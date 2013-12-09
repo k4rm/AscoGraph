@@ -935,8 +935,9 @@ void ofxAntescofog::setup(){
 	if (mScore_filename.size())
 		loadScore(mScore_filename);
 
-	if (!disable_httpd)
-		setup_httpd();
+#ifdef USE_HTTPD
+	if (!disable_httpd) setup_httpd();
+#endif
 }
 
 //--------------------------------------------------------------
@@ -977,8 +978,10 @@ void ofxAntescofog::update() {
 				mOsc_beat = m.getArgAsFloat(0);
 				mLabelBeat->setLabel(ofToString(mOsc_beat));
 				if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
+#ifdef USE_HTTPD
 				if (!disable_httpd)
 					httpd_update_beatpos();
+#endif
 				if (mOsc_beat == 0)
 					ofxAntescofoNote->missedAll();
 				mHasReadMessages = true;
@@ -1069,9 +1072,11 @@ void ofxAntescofog::update() {
 	//guiBottom->update();
 	push_tempo_value();
 
+#ifdef USE_HTTPD
 	// http update
 	if (!disable_httpd)
 		update_http_image();
+#endif
 }
 
 //--------------------------------------------------------------
@@ -1148,9 +1153,11 @@ void ofxAntescofog::draw() {
 		}
 	}
 
+#ifdef USE_HTTPD
 	// http draw
 	if (!disable_httpd)
 		draw_http_image();
+#endif
 }
 
 void ofxAntescofog::load()
@@ -2027,7 +2034,9 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	showJumpTrack();
 
 	bShouldRedraw = true;
+#ifdef USE_HTTPD
 	imageSaved = false;
+#endif
 	return n;
 }
 
@@ -2552,6 +2561,7 @@ string ofxAntescofog::convertMidiFileToActions(string& midifile) {
 }
 
 
+#ifdef USE_HTTPD
 //////////////////////////////////////
 ///// HTTP server
 //////////////////////////////////////
@@ -2639,6 +2649,7 @@ void ofxAntescofog::httpd_update_beatpos()
 
 	ofs.close();
 }
+#endif
 
 
 

@@ -3,6 +3,7 @@
 set(ASCOGRAPH_VERSION_NUMBER "0.087")
 
 set(FAUST 0)
+set(USE_HTTPD 0)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -367,9 +368,10 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fft.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
+
+# ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
 
 SET_SOURCE_FILES_PROPERTIES(../src/mainMacOSX.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 #SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxEditor.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
@@ -765,7 +767,7 @@ SET_SOURCE_FILES_PROPERTIES(
   MACOSX_PACKAGE_LOCATION Resources/GUI/
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS " -sectcreate __TEXT __info_plist Info.plist ")
+#set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS " -sectcreate __TEXT __info_plist Info.plist ")
 
 set( MACOSX_BUNDLE_ICON_FILE Icon.icns )
 
