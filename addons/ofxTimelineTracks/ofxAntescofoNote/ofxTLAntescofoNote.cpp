@@ -1417,12 +1417,11 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			int index = mNetscore->labelPosition(ito->second.at(i));
 			//int index = mNetscore->labelPosition(ito->second.at(ito->first));
 			float pos = (*mNetscore)[index]->beatcum;
-			float srcpos = (*mNetscore)[ito->first]->notenum;
+			float srcpos = (*mNetscore)[ito->first]->beatcum;
+			cout << "Jump at " << ito->first << " (pos:"<< srcpos<< ") :" << ito->second.at(i).c_str() << " index:"<< index << endl;
 			ofxTLAntescofoNoteOn* switche = get_switch_for_beatnum(srcpos);
 			assert(switche != NULL);
 			switche->jump_dests.push_back(pos);
-			cout << "Jump at " << ito->first << " : from [" << switche->label << "] " << ito->second.at(i).c_str() 
-				<< " index:"<< index << endl;
 		}
 	}
 
@@ -1440,38 +1439,14 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	return switches.size();
 }
 
-ofxTLAntescofoNoteOn* ofxTLAntescofoNote::get_switch_for_beatnum(float notenum) {
-	int n = 0;
-	bool ismulti = false;
+ofxTLAntescofoNoteOn* ofxTLAntescofoNote::get_switch_for_beatnum(float beatnum) {
 	for (vector<ofxTLAntescofoNoteOn*>::iterator i = switches.begin(); i != switches.end(); i++) {
-		//cout << "getting switch for beat:" << beatnum << " current beat:" << (*i)->beat.min << endl;
-		if ((*i)->type == ANTESCOFO_MULTI) {
-			ismulti = true;
-		} else if ((*i)->type == ANTESCOFO_MULTI_STOP) {
-			ismulti = false;
-		}
-		if (n == notenum)
+		if ((*i)->beat.min == beatnum)
 			return *i;
-		if (!ismulti)
-			n++;
 	}
-	cout << "get_switch_for_beatnum: ERROR : note not found: "<< notenum << endl;
+	cout << "get_switch_for_beatnum: ERROR : note not found: "<< beatnum << endl;
 	return NULL;
 }
-
-/*
-void ofxTLAntescofoNote::getjumps() {
-	for(uint i=0; i < mNetscore.size(); i++)
-	{
-		std::map<int, std::vector<int> >::iterator ito;
-		ito = mNetscore[i]->jump_index.find(i);
-		if (ito != jump_index.end())
-		{
-		}
-	}
-	
-}
-*/
 
 void ofxTLAntescofoNote::getcues() {
 
