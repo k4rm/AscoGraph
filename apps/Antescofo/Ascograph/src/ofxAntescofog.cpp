@@ -117,6 +117,9 @@ void ofxAntescofog::menu_item_hit(int n)
 				guiBottom->disable();
 			}
 			break;
+		case INT_CONSTANT_BUTTON_HIDE:
+			[[NSRunningApplication currentApplication] hide];
+			break;
 		case INT_CONSTANT_BUTTON_CREATE_GROUP:
 		case INT_CONSTANT_BUTTON_CREATE_LOOP:
 		case INT_CONSTANT_BUTTON_CREATE_CURVE:
@@ -335,6 +338,11 @@ void ofxAntescofog::setupUI() {
 	id oscMenuItem = [[[NSMenuItem alloc] initWithTitle:@"OSC Setup" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[oscMenuItem setTag:INT_CONSTANT_BUTTON_OSCSETUP];
 	[appMenu addItem:oscMenuItem];
+
+	// . hide AscoGraph
+	id hideMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Hide AscoGraph" action:@selector(menu_item_hit:) keyEquivalent:@"h"] autorelease];
+	[hideMenuItem setTag:INT_CONSTANT_BUTTON_HIDE];
+	[appMenu addItem:hideMenuItem];
 
 	// . quit
 	id quitTitle = [@"Quit " stringByAppendingString:appName];
