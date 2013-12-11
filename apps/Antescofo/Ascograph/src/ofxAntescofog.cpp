@@ -340,7 +340,7 @@ void ofxAntescofog::setupUI() {
 	[appMenu addItem:oscMenuItem];
 
 	// . hide AscoGraph
-	id hideMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Hide AscoGraph" action:@selector(menu_item_hit:) keyEquivalent:@"h"] autorelease];
+	id hideMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Hide Ascograph" action:@selector(menu_item_hit:) keyEquivalent:@"h"] autorelease];
 	[hideMenuItem setTag:INT_CONSTANT_BUTTON_HIDE];
 	[appMenu addItem:hideMenuItem];
 

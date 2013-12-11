@@ -2,10 +2,10 @@
 
 @MACRO_DEF TREMOLO($NUM, $PER, $AMIN, $AMAX)
 {
-	LFWD h$NUM_tremolo $PER
+	LFWD "h"$NUM"_tremolo" $PER
 	{
-		harm$NUM $AMIN	@beat2msec( expr{$PER/2} )
-		;harm$NUM $AMIN	@beat2msec( $PER/2 )
+		;harm$NUM $AMIN	@beat2msec( expr{$PER/2} )
+		harm$NUM $AMIN	@beat2msec( $PER/2 )
 		expr{$PER/2}	harm$NUM $AMAX	@beat2msec( expr{$PER/2} )
 	}
 }
