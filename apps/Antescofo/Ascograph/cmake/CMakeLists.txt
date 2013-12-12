@@ -11,94 +11,23 @@ cmake_minimum_required(VERSION 2.8)
 
 PROJECT(Ascograph)
 
-#INCLUDE_DIRECTORIES(..)
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
-find_package (FLEX REQUIRED)
-find_package (BISON REQUIRED)
-
 SET(BUILD_SHARED_LIBS OFF)
-
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
-
-# add ofx includes directories for dependencies 
-# include_directories ( ${ofx_includes} ) 
 
 ###### 
 get_filename_component(OPENFRAMEWORKS_CMAKE_DIR_ROOT ${CMAKE_CURRENT_LIST_FILE} PATH)
 get_filename_component(OPENFRAMEWORKS_ROOT "${OPENFRAMEWORKS_CMAKE_DIR_ROOT}/../../../../" ABSOLUTE)
 set(OPENFRAMEWORKS_ADDONS_ROOT ${OPENFRAMEWORKS_ROOT}/addons/)
 
-
-set (ANTESCOFO_PARSER_PATH ${OPENFRAMEWORKS_ROOT}/../antescofo_New )
-set (ANTESCOFO_PARSER_INCL_PATH 
-	${ANTESCOFO_PARSER_PATH}/minimal/
-	${ANTESCOFO_PARSER_PATH}/includes
-	${ANTESCOFO_PARSER_PATH}/parser
-)
-
-bison_target(anteyacc ${ANTESCOFO_PARSER_PATH}/parser/parser.yy ${ANTESCOFO_PARSER_PATH}/parser/parser.cpp
-	COMPILE_FLAGS "-v -d -t")
-flex_target(anteflex ${ANTESCOFO_PARSER_PATH}/parser/scanner.lll ${ANTESCOFO_PARSER_PATH}/parser/scanner.cpp 
-	COMPILE_FLAGS "-d --header-file=${ANTESCOFO_PARSER_PATH}/parser/scanner.hh ")
-add_flex_bison_dependency(anteflex anteyacc)
-
+set (ANTESCOFO_LIB_PATH ${OPENFRAMEWORKS_ROOT}/../antescofo_New )
+set (ANTESCOFO_PARSER_INCL_PATH ${ANTESCOFO_LIB_PATH}/includes ${ANTESCOFO_LIB_PATH}/parser)
 
 set (PATH_MACOS_SDK "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/")
 set(CMAKE_OSX_SYSROOT ${PATH_MACOS_SDK})
 
-#message(STATUS "Using incl path: ${ANTESCOFO_PARSER_INCL_PATH}")
-message(STATUS "Using bison flags: ${BISON_anteyacc_COMPILE_FLAGS} ; outputs: ${BISON_anteyacc_OUTPUTS} ")
-message(STATUS "Using flex flags: ${FLEX_anteflex_COMPILE_FLAGS} ; outputs: ${FLEX_anteflex_OUTPUTS} ")
-
-set (ANTESCOFO_PARSER_SOURCES
-	${BISON_anteyacc_OUTPUTS}
-	${FLEX_anteflex_OUTPUTS}
-	${ANTESCOFO_PARSER_PATH}/sources/Attributes.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/duration.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Event.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Action.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/pre_Antescofo.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Antescofo_AscoGraph.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Expression.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Function.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Function_map.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Function_tab.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Proc.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Score.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Environment.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/IOfile.cpp
-	# ${ANTESCOFO_PARSER_PATH}/sources/Statements.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Values.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/TemporalRegex.cpp
-	${ANTESCOFO_PARSER_PATH}/parser/parsedriver.cpp
-	${ANTESCOFO_PARSER_PATH}/parser/scanner.lll
-	${ANTESCOFO_PARSER_PATH}/parser/parser.yy
-	### Full following:
-	${ANTESCOFO_PARSER_PATH}/sources/AnteScheduler.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/AnteAlign.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/TempoClass.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/exec.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/AntescofoCore.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Attributes.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/ActionFire.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Environment_RunTime.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/TemporalRegex.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Function_map.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Interpolation.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/OscManager.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/IOfile.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/AscoGraph_com.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/exec_when_tregexp.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Proc.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Function_tab.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/AnteClock_standalone.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Antescofo_standalone.cpp
-	${ANTESCOFO_PARSER_PATH}/sources/Track.cpp
-)
-if (FAUST)
-	set (ANTESCOFO_PARSER_SOURCES ${ANTESCOFO_PARSER_SOURCES} ${ANTESCOFO_PARSER_PATH}/sources/DspDef.cpp)
-endif(FAUST)
+message(STATUS "Using Antescofo lib path: ${ANTESCOFO_LIB_PATH}")
 
 set (OFX_LIB_PATH ../../../../libs/openFrameworks)
 set (OFX_LIB_INCL_PATH ../../../../libs/openFrameworks)
@@ -111,7 +40,8 @@ set (OFX_FREEIMAGE_INCL_PATH ../../../../libs/FreeImage/include/)
 set (OFX_FREETYPE_INCL_PATH ../../../../libs/freetype/include/ ../../../../libs/freetype/include/freetype2/)
 set (OFX_RTAUDIO_INCL_PATH ../../../../libs/rtAudio/include/)
 set (GST_INCL_PATH ../../../../../gstreamer-1.0.2/)
-set (SNDFILE_INCL_PATH ${ANTESCOFO_PARSER_PATH}/../../Mutant-libs/libsndfile-1.0.25/Buildlib/i386/include/)
+set (MUTANT_LIBS_PATH ${ANTESCOFO_LIB_PATH}/../../Mutant-libs)
+set (SNDFILE_INCL_PATH ${MUTANT_LIBS_PATH}/libsndfile-1.0.25/Buildlib/i386/include/)
 
 set (LIB_MUSICXML_PATH ../libmusicxml-3.0-src/src/)
 set (OFX_MUSICXML_INCL_PATH 
@@ -125,9 +55,6 @@ set (OFX_MUSICXML_INCL_PATH
 		${LIB_MUSICXML_PATH}/antescofo/
 )
 
-
-#file (GLOB_RECURSE OFX_SOURCE_FILES ${OFX_LIB_PATH}/*.cpp)
-#file (GLOB_RECURSE OFX_INCLUDES_DIRS ${OFX_LIB_PATH})
 include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_INCL_PATH} 
 					${OFX_POCO_INCL_PATH}
 					${OFX_TESS2_INCL_PATH}
@@ -152,10 +79,6 @@ include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_
 					${SNDFILE_INCL_PATH}
 )
 
-#set (OFX_LIBS ../../../../libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a)
-
-
-#file ( GLOB_RECURSE app_sources_files ${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/*.cpp)
 set (OPENFRAMEWORKS_LIB_SOURCES
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/of3dUtils.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/ofCamera.cpp
@@ -209,9 +132,6 @@ set (OPENFRAMEWORKS_LIB_SOURCES
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofURLFileLoader.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofUtils.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofDirectShowGrabber.cpp
-	#${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofGstUtils.cpp
-	#${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofGstVideoGrabber.cpp
-	#${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofGstVideoPlayer.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQtUtils.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQuickTimeGrabber.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQuickTimePlayer.cpp
@@ -232,13 +152,8 @@ SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQ
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitMovieRenderer.m
 	PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
-#set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-x objective-c++")
-
-#file ( GLOB_RECURSE app_sources_files ../src/*)
 if (APPLE)
 	set (app_sources_files ../src/mainMacOSX.mm ../src/ofxAntescofog.cpp ../src/ofxAntescofoSim.cpp)
-else() 
-	set (app_sources_files ../src/main ../src/ofxAntescofog.cpp )
 endif(APPLE)
 
 set (app_sources_files ${app_sources_files}
@@ -275,14 +190,14 @@ set (app_sources_files ${app_sources_files}
 	${LIB_MUSICXML_PATH}/visitors/transposevisitor.cpp
 	${LIB_MUSICXML_PATH}/visitors/unrolled_clonevisitor.cpp
 	${LIB_MUSICXML_PATH}/visitors/xmlvisitor.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/src
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/IpEndpointName.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/NetworkingUtils.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/UdpSocket.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscOutboundPacketStream.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscPrintReceivedElements.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscReceivedElements.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscTypes.cpp
+	# oscpack is commented here because it is compiled in libantescofo which uses it as well.
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/IpEndpointName.cpp
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/NetworkingUtils.cpp
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/UdpSocket.cpp
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscOutboundPacketStream.cpp
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscPrintReceivedElements.cpp
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscReceivedElements.cpp
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscTypes.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//src/ofxOscBundle.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//src/ofxOscMessage.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//src/ofxOscReceiver.cpp
@@ -368,13 +283,11 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fft.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
+	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
 
-# ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
-
 SET_SOURCE_FILES_PROPERTIES(../src/mainMacOSX.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxEditor.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofog.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
@@ -382,68 +295,19 @@ SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxA
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatJump.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
-# ofxCocoaWindowNibless sucks
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindowNibless/src/GLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindowNibless/src/MyDelegate.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindowNibless/src/ofxCocoaWindowNibless.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-
-# ofxCocoaWindow rocks
+# ofxCocoaWindow rocks (compared to others ofxCocoa*)
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-
-# ofxCocoa sucks
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/AppDelegate.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/AppWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/GLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/GLWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/msalibs/ofxCocoa/src/ofxCocoa.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
 # scintilla
 file ( GLOB_RECURSE SCINTILLA_SOURCES
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.cxx
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.mm
 )
-#set (SCINTILLA_SOURCES ${SCINTILLA_SOURCES} ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexers/LexAntescofo.cxx)
-
-
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/ PROPERTIES COMPILE_FLAGS "-x objective-c++")
-#SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/ofxModifierKeys/src/ofxModifierKeys_impl_mac.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-
-# Faust/LLVM
-if (FAUST)
-	set (LLVM_CONFIG "/opt/local/bin/llvm-config")
-	execute_process(COMMAND ${LLVM_CONFIG} "--version" OUTPUT_VARIABLE LLVM_VERSION)
-	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_VERSION "${LLVM_VERSION}")
-	message(STATUS "LLVM_VERSION: ${LLVM_VERSION}")
-
-	set (FAUST_DIR "${ANTESCOFO_PARSER_PATH}/../Mutant-libs/Faust2/llvm-${LLVM_VERSION}")
-	set (LLVM_CFLAGS "-I/opt/local/libexec/llvm-${LLVM_VERSION}/include")
-
-	execute_process(COMMAND ${LLVM_CONFIG} "--ldflags" OUTPUT_VARIABLE LLVM_LDFLAGS)
-	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS "${LLVM_LDFLAGS}")
-	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
-
-	execute_process(COMMAND ${LLVM_CONFIG} "--libs" "all" OUTPUT_VARIABLE LLVM_LDFLAGS2)
-	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS2 "${LLVM_LDFLAGS2}")
-	set (LLVM_LDFLAGS "${LLVM_LDFLAGS} ${LLVM_LDFLAGS2}")
-	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
-	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS "${LLVM_LDFLAGS}")
-	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
-	set (LLVM_LDFLAGS "${LLVM_LDFLAGS} -lLLVMX86AsmParser -lc++ -lstdc++")
-	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
-
-	set (FAUST_CFLAGS "-I${FAUST_DIR}/include -DUSE_FAUST=1 -DUSE_FAUST_IN_ASCOGRAPH=1")
-	set (FAUST_LDFLAGS "${FAUST_DIR}/lib/faust/libfaust.a")
-	set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
-	set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FAUST_CFLAGS}")
-endif(FAUST)
-
 
 set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS 
 	../src/
@@ -482,21 +346,11 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/microhttpd/include
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/src/
 
-
-	#${OPENFRAMEWORKS_ROOT}/libs/fmodex/include
-        #${OPENFRAMEWORKS_ROOT}/libs/FreeImage/include
-        #${OPENFRAMEWORKS_ROOT}/libs/freetype/include
-        #${OPENFRAMEWORKS_ROOT}/libs/glee/include
 	${OPENFRAMEWORKS_ROOT}/libs/glu/include
 	${OPENFRAMEWORKS_ROOT}/libs/glut/include
-	#${OPENFRAMEWORKS_ROOT}/libs/gstappsink/include
-	#${OPENFRAMEWORKS_ROOT}/libs/poco/include
-	#${OPENFRAMEWORKS_ROOT}/libs/quicktime/include
-	#${OPENFRAMEWORKS_ROOT}/libs/rtAudio/include
-        #${OPENFRAMEWORKS_ROOT}/libs/unicap/include
-	# ${OPENFRAMEWORKS_ROOT}/libs/videoInput/include
 	/usr/include/
 	CACHE STRING "OpenFrameworks includes search path")
+
 if(APPLE)
     set(OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS 
     				     ${OPENFRAMEWORKS_ROOT}/libs/openFrameworksCompiled/lib/osx/
@@ -512,16 +366,15 @@ if(APPLE)
 				     ${OPENFRAMEWORKS_ROOT}/libs/glut/lib/osx/GLUT.framework/
                                      ${OPENFRAMEWORKS_ROOT}/libs/gstappsink/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/poco/lib/osx
-                                     #${OPENFRAMEWORKS_ROOT}/libs/quicktime/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/tess2/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/rtAudio/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/unicap/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/videoInput/lib/osx
                                      ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/sndfile/lib/osx/${SUBLIBDIRSUFFIX}
-				     # ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//libs/microhttpd/lib/macosx
 				     ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/
 
                                      CACHE STRING "OpenFrameworks library search paths")
+
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
   execute_process(COMMAND uname -m OUTPUT_VARIABLE ARCH)
   if ( ${ARCH} MATCHES "x86_64" )
@@ -532,13 +385,9 @@ elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 
      set(OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS 
                                      ${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/${SUBLIBDIRSUFFIX}
-                                     #${OPENFRAMEWORKS_ROOT}/libs/FreeImage/lib/${SUBLIBDIRSUFFIX}
-                                     #${OPENFRAMEWORKS_ROOT}/libs/freetype/lib/${SUBLIBDIRSUFFIX}
-                                     #${OPENFRAMEWORKS_ROOT}/libs/glee/lib/${SUBLIBDIRSUFFIX}
                                      ${OPENFRAMEWORKS_ROOT}/libs/glu/lib/${SUBLIBDIRSUFFIX}
 				     ${OPENFRAMEWORKS_ROOT}/libs/glut/lib/${SUBLIBDIRSUFFIX}
                                      ${OPENFRAMEWORKS_ROOT}/libs/gstappsink/lib/${SUBLIBDIRSUFFIX}
-                                     #${OPENFRAMEWORKS_ROOT}/libs/poco/lib/${SUBLIBDIRSUFFIX}
                                      ${OPENFRAMEWORKS_ROOT}/libs/rtAudio/lib/${SUBLIBDIRSUFFIX}
                                      /usr/lib/
                                      CACHE STRING "OpenFrameworks library search paths")
@@ -548,29 +397,26 @@ if ( APPLE )
     set (CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
     #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m64")
-    #set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m32 -arch i386")
+    set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m32 -arch i386")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -mmacosx-version-min=10.6")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG=1 -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DTARGET_MAXSDK -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_MAC_OS")
     set (CMAKE_OSX_ARCHITECTURES "i386")
     #set (CMAKE_OSX_ARCHITECTURES "x86_64")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG=1 -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DTARGET_MAXSDK -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_MAC_OS")
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 endif ()
 
-set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib )
+set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib ${ANTESCOFO_LIB_PATH})
 set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain//usr/include/ /usr/include /usr/local/include )
 
 message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
-#message(STATUS "Looking for includes in  :" ${CMAKE_INCLUDE_PATH})
-#message(STATUS "Looking for Scintilla in : ${SCINTILLA_SOURCES}")
 
 include_directories(${CMAKE_INCLUDE_PATH})
 
 #######################################################
+# Find library and include 
 #
-# Find include file and fail if not found 
-# 
 macro(of_find_include includefile)
   find_path(${includefile}_INCPATH NAMES ${includefile} PATHS ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS})
   if ( ${${includefile}_INCPATH} STREQUAL "${includefile}_INCPATH-NOTFOUND")
@@ -581,11 +427,6 @@ macro(of_find_include includefile)
   set (OPENFRAMEWORKS_INCLUDES ${OPENFRAMEWORKS_INCLUDES} ${${includefile}_INCPATH})
 endmacro(of_find_include)
 
-
-#######################################################
-####
-# Find library and fail if not found 
-#
 macro(of_find_library libname)
   string(TOLOWER ${libname} libnamelow)
      
@@ -602,21 +443,13 @@ macro(of_find_library libname)
   endif()
 endmacro()
 
-
-#######################################################
-####
-# Find library and include 
-#
 macro(of_find_lib_and_include libname incname)
   of_find_library(${libname})
   of_find_include(${incname})
 endmacro(of_find_lib_and_include)
 
 
-
-
 #######################################################
-####
 # Find glut library
 #
 macro(of_find_glut)
@@ -666,45 +499,17 @@ if ( APPLE )
     of_find_library("rtAudio")
     of_find_library("sndfile")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
-    of_find_library("microhttpd")
+    #of_find_library("microhttpd")
+    of_find_library("antescofo")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
     of_find_library("openal")
     of_find_library("stdc++")
-    #of_find_library("openFrameWorksDebug")
 endif(APPLE)
 
 
 	
 of_find_glut()
 
-######
-# VectorMath addon ##############################
-# add VectorMath addon sourcecode
-#file ( GLOB_RECURSE ofxVectorMath ofxVectorMath/src/* )
-# add includes path for this addon
-#include_directories ( ofxVectorMath/src/ )
-
-# OpenCv addon ##################################
-# add ofxOpenCv source code
-#file ( GLOB_RECURSE ofxOpenCv ofxOpenCv/src/* )
-# add include path for this addon
-#include_directories ( ofxOpenCv/src/ )
-
-# search for opencv library and includes using pkg-config 
-#include(FindPkgConfig)
-#pkg_search_module(cv opencv)
-#include_directories ( ${cv_INCLUDE_DIRS} )
-#################################################
-
-#message("Files to be compiled: " ${app_sources_files})
-#${OFX_SOURCE_FILES})
-#${app_sources_files}
-
-#message("OpenFrameworks lib: " ${OFX_LIBS})
-
-
-#set (CMAKE_LD_FLAGS ${CMAKE_LD_FLAGS} " -static ")
-#set (CMAKE_LD_FLAGS ${CMAKE_LD_FLAGS} " -ObjC ")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSCI_NAMESPACE -DSCI_LEXER ")
 
 set( MACOSX_RESOURCE_FILES
@@ -742,38 +547,36 @@ set( MACOSX_RESOURCE_FILES_FONTS
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_on.png
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_over.png
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_down.png
-)
+	)
 
 
 # create an executable with all source files
 add_executable( ${PROJECT_NAME}
 		MACOSX_BUNDLE
-    ${app_sources_files}
-   ${OFX_SOURCE_FILES} 
-   ${SCINTILLA_SOURCES} 
-   ${OFX_INCLUDES_DIRS}
-	${MACOSX_RESOURCE_FILES}
-	${MACOSX_RESOURCE_FILES_FONTS}
+		${app_sources_files}
+		${OFX_SOURCE_FILES} 
+		${SCINTILLA_SOURCES} 
+		${OFX_INCLUDES_DIRS}
+		${MACOSX_RESOURCE_FILES}
+		${MACOSX_RESOURCE_FILES_FONTS}
 )
 
 SET_SOURCE_FILES_PROPERTIES(
 	${MACOSX_RESOURCE_FILES}
-  PROPERTIES
-  MACOSX_PACKAGE_LOCATION Resources
+	PROPERTIES
+	MACOSX_PACKAGE_LOCATION Resources
 )
 SET_SOURCE_FILES_PROPERTIES(
 	${MACOSX_RESOURCE_FILES_FONTS}
-  PROPERTIES
-  MACOSX_PACKAGE_LOCATION Resources/GUI/
+	PROPERTIES
+	MACOSX_PACKAGE_LOCATION Resources/GUI/
 )
-
-#set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS " -sectcreate __TEXT __info_plist Info.plist ")
+# WTF is this? set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS " -sectcreate __TEXT __info_plist Info.plist ")
 
 set( MACOSX_BUNDLE_ICON_FILE Icon.icns )
 
 set (ANTESCOFO_VERSION "")
 execute_process(COMMAND sh -c "cd ${ANTESCOFO_PARSER_PATH} && PROJECT_DIR=${ANTESCOFO_PARSER_PATH} ./script_gitversion.sh" OUTPUT_VARIABLE ANTESCOFO_VERSION)
-#execute_process(COMMAND "sh -c 'grep GIT_LAST_REPO_TAG ${ANTESCOFO_PARSER_PATH}/includes/gitDataAutoGenerated.h | sed 's:.*@\"\([a-z0-9].*\)\":\\1:''" OUTPUT_VARIABLE ANTESCOFO_VERSION)
 message("Building with Antescofo ${ANTESCOFO_VERSION}")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -792,34 +595,27 @@ message("resources: ${MACOSX_RESOURCE_FILES}")
 
 message(STATUS "CFLAGS: ${CMAKE_CXX_FLAGS}")
 message(STATUS "LDLAGS: ${CMAKE_LD_FLAGS}")
-# install_name_tool -change ./libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib bin/Contents/MacOS/ofxAntescofog 
 
 SET_SOURCE_FILES_PROPERTIES(
 	${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/osx/libfmodex.dylib
-  PROPERTIES
-  MACOSX_PACKAGE_LOCATION Frameworks
+	PROPERTIES
+	MACOSX_PACKAGE_LOCATION Frameworks
 )
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib)
 
-set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES} 
-	../../../../../Mutant-libs/libsndfile-1.0.25/Buildlib/i386/lib/libsndfile.a 
-	# ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//libs/microhttpd/lib/macosx/libmicrohttpd.a 
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/libmicrohttpd.a )
-	# /opt/local/lib/libmicrohttpd.a)
+#set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES}) ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/libmicrohttpd.a )
 
 target_link_libraries(${PROJECT_NAME} ${OPENFRAMEWORKS_LIBRARIES})
 
 # link with cv libraries and openFrameworks dependencies
 #set ( libs ${ofx_libs} ${cv_LIBRARIES})
 #target_link_libraries(t ${libs} )
-  
 
 #add_library(fmodlib SHARED ${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/osx/libfmodex.dylib)
 #install (TARGETS fmodlib DESTINATION Frameworks)
 #install(TARGETS  BUNDLE DESTINATION ../bin/Contents/Frameworks)
-
 
 ADD_CUSTOM_COMMAND(
 #TARGET ${PROJECT_NAME} PRE_BUILD COMMAND "grep GIT_LAST_REPO_TAG ${ANTESCOFO_PARSER_PATH}/includes/gitDataAutoGenerated.h | sed 's/.*@\"\([a-z0-9].*\)\"/\\1/' > /tmp/out"
