@@ -3,7 +3,7 @@
  * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
  *
  * derived from ofxTimeline
- *	
+ *
  * Copyright (c) 2011 James George
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
@@ -770,87 +770,9 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLAntescofoNote::mouseMoved(ofMouseEventArgs& args, long millis){
-	//cout << "mouseMoved: "<< args.x<<", "<<args.y << endl ;
-	/*
-	hoverSwitch = switchHandleForScreenPoint(ofPoint(args.x, args.y), hoveringStartTime);
-	if(hoverSwitch == NULL){
-		hoverSwitch = switchForScreenXY(args.x, args.y);
-		hoveringHandle = false;
-		for (int i = 0; i < switches.size(); i++) {
-			switches[i]->startHovered = false;
-			switches[i]->endHovered = false;
-		}
-	}
-	else{
-		hoveringHandle = true;
-		hoverSwitch->startHovered = hoveringStartTime;
-		hoverSwitch->endHovered = !hoveringStartTime;
-	}
-	*/
 }
 
 void ofxTLAntescofoNote::mouseDragged(ofMouseEventArgs& args, long millis) { //bool snapped){
-#if 0
-	//cout << "mouseDragged: "<< args.x<<", "<<args.y << ", millis:"<< millis << endl ;
-
-	bool oneSwitchSelected = howManySwitchesAreSelected() == 1;
-
-	if(draggingSelectionRange){
-		dragSelection.min = MIN(args.x, selectionRangeAnchor);
-		dragSelection.max = MAX(args.x, selectionRangeAnchor);
-	}
-
-	else if(pointsAreDraggable){
-
-		for(int i = 0; i < switches.size(); i++){
-
-			// allow pitch changes if we're dragging the whole note
-			if(switches[i]->startSelected && switches[i]->endSelected /*&& oneSwitchSelected*/
-					&& switches[i]->type != ANTESCOFO_REST) {
-				switches[i]->pitch = pitchForScreenY(args.y);
-				continue;
-			}
-
-			if (switches[i]->type == ANTESCOFO_NOTE || switches[i]->type == ANTESCOFO_REST) {// not a chord
-				// check if next note is in the way
-				if (i + 1 != switches.size() && switches[i+1]->beat.min > switches[i]->beat.max) {
-
-					switches[i+1]->beat.min = MIN(timeline->normalizedXToBeat( screenXtoNormalizedX(args.x /* - switches[i]->dragOffsets.min*/, zoomBounds)), switches[i+1]->beat.max);
-				}
-				if (i > 0 && switches[i-1]->beat.max > switches[i]->beat.min) {
-					switches[i-1]->beat.max = MIN(timeline->normalizedXToBeat( screenXtoNormalizedX(args.x /* - switches[i]->dragOffsets.min*/, zoomBounds)), switches[i-1]->beat.min);
-				}
-			}
-			if(switches[i]->startSelected){
-				//switches[i]->time.min = MIN( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.min, zoomBounds), switches[i]->time.max);
-				//TIME switches[i]->time.min = MIN( screenXtoNormalizedX(args.x /* - switches[i]->dragOffsets.min*/, zoomBounds), switches[i]->time.max);
-				switches[i]->beat.min = MIN(timeline->normalizedXToBeat( screenXtoNormalizedX(args.x /* - switches[i]->dragOffsets.min*/, zoomBounds)), switches[i]->beat.max);
-
-				cout << "mouseDragged: start selected: newTimeMin:"<< switches[i]->beat.min<<" dragOmin:"<< switches[i]->dragOffsets.min<<", timeMax:"<<switches[i]->beat.max<< endl ;
-			}
-			if(switches[i]->endSelected){
-				//switches[i]->time.max = MAX( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.max, zoomBounds), switches[i]->time.min);
-				//TIME switches[i]->time.max = MAX( screenXtoNormalizedX(args.x /* - switches[i]->dragOffsets.max*/, zoomBounds), switches[i]->time.min);
-				switches[i]->beat.max = MAX(timeline->normalizedXToBeat( screenXtoNormalizedX(args.x /* - switches[i]->dragOffsets.max*/, zoomBounds)), switches[i]->beat.min);
-				cout << "mouseDragged: end selected: newTimeMax:"<< switches[i]->beat.max<<" dragOmin:"<< switches[i]->dragOffsets.min<<", timeMax:"<<switches[i]->beat.max << endl ;
-
-			}
-		}
-		draggingSelectionRange = false;
-
-		bool didSelectedStartTime;
-		ofxTLAntescofoNoteOn* switchHandle = switchHandleForScreenPoint(ofPoint(args.x, args.y), didSelectedStartTime);
-		if(timeline->getMovePlayheadOnPaste()){
-			if(switchHandle != NULL){
-				//timeline->setPercentComplete(didSelectedStartTime ? switchHandle->time.min : switchHandle->time.max);
-				//timeline->setPercentComplete(didSelectedStartTime ? timeline->beatToNormalizedX(switchHandle->beat.min) : timeline->beatToNormalizedX(switchHandle->beat.max));
-			}
-			else{
-				//timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
-			}
-		}
-	}
-#endif
 	// Drag Note Range
 	if(changingRangeMin) {
 		noteRange.min += floor((changingRangeAnchor - args.y) * 0.1f);
@@ -869,72 +791,20 @@ void ofxTLAntescofoNote::mouseReleased(ofMouseEventArgs& args, long millis){
 	changingRangeMin = false;
 	changingRangeMax = false;
 
-#if 0
-	if(draggingSelectionRange){
-		for(int i = 0; i < switches.size(); i++){
-			//TIME if(dragSelection.contains( normalizedXtoScreenX(switches[i]->time.min, zoomBounds)))
-			if(dragSelection.contains( normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds)) ){
-				switches[i]->startSelected = true;
-			}
-
-			if(dragSelection.contains( normalizedXtoScreenX(timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds)) ){
-				switches[i]->endSelected = true;
-			}
+	for(int i = switches.size()-1; i >= 0; i--){
+		// deselect all switches if we're not dragging and we haven't released over a note
+		//TIME if(!draggingSelectionRange && !switches[i]->time.contains(screenXtoNormalizedX(args.x)))
+		if(!draggingSelectionRange &&
+				!switches[i]->beat.contains(screenXtoNormalizedX(timeline->normalizedXToBeat(args.x)))){
+			switches[i]->startSelected = false;
+			switches[i]->endSelected = false;
 		}
-	} else {
-		if(shouldCreateNewSwitch){
-			ofxTLAntescofoNoteOn* newNote = new ofxTLAntescofoNoteOn();
-			int pitch = pitchForScreenY(args.y);
-			int velocity = 50;
-			//TIME float startTime = screenXtoNormalizedX(args.x, zoomBounds);
-			float startBeat = screenXtoNormalizedX(timeline->normalizedXToBeat(args.x), zoomBounds);
-			addNote(startBeat, pitch, velocity);
-			ostringstream str;
-			str << "Adding new note : pitch: " << pitch << endl;
-			console->addln(str.str());
-
-			//ofLogVerbose("starTime=", startTime);
-			updateDragOffsets(args.x); //TODO: what does this do? Do we still need it?
-		}
-	}
-
-
-	// If we've dragged a switch such that it overlaps other notes, delete the other notes
-	for (int i = 0; i < switches.size(); i++) {
-		if(switches[i]->endSelected || switches[i]->startSelected) {
-			for (int j = switches.size()-1; j >= 0; j--) {
-				//TIME if(switches[j]->pitch == switches[i]->pitch && switches[j]->time.intersects(switches[i]->time) && switches[j] != switches[i]) 
-				if(switches[j]->pitch == switches[i]->pitch && switches[j]->beat.intersects(switches[i]->beat) && switches[j] != switches[i]) {
-					// we have overlapping switches - delete the old one if we overlap the start, or trim it if we overlap the end
-					//TIME if(switches[i]->time.contains(switches[j]->time.min)) {
-					if(switches[i]->beat.contains(switches[j]->beat.min)) {
-						delete switches[j];
-						switches.erase(switches.begin()+j);
-					} else {
-						//switches[j]->time.max = switches[i]->time.min - 0.001;
-						switches[j]->beat.min = switches[i]->beat.min - 1; // XXX ?
-					}
-				}
-				}
-			}
-		}
-
-#endif
-		for(int i = switches.size()-1; i >= 0; i--){
-			// deselect all switches if we're not dragging and we haven't released over a note
-			//TIME if(!draggingSelectionRange && !switches[i]->time.contains(screenXtoNormalizedX(args.x)))
-			if(!draggingSelectionRange &&
-					!switches[i]->beat.contains(screenXtoNormalizedX(timeline->normalizedXToBeat(args.x)))){
-				switches[i]->startSelected = false;
-				switches[i]->endSelected = false;
-			}
-			// delete all switches that have been collapsed to nothing
-			//if(switches[i]->time.min == switches[i]->time.max)
-			//	delete switches[i];
-			//	switches.erase(switches.begin()+i);
-		}	
-		draggingSelectionRange = false;
-		//	if(autosave) save();
+		// delete all switches that have been collapsed to nothing
+		//if(switches[i]->time.min == switches[i]->time.max)
+		//	delete switches[i];
+		//	switches.erase(switches.begin()+i);
+	}	
+	draggingSelectionRange = false;
 }
 
 void ofxTLAntescofoNote::keyPressed(ofKeyEventArgs& args){
@@ -1381,7 +1251,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			// get location in text score
 			if (!e->scloc) cout << *e;
 			newSwitch->label = e->cuename;
-#if 0
+#if 0 // XXX
 			assert(e->scloc);
 			newSwitch->lineNum_begin = e->scloc->begin.line;
 			newSwitch->colNum_begin = e->scloc->begin.column;
@@ -1397,18 +1267,6 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		}
 
 	}
-	// copy jumps
-	/*
-	   std::map<int, std::vector<int> >::iterator ito;
-	   ito = mNetscore->jump_index.find(evt_nb);
-	   if (ito != mNetscore->jump_index.end())
-	   {
-	   	for (vector<int>::iterator v = ito->second.begin(); v != ito->second.end(); v++) {
-	   		ofxTLAntescofoNoteOn *newSwitch = switches.back();
-			newSwitch->jump_dests.push_back(*v);
-			cout << "added for event "<< evt_nb << " jump dest: " << *v << endl;
-			}
-			}*/
 	map<int, std::vector<std::string> >::iterator ito;
 	for (ito = mNetscore->jump_labels.begin(); ito != mNetscore->jump_labels.end(); ito++) {
 		vector< int> jindz;
@@ -1424,7 +1282,6 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			switche->jump_dests.push_back(pos);
 		}
 	}
-
 	setScore(score);
 	str << "Score tempo : " << 60/score->tempo;
 	console->addln(str.str()); str.str("");
@@ -1502,14 +1359,12 @@ void ofxTLAntescofoNote::setScore(Score* s) {
 
 
 float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mOsc_tempo, float mOsc_pitch) {
-
 	//if (mOsc_tempo == 0) cerr << "Error null tempo returned by Antescofo, skipping a division by zero..." << endl;
 	//if (mOsc_beat == 0) return 0;
 
 	float r = timeline->beatToMillisec(mOsc_beat) / 1000;
 	//timeline->setCurrentTimeSeconds(r);
 	mCurSecs = r;
-
 
 	// display followed event in editor
 	ofxTLAntescofoNoteOn* switchA = 0;
@@ -1519,7 +1374,6 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 			switchA->missed = false;
 		}
 	}
-
 	if(switchA != NULL && bAutoScroll)
 		mAntescofog->editorShowLine(switchA->lineNum_begin, switchA->lineNum_end, switchA->colNum_begin, switchA->colNum_end);
 

@@ -1,5 +1,9 @@
 /**
- * ofxTimeline
+ *
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ * http://repmus.ircam.fr/mutant/ascograph
+ *
+ * based on ofxTimeline
  * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George

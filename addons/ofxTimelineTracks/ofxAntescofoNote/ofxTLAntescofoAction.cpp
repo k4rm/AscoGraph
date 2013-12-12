@@ -787,8 +787,6 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 		}
 	}
 	//_timeline->unselectAll();
-
-
 	/*
 	if(draggingSelectionRange){
 		for (list<ActionGroupHeader*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
@@ -979,53 +977,12 @@ void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
 	ostringstream oss;
 	string actstr;
 
-
 	if (actioncurve) {
 		actioncurve->parentCurve->antescofo_curve->show(oss);
 		actstr = oss.str();
 		mAntescofog->replaceEditorScore(actioncurve->parentCurve->header->lineNum_begin, actioncurve->parentCurve->header->lineNum_end,
 				actioncurve->parentCurve->header->colNum_begin, actioncurve->parentCurve->header->colNum_end, actstr);
 	}
-	
-	/*
-	for (list<ActionGroupHeader*>::const_iterator ahi = mActionGroups.begin(); ahi != mActionGroups.end(); ahi++) {
-		newscore += (*ahi)->dump();
-		
-	}
-	cout << "===================================================" << endl;
-	cout << "   Got new full score : " << endl;
-	cout << newscore << endl;
-	cout << "===================================================" << endl;
-	*/
-		/* parser structures way
-		if ((*ahi)->group && (*ahi)->group->gfwd) {
-			Gfwd *g = (*ahi)->group->gfwd;
-			for (i = g->actions().begin(); i != g->actions().end(); i++) {
-				Action *tmpa = *i;
-
-				// can be a curve
-				Curve* c = dynamic_cast<Curve*>(tmpa);
-				if (c && modifiedcurve) {
-					ActionMultiCurves *cu = new ActionMultiCurves(c, d, event, header); 
-					sons.push_back((ActionGroup*)cu);
-					continue;
-				} else { // use parser dump to dump 
-					oss.str(""); oss.clear();
-					list<Action*> l = g->bloc();
-					for (list<Action*>::iterator a = l.begin(); a != l.end(); a++) {
-						if (*a)
-							oss << *a;
-					}
-					actstr = oss.str();
-					newscore += actstr;
-					actstr.clear();
-				}
-			}
-		}
-	}
-		*/
-
-
 }
 
 void ofxTLAntescofoAction::show_all_curves()

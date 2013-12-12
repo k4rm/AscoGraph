@@ -8,9 +8,9 @@ using namespace std;
 
 #include "ofxMidiparser.h"
 
-///////////////////////////////////
-//// MIDI conversion
-//////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+//// MIDI to Antescofo Score Notation conversion command line tool ////
+///////////////////////////////////////////////////////////////////////
 
 NSString* convertMidiFileToNotes(string& midifile) {
 	NSString *midifileNS = [NSString stringWithCString:midifile.c_str() encoding:[NSString defaultCStringEncoding]];

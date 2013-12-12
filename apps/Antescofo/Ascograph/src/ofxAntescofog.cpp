@@ -16,7 +16,6 @@ int _debug = 0;
 static string str_error; // filled by our error()
 
 int fontsize = OFX_UI_FONT_SMALL;
-//int fontsize = OFX_UI_FONT_MEDIUM;
 
 extern ofxConsole* console;
 
@@ -83,12 +82,12 @@ void ofxAntescofog::menu_item_hit(int n)
 			}
 		case INT_CONSTANT_BUTTON_RELOAD:
 			askToSaveScore();
-			ofxAntescofoNote->clear(); // TODO ask for Saving file
+			ofxAntescofoNote->clear();
 			loadScore(mScore_filename);
 			break;
 		case INT_CONSTANT_BUTTON_NEW:
 			askToSaveScore();
-			ofxAntescofoNote->clear(); // TODO ask for Saving file
+			ofxAntescofoNote->clear();
 			newScore();
 			break;
 
@@ -709,22 +708,6 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_trill);
 
-/*
-	// drop down list
-	//guiBottom->addWidgetDown(new ofxUILabel("Cue points", OFX_UI_FONT_MEDIUM)); 
-	mCuepointsDdl = new ofxUIDropDownList(100, TEXT_CONSTANT_BUTTON_CUEPOINTS, cuepoints, OFX_UI_FONT_SMALL);
-	mCuepointsDdl->setAllowMultiple(false);
-	mCuepointsDdl->setAutoClose(true);
-	guiBottom->addWidgetDown(mCuepointsDdl);
-*/
-	// event buttons
-	/*
-	space = new ofxUISpacer(1, 1);
-	space->setVisible(false);
-	guiBottom->addWidgetDown(space);//, OFX_UI_ALIGN_RIGHT);
-	*/
-	//guiBottom->addWidgetLeft(b, OFX_UI_ALIGN_RIGHT);
-
 	guiBottom->addWidgetDown(mLabelAccompSpeed);
 	mLabelAccompSpeed->setVisible(false);
 	mLabelAccompSpeed = new ofxUILabel("0", fontsize);
@@ -744,19 +727,6 @@ void ofxAntescofog::setupUI() {
 	guiElevator->disable();
 
 	guiFind->setColorBack(ofColor(0, 0, 0, 0));
-
-
-	/*vector<string> items;
-	  items.push_back("Play to midi synth");
-	  items.push_back("Open MusicXML score");
-	  items.push_back("Open Antescofo score");
-	  items.push_back("Save to Antescofo score");
-	  items.push_back("Save to Antescofo score as...");
-	  items.push_back("Setup OSC");
-	  items.push_back("About Antescofog");
-	  items.push_back("Colors preferences");
-	  items.push_back("Help");
-	  */
 
 #if NO_UI_BUTTON
 	guiTop->addWidgetRight(new ofxUILabel(TEXT_CONSTANT_TITLE, OFX_UI_FONT_MEDIUM));
@@ -792,19 +762,15 @@ void ofxAntescofog::setupUI() {
 
 void ofxAntescofog::setupOSC(){
 	// listen for OSC
-	//mOsc_port = 3002;
 	int port = 0;
 	std::istringstream is(mOsc_port);
 	is >> port;
 	if (! is.good() && port <= 0)
-	{
-		//cerr << "Not a number, try again." << endl;
 		mOsc_port = "6789";
-	}
 	std::cout << "Listening on OSC port " << port << endl;
 	try {
 		mOSCreceiver.setup(atoi(mOsc_port.c_str()));
-	} catch(...) { //} catch(exception& e) { 
+	} catch(...) {
 		ofSetColor(0, 0, 0, 100);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		ofSetColor(255, 255, 255, 240);
@@ -819,7 +785,6 @@ void ofxAntescofog::setupOSC(){
 		display_error();
 	}
 
-	//mOsc_port_MAX = 3003;
 	is.str("");
 	is.str(mOsc_port_MAX);
 	is.clear();
@@ -844,7 +809,6 @@ void ofxAntescofog::setupTimeline(){
 	timeline.setOffset(ofVec2f(score_x, score_y));
 	timeline.setup(); //registers events
 
-	//timeline.setWidth(score_w - 100);
 	timeline.setFrameRate(24);
 	timeline.setShowTicker(false);
 	timeline.setShowBPMGrid(bSnapToGrid);
@@ -852,35 +816,23 @@ void ofxAntescofog::setupTimeline(){
 	timeline.setDurationInSeconds(60);
 	//timeline.moveToThread(); //increases accuracy of bang call backs
 
-	timeline.setLoopType(OF_LOOP_NORMAL);//LOOP_NONE); ///NORMAL); //turns the timeline to loop
+	timeline.setLoopType(OF_LOOP_NORMAL);
 	timeline.setBPM(bpm);
 	timeline.setLockWidthToWindow(false);
-	//timeline.setWidth(ofGetWidth());
 
 	// use custom zoomer :
 	timeline.addTrack("zoom", ofxAntescofoZoom);
 	timeline.setZoomer(ofxAntescofoZoom);
 	timeline.addTrack("Beats", ofxAntescofoBeatTicker);
-	//timeline.addTrack("Jumps", ofxJumpTrack);
 	timeline.addTrack("Notes", ofxAntescofoNote);
 	ofxAntescofoNote->setDrawRect(ofRectangle(0, 0, score_w, 300));
 	ofxAntescofoBeatTicker->setup();
 	timeline.setShowTicker(true);
 	timeline.setBPM(bpm);
 
-	//timeline.addCurves("test", "test.xml");
 	timeline.enable();
 	timeline.setFrameBased(false);
 	ofxAntescofoNote->enable();
-
-	/*
-	// stick to the bottom of the window
-	ofxTLZoomer* z = timeline.getZoomer();
-	ofRectangle rz = z->getDrawRect(); 
-	ofRectangle ra = ofxAntescofoAction->getDrawRect();
-	ra.height = ofGetHeight() - ra.y - rz.height - 200;
-	ofxAntescofoAction->setDrawRect(ra);
-	*/
 }
 
 
@@ -890,7 +842,6 @@ void ofxAntescofog::setup(){
 	console->addln("ofxAntescofo::setup()");
 	ofSetDataPathRoot("../Resources/");
 
-	//ofBackground(.15*255);
 	//ofSetFrameRate(60);
 	ofSetVerticalSync(true);
 	ofEnableSmoothing();
@@ -901,7 +852,7 @@ void ofxAntescofog::setup(){
 
 	fog = this;
 	score_x = 5;
-	score_y = 72;////81;//+10;
+	score_y = 72;
 	mUIbottom_y = 40;
 
 	bpm = 120; 
@@ -913,8 +864,6 @@ void ofxAntescofog::setup(){
 	ofAddListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
 
 	ofxAntescofoZoom = new ofxTLZoomer2D();
-	//ofxJumpTrack = new ofxTLBeatJump(this);
-
 	ofxAntescofoNote = new ofxTLAntescofoNote(this);
 	ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
 
@@ -928,8 +877,6 @@ void ofxAntescofog::setup(){
 
 	remove(TEXT_CONSTANT_TEMP_FILENAME);
 	remove(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
-	// finally open a score if given on command line
-	//if (mScore_filename.size()) loadScore(mScore_filename);
 
 	setEditorMode(bEditorShow, 0);
 
@@ -953,15 +900,13 @@ void ofxAntescofog::update() {
 	if (!bSetupDone)
 		return;
 
-	//if (!bEditorShow) score_w = ofGetWindowWidth() - score_x;
-	//else score_w = ofGetWindowWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
 	timeline.setWidth(score_w);
 	timeline.setOffset(ofVec2f(score_x, score_y));
 
 	if (timeline.getDrawRect().height + score_y > ofGetWindowHeight()) {
 		if (!elevator->isVisible())
 			elevatorEnable();
-	} // else if (elevator->isVisible() && ) elevatorDisable();
+	}
 
 	// check for waiting messages
 	try {
@@ -1020,7 +965,6 @@ void ofxAntescofog::update() {
 				string scorefile = m.getArgAsString(0);
 				if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
 				mHasReadMessages = true;
-				// mCuepointsDdl->clearToggles();
 				cues_clear_menu();
 				loadScore(scorefile, false);
 				bShouldRedraw = true;
@@ -1048,16 +992,9 @@ void ofxAntescofog::update() {
 						msg_string += "unknown";
 					}
 				}
-				// add to the list of strings to display
-				/*	msg_string[current_msg_string] = msg_string;
-					timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
-					current_msg_string = (current_msg_string + 1) % NUM_MSG_STRINGS;
-				// clear the next line
-				msg_strings[current_msg_string] = "";
-				*/
 				cout << "OSC received: unknown msg: "<< msg_string << endl;
 			}
-			//break;
+			//no break in order to eat every available messages
 		}
 	}
 	catch (exception& e) {
@@ -1071,10 +1008,7 @@ void ofxAntescofog::update() {
 		fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
 
 		if (_debug) cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
-		//timeline.setCurrentTimeSeconds(fAntescofoTimeSeconds);
-		//ofNotifyEvent(playbackStarted, )
 		mHasReadMessages = false;
-		//timeline.play();
 		bShouldRedraw = true;
 	}
 	//guiBottom->update();
@@ -1089,9 +1023,6 @@ void ofxAntescofog::update() {
 
 //--------------------------------------------------------------
 void ofxAntescofog::draw() {
-	
-	//ofRectangle r = timeline.getDrawRect();
-	//cout << "ofxAntescofog: draw: total draw rect:" << r.x << ", " << r.y << " : " << r.width << "x" << r.height << endl;
 	if (!bSetupDone)
 		return;
 
@@ -1104,7 +1035,6 @@ void ofxAntescofog::draw() {
 	}
 	*/
 	bool bMayUseCache = false;
-	//cout << "---- " << ofGetSystemTime() - mLastOSCmsgDate << endl;
 	if (ofGetSystemTime() - mLastOSCmsgDate > 15000) 
 		bMayUseCache = true;
 
@@ -1148,10 +1078,8 @@ void ofxAntescofog::draw() {
 			ofPopStyle();
 
 			// logos
-			//mLogoInria.draw(score_w - 290, 2, 148, 54);
 			mLogoInria.draw(score_w - 290, 9, 142, 52);
 			mLogoIrcam.draw(score_w - 120, 8, 102, 61);
-			//mLogoIrcam.draw(score_w - 170, 0, 109, 64);
 		
 			drawCache.end();
 
@@ -1337,24 +1265,15 @@ void ofxAntescofog::load()
         oscString2var["osc:portremote"] = &mOsc_port_MAX;
         
         cout << "UI Colors loaded from xml files." << endl;
-    }
+	}
 	else{
 		string str = "ofxTLAntescofoNote -- Error loading from xml file " + xmlFileName;
 		console->addln(str);
 	}
-    
-   /*
-    string xmlFileName = "GUI/defaultColors.xml";
+	/* string xmlFileName = "GUI/defaultColors.xml";
 	ofxXmlSettings settings;
-    
-	if(settings.loadFile(xmlFileName)){
-               
-        cout << "UI Colors loaded from xml files." << endl;
-    }
-	else{
-		ofLogError("ofxTLAntescofoNote -- Error loading from xml file " + xmlFileName);
-	}
-    */
+	if(settings.loadFile(xmlFileName)){ cout << "UI Colors loaded from xml files." << endl; }
+	else{ ofLogError("ofxTLAntescofoNote -- Error loading from xml file " + xmlFileName); } */
 }
 
 
@@ -1417,8 +1336,6 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 		[ editor  set_procedure_keywords: procedure_keywords ];
 		[ editor  set_system_keywords: system_keywords ];
 		NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
-		//string str = "ofxAntescofog: window: "; str += ofGetWidth() + "x"+ ofGetHeight(); console->addln(str);
-
 		NSView *nsview_ = [cocoaWindow->delegate getNSView];
 		ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
 		[ editor setup: nswin glview:nsview_ rect:r];
@@ -1467,7 +1384,6 @@ void ofxAntescofog::draw_ColorPicker(string name)
 	w = 300;
 	h = 400;
 	x = ofGetWindowWidth() / 2 + w;
-
 	y = ofGetWindowHeight() / 2;
 
 	ofColor c;
@@ -1506,8 +1422,6 @@ void ofxAntescofog::draw_ColorAsset(string name, ofColor *color)
 
 void ofxAntescofog::draw_ColorSetup()
 {
-    //ofFill();
-    //ofSetColor(255, 255, 255, 100);
     ofSetColor(0, 0, 0, 100);
     
     ofRect(0, mUIbottom_y, score_w, ofGetWindowHeight() - mUIbottom_y);
@@ -1528,7 +1442,6 @@ void ofxAntescofog::draw_ColorSetup()
             guiSetup_Colors->getWidget(c->first)->setVisible(true);
         }
     }
-    //draw_ColorPicker();
 }
 
 
@@ -1536,15 +1449,7 @@ void ofxAntescofog::draw_OSCSetup() {
     ofSetColor(0, 0, 0, 100);
     ofRect(40, mUIbottom_y, score_w - 40, ofGetWindowHeight() - mUIbottom_y);
     if (!bOSCSetupInitDone) {// init and create buttons with color rect
-        //guiSetup->addWidgetDown(new ofxUILabel("OSC local port", OFX_UI_FONT_MEDIUM));
         guiSetup_OSC->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
-	/*
-        for (map<string, string*>::const_iterator c = oscString2var.begin(); c != oscString2var.end(); c++) {
-            guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
-	    cout << "===============> adding text input:" << c->first << " 2nd:" << *(c->second) << endl;
-
-        }
-	*/
 	// host
 	map<string, string*>::const_iterator c = oscString2var.begin();
 	guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
@@ -1655,25 +1560,6 @@ void ofxAntescofog::mousePressed( int x, int y, int button ) {
 	//if (args.button == 3) { }
 	bShouldRedraw = true;
     //cout << "Fog : mousePressed r:"<< mEditorRect.x << ","<< mEditorRect.y << ","<< mEditorRect.width << "," << mEditorRect.height <<" inside:"<< mEditorRect.inside(x, y) << endl;
-    
-#if 0
-    if (bEditorMode && !mEditorRect.inside(x, y)) {
-        
-        cout << "Fog : change action" << endl;
-        setEditorMode(false, mEditorBeatnum);
-        string a, line;
-        ifstream f;
-        f.open(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
-        while (f.good()) {
-            getline(f, line);// >> tmp;
-            a += line;
-            a += "\n";
-        }
-        f.close();
-        ofxAntescofoNote->change_action(mEditorBeatnum, a);
-        ofxAntescofoAction->bEditorShow = false;
-    }
-#endif
 }
 
 //--------------------------------------------------------------
@@ -1714,7 +1600,6 @@ void ofxAntescofog::mouseReleased( int x, int y, int button ){
 void ofxAntescofog::windowResized(ofResizeEventArgs& resizeEventArgs) { // (int w, int h){
 	cout << "ofxAntescofog::windowResized: "<< resizeEventArgs.width << "x"<< resizeEventArgs.height << endl;
 
-
 #ifdef TARGET_OSX
 	NSView *glview = [cocoaWindow->delegate getNSView];
 	[glview setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -1731,8 +1616,6 @@ void ofxAntescofog::windowResized(ofResizeEventArgs& resizeEventArgs) { // (int 
 	drawCache.begin();
 	ofClear(255,255,255, 0);
 	drawCache.end();
-	 
-
 #endif
 
 	bShouldRedraw = true;
@@ -1778,17 +1661,6 @@ void ofxAntescofog::display_error()
 	string hdr(bIsSimulating ? TEXT_CONSTANT_SIMULATION_ERROR : TEXT_CONSTANT_PARSE_ERROR);
         guiError->addWidgetRight(new ofxUILabel(ofGetWindowWidth()/2, 100, hdr, OFX_UI_FONT_MEDIUM));
         string err = ofxAntescofoNote->get_error();
-        /*
-         int len = 80, i;
-         for (i = 0; i < err.size(); i += len) {
-         string sub(err, i, MIN(i+len, err.size()));
-         guiError->addWidgetDown(new ofxUILabel(sub, OFX_UI_FONT_MEDIUM));
-         }
-         if (i != err.size()) { string sub(err, i, err.size()); guiError->addWidgetDown(new ofxUILabel(sub, OFX_UI_FONT_MEDIUM)); }
- 
-         //guiError->addWidgetDown(new ofxUILabel(ofGetWidth()/3, 200, score_w - ofGetWidth()/3, err, OFX_UI_FONT_MEDIUM));
-
-         */
         ofDrawBitmapString(ofxAntescofoNote->get_error(), 100, 100);
         bErrorInitDone = true;
         guiError->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_CANCEL, fontsize));
@@ -1824,9 +1696,7 @@ void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 					break;
 				}
 			}
-
-			//.addPatch( dragInfo.files[i], dragInfo.position );
-			ofxAntescofoNote->clear(); // TODO ask for Saving file
+			ofxAntescofoNote->clear();
 			string str = "ofxAntescofog: trying to load file :" + dragInfo.files[i];
 			console->addln(str);
 			int n = loadScore(string(dragInfo.files[i]));
@@ -1852,11 +1722,8 @@ void ofxAntescofog::saveScore(bool stopSimu) {
 	if (bEditorShow) {
 		if (bIsSimulating && stopSimu) {
 			bIsSimulating = false;
-			//mEditButton->setVisible(false);
-			//mEditButton->setLabelVisible(false);
 			stop_simulate_and_goedit();
 		}
-
 		if (mScore_filename.empty()) {
 			saveAsScore();
 			return;
@@ -1865,7 +1732,6 @@ void ofxAntescofog::saveScore(bool stopSimu) {
 		[ editor getEditorContent:s ];
 		if (!s.empty()) {
 			// save and try to parse
-			// show dialog confirming
 			ofstream outfile;
 			outfile.open (mScore_filename.c_str());
 			outfile << s;
@@ -1910,9 +1776,8 @@ void ofxAntescofog::askToSaveScore() {
 		cout << "askToSaveScore: file modified" << endl;
 		saveAsScore();
 
-	} else {
+	} else
 		cout << "askToSaveScore: file not modified" << endl;
-	}
 }
 
 
@@ -1992,19 +1857,16 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 		guiBottom->enable();
 
 		// ensure zoom is restored
-		ofxAntescofoNote->setZoomBounds(z); //timeline.getZoomer()->setViewRange(z);
+		ofxAntescofoNote->setZoomBounds(z);
 		ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
 		if (!actiontrack) actiontrack = ofxAntescofoNote->createActionTrack();
 		if (actiontrack) actiontrack->setZoomBounds(z);
 		timeline.getTicker()->setZoomBounds(z);
 
 		bpm = timeline.getBPM();
-		//mSliderBPM->setValue(bpm);
 		// get cuepoints
 		cues_clear_menu();
-		//mCuepointsDdl->clearToggles();
 		for (vector<string>::iterator i = ofxAntescofoNote->cuepoints.begin(); i != ofxAntescofoNote->cuepoints.end(); i++) {
-			//mCuepointsDdl->addToggle(*i);
 			cues_add_menu(*i);
 		}
 		update();
@@ -2019,7 +1881,6 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 			mOSCsender.sendMessage(m);
 		} else bScoreFromCommandLine = false;
 	} else {
-		//mScore_filename = TEXT_CONSTANT_TEMP_FILENAME;
 		//if (ofxAntescofoNote->get_error().empty()) ofxAntescofoNote->set_error("Zero event found in score.");
 		display_error();
 	}
@@ -2083,7 +1944,7 @@ void ofxAntescofog::showJumpTrack() {
 		for (int n = 0; n < (*i)->jump_dests.size(); n++) {
 			float destBeat = (*i)->jump_dests[n];
 			cout << "showJumpTrack: adding jump: beat:" << (*i)->beat.min << " destBeat:" << destBeat << " label:" << (*i)->label <<endl;
-			ofxJumpTrack->add_jump((*i)->beat.min, destBeat, ""); //(*i)->label);
+			ofxJumpTrack->add_jump((*i)->beat.min, destBeat, "");
 		}
 	}
 }
@@ -2202,13 +2063,6 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
 	    cout << "Simulate button change: " << b->getValue() << endl;
 	    b->setValue(0);
-	    /*if (!mEditButton) {
-		    cerr << "ERROR: Can not get widget edit"<< endl;
-		    abort();
-	    }
-	    mEditButton->setVisible(true);
-	    mEditButton->setLabelVisible(true);
-	    */
 	    bIsSimulating = true;
 	    simulate();
     }
@@ -2239,7 +2093,6 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		    b->setValue(false);
 	    }
     }
-
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_START)
     {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
@@ -2367,24 +2220,6 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		    ny = ofGetWindowHeight() + topy - score_h;
 	    score_y = ny;
     }
-    /*
-    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_CUEPOINTS) {
-	    cout << "Cuepoints Drop Down List hit: " << endl; 
-	    vector<ofxUIWidget *> &selected = mCuepointsDdl->getSelected(); 
-	    for(int i = 0; i < selected.size(); i++)
-	    {
-		    mPlayLabel = selected[i]->getName();
-		    cout << "Sending OSC: gotolabel " << mPlayLabel << endl; 
-		    ofxOscMessage m;
-		    m.setAddress("/antescofo/cmd");
-		    m.addStringArg("gotolabel");
-		    m.addStringArg(mPlayLabel);
-		    mOSCsender.sendMessage(m);
-		    break;
-	    }
-	    mCuepointsDdl->clearSelected();
-    }
-    */
 }
 
 void ofxAntescofog::editorDoubleclicked(int line)
@@ -2505,7 +2340,7 @@ void ofxAntescofog::elevatorDisable()
 
 void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 {
-	//if (zoomer) removeTrack(zoomer);
+	//XXX if (zoomer) removeTrack(zoomer);
 	delete zoomer;
 	zoomer = z;
 	zoomer->setTimeline(this);
@@ -2610,7 +2445,6 @@ void ofxAntescofog::setup_httpd() {
 }
 
 void ofxAntescofog::getRequest(ofxHTTPServerResponse & response){
-	//if(response.url=="/showScreen.of"){
 	cout << "++++++++++ got request: " << response.url << endl;
 	if(response.url=="/"){
 		response.response="<html> \
@@ -2643,11 +2477,6 @@ void ofxAntescofog::httpd_update_beatpos()
 	m.setAddress("/antescofo/event_beatpos");
 	float n = (mOsc_beat - 1.) / ofxAntescofoNote->get_max_note_beat();
 	cout<< "Sending OSC event beat pos: " << mOsc_beat << " :" << n << " : " << ofxAntescofoNote->get_max_note_beat() << endl;
-/*
-	m.addFloatArg(n );
-	mOSCsender_www.sendMessage(m);
-	*/
-
 	char b[200];
 	getcwd(b, 200);
 	cout << b << endl;
@@ -2657,7 +2486,7 @@ void ofxAntescofog::httpd_update_beatpos()
 
 	ofs.close();
 }
-#endif
+#endif //USE_HTTPD
 
 
 

@@ -1,5 +1,8 @@
 /**
- * ofxTimeline
+ * Copyright (c) 2012-2013 Thomas Coffy - thomas.coffy@ircam.fr
+ * http://repmus.ircam.fr/mutant/ascograph
+ *
+ * based on ofxTimeline
  * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
@@ -37,26 +40,7 @@
 #include "Keyframes.h"
 #include "ofxTween.h"
 #include "ofxTLCurves.h"
-/*
-typedef struct {
-	int id;
-	ofRectangle bounds;
-	string name;
-	ofPolyline easeInPreview;
-	ofPolyline easeOutPreview;
-	ofPolyline easeInOutPreview;
-	
-	ofxEasing* easing;
-} EasingFunction;
 
-typedef struct {
-	int id;
-	ofRectangle bounds;
-	string name;
-	ofxTween::ofxEasingType type;
-} EasingType;
-
-*/
 class TweenKeyframe : public Keyframe{
   public:
     EasingFunction* easeFunc;
