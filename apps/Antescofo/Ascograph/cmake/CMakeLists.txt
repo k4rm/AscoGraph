@@ -2,7 +2,7 @@
 
 set(ASCOGRAPH_VERSION_NUMBER "0.087")
 
-set(FAUST 0)
+set(FAUST 1)
 set(USE_HTTPD 0)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
@@ -40,7 +40,7 @@ set (OFX_FREEIMAGE_INCL_PATH ../../../../libs/FreeImage/include/)
 set (OFX_FREETYPE_INCL_PATH ../../../../libs/freetype/include/ ../../../../libs/freetype/include/freetype2/)
 set (OFX_RTAUDIO_INCL_PATH ../../../../libs/rtAudio/include/)
 set (GST_INCL_PATH ../../../../../gstreamer-1.0.2/)
-set (MUTANT_LIBS_PATH ${ANTESCOFO_LIB_PATH}/../../Mutant-libs)
+set (MUTANT_LIBS_PATH ${ANTESCOFO_LIB_PATH}/../Mutant-libs)
 set (SNDFILE_INCL_PATH ${MUTANT_LIBS_PATH}/libsndfile-1.0.25/Buildlib/i386/include/)
 
 set (LIB_MUSICXML_PATH ../libmusicxml-3.0-src/src/)
@@ -413,6 +413,37 @@ set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /Applications/Xc
 message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
 
 include_directories(${CMAKE_INCLUDE_PATH})
+
+
+# Faust/LLVM
+if (FAUST)
+	set (LLVM_CONFIG "/opt/local/bin/llvm-config")
+	execute_process(COMMAND ${LLVM_CONFIG} "--version" OUTPUT_VARIABLE LLVM_VERSION)
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_VERSION "${LLVM_VERSION}")
+	message(STATUS "LLVM_VERSION: ${LLVM_VERSION}")
+
+	set (FAUST_DIR "${MUTANT_LIBS_PATH}/Faust2/llvm-${LLVM_VERSION}")
+	set (LLVM_CFLAGS "-I/opt/local/libexec/llvm-${LLVM_VERSION}/include")
+
+	execute_process(COMMAND ${LLVM_CONFIG} "--ldflags" OUTPUT_VARIABLE LLVM_LDFLAGS)
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS "${LLVM_LDFLAGS}")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+
+	execute_process(COMMAND ${LLVM_CONFIG} "--libs" "all" OUTPUT_VARIABLE LLVM_LDFLAGS2)
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS2 "${LLVM_LDFLAGS2}")
+	set (LLVM_LDFLAGS "${LLVM_LDFLAGS} ${LLVM_LDFLAGS2}")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_LDFLAGS "${LLVM_LDFLAGS}")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+	set (LLVM_LDFLAGS "${LLVM_LDFLAGS} -lLLVMX86AsmParser -lc++ -lstdc++")
+	message(STATUS "LLVM_LDFLAGS: ${LLVM_LDFLAGS}")
+
+	set (FAUST_CFLAGS "-I${FAUST_DIR}/include -DUSE_FAUST=1 -DUSE_FAUST_IN_ASCOGRAPH=1")
+	set (FAUST_LDFLAGS "${FAUST_DIR}/lib/faust/libfaust.a")
+	set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
+	set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FAUST_CFLAGS}")
+endif(FAUST)
 
 #######################################################
 # Find library and include 
