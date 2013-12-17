@@ -1,8 +1,8 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.087")
+set(ASCOGRAPH_VERSION_NUMBER "0.089")
 
-set(FAUST 1)
+set(FAUST 0)
 set(USE_HTTPD 0)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
@@ -277,6 +277,10 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindower.mm
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindow.mm
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLView.mm
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLContext.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxCodeEditor.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/ofxConsole.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/ofOpenALSoundPlayer_TimelineAdditions/ofOpenALSoundPlayer_TimelineAdditions.cpp
@@ -302,6 +306,10 @@ SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLV
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindower.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLContext.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
 # scintilla
 file ( GLOB_RECURSE SCINTILLA_SOURCES
@@ -607,18 +615,19 @@ SET_SOURCE_FILES_PROPERTIES(
 set( MACOSX_BUNDLE_ICON_FILE Icon.icns )
 
 set (ANTESCOFO_VERSION "")
-execute_process(COMMAND sh -c "cd ${ANTESCOFO_PARSER_PATH} && PROJECT_DIR=${ANTESCOFO_PARSER_PATH} ./script_gitversion.sh" OUTPUT_VARIABLE ANTESCOFO_VERSION)
+execute_process(COMMAND sh -c "cd ${ANTESCOFO_LIB_PATH} && PROJECT_DIR=${ANTESCOFO_LIB_PATH} ./script_gitversion.sh" OUTPUT_VARIABLE ANTESCOFO_VERSION)
 message("Building with Antescofo ${ANTESCOFO_VERSION}")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
 	MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} Version ${ASCOGRAPH_VERSION_NUMBER}, Copyright 2013 Thomas Coffy."
 	MACOSX_BUNDLE_ICON_FILE ${MACOSX_BUNDLE_ICON_FILE}
 	MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
-	MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} Version ${ASCOGRAPH_VERSION_NUMBER}"
+	MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} Version ${ASCOGRAPH_VERSION_NUMBER}."
 	MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}
 	MACOSX_BUNDLE_SHORT_VERSION_STRING ${ASCOGRAPH_VERSION_NUMBER}
 	MACOSX_BUNDLE_BUNDLE_VERSION ${ASCOGRAPH_VERSION_NUMBER}
-	MACOSX_BUNDLE_COPYRIGHT "Copyright 2013, Thomas Coffy\nSee http://repmus.ircam.fr/mutant/ascograph\n\nbuilt with Antescofo ${ANTESCOFO_VERSION}"
+	MACOSX_BUNDLE_NSPRINCIPAL_CLASS "NSApplication"
+	MACOSX_BUNDLE_COPYRIGHT "Copyright 2013, Thomas Coffy\n\n Ascograph is the open-source\n graphical score editor for Antescofo scores.\nSee http://repmus.ircam.fr/mutant/ascograph\n\nbuilt with Antescofo ${ANTESCOFO_VERSION}"
 )
 
 message("fmodex: ${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/osx/libfmodex.dylib")

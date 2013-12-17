@@ -1346,7 +1346,7 @@ void ofxTimeline::draw(){
 		ofNoFill();
 		ofSetColor(0);
 		//ofRect(totalDrawRect);
-		//ofRoundRect(totalDrawRect, 3);
+		ofRoundRect(totalDrawRect, 6);
 		//ofSetColor(0);
 
 		if (pages.size() > 1) {

@@ -1198,16 +1198,16 @@ ActionMultiCurves::ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */Curve*
 		cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
 		for (uint i = 0; i < nbvects; i++)
 		{
-			howmany = antescofo_curve->seq_vect[i]->var_list->size();
+			howmany = antescofo_curve->seq_vect[i].var_list->size();
 			cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< howmany << endl;
-			SeqContFunction* s = antescofo_curve->seq_vect[i];
-			list<Var*>::iterator it_var = s->var_list->begin();
+			SeqContFunction& s = antescofo_curve->seq_vect[i];
+			list<Var*>::iterator it_var = s.var_list->begin();
 			//for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
 			//{
 				string var = (*it_var)->name();
 				cout << "ActionMultiCurves: adding sub curve:" << endl;
 
-				ActionCurve* newc = new ActionCurve(*(s->var_list), s, &s->dur_vect, 0, e, this);
+				ActionCurve* newc = new ActionCurve(*(s.var_list), &s, &s.dur_vect, 0, e, this);
 				newc->label = antescofo_curve->label();
 				curves.push_back(newc);
 			//}
@@ -1266,42 +1266,43 @@ void ActionCurve::split()
 		label = parentCurve->antescofo_curve->label();
 		int nbvects = parentCurve->antescofo_curve->seq_vect.size();
 
-		vector<SeqContFunction*> listseq;
+		vector<SeqContFunction> listseq;
 		ofxTLAntescofoAction* actionTrack = (ofxTLAntescofoAction *)_timeline->getTrack("Actions");
 		cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
 		int nbtracks = 0;
 		for (uint i = 0; i < nbvects; i++)
 		{
-			parentCurve->howmany = parentCurve->antescofo_curve->seq_vect[i]->var_list->size();
+			parentCurve->howmany = parentCurve->antescofo_curve->seq_vect[i].var_list->size();
 			cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< parentCurve->howmany << endl;
-			SeqContFunction* s = parentCurve->antescofo_curve->seq_vect[i];
-			list<Var*>::iterator it_var = s->var_list->begin();
+			SeqContFunction& s = parentCurve->antescofo_curve->seq_vect[i];
+			list<Var*>::iterator it_var = s.var_list->begin();
 			// accumulate types
 			vector<Expression*> listinterp;
 
-			for (int j = 0; j < s->s_vect[0].size(); j++) {
-				listinterp.push_back(s->s_vect[0][j].type);
+			for (int j = 0; j < s.s_vect[0].size(); j++) {
+				listinterp.push_back(s.s_vect[0][j].type);
 			}
-			for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
+			for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s.var_list->end(); j++, it_var++)
 			{
 				nbtracks++;
 				vector<Expression*> listexp; 
-				vector<SimpleContFunction>* simple_vect = &parentCurve->antescofo_curve->seq_vect[i]->s_vect[j]; //&(seq->s_vect[j]);
+				vector<SimpleContFunction>* simple_vect = &parentCurve->antescofo_curve->seq_vect[i].s_vect[j]; //&(seq->s_vect[j]);
 				// get values
 				vector<double> hvalues;
-				for (uint j = 0; j != parentCurve->antescofo_curve->seq_vect[i]->dur_vect.size() - 1; j++) {
+				for (uint j = 0; j != parentCurve->antescofo_curve->seq_vect[i].dur_vect.size() - 1; j++) {
 					listexp.push_back((*simple_vect)[j].y0);
 				}
 				// get last y1
 				listexp.push_back((*simple_vect)[simple_vect->size()-1].y1);
 				
 				antescofo_ascograph_offline *ao = (actionTrack)->mAntescofog->ofxAntescofoNote->mAntescofo;
-				SeqContFunction* n = new SeqContFunction(ao, *it_var, s->dur_vect, listexp, listinterp, s->grain, *parentCurve->antescofo_curve);
-				listseq.push_back(n);
+				//SeqContFunction* n = new SeqContFunction(ao, *it_var, s.dur_vect, listexp, listinterp, s.grain, parentCurve->antescofo_curve);
+				//listseq.push_back(*n);
+				listseq.push_back(SeqContFunction(ao, *it_var, s.dur_vect, listexp, listinterp, s.grain, parentCurve->antescofo_curve));
 			}
 		}
 		// assign new seq_vect
-		vector<SeqContFunction*> oldseq = parentCurve->antescofo_curve->seq_vect;
+		vector<SeqContFunction> oldseq = parentCurve->antescofo_curve->seq_vect;
 		parentCurve->antescofo_curve->seq_vect = listseq;
 		parentCurve->antescofo_curve->show(cout);
 

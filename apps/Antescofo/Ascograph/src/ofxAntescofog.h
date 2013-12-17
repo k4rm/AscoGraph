@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxNSWindowApp.h"
 #include "ofxCocoaDelegate.h"
 #include "ofxTimeline.h"
 #include "ofxTLZoomer2D.h"
@@ -162,7 +163,8 @@ class AntescofoTimeline : public ofxTimeline
 	void keypressed(ofKeyEventArgs& args) {}
 };
 
-class ofxAntescofog : public ofBaseApp
+//class ofxAntescofog : public ofBaseApp
+class ofxAntescofog : public ofxNSWindowApp
 #ifdef USE_HTTPD
 		      , public ofxHTTPServerListener
 #endif
@@ -257,6 +259,8 @@ class ofxAntescofog : public ofBaseApp
 		int mCuesMaxIndex;
 		void cues_clear_menu();
 		void cues_add_menu(string s);
+		void newWindow();
+		ofxCocoaWindow* subWindow;
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;
@@ -339,3 +343,4 @@ class ofxAntescofog : public ofBaseApp
 #endif
 
 };
+

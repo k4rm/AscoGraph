@@ -2,7 +2,6 @@
 #include <string>
 #include <sys/time.h>
 
-//#include "ofxConsole.h"
 #include "ofxHotKeys.h"
 #include "ofxAntescofog.h"
 #include "ofxCocoaWindow.h"
@@ -11,6 +10,8 @@
 
 bool enable_simulate = true;
 bool disable_httpd = true;
+
+bool enable_new_window = false;
 
 int _debug = 0;
 static string str_error; // filled by our error()
@@ -54,6 +55,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	ofxJumpTrack = 0;
 	audioTrack = NULL;
 	ofxAntescofoSim = 0;
+	subWindow = NULL;
 
 	if (argc > 1 && argv[1][0] != '-') {
 		bScoreFromCommandLine = true;
@@ -301,7 +303,6 @@ static ofxAntescofog *fog;
 
 - (void) receiveNotification:(NSNotification *) notification
 {
-	//NSLog([notification name]);
 	if ([[notification name] isEqualToString:@"DoubleClick"]) {
 
 		NSDictionary *userInfo = notification.userInfo;
@@ -1044,8 +1045,6 @@ void ofxAntescofog::draw() {
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_ColorSetup();
 	} else if (bShowOSCSetup) { // osc setup
-		ofSetColor(ofxAntescofoNote->color_staves_bg);
-		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_OSCSetup();
 	} else if (bShowError) { // parsing error display
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
@@ -1446,6 +1445,9 @@ void ofxAntescofog::draw_ColorSetup()
 
 
 void ofxAntescofog::draw_OSCSetup() {
+    if (enable_new_window) newWindow();
+    ofSetColor(ofxAntescofoNote->color_staves_bg);
+    ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
     ofSetColor(0, 0, 0, 100);
     ofRect(40, mUIbottom_y, score_w - 40, ofGetWindowHeight() - mUIbottom_y);
     if (!bOSCSetupInitDone) {// init and create buttons with color rect
@@ -2519,6 +2521,65 @@ void ofxAntescofog::cues_add_menu(string c) {
 	[menuItem setTag:mCuesMaxIndex + INT_CONSTANT_BUTTON_CUES_INDEX];
 
 	[mCuesMenu addItem:menuItem];
+}
+
+class ofxAntescofoSetup : public ofxNSWindowApp {
+public:
+        ofxAntescofoSetup() { cout << "ofxAntescofoSetup::ctor " << endl;}
+        
+        void setup() { cout << "ofxAntescofoSetup::setup()" << endl; }
+        void update() {}
+        void draw() { cout << "ofxAntescofoSetup::draw()" << endl; }
+        
+        void keyPressed(int key) {}
+        void keyReleased(int key) {}
+        
+        void mouseMoved(int x, int y) {}
+        void mouseDragged(int x, int y, int button) {}
+        void mousePressed(int x, int y, int button) {}
+        void mouseReleased() {}
+        void mouseReleased(int x, int y, int button) {}
+        
+        void mouseScrolled(float x, float y) {}
+};
+
+void ofxAntescofog::newWindow() {
+	if (!subWindow) {
+		cout << "Creating new window" << endl;
+
+		/*
+		NSRect frame = NSMakeRect(0, 0, 200, 200);
+		subWindow  = [[[NSWindow alloc] initWithContentRect:frame
+			styleMask:NSBorderlessWindowMask
+			backing:NSBackingStoreBuffered
+			defer:NO] autorelease];
+		[subWindow setBackgroundColor:[NSColor blueColor]];
+		[subWindow makeKeyAndOrderFront:subWindow];
+		[subWindow setIdentifier:@"Preferences"];
+
+		NSView* glview = [[NSView alloc] initWithFrame:frame];
+
+		//setup and display the window
+		[subWindow setContentView:glview];
+		[subWindow makeKeyAndOrderFront:nil];
+		[glview release];
+		NSWindowDelegate* windowDelegate = [[NSWindowDelegate alloc] init];
+		[windowDelegate setApp:NSApp];
+		[windowDelegate setView:[window contentView]];
+		[window setDelegate:windowDelegate];
+		[window setReleasedWhenClosed:YES];
+		*/
+
+		//subWindow;
+		/*
+		ofRemoveListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
+		subWindow = new ofxCocoaWindow();
+		subWindow->setupOpenGL(300, 200, OF_WINDOW); 
+		//ofRunApp(new ofxAntescofoSetup(subWindow, this));
+		*/
+
+		ofxNSWindower::instance()->addWindow(/*new ofxAntescofoSetup()*/ this, "Setup");
+	}
 }
 
 

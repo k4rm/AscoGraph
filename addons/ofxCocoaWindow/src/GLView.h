@@ -14,9 +14,12 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxNSWindowApp.h"
 
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CVDisplayLink.h>
+
+class ofxNSWindowApp;
 
 @protocol GLViewDelegate <NSObject>
 @required
@@ -33,6 +36,8 @@
 	CVDisplayLinkRef displayLink;
 	BOOL isAnimating;
     bool bEnableSetupScreen;
+    ofxNSWindowApp *windowApp;
+    int frameRate;
 }
 
 @property(nonatomic, assign) id delegate;
@@ -41,10 +46,18 @@
 - (NSOpenGLContext*) openGLContext;
 
 - (void) drawView;
+- (void) setup;
+- (void) prepareOpenGL;
+- (void) setApp: (ofxNSWindowApp*) app;
+- (void) setFrameRate: (float) fr;
+- (float) getFrameRate;
+
 
 - (void) timerFired:(id)sender;
 - (id) initWithFrame:(NSRect)frameRect;
 - (id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context;
+- (id) initWithFrame:(NSRect)frame : (ofxNSWindowApp*) app : (int) fr;
+
 
 - (void) startAnimation;
 - (void) stopAnimation;

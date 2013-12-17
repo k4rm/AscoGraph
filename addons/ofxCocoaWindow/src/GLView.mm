@@ -170,12 +170,88 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	return self;
 }
-
+/*
 - (id) initWithFrame:(NSRect)frameRect
 {
 	self = [self initWithFrame:frameRect shareContext:nil];
 	return self;
 }
+*/
+
+
+- (id) initWithFrame: (NSRect) frame : (ofxNSWindowApp*) app : (int) fr {
+	
+	windowApp = app;
+	frameRate = fr;
+	return [self initWithFrame:frame];
+}
+
+
+- (id) initWithFrame: (NSRect)frame {
+	
+	self = [super initWithFrame:frame];
+	
+	if (self) {
+		
+		pixelFormat = [[OpenGLContext instance] pixelFormat];
+
+		if (pixelFormat == nil) {
+			NSLog(@"OpenGLView: no pixel format");
+		}
+		
+		openGLContext = nil;
+
+	}
+	
+	//we need to do this to enable mouseMoved events
+	NSTrackingArea *trackingArea;
+	trackingArea = [[NSTrackingArea alloc] initWithRect:frame
+																							options:NSTrackingMouseMoved | NSTrackingInVisibleRect | NSTrackingActiveInKeyWindow
+																								owner:self
+																						 userInfo:nil];
+	
+	[self addTrackingArea:trackingArea];
+	[trackingArea release];
+	
+	
+	//lastFrameTime = 0;
+#if 0
+	if (frameRate) { [self startTimer]; }
+	
+	//framerate is 0 so we sync with the screen's refresh rate
+	else {
+#endif
+		//the following has been copied and adjusted from:
+		//http://developer.apple.com/library/mac/#documentation/graphicsimaging/conceptual/OpenGL-MacProgGuide/opengl_designstrategies/opengl_designstrategies.html
+		
+		// Synchronize buffer swaps with vertical refresh rate
+    GLint swapInt = 1;
+    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
+		
+    // Create a display link capable of being used with all active displays
+    CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
+		
+    // Set the renderer output callback function
+    //CVDisplayLinkSetOutputCallback(displayLink, &displayLinkCallback, self);
+    CVDisplayLinkSetOutputCallback(displayLink, &MyDisplayLinkCallback, self);
+		
+    // Set the display link for the current renderer
+    CGLContextObj cglContext = (CGLContextObj) [[self openGLContext] CGLContextObj];
+    CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj) [pixelFormat CGLPixelFormatObj];
+    CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink, cglContext, cglPixelFormat);
+		
+    // Activate the display link
+    CVDisplayLinkStart(displayLink);
+//	}
+	
+	//dragging stuff, basically just allow us to register dragging...
+	[self registerForDraggedTypes:[NSArray arrayWithObjects: NSFilenamesPboardType, nil]];
+
+	
+	
+	return self;
+}
+
 
 - (void) lockFocus
 {
@@ -184,6 +260,64 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		[[self openGLContext] setView:self];
 }
 
+- (void) setup {
+	windowApp->setup();
+}
+
+- (void) setApp: (ofxNSWindowApp*) app {
+	windowApp = app;
+}
+
+- (float) getFrameRate {
+	return frameRate;
+}
+
+
+- (void) setFrameRate: (float) fr {
+	
+	//[self eraseTimer];
+	frameRate = fr;
+	//[self startTimer];
+	
+}
+
+
+- (void) prepareOpenGL {
+	
+	//really basic OpenGL initialisation...
+	glViewport(0, 0, (GLsizei) self.frame.size.width, (GLsizei) self.frame.size.height);
+	
+	//this is taken from oF's ofGLRenderer::setupScreenPerspective()
+		
+	float viewW = self.frame.size.width;
+	float viewH = self.frame.size.height;
+	
+	float fov = 60;
+	float eyeX = viewW / 2;
+	float eyeY = viewH / 2;
+	float halfFov = PI * fov / 360;
+	float theTan = tanf(halfFov);
+	float dist = eyeY / theTan;
+	float aspect = (float) viewW / viewH;
+	
+	float nearDist = dist / 10.0f;
+	float farDist = dist * 10.0f;
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(fov, aspect, nearDist, farDist);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(eyeX, eyeY, dist, eyeX, eyeY, 0, 0, 1, 0);
+	
+	//put the origin in the top left corner...
+	glScalef(1, -1, 1);
+	glTranslatef(0, -self.frame.size.height, 0);
+	
+
+	[[self openGLContext] update];
+}
 - (void) reshape
 {
 	// This method will be called on the main thread when resizing, but we may be drawing on a secondary thread through the display link

@@ -386,3 +386,5 @@ void ofSetVerticalSync(bool bSync){
 	//--------------------------------------
 
 }
+
+void ofSetAppWindow(ofPtr<ofAppBaseWindow> windowPtr) { window = windowPtr; }

@@ -102,8 +102,8 @@ void ofxTLTrackHeader::draw(){
 		//ofFill();
 		ofNoFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
-		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-		//ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4);
+		//ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		ofRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 6);
 	}
 
 	ofNoFill();
@@ -132,8 +132,8 @@ void ofxTLTrackHeader::draw(){
 	
 	ofNoFill();
 	ofSetColor(track->getTimeline()->getColors().outlineColor);
-	ofRect(bounds);
-	//ofRoundRect(bounds, 4);
+	//ofRect(bounds);
+	ofRoundRect(bounds, 6);
 	
 	//draw grippy lines on the footer draggable element
 	if(draggingSize){

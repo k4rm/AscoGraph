@@ -56,4 +56,4 @@ void		ofSetFullscreen(bool fullscreen);
 void		ofToggleFullscreen();
 //-------------------------- sync
 void 		ofSetVerticalSync(bool bSync);
-
+void ofSetAppWindow(ofPtr<ofAppBaseWindow> windowPtr);
