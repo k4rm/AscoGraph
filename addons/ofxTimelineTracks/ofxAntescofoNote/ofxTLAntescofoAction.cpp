@@ -272,7 +272,7 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 			int boxw = c->getWidth();
 			int boxx = ag->header->rect.x;
 			//int boxx = get_x(ag->header->beatnum + ag->header->delay + c->delay);
-			if (c->delay) boxx = get_x(c->header->beatnum + c->header->delay + c->delay);
+			if (c->delay) boxx = get_x(c->header->beatnum + /*c->header->delay*/ + c->delay);
 			//g->header->rect.x = boxx;
 			//cout << "boxx: " << boxx << " delay:" << c->delay << endl;
 			ofRectangle cbounds(boxx, boxy, boxw, boxh);
@@ -283,6 +283,8 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 					ac->beatcurves[iac]->setBounds(cbounds);
 					ofRange zr(getZoomBounds());
 					ac->beatcurves[iac]->setZoomBounds(zr);
+					ofRectangle r(getBounds());
+					ac->beatcurves[iac]->setTLBounds(r);
 					ac->beatcurves[iac]->viewIsDirty = true;
 				}
 			}
@@ -1463,7 +1465,9 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 		double groupDelay = parentCurve->header->delay;
 		for (std::vector<AnteDuration*>::const_iterator j = dur_vect->begin(); j != dur_vect->end(); j++) {
 			if ((*j)->is_constant()) {
-				double dou = (*j)->eval() + parentCurve->header->delay + groupDelay;
+				double dou = (*j)->eval();
+				if (j == dur_vect->begin())
+					dou +=  groupDelay;
 				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
 				delays.push_back(dou);
 			} else return false;
@@ -1516,6 +1520,8 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			curve->setBounds(bounds);
 			ofRange zr = curve->tlAction->getZoomBounds();
 			curve->setZoomBounds(zr);
+			ofRectangle r(curve->tlAction->getBounds());
+			curve->setTLBounds(r);
 			curve->viewIsDirty = true;
 			curve->ref = this;
 
@@ -1533,7 +1539,8 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			vector<SimpleContFunction>::iterator s = simple_vect->begin();
 			for (int k = 0; k < delays.size(); k++, s++) {
 				dcumul += delays[k];
-				cout << "ofxTLAntescofoAction::add_action: CURVE add keyframe[" << k << "] msec=" << _timeline->beatToMillisec(parentCurve->header->beatnum + dcumul)
+				float b = parentCurve->header->beatnum + dcumul;
+				cout << "ofxTLAntescofoAction::add_action: CURVE add keyframe[" << k << "] beat=" << b << " msec=" << _timeline->beatToMillisec(b)
 					<< " val=" <<  values[i][k] << endl;
 				string easetype;
 				if (s != simple_vect->end() && s->type && s->type->is_value()) {
@@ -1870,6 +1877,10 @@ int ActionCurve::getWidth() {
 	int maxx = 0, minx = 0;
 	for (int i = 0; i < beatcurves.size(); i++) {
 		ofRectangle tlbounds = beatcurves[i]->tlAction->getBounds();
+		ofRange tlzbounds = beatcurves[i]->tlAction->getZoomBounds();
+		cout <<"ActionCurve::getWidth(): bounds: "<<  tlbounds.x << ", " << tlbounds.y << " wxh:" << tlbounds.width << "x" << tlbounds.height << endl;
+		beatcurves[i]->setTLBounds(tlbounds);
+		beatcurves[i]->setZoomBounds(tlzbounds);
 		beatcurves[i]->get_first_last_displayed_keyframe(&screenpoint_first, &screenpoint_last, &firsti, &lasti);
 		if (minx > screenpoint_first.x)
 			minx = screenpoint_first.x;

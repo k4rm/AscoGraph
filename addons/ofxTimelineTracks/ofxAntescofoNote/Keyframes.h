@@ -122,6 +122,7 @@ class Keyframes// : public ofxTLTrack
 	ofxTLTrack* track;
 
 	virtual void setBounds(ofRectangle& b) { bounds = b; }
+	virtual void setTLBounds(ofRectangle& b) { tlBounds = b; }
 	virtual void setZoomBounds(ofRange& z) { zoomBounds = z; }
 	virtual void setViewIsDirty(bool v) { viewIsDirty = v; }
 	ofRectangle bounds;
@@ -212,4 +213,5 @@ class Keyframes// : public ofxTLTrack
 
 	// fake ofxTLTrack member
 	ofRange zoomBounds;
+	ofRectangle tlBounds;
 };

@@ -257,6 +257,7 @@ void BeatCurve::mouseMoved(ofMouseEventArgs& args, long millis){
 		BeatKeyframes::mouseMoved(args, millis);
 	} else cursor.set(args.x, args.y);
 }
+
 void BeatCurve::mouseDragged(ofMouseEventArgs& args, long millis){
 	if (ref->parentCurve->howmany != 1) return;
 	//if (!bounds.inside(args.x, args.y)) return;
@@ -278,7 +279,7 @@ void BeatCurve::mouseDragged(ofMouseEventArgs& args, long millis){
 		updateKeyframeSort();
 	}
 
-	
+
 	// if dragging last key, extend bounds
 	int maxi = 0;
 	for (int i = 0; i < selectedKeyframes.size(); i++) {
@@ -346,18 +347,18 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 					//float beat = selectedKeyframes[k]->beat;
 					//ref->changeKeyframeEasing(beat, ((ofxTLTweenBeatKeyframe*)selectedKeyframes[k])->easeFunc->name);// XXX
 					/*
-					switch(i) {
-						case 1:
-							easetype = "_out";
-							break;
-						case 2:
-							easetype = "_in_out";
-							break;
-						default:
-							easetype = "";
-					}
-					cout << "BeatCurve::mouseReleased: easingType : " << i <<  " easetype:" << easetype <<  endl;
-					*/
+					   switch(i) {
+					   case 1:
+					   easetype = "_out";
+					   break;
+					   case 2:
+					   easetype = "_in_out";
+					   break;
+					   default:
+					   easetype = "";
+					   }
+					   cout << "BeatCurve::mouseReleased: easingType : " << i <<  " easetype:" << easetype <<  endl;
+					   */
 					//drawingEasingWindow = false; timeline->dismissedModalContent();
 				}
 				//timeline->flagTrackModified(this);
@@ -434,7 +435,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 			EasingFunction* func = ((TweenBeatKeyframe*)(selectedKeyframes[i]))->easeFunc;
 			EasingType* type = ((TweenBeatKeyframe*)(selectedKeyframes[i]))->easeType;
 
-			
+
 			ref->deleteKeyframeAtBeat(selectedKeyframes[i]->orig_beat);
 			ref->addKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->tmp_value);
 			string easetype;
@@ -535,12 +536,12 @@ void BeatCurve::changeKeyframeEasing(float beat, string type) {
 				}
 			}
 			/*
-			for(int j = 0; j < easingTypes.size(); j++){
-				if(easingTypes[j]->easeType == easingTypes[i]) {
-					((ofxTLTweenBeatKeyframe*)keyframes[i])->easeType = easingTypes[j];
-					return;
-				}
-			} */
+			   for(int j = 0; j < easingTypes.size(); j++){
+			   if(easingTypes[j]->easeType == easingTypes[i]) {
+			   ((ofxTLTweenBeatKeyframe*)keyframes[i])->easeType = easingTypes[j];
+			   return;
+			   }
+			   } */
 		}
 		break;
 	}
@@ -558,10 +559,10 @@ void BeatCurve::willDeleteKeyframe(BeatKeyframe* keyframe){
 // 2/ pretty print the action
 // 3/ eplace it in the text score
 /*
-void BeatCurve::updateEditorContent()
-{
-}
-*/
+   void BeatCurve::updateEditorContent()
+   {
+   }
+   */
 
 void BeatCurve::selectedKeySecondaryClick(ofMouseEventArgs& args){
 	if (ref->parentCurve->howmany != 1) return;
@@ -732,6 +733,7 @@ void BeatCurve::recomputePreviews(){
 }
 
 bool BeatCurve::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coord2, int* firsti, int* lasti) {
+	cout <<"BeatCurve::get_first_last_displayed_keyframe(): tlbounds: "<<  tlBounds.x << ", " << tlBounds.y << " wxh:" << tlBounds.width << "x" << tlBounds.height << endl;
 	int i = 0;
 
 	*firsti = 0;
@@ -749,11 +751,11 @@ bool BeatCurve::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coor
 			break;
 		}
 	}
-	for (int i = keyframes.size() - 1; i > 0; i--) {
+	for (int i = keyframes.size() - 1; i >= 0; i--) {
 		if (isKeyframeIsInBounds(keyframes[i])) {
 			*coord2 = screenPositionForKeyframe(keyframes[i]);
 			*lasti = i; 
-			//cout << "get_first_last_displayed_keyframe: found last=" << i << endl;
+			//cout << "get_first_last_displayed_keyframe: found last=" << i << " beat:" << keyframes[i]->beat << endl;
 			found = true;
 			break;
 		}
@@ -764,15 +766,17 @@ bool BeatCurve::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coor
 		ofVec2f bx(bounds.x, 0);
 
 		for (int i = 0; i < keyframes.size(); i++) {
-			if (timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds) > bounds.x) {
+			float x = timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds);
+			if ( x > bounds.x && x > tlBounds.x) {
 				//cout << "get_first_last_displayed_keyframe: not found first=" << i-1 << endl;
 				*firsti = i - 1;
 				break;
 			}
 		}
-	
+
 		for (int i = keyframes.size() - 1; i >= 0; i--) {
-			if (timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds) < bounds.x + bounds.width) {
+			float x = timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds);
+			if (x < bounds.x + bounds.width && x < tlBounds.x + tlBounds.width) {
 				*lasti = i;
 				//cout << "get_first_last_displayed_keyframe: not found last=" << i << endl;
 				*coord2 = ofVec2f(bounds.x + bounds.width + 1, 0);
@@ -793,7 +797,7 @@ bool BeatCurve::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coor
 
 
 void BeatCurve::draw(){
-        if (curve_debug_) cout << "BeatCurve::draw(): bounds: x:"<<bounds.x << " y:" << bounds.y << " " << bounds.width << "x" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
+	if (curve_debug_) cout << "BeatCurve::draw(): bounds: x:"<<bounds.x << " y:" << bounds.y << " " << bounds.width << "x" << bounds.height << " valueRange:" << valueRange.min << ":" << valueRange.max << endl;
 	if(bounds.width == 0 || bounds.height < 2 || keyframes.empty()){
 		return;
 	}
@@ -803,18 +807,18 @@ void BeatCurve::draw(){
 		recomputePreviews();
 		redraw = true;
 	}
-	
+
 	/*
-	if (bounds == boundsCached && !redraw) {
-		drawCache.draw(0,0);
-		return;
-	}
+	   if (bounds == boundsCached && !redraw) {
+	   drawCache.draw(0,0);
+	   return;
+	   }
 
-	redraw = true;
-	bounds = boundsCached;
+	   redraw = true;
+	   bounds = boundsCached;
 
-	drawCache.begin();
-	*/
+	   drawCache.begin();
+	   */
 
 	ofVec2f screenpoint_first, screenpoint_last;
 	int firsti = 0, lasti = 0;
@@ -822,7 +826,7 @@ void BeatCurve::draw(){
 
 	ofPushStyle();
 
-        //draw current value indicator as a big transparent rectangle
+	//draw current value indicator as a big transparent rectangle
 	//ofSetColor(timeline->getColors().disabledColor, 30);
 	ofSetColor(timeline->getColors().outlineColor, 170);
 	//jg play solo change
@@ -831,9 +835,9 @@ void BeatCurve::draw(){
 	ofFill();
 	//ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
 
-        //******* DRAW FILL CURVES
-        ofSetPolyMode(OF_POLY_WINDING_NONZERO);
-	
+	//******* DRAW FILL CURVES
+	ofSetPolyMode(OF_POLY_WINDING_NONZERO);
+
 	//***** DRAW KEYFRAME LINES
 	ofSetLineWidth(2);
 	ofSetColor(keyColor);
@@ -841,9 +845,9 @@ void BeatCurve::draw(){
 
 	preview.draw();
 	ofSetLineWidth(1);
-	
+
 	//**** DRAW KEYFRAME DOTS
-	
+
 	//**** HOVER FRAME
 	if(hoverKeyframe != NULL){
 		ofPushStyle();
@@ -861,11 +865,11 @@ void BeatCurve::draw(){
 		if (curve_debug_) cout << "BeatCurve::draw(): "<<keyPoints[i].x << ", "<< keyPoints[i].y << endl;
 		ofRect(keyPoints[i].x-1, keyPoints[i].y-1, 3, 3);
 	}
-	
+
 	//**** SELECTED KEYS
 	ofSetColor(timeline->getColors().textColor);
 	ofFill();
-        //cout << "Keyframes::draw(): selectedKeyframes.size:"<< selectedKeyframes.size() << endl;
+	//cout << "Keyframes::draw(): selectedKeyframes.size:"<< selectedKeyframes.size() << endl;
 	for(int i = 0; i < selectedKeyframes.size(); i++){
 		if(isKeyframeIsInBounds(selectedKeyframes[i])){
 			ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[i]);
@@ -879,7 +883,7 @@ void BeatCurve::draw(){
 			}
 			ofSetColor(255, 0, 0, 255);
 			ofCircle(screenpoint.x, screenpoint.y, 4);
-                        //if (curve_debug_) cout << "Keyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
+			//if (curve_debug_) cout << "Keyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
 		}
 	}
 

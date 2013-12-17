@@ -580,6 +580,7 @@ void BeatKeyframes::addKeyframeAtBeat(float beat){
 void BeatKeyframes::addKeyframeAtBeat(float value, float beat){
 	BeatKeyframe* key = newKeyframe();
 	key->time = 0;
+	//cout << "BeatKeyframes::addKeyframeAtBeat: beat:" << beat << endl;
 	key->beat = key->previousBeat = beat;
 	key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
 	key->orig_value = value;
@@ -671,13 +672,12 @@ bool BeatKeyframes::isKeyframeSelected(BeatKeyframe* k){
 }
 
 bool BeatKeyframes::isKeyframeIsInBounds(BeatKeyframe* key){
-	if(zoomBounds.min == 0.0 && zoomBounds.max == 1.0) return true;
-	unsigned long duration = timeline->getDurationInMilliseconds();
-	return key->beat >= timeline->millisecToBeat(zoomBounds.min*duration) 
-		&& key->beat <= timeline->millisecToBeat(zoomBounds.max*duration);
+	float x =  timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( key->beat), zoomBounds);
+	//cout << "BeatKeyframes::isKeyframeIsInBounds(beat= " << key->beat << ") => is " << x << " between [ "<< tlBounds.x << " - " << tlBounds.x + tlBounds.width << " ]"<<endl;
+	return tlBounds.x <= x && ( tlBounds.x + tlBounds.width) >= x;
 }
 
-ofVec2f BeatKeyframes::screenPositionForKeyframe(BeatKeyframe* keyframe){
+ofVec2f BeatKeyframes::screenPositionForKeyframe(BeatKeyframe* keyframe) {
 	return ofVec2f( timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframe->beat), zoomBounds), valueToScreenY(keyframe->value));
 }
 
