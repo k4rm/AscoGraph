@@ -733,7 +733,7 @@ void BeatCurve::recomputePreviews(){
 }
 
 bool BeatCurve::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coord2, int* firsti, int* lasti) {
-	cout <<"BeatCurve::get_first_last_displayed_keyframe(): tlbounds: "<<  tlBounds.x << ", " << tlBounds.y << " wxh:" << tlBounds.width << "x" << tlBounds.height << endl;
+	//cout <<"BeatCurve::get_first_last_displayed_keyframe(): tlbounds: "<<  tlBounds.x << ", " << tlBounds.y << " wxh:" << tlBounds.width << "x" << tlBounds.height << endl;
 	int i = 0;
 
 	*firsti = 0;

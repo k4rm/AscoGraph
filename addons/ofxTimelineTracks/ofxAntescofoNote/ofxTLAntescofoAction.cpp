@@ -1863,7 +1863,7 @@ void ActionMultiCurves::setWidth(int w) {
 }
 
 void ActionCurve::setWidth(int w) {
-	cout << "--------------------------------setting Width on \'" << parentCurve->header->title << "\" : " << parentCurve->header->rect.width << endl;
+	//cout << "--------------------------------setting Width on \'" << parentCurve->header->title << "\" : " << parentCurve->header->rect.width << endl;
 	parentCurve->header->rect.width = w;
 	for (int i = 0; i < beatcurves.size(); i++) {
 		beatcurves[i]->bounds.width = w;
@@ -1878,7 +1878,7 @@ int ActionCurve::getWidth() {
 	for (int i = 0; i < beatcurves.size(); i++) {
 		ofRectangle tlbounds = beatcurves[i]->tlAction->getBounds();
 		ofRange tlzbounds = beatcurves[i]->tlAction->getZoomBounds();
-		cout <<"ActionCurve::getWidth(): bounds: "<<  tlbounds.x << ", " << tlbounds.y << " wxh:" << tlbounds.width << "x" << tlbounds.height << endl;
+		//cout <<"ActionCurve::getWidth(): bounds: "<<  tlbounds.x << ", " << tlbounds.y << " wxh:" << tlbounds.width << "x" << tlbounds.height << endl;
 		beatcurves[i]->setTLBounds(tlbounds);
 		beatcurves[i]->setZoomBounds(tlzbounds);
 		beatcurves[i]->get_first_last_displayed_keyframe(&screenpoint_first, &screenpoint_last, &firsti, &lasti);

@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.089")
+set(ASCOGRAPH_VERSION_NUMBER "0.090")
 
 set(FAUST 0)
 set(USE_HTTPD 0)

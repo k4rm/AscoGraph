@@ -180,15 +180,13 @@ void ofxAntescofog::simulate()
 		setupTimelineSim();
 	} else {
 		timelineSim.enable();
+		if (ofxAntescofoNoteSim->mAntescofo) 
+		{ 
+			//ofxAntescofoNote->deleteActionTrack();
+			delete ofxAntescofoNoteSim->mAntescofo; 
+			ofxAntescofoNoteSim->mAntescofo = new antescofo_ascograph_offline();
+		}
 	}
-
-	if (ofxAntescofoNoteSim->mAntescofo) 
-	{ 
-		//ofxAntescofoNote->deleteActionTrack();
-		delete ofxAntescofoNoteSim->mAntescofo; 
-		ofxAntescofoNoteSim->mAntescofo = new antescofo_ascograph_offline();
-	}
-
 	ofxAntescofoNoteSim->mAntescofo->antescofo_stop_run();
 	ofxAntescofoNoteSim->mAntescofo->antescofo_stop();
 	ofxAntescofoNoteSim->loadscoreAntescofo(mScore_filename);
