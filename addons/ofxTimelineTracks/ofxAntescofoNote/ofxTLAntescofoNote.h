@@ -46,6 +46,9 @@
 #include "antescofowriter.h"
 #include "rational.h"
 #include <sndfile.h>    // Sound-file reader
+#include "GuidoComponent.h"
+#include "openFrameworksDevice.h"
+
 
 
 #define ANTESCOFO_REST              0
@@ -87,6 +90,7 @@ typedef struct {
 	bool endSelected;
 	bool startHovered;
 	bool endHovered;
+	bool isLast;
 
 	int pitch;
 	int velocity;
@@ -267,6 +271,10 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	void draw_showPianoRoll();
 	void draw_showStaves();
+	void draw_guido();
+	string getGuidoString(int fromx, int fromi, int tox, int toi);
+	string getGuidoStringNote(int switchnb);
+	string getGuidoStringNoteName(int pitch);
 
 	bool bShowPianoRoll;
 	bool bAutoScroll;
@@ -283,4 +291,6 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofImage* noteImage;
 
 	bool bLockNotes;
+
+	GuidoComponent* guido;
 };

@@ -1,6 +1,7 @@
 BPM 60
 NOTE A4 4
 NOTE C4 0.5
+NOTE C4 0.5
 group testgroup 
 {
 	action_one 55 $RT_TEMPO
@@ -17,3 +18,12 @@ NOTE g2 3
 NOTE A2 1
 	msg4 a
 	kill h2_p
+
+NOTE A4 4
+
+NOTE A4 4
+
+NOTE A4 4
+NOTE A4 4
+
+NOTE A4 4

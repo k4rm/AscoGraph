@@ -54,7 +54,12 @@ set (OFX_MUSICXML_INCL_PATH
 		${LIB_MUSICXML_PATH}/parser/
 		${LIB_MUSICXML_PATH}/antescofo/
 )
-
+set (LIB_GUIDO_PATH ../guidolib-1.51-src/)
+set (OFX_GUIDO_INCL_PATH 
+		${LIB_GUIDO_PATH}/openFrameworks/Device
+		${LIB_GUIDO_PATH}/src/include/
+		${LIB_GUIDO_PATH}/src/maps/
+)
 include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_INCL_PATH} 
 					${OFX_POCO_INCL_PATH}
 					${OFX_TESS2_INCL_PATH}
@@ -77,6 +82,7 @@ include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_
 					${ANTESCOFO_PARSER_INCL_PATH}
 					${GST_INCL_PATH}
 					${SNDFILE_INCL_PATH}
+					${OFX_GUIDO_INCL_PATH}
 )
 
 set (OPENFRAMEWORKS_LIB_SOURCES
@@ -288,6 +294,10 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
+	${LIB_GUIDO_PATH}/openFrameworks/Device/GuidoComponent.cpp
+	${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksDevice.cpp
+	${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksSystem.cpp
+	${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksFont.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
 
@@ -415,7 +425,7 @@ elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 endif ()
 
-set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib ${ANTESCOFO_LIB_PATH})
+set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib ${ANTESCOFO_LIB_PATH} ${LIB_GUIDO_PATH}/)
 set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain//usr/include/ /usr/include /usr/local/include )
 
 message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
@@ -537,6 +547,7 @@ if ( APPLE )
     of_find_library("glut")
     of_find_library("rtAudio")
     of_find_library("sndfile")
+    of_find_library("GUIDOEngine")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
     #of_find_library("microhttpd")
     of_find_library("antescofo")
@@ -558,11 +569,13 @@ set( MACOSX_RESOURCE_FILES
 	${CMAKE_SOURCE_DIR}/../bin/data/logo_ircam.png
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
 	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
+	${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf
 )
 
 set( MACOSX_RESOURCE_FILES_FONTS
 	"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/Ascograph.xml
+	${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 
 	${CMAKE_SOURCE_DIR}/../bin/data/timeline0_Page_One_trackPositions.xml 
@@ -643,7 +656,7 @@ SET_SOURCE_FILES_PROPERTIES(
 )
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib)
+SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib @executable_path/../Frameworks/GUIDOEngine.dylib)
 
 #set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES}) ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/libmicrohttpd.a )
 
@@ -664,6 +677,8 @@ ADD_CUSTOM_COMMAND(
 		COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/
 		COMMAND cp -f ${CMAKE_SOURCE_DIR}/../../../../libs/fmodex/lib/osx/libfmodex.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks
 		COMMAND install_name_tool -change ./libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
+		COMMAND cp -f ${CMAKE_SOURCE_DIR}/${LIB_GUIDO_PATH}/GUIDOEngine.framework/Versions/C/GUIDOEngine ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/GUIDOEngine.dylib
+		COMMAND install_name_tool -change ./GUIDOEngine.dylib @executable_path/../Frameworks/GUIDOEngine.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
 		COMMAND sed "s/ASCOGRAPHVERSION/${ASCOGRAPH_VERSION_NUMBER}/g" Info.plist_orig > Info.plist
 		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
 		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures

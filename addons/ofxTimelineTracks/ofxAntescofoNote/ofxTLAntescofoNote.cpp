@@ -42,13 +42,16 @@
 #include <string>
 #include <sys/stat.h>
 
-// libmusicxcml includes
+// libmusicxcml/guido includes
 #include "libmusicxml.h"
 #include "xml.h"
 #include "xmlfile.h"
 #include "xmlreader.h"
 #include "xml2antescofovisitor.h"
 #include "antescofowriter.h"
+#include "GuidoComponent.h"
+#include "GUIDOScoreMap.h"
+#include "GuidoMapCollector.h"
 
 #include "ofMain.h"
 #include "ofxTLAntescofoNote.h"
@@ -106,6 +109,18 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	mAntescofo = new antescofo_ascograph_offline();
 	cout << "================= This Name : " << mAntescofo->thisName()<< endl;
 	mNetscore = 0;
+
+	guido = new GuidoComponent();
+	guido->GuidoInit("GUI/NewMedia Fett.ttf", "GUI/guido2.ttf");
+	GuidoLayoutSettings layoutSettings;
+	layoutSettings.systemsDistance = 75;
+	layoutSettings.spring = 1.1;
+	layoutSettings.force = 750;
+	layoutSettings.systemsDistribLimit = 0.25;
+	layoutSettings.systemsDistribution = kAutoDistrib;
+	layoutSettings.neighborhoodSpacing = 0;
+	layoutSettings.optimalPageFill = 0;
+	guido->setGuidoLayoutSettings(layoutSettings);
 }
 
 ofxTLAntescofoNote::~ofxTLAntescofoNote(){
@@ -377,6 +392,188 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 	}
 }
 
+void ofxTLAntescofoNote::draw_guido() {
+	if (guido) {
+		ofPushStyle();
+
+		ofSetColor(255, 255, 255, 255);
+		ofFill();
+		ofRect(bounds);
+
+		//guido->setResizePageToMusic(true);
+		int w = guido->getWidth();
+		int h = guido->getHeight();
+		int sw = w / bounds.width;
+		int sh = h / bounds.height;
+
+		//guido->getDevice()->OffsetOrigin(bounds.x, bounds.y);
+		guido->setSize(bounds.width, bounds.height);
+		guido->getDevice()->NotifySize(bounds.width, bounds.height);
+		//guido->getDevice()->SetScale(sw, sh);
+		//guido->getDevice()->SetScale(4, 4);
+		//guido->getDevice()->SetScale(1/4, 1/4);
+
+		GuidoPageFormat format;
+    		format.width = bounds.width;// * xfactor;
+		format.height = bounds.height;
+#if 0
+    		format.marginleft = bounds.x;
+    		format.margintop = bounds.y + 200;
+    		format.marginright = bounds.x + bounds.width;
+		format.marginbottom = bounds.y + bounds.height - 200;
+#else
+    		format.marginleft = 0;
+    		format.margintop = 0;
+    		format.marginright = bounds.width;
+		format.marginbottom = bounds.height;
+#endif
+		//TODO regarder code de GuidoGetDrawBoundingBoxes
+		GuidoSetDefaultPageFormat(&format);
+		GuidoLayoutSettings layoutSettings;
+		layoutSettings.systemsDistance = 75;
+		layoutSettings.spring = 1.1; //5;
+		layoutSettings.force = 750;
+		layoutSettings.systemsDistribLimit = 0.25;
+		layoutSettings.systemsDistribution = kAutoDistrib;
+		layoutSettings.neighborhoodSpacing = 0;
+		layoutSettings.optimalPageFill = 0;
+		guido->setGuidoLayoutSettings(layoutSettings);
+
+		//int err = guido->setGMNCode("[ \\clef<\"treble\"> \\key<\"D\"> \\meter<\"4/4\"> d \\space<10> e \\space<10> g \\space<10> e\\space<1> d  \\space<1> c \\space<1> d \\space<1> e  \\space<1>]");
+		// 1/ get first and last beat displayed
+		float startX = -1;
+		float endX = -1;
+		int starti = 0, endi = 0;
+		for(int i = 0; i < switches.size(); i++){
+			if(isSwitchInBounds(switches[i])){
+				if (startX == -1) {
+					startX = std::min((int)floor(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds)), 0);
+					starti = i;
+				}
+				endX = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
+				endi = i;
+			}
+		}
+		endi--;
+		string gstr = getGuidoString(startX, starti, endX, endi);
+		cout << "Displaying Guido code: " << gstr << endl;
+		//guido->getDevice()->SetScale(1/4, 1/4);
+		int err = guido->setGMNCode(gstr.c_str());
+		cout << "Guido returned err:" << err << endl;
+
+		guido->draw(0, 0);
+		// retrieve graphic2time mapping
+		guido::GuidoMapCollector mapcol(guido->getGRHandler(), kGuidoEvent);
+		Time2GraphicMap outmap;
+		mapcol.process(1, bounds.width, bounds.height, &outmap);
+		for (int i = 0; i < outmap.size(); i++) {
+			cout << "Mapcol: " << i << " -> ";
+			outmap[i].first.print(cout);
+			cout << " <-> ";
+			outmap[i].second.print(cout);
+			cout << endl;
+		}
+		// 2/ find their corresponding position in fbo
+#if 1
+		/*for (int i = 0; i < outmap.size(); i++) {
+			if (outmap[i].first.include(switches
+		}*/
+		cout << "startx = " << startX << " starti = " << starti<<endl;
+		cout << "endx = " << endX << " endi = " << endi<<endl;
+		int pxmin = outmap[starti].second.left;
+		int pxmax = outmap[endi].second.right;
+
+#endif
+		// 3/ draw
+		//int pxmin = 0;
+#if 1
+		float fact = (pxmax - pxmin) /  bounds.width;
+		cout << "fact=" << fact << endl;
+		//ofScale(fact, fact);
+#endif
+		guido->getDevice()->drawCache.draw(bounds.x + pxmin, bounds.y);
+
+		ofPopStyle();
+	}
+}
+
+string ofxTLAntescofoNote::getGuidoStringNoteName(int pitch) {
+	pitch = abs(pitch);
+	if (pitch > 1000) pitch /= 100;
+	int p = pitch % 12;
+	int o = 0;
+	if (pitch >= 12 && pitch <= 23) o = 0;
+	if (pitch >= 24 && pitch <= 35) o = 1;
+	if (pitch >= 36 && pitch <= 47) o = 2;
+	if (pitch >= 48 && pitch <= 59) o = 3;
+	if (pitch >= 60 && pitch <= 71) o = 4;
+	if (pitch >= 72 && pitch <= 83) o = 5;
+	if (pitch >= 84 && pitch <= 95) o = 6;
+	if (pitch >= 96 && pitch <= 107) o = 7;
+	if (pitch >= 108 && pitch <= 120) o = 8;
+	string c = "";
+	if (p == 0) c = "c";
+	if (p == 1) c = "c" + ofToString(o) + "#";
+	if (p == 2) c = "d";
+	if (p == 3) c = "d" + ofToString(o) + "#";
+	if (p == 4) c = "e";
+	if (p == 5) c = "f";
+	if (p == 6) c = "f" + ofToString(o) + "#";
+	if (p == 7) c = "g";
+	if (p == 8) c = "g" + ofToString(o) + "#";
+	if (p == 9) c = "a";
+	if (p == 10) c = "a" + ofToString(o) + "#";
+	if (p == 11) c = "b";
+	return c ;
+}
+
+string ofxTLAntescofoNote::getGuidoStringNote(int switchnb) {
+	static bool bInChord = false;
+	string ret;
+	if (switches[switchnb]->type == ANTESCOFO_NOTE || switches[switchnb]->type == ANTESCOFO_CHORD) {
+		rational rmin(floor(switches[switchnb]->beat.min * 10000.), 10000);
+		rational rmax(floor(switches[switchnb]->beat.max * 10000.), 10000);
+		rational rdur = rmax - rmin;
+		rdur /= 4;
+		rdur.rationalise();
+		string dur = rdur.toString();
+		if (switches[switchnb]->isLast) {
+			bInChord = false;
+		}
+		if (switches[switchnb]->type == ANTESCOFO_CHORD) {
+			if (!switches[switchnb]->isLast) {
+				if (!bInChord) ret += "{";
+				bInChord = true;
+			}
+		}
+		ret += getGuidoStringNoteName(switches[switchnb]->pitch) + "*" + dur;
+		if (switches[switchnb]->type == ANTESCOFO_CHORD && !switches[switchnb]->isLast)
+			ret += ",";
+		ret += " ";
+	}
+	return ret;
+}
+string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi) {
+	string ret = "[";
+	if (fromi == 0) {
+		ret += "\\clef<\"treble\">";
+	}
+	int curx = fromx;
+	for (int i = fromi; i < toi; i++) {
+		int x = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
+		if (x != curx) {
+			int space = (x - curx)/4;
+			ret += "\\space<";
+			ret += ofToString(space) + "> ";
+		}
+		ret += getGuidoStringNote(i);
+		if (x == curx && switches[i]->isLast) ret += "}\n" ;
+		//"e \\space<10> g \\space<10> e\\space<1> d  \\space<1> c \\space<1> d \\space<1> e  \\space<1>]");
+		curx = x;
+	}
+	ret += "]";
+	return ret;
+}
 
 void ofxTLAntescofoNote::draw_showStaves() {
 	// bg
@@ -533,8 +730,8 @@ void ofxTLAntescofoNote::draw_showStaves() {
 		int sizec = mFont.stringWidth(string("_"));
 		for(int i = switches.size() - 1; i >= 0; i--){
 			if(isSwitchInBounds(switches[i])){
-				float startX =  max(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds), zoomMinX);
-				float endX = min(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds), zoomMaxX);
+				int startX = max(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds), zoomMinX);
+				int endX = min(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds), zoomMaxX);
 
 				if (!switches[i]->label.empty()) {
 					ofSetLineWidth(1);
@@ -622,7 +819,8 @@ void ofxTLAntescofoNote::draw() {
 	if (bShowPianoRoll) {
 		draw_showPianoRoll();
 	} else
-		draw_showStaves();
+		//draw_showStaves();
+		draw_guido();
 
 	draw_playhead();
 	ofPopStyle();
@@ -1104,6 +1302,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->colNum_begin = e->scloc->begin.column;
 					newSwitch->lineNum_end = e->scloc->end.line;
 					newSwitch->colNum_end = e->scloc->end.column;
+					newSwitch->isLast = false;
 					if (m == e->multi_source.begin()) { 
 						newSwitch->label = e->cuename;
 						if (bGot_Action)  {
@@ -1125,6 +1324,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->pitch = abs(*m) > 1000 ? abs(*m) / 100 : abs(*m);
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;
+					newSwitch->isLast = true;
 					// get location in text score
 					assert(e->scloc);
 					newSwitch->lineNum_begin = e->scloc->begin.line;
@@ -1149,6 +1349,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->pitch = abs(e->pitch_list[0]) > 1000 ? abs(e->pitch_list[0]) / 100 : abs(e->pitch_list[0]);
 			newSwitch->velocity = 127;
 			newSwitch->channel = 1;
+			newSwitch->isLast = false;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
 				add_action(e->beatcum, actstr, e);
@@ -1162,6 +1363,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				newSwitch->lineNum_end = e->scloc->end.line;
 				newSwitch->colNum_end = e->scloc->end.column;
 				newSwitch->label = e->cuename;
+				newSwitch->isLast = false;
 				switches.push_back(newSwitch);
 				line2note[e->scloc->begin.line] = switches.size() - 1;
 			}
@@ -1186,6 +1388,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				newSwitch->pitch = abs(e->pitch_list[p]) > 1000 ? abs(e->pitch_list[p]) / 100 : abs(e->pitch_list[p]);
 				newSwitch->velocity = 127;
 				newSwitch->channel = 1;
+				newSwitch->isLast = false;
 				newSwitch->lineNum_begin = e->scloc->begin.line;
 				newSwitch->colNum_begin = e->scloc->begin.column;
 				newSwitch->lineNum_end = e->scloc->end.line;
@@ -1202,6 +1405,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				line2note[e->scloc->begin.line] = switches.size() - 1;
 				if (debug_loadscore) { str << "added new switch: CHORD:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 			}
+			switches.back()->isLast = true;
 			bGot_Action = false;
 		} else if (newtype == ANTESCOFO_TRILL) {
 			int pitch = 0;
@@ -1234,6 +1438,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 				}
 			}
+			switches.back()->isLast = true;
 		} else if (e->isSilence()) { // rest
 			if (debug_loadscore) { str << "GOT REST"; console->addln(str.str()); str.str(""); }
 			ofxTLAntescofoNoteOn *newSwitch = new ofxTLAntescofoNoteOn();
@@ -1244,6 +1449,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->pitch = 0;
 			newSwitch->velocity = 127;
 			newSwitch->channel = 1;
+			newSwitch->isLast = false;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
 				add_action(e->beatcum, actstr, e);
@@ -1289,6 +1495,10 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	missedAll();
 	unselectAll();
 	sort(switches.begin(), switches.end(), switchsort);
+
+	// guido
+	guido->getDevice()->NotifySize(bounds.width, bounds.height);
+	//int err = guido->setGMNCode("[ \\clef<\"treble\"> \\key<\"D\"> \\meter<\"4/4\"> d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c]");
 
 	update_duration();
 	getcues();
