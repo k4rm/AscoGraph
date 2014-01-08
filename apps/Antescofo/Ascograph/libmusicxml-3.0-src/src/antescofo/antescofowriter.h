@@ -106,7 +106,7 @@ class antescofowriter {
 		void setBPM(string _bpm) { fBPM = _bpm; }
 
 		//map<rational, measure_elt>::iterator findNoteInVector(rational atbeat, rational dur);
-		const rational& findNoteInVector(rational atbeat, rational dur);
+		void findNoteInVector(rational atbeat, rational& ret, rational dur);
 		void v_Notesfind(rational& atbeat, vector<measure_elt>::iterator& i);
 		//bool v_Notesless(vector<measure_elt>::iterator& a, vector<measure_elt>::iterator& b);
 		bool v_Noteserase(rational& atbeat);
@@ -122,6 +122,7 @@ class antescofowriter {
 		// so if nmeasure>1 we suppose notes were added before,
 		// and the curBeat in absolute beats can be found.
 		void AddNote(int type, float pitch, rational dur, float nmeasure, rational &curBeat, int flag_ = ANTESCOFO_FLAG_NULL, string rehearsal = "");
+		void insertNote(int type, float pitch, rational dur, float nmeasure, rational &existBeat, rational curBeat, int flag_ = ANTESCOFO_FLAG_NULL, string rehearsal = "");
 
 		void print(bool with_header=true);
 		void write(const char *outfilename);

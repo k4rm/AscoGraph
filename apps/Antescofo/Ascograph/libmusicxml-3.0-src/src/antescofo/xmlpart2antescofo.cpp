@@ -1049,6 +1049,7 @@ void xmlpart2antescofo::newNote ( const notevisitor& nv,  S_note& elt  )
 		cout << "newNote: isInChord so removing "<< fLastDur.toFloat() << " to curBeat: " << fCurBeat.toFloat() << endl;
 		fCurBeat -= fLastDur; // because fucking MusicXML notation <chord/> is full of shit
 		fLastDur = 0;
+		if (nv.isGrace()) d = rational(0);
 		w.AddNote(ANTESCOFO_CHORD, getMidiPitch(nv), d, fMeasNum, fCurBeat, flag, fRehearsals);
 	}
 	else if (nv.getType() == notevisitor::kRest)
