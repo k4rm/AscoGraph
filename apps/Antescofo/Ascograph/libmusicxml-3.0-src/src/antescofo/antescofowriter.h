@@ -105,6 +105,7 @@ class antescofowriter {
 		bool print_notes_names;
 		void setBPM(string _bpm) { fBPM = _bpm; }
 
+		void round_rational(rational &r);
 		//map<rational, measure_elt>::iterator findNoteInVector(rational atbeat, rational dur);
 		void findNoteInVector(rational atbeat, rational& ret, rational dur);
 		void v_Notesfind(rational& atbeat, vector<measure_elt>::iterator& i);

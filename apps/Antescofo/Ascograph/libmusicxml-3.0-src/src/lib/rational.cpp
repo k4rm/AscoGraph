@@ -66,7 +66,7 @@ rational::rational(const string &str)
     if (denom) fDenominator = atol(denom);
 }
 
-rational::rational(long int num, long int denom) : fNumerator(num), fDenominator(denom)
+rational::rational(long long int num, long long int denom) : fNumerator(num), fDenominator(denom)
 {
     // don't allow zero denominators!
     if (fDenominator == 0) fDenominator = 1;
@@ -188,12 +188,12 @@ bool rational::operator ==(double num) const
 }
 
 // gcd(a, b) calculates the gcd of a and b using Euclid's algorithm.
-long int rational::gcd(long int a1, long int b1)
+long long int rational::gcd(long long int a1, long long int b1)
 {
-    long int r;
+    long long int r;
 
-    long int a = ::abs(a1);
-    long int b = ::abs(b1);
+    long long int a = ::abs(a1);
+    long long int b = ::abs(b1);
 
     if (!(a == 0) || (b == 0)){
         while (b > 0){
@@ -208,7 +208,7 @@ long int rational::gcd(long int a1, long int b1)
 
 void rational::rationalise()
 {
-    long int g = gcd(fNumerator, fDenominator);
+    long long int g = gcd(fNumerator, fDenominator);
     fNumerator /= g;
     fDenominator /= g;
     if (fNumerator == 0) fDenominator = 1;

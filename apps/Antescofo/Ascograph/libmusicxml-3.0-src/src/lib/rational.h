@@ -35,23 +35,23 @@ class EXP rational {
 
    private:    
    
-        long int fNumerator;
-        long int fDenominator;        
+        long long int fNumerator;
+        long long int fDenominator;        
         
         // Used by rationalise()
-        long int gcd(long int a, long int b); 
+        long long int gcd(long long int a, long long int b); 
  
     public:    
 	
-        rational(long int num = 0, long int denom = 1);
+        rational(long long int num = 0, long long int denom = 1);
         rational(const rational& d);
         rational(const string &str);
     
-        long int getNumerator()	const		{ return fNumerator; }
-        long int getDenominator() const		{ return fDenominator; }
-        void setNumerator(long int d)		{ fNumerator = d; }
-        void setDenominator(long int d) 	{ fDenominator = d; }
-		void set(long int n, long int d)  { fNumerator = n; fDenominator = d; }
+        long long int getNumerator()   const	{ return fNumerator; }
+        long long int getDenominator() const	{ return fDenominator; }
+        void setNumerator(long long int d)		{ fNumerator = d; }
+        void setDenominator(long long int d) 	{ fDenominator = d; }
+		void set(long long int n, long long int d)  { fNumerator = n; fDenominator = d; }
 
         rational operator +(const rational &dur) const;
         rational operator -(const rational &dur) const;
@@ -70,8 +70,8 @@ class EXP rational {
         rational& operator /=(const rational &dur);
         // (i.e. dur * 3/2 or dur * 7/4)
 
-        rational& operator *=(long int num) { fNumerator *= num; return *this; }
-        rational& operator /=(long int num) { fDenominator *= num; return *this; }
+        rational& operator *=(long long int num) { fNumerator *= num; return *this; }
+        rational& operator /=(long long int num) { fDenominator *= num; return *this; }
  
         rational& operator =(const rational& dur);
     
