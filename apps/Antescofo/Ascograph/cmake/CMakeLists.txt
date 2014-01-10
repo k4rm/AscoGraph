@@ -3,6 +3,7 @@
 set(ASCOGRAPH_VERSION_NUMBER "0.090")
 
 set(FAUST 0)
+set(GUIDO 0)
 set(USE_HTTPD 0)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
@@ -54,12 +55,14 @@ set (OFX_MUSICXML_INCL_PATH
 		${LIB_MUSICXML_PATH}/parser/
 		${LIB_MUSICXML_PATH}/antescofo/
 )
-set (LIB_GUIDO_PATH ../guidolib-1.51-src/)
-set (OFX_GUIDO_INCL_PATH 
-		${LIB_GUIDO_PATH}/openFrameworks/Device
-		${LIB_GUIDO_PATH}/src/include/
-		${LIB_GUIDO_PATH}/src/maps/
-)
+if (GUIDO)
+	set (LIB_GUIDO_PATH ../guidolib-1.51-src/)
+	set (OFX_GUIDO_INCL_PATH 
+			${LIB_GUIDO_PATH}/openFrameworks/Device
+			${LIB_GUIDO_PATH}/src/include/
+			${LIB_GUIDO_PATH}/src/maps/
+	)
+endif(GUIDO)
 include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_INCL_PATH} 
 					${OFX_POCO_INCL_PATH}
 					${OFX_TESS2_INCL_PATH}
@@ -294,12 +297,16 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
-	${LIB_GUIDO_PATH}/openFrameworks/Device/GuidoComponent.cpp
-	${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksDevice.cpp
-	${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksSystem.cpp
-	${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksFont.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
+if (GUIDO)
+	set (app_sources_files ${app_sources_files}
+			${LIB_GUIDO_PATH}/openFrameworks/Device/GuidoComponent.cpp
+			${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksDevice.cpp
+			${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksSystem.cpp
+			${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksFont.cpp
+	)
+endif(GUIDO)
 
 SET_SOURCE_FILES_PROPERTIES(../src/mainMacOSX.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofog.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
@@ -547,7 +554,6 @@ if ( APPLE )
     of_find_library("glut")
     of_find_library("rtAudio")
     of_find_library("sndfile")
-    of_find_library("GUIDOEngine")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
     #of_find_library("microhttpd")
     of_find_library("antescofo")
@@ -556,6 +562,10 @@ if ( APPLE )
     of_find_library("stdc++")
 endif(APPLE)
 
+if (GUIDO)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_GUIDO=1")
+    of_find_library("GUIDOEngine")
+endif(GUIDO)
 
 	
 of_find_glut()
@@ -569,13 +579,11 @@ set( MACOSX_RESOURCE_FILES
 	${CMAKE_SOURCE_DIR}/../bin/data/logo_ircam.png
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
 	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
-	${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf
 )
 
 set( MACOSX_RESOURCE_FILES_FONTS
 	"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/Ascograph.xml
-	${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 
 	${CMAKE_SOURCE_DIR}/../bin/data/timeline0_Page_One_trackPositions.xml 
@@ -599,7 +607,13 @@ set( MACOSX_RESOURCE_FILES_FONTS
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_on.png
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_over.png
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/start_down.png
-	)
+)
+
+if (GUIDO)
+	set( MACOSX_RESOURCE_FILES ${MACOSX_RESOURCE_FILES} ${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf)
+	set( MACOSX_RESOURCE_FILES_FONTS ${MACOSX_RESOURCE_FILES_FONTS} ${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf)
+endif(GUIDO)
+
 
 
 # create an executable with all source files
@@ -656,7 +670,10 @@ SET_SOURCE_FILES_PROPERTIES(
 )
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib @executable_path/../Frameworks/GUIDOEngine.dylib)
+SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib)
+if (GUIDO)
+	set (CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} @executable_path/../Frameworks/GUIDOEngine.dylib)
+endif(GUIDO)
 
 #set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES}) ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/libmicrohttpd.a )
 
@@ -677,8 +694,8 @@ ADD_CUSTOM_COMMAND(
 		COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/
 		COMMAND cp -f ${CMAKE_SOURCE_DIR}/../../../../libs/fmodex/lib/osx/libfmodex.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks
 		COMMAND install_name_tool -change ./libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
-		COMMAND cp -f ${CMAKE_SOURCE_DIR}/${LIB_GUIDO_PATH}/GUIDOEngine.framework/Versions/C/GUIDOEngine ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/GUIDOEngine.dylib
-		COMMAND install_name_tool -change ./GUIDOEngine.dylib @executable_path/../Frameworks/GUIDOEngine.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
+		#COMMAND cp -f ${CMAKE_SOURCE_DIR}/${LIB_GUIDO_PATH}/GUIDOEngine.framework/Versions/C/GUIDOEngine ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/GUIDOEngine.dylib
+		#COMMAND install_name_tool -change ./GUIDOEngine.dylib @executable_path/../Frameworks/GUIDOEngine.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
 		COMMAND sed "s/ASCOGRAPHVERSION/${ASCOGRAPH_VERSION_NUMBER}/g" Info.plist_orig > Info.plist
 		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
 		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures

@@ -49,9 +49,11 @@
 #include "xmlreader.h"
 #include "xml2antescofovisitor.h"
 #include "antescofowriter.h"
-#include "GuidoComponent.h"
-#include "GUIDOScoreMap.h"
-#include "GuidoMapCollector.h"
+#ifdef USE_GUIDO
+# include "GuidoComponent.h"
+# include "GUIDOScoreMap.h"
+# include "GuidoMapCollector.h"
+#endif
 
 #include "ofMain.h"
 #include "ofxTLAntescofoNote.h"
@@ -110,6 +112,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	cout << "================= This Name : " << mAntescofo->thisName()<< endl;
 	mNetscore = 0;
 
+#ifdef USE_GUIDO
 	guido = new GuidoComponent();
 	guido->GuidoInit("GUI/NewMedia Fett.ttf", "GUI/guido2.ttf");
 	GuidoLayoutSettings layoutSettings;
@@ -121,6 +124,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	layoutSettings.neighborhoodSpacing = 0;
 	layoutSettings.optimalPageFill = 0;
 	guido->setGuidoLayoutSettings(layoutSettings);
+#endif
 }
 
 ofxTLAntescofoNote::~ofxTLAntescofoNote(){
@@ -392,6 +396,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 	}
 }
 
+#ifdef USE_GUIDO
 void ofxTLAntescofoNote::draw_guido() {
 	if (guido) {
 		ofPushStyle();
@@ -574,6 +579,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	ret += "]";
 	return ret;
 }
+#endif
 
 void ofxTLAntescofoNote::draw_showStaves() {
 	// bg
@@ -819,8 +825,11 @@ void ofxTLAntescofoNote::draw() {
 	if (bShowPianoRoll) {
 		draw_showPianoRoll();
 	} else
-		//draw_showStaves();
+#ifdef USE_GUIDO
 		draw_guido();
+#else
+		draw_showStaves();
+#endif
 
 	draw_playhead();
 	ofPopStyle();
@@ -1496,9 +1505,10 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	unselectAll();
 	sort(switches.begin(), switches.end(), switchsort);
 
+#ifdef USE_GUIDO
 	// guido
 	guido->getDevice()->NotifySize(bounds.width, bounds.height);
-	//int err = guido->setGMNCode("[ \\clef<\"treble\"> \\key<\"D\"> \\meter<\"4/4\"> d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c d e g e d c]");
+#endif
 
 	update_duration();
 	getcues();
