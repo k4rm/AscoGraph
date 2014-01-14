@@ -581,6 +581,74 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 }
 #endif
 
+int ofxTLAntescofoNote::note_height() {
+	return 2 * bounds.height / (noteRange.span()+1);
+}
+
+int ofxTLAntescofoNote::note_pitch2y(int p) {
+	int y = 0;
+	int rowHeight = note_height();
+	int centerY = bounds.height / 2 + bounds.y;
+	int whichRow = 0;
+
+	// whichRow en absolu depuis 
+	// C4 = 60 => 1
+	if (p == 18 || p == 19) whichRow = 23;
+	else if (p == 21 || p == 20) whichRow = 22;
+	else if (p == 23) whichRow = 22;
+	else if (p == 24 || p == 25) whichRow = 21;
+	else if (p == 26 || p == 27) whichRow = 20;
+	else if (p == 28) whichRow = 19;
+	else if (p == 29 || p == 30) whichRow = 18;
+	else if (p == 31 || p == 32) whichRow = 17;
+	else if (p == 33 || p == 34) whichRow = 16;
+	else if (p == 35) whichRow = 15;
+	else if (p == 36 || p == 37) whichRow = 14;
+	else if (p == 39 || p == 38) whichRow = 13;
+	else if (p == 40) whichRow = 12;
+	else if (p == 41 || p == 42) whichRow = 11;
+	else if (p == 43 || p == 44) whichRow = 10;
+	else if (p == 45 || p == 46) whichRow = 9;
+	else if (p == 47) whichRow = 8;
+	else if (p == 48 || p == 49) whichRow = 7;
+	else if (p == 50 || p == 51) whichRow = 6;
+	else if (p == 52) whichRow = 5;
+	else if (p == 53 || p == 54) whichRow = 4;
+	else if (p == 55 || p == 56) whichRow = 3;
+	else if (p == 57 || p == 58) whichRow = 2;
+	else if (p == 59) whichRow = 1;
+	else if (p == 60 || p == 61) whichRow = 0;
+	else if (p == 62 || p == 63) whichRow = -1; 
+	else if (p == 64) whichRow = -2; // E
+	else if (p == 65 || p == 66) whichRow = -3;
+	else if (p == 67 || p == 68) whichRow = -4;
+	else if (p == 69 || p == 70) whichRow = -5;
+	else if (p == 71) whichRow = -6;
+	else if (p == 72 || p == 73) whichRow = -7;
+	else if (p == 74 || p == 75) whichRow = -8;
+	else if (p == 76) whichRow = -9;
+	else if (p == 77 || p == 78) whichRow = -10;
+	else if (p == 79 || p == 80) whichRow = -11;
+	else if (p == 81 || p == 82) whichRow = -12;
+	else if (p == 83) whichRow = -13;
+	else if (p == 84 || p == 85) whichRow = -14;
+	else if (p == 86 || p == 87) whichRow = -15;
+	else if (p == 88) whichRow = -16;
+	else if (p == 89 || p == 90) whichRow = -17;
+	else if (p == 91 || p == 92) whichRow = -18;
+	else if (p == 93 || p == 94) whichRow = -19;
+	else if (p == 95) whichRow = -20;
+	else if (p == 96 || p == 97) whichRow = -21;
+	else if (p == 98 || p == 99) whichRow = -22;
+	else if (p == 100) whichRow = -23;
+	else if (p == 101 || p == 102) whichRow = -23;
+	else if (p == 103 || p == 104) whichRow = -24;
+	else if (p == 105 || p == 106) whichRow = -25;
+
+	y = centerY + whichRow * rowHeight;
+	return y;
+}
+
 void ofxTLAntescofoNote::draw_showStaves() {
 	// bg
 	ofFill();
@@ -594,24 +662,24 @@ void ofxTLAntescofoNote::draw_showStaves() {
 	float score_line_w = bounds.width;// - score_line_x - score_line_interval;
 	float score_line_h = 1;
 
-	float rowHeight = bounds.height / (noteRange.span()+1);
+	float rowHeight = note_height();//bounds.height / (noteRange.span()+1);
 
 	ofSetColor(color_staves_fg, 180);
 	// draw staves :
-	ofSetColor(0, 0, 0, 195);
+	ofSetColor(0, 0, 0, 255);//195);
 	int staves[10] = { 77, 74, 71, 67, 64, 57, 53, 50, 47, 43 };
 	for (int i = 0; i < 10; i++) {
 		if (staves[i] > noteRange.max || staves[i] < noteRange.min) continue; // don't draw note outside range
-
-		int whichRow = ofMap(staves[i], noteRange.max, noteRange.min, 0, noteRange.span());
-
+		//int whichRow = ofMap(staves[i], noteRange.max, noteRange.min, 0, noteRange.span());
+		//int whichRow = ofMap(staves[i], noteRange.max+1, noteRange.min-1, 0, noteRange.span()+1);
+		//cout << "whichRow: " << whichRow << endl;
 		//if (i >= 5) // let a space between two staves
 			//whichRow += 2;
-
-		float y = bounds.y + whichRow * rowHeight;
+		//float y = bounds.y + whichRow * rowHeight;
+		float y = note_pitch2y(staves[i]); //bounds.y + whichRow * rowHeight;
 
 		//cout << "line " << i << " whichRow:" << whichRow << " y:" << y << endl;
-		ofRect(bounds.x, y , score_line_w, score_line_h);
+		ofRect(bounds.x, y, score_line_w, score_line_h);
 	}
 	bool bShowGraceNote = false;
 	ofSetColor(0, 0, 0, 255);
@@ -650,10 +718,13 @@ void ofxTLAntescofoNote::draw_showStaves() {
 						p--; c--;
 						accident = true;
 					}
-					int whichRow = ofMap(p, noteRange.max, noteRange.min, 0, noteRange.span());
+					//int whichRow = ofMap(p, noteRange.max, noteRange.min, 0, noteRange.span());
+					//if (!(p % 2)) p--;
+					int whichRow = ofMap(p, noteRange.max+1, noteRange.min-1, 0, noteRange.span()+1);
 
-					ofRectangle noteBounds = ofRectangle(startX, bounds.y + whichRow * rowHeight, endX - startX, rowHeight);
-					int y = bounds.y + whichRow*rowHeight;
+					//ofRectangle noteBounds = ofRectangle(startX, bounds.y + whichRow * rowHeight, endX - startX, rowHeight);
+					int y = note_pitch2y(p);
+					ofRectangle noteBounds = ofRectangle(startX, y, endX - startX, rowHeight);
 
 					// draw note, if grace note: halfsize gray note
 					int notehead_w = 10, notehead_h = 9;
@@ -662,35 +733,34 @@ void ofxTLAntescofoNote::draw_showStaves() {
 						ofSetColor(0, 0, 0, 100);
 					} else { bShowGraceNote = false; ofSetColor(0, 0, 0, 255); }
 
-#if 0
-					ofEllipse(startX+5, y + rowHeight/2, notehead_w, notehead_h);
-#else
 					// draw note image
-					ofSetColor(0, 0, 0, 200);
-					int sp = rowHeight*3;/// noteImage->getHeight();
-					if (bShowGraceNote)
-						sp /= 2;
-					noteImage->draw(startX, y - sp/2, sp, sp);//noteImage->getWidth(), noteImage->getHeight());
-#endif
+					ofSetColor(0, 0, 0, 255);
+					int h = note_height();
+					int factorh = h * 2;// / noteImage->getHeight();
+					int factorw = h * 2;// / noteImage->getWidth();
+
+					//if (bShowGraceNote) sp /= 2;
+					//noteImage->draw(startX, y - sp/2, sp, sp);//noteImage->getWidth(), noteImage->getHeight());
+					noteImage->draw(startX/*-factorw/2*/, y-factorh/2, factorw, factorh);//noteImage->getWidth(), noteImage->getHeight());
 
 					if (accident)
-						mFont.drawString("#", startX - 10, y + 2*rowHeight);
+						mFont.drawString("#", startX-factorw, y+factorh/2); //startX - 10, y + 2*rowHeight);
 
 					// draw little rect displaying duration after the note if not grace note
-					ofSetColor(0, 0, 0, 99);
+					ofSetColor(0, 0, 0, 255);
 					if (!bShowGraceNote) ofRect(startX+2, y, endX-startX-2, 1);
 
 					ofSetColor(0, 0, 0, 255);
 					// draw little lines if note if out of staves
 					if (p == 60) {
-						whichRow = ofMap(p, noteRange.max, noteRange.min, 0, noteRange.span());
-						ofRect(startX - 3, y, notehead_w + 6, score_line_h);
+						//whichRow = ofMap(p, noteRange.max, noteRange.min, 0, noteRange.span());
+						ofRect(startX - notehead_w/2, y, notehead_w * 3/2, score_line_h);
 					}
 					if (p >= 81) {
 						for (int k = p; k >= 81 ; ) {
-							whichRow = ofMap(k, noteRange.max, noteRange.min, 0, noteRange.span());
-							y = bounds.y + whichRow*rowHeight;
-							ofRect(startX - 3, y, notehead_w + 6, score_line_h);
+							//whichRow = ofMap(k, noteRange.max, noteRange.min, 0, noteRange.span());
+							y = note_pitch2y(k); //bounds.y + whichRow*rowHeight;
+							ofRect(startX - notehead_w/2, y, notehead_w*3/2, score_line_h);
 							int t = k % 12;
 							if (t == 1 || t == 3 || t == 6 || t == 8 || t == 10)
 								k -= 2;
@@ -698,9 +768,9 @@ void ofxTLAntescofoNote::draw_showStaves() {
 						}
 					} else if (p <= 41) {
 						for (int k = p; k <= 41 ;) {
-							whichRow = ofMap(k, noteRange.max, noteRange.min, 0, noteRange.span());
-							y = bounds.y + whichRow*rowHeight;
-							ofRect(startX - 3, y, notehead_w + 6, score_line_h);
+							//whichRow = ofMap(k, noteRange.max, noteRange.min, 0, noteRange.span());
+							y = note_pitch2y(k);// bounds.y + whichRow*rowHeight;
+							ofRect(startX - notehead_w/2, y, notehead_w*3/2, score_line_h);
 							int t = k % 12;
 							if (t == 1 || t == 3 || t == 6 || t == 8 || t == 10)
 								k += 2;
@@ -723,11 +793,10 @@ void ofxTLAntescofoNote::draw_showStaves() {
 					}
 
 				} else { // rest
-					int whichRow = ofMap(71, noteRange.max, noteRange.min, 0, noteRange.span());
-					int y = bounds.y + whichRow*rowHeight;
+					int y = note_pitch2y(71);
 					int h = 7;
 					ofSetColor(0, 0, 0, 255);
-					ofRect(startX, y - h + 2, endX-startX, h);
+					ofRect(startX, y - note_height()/2, endX-startX, note_height());
 				}
 			}
 		}
@@ -742,11 +811,11 @@ void ofxTLAntescofoNote::draw_showStaves() {
 				if (!switches[i]->label.empty()) {
 					ofSetLineWidth(1);
 					//ofLine(startX, bounds.y, startX, bounds.y + bounds.height);
-					ofSetColor(0, 0, 0, 105);
-					int yy = bounds.y + rowHeight* ofMap(staves[0], noteRange.max, noteRange.min, 0, noteRange.span());
-					int hh = rowHeight* ofMap(staves[9], noteRange.max, noteRange.min, 0, noteRange.span());
+					ofSetColor(0, 0, 0, 250);//105);
+					int yy = note_pitch2y(staves[0]); //bounds.y + rowHeight* ofMap(staves[0], noteRange.max, noteRange.min, 0, noteRange.span());
+					int yy2 = note_pitch2y(staves[9]);//rowHeight* ofMap(staves[9], noteRange.max, noteRange.min, 0, noteRange.span());
 					if (switches[i]->label.size()) {
-						ofLine(startX, yy, startX, bounds.y + hh);
+						ofLine(startX, yy, startX, yy2);
 					}
 					float w = lastX - startX;
 					int l = floor( (w+1) / (sizec ));

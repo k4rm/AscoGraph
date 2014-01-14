@@ -151,6 +151,8 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void set_error(string e);
 	void clear_error();
 	virtual void clear();
+	int note_pitch2y(int p);
+	int note_height();
 
 	void playbackStarted(ofxTLPlaybackEventArgs& args);
 	void playbackLooped(ofxTLPlaybackEventArgs& args);

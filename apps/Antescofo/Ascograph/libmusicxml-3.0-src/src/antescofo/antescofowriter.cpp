@@ -22,7 +22,7 @@
 
 #include "antescofowriter.h"
 
-bool debug_ = true;
+bool debug_ = false;
 
 namespace MusicXML2
 {

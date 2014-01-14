@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.090")
+set(ASCOGRAPH_VERSION_NUMBER "0.091")
 
 set(FAUST 0)
 set(GUIDO 0)
