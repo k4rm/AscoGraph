@@ -14,6 +14,7 @@ class ofxConsole
 		void toggleShow();
 
 		void update();
+		void clear();
 
 		void appendString(string s) { content += s; }
 		void add(string strin);

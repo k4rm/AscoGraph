@@ -15,6 +15,7 @@
     NSTextContainer* 	textContainer;
     NSView*		mGLview;
     NSWindow*		mWindow;
+    NSString*		editorContent;
     ScintillaView*	mEditor;
     const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords, *client_keywords, *user_keywords;
 };

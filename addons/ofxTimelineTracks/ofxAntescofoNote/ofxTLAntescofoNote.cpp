@@ -109,7 +109,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	bLockNotes = true;
 
 	mAntescofo = new antescofo_ascograph_offline();
-	cout << "================= This Name : " << mAntescofo->thisName()<< endl;
+	//cout << "================= This Name : " << mAntescofo->thisName()<< endl;
 	mNetscore = 0;
 
 #ifdef USE_GUIDO
@@ -1756,6 +1756,7 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 
 
 ofxTLAntescofoAction* ofxTLAntescofoNote::createActionTrack() {
+	if (ofxAntescofoAction) return ofxAntescofoAction;
 	ofxAntescofoAction = new ofxTLAntescofoAction(mAntescofog);
 	getTimeline()->addTrack("Actions", ofxAntescofoAction);
 	ofxAntescofoAction->setNoteTrack(this);
@@ -1979,10 +1980,21 @@ int ofxTLAntescofoNote::getSelectedItemCount()
 };
 
 void ofxTLAntescofoNote::clear(){
-	for(int i = 0; i < switches.size(); i++){
-		delete switches[i];
+	if (mNetscore) {
+		deleteActionTrack();
+		//mAntescofo // TODO rajouter l'appel au ~Score() !!!
+		delete mNetscore;
+		mNetscore = 0;
+		if (switches.size()) {
+			for (vector<ofxTLAntescofoNoteOn*>::iterator i = switches.begin(); i != switches.end(); i++) {
+				ofxTLAntescofoNoteOn* s = *i;
+				delete s;
+			}
+			switches.clear();
+
+		}
 	}
-	switches.clear();
+
 	delete AntescofoWriter;
 	AntescofoWriter = new MusicXML2::antescofowriter();
 }

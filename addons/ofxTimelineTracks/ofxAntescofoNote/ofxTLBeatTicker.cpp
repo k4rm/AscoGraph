@@ -19,6 +19,7 @@ ofxTLBeatTicker::ofxTLBeatTicker(ofxAntescofog* Antescofog) : mAntescofog(Antesc
 }
 
 void ofxTLBeatTicker::setup() {
+	bpmScreenPoints.clear();
 	ofxTLTicker::setup();
 	(*(getTimeline()->getPages().begin()))->setTicker(this);
 	getTimeline()->setTicker(this);

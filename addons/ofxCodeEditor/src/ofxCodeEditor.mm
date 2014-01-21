@@ -107,6 +107,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
  */
 - (void) setupEditor
 {  
+	editorContent = 0;
 	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: (sptr_t) "Antescofo"];
 	// alternatively: [mEditor setEditorProperty: SCI_SETLEXERLANGUAGE parameter: nil value: (sptr_t) "mysql"];
 
@@ -393,16 +394,17 @@ static const char * box_xpm[] = {
 	cout << "ofxCodeEditor: loadfile:" << filename << endl;
 	NSError* error = nil;
 
-	NSString* path = [[NSBundle mainBundle] pathForResource: [NSString stringWithUTF8String:filename.c_str()]//@"TestData" 
-		ofType: @"" inDirectory: nil];
-
-	NSString* sql = [NSString stringWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]
+	if (editorContent) {
+		[editorContent release];
+		editorContent = 0;
+	}
+	editorContent = [NSString stringWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]
 		encoding:NSUTF8StringEncoding
 		error: &error];
 	if (error && [[error domain] isEqual: NSCocoaErrorDomain])
 		NSLog(@"%@", error);
 
-	[mEditor setString: sql];
+	[mEditor setString: editorContent];
 	if (!error)
 		[mWindow setTitle:[NSString stringWithUTF8String:filename.c_str()]];
 	[self setupEditor];

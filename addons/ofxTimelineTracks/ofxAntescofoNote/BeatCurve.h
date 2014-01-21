@@ -54,7 +54,7 @@ class TweenBeatKeyframe : public BeatKeyframe{
 class BeatCurve : public BeatKeyframes {
 	public:
 		BeatCurve();
-		virtual ~BeatCurve() {}
+		virtual ~BeatCurve();
 
 		virtual void draw();
 		virtual void recomputePreviews();

@@ -36,9 +36,8 @@ void ofxTLBeatJump::add_jump(float beat_, float destBeat_, string destLabel_)
 
 void ofxTLBeatJump::clear_jumps()
 {
-	for (vector<antescofoJump*>::iterator i = jumpList.begin(); i != jumpList.end();) {
+	for (vector<antescofoJump*>::iterator i = jumpList.begin(); i != jumpList.end(); i++) {
 		delete *i;
-		i = jumpList.erase(i);
 	}
 	jumpList.clear();
 }

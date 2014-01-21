@@ -76,7 +76,7 @@ void ofxAntescofog::menu_item_hit(int n)
 				if (openFileResult.bSuccess){
 					string f = openFileResult.filePath;
 					ofLogVerbose("Selected file: " + f);
-					loadScore(f);
+					loadScore(f, true);
 				} else {
 					ofLogVerbose("Cancel load score hit.");
 				}
@@ -85,7 +85,7 @@ void ofxAntescofog::menu_item_hit(int n)
 		case INT_CONSTANT_BUTTON_RELOAD:
 			askToSaveScore();
 			ofxAntescofoNote->clear();
-			loadScore(mScore_filename);
+			loadScore(mScore_filename, false);
 			break;
 		case INT_CONSTANT_BUTTON_NEW:
 			askToSaveScore();
@@ -142,7 +142,7 @@ void ofxAntescofog::menu_item_hit(int n)
 				ofxAntescofoNote->deleteActionTrack();
 			} else {
 				ofxAntescofoNote->createActionTrack();
-				loadScore(mScore_filename);
+				loadScore(mScore_filename, false);
 			}
 			break;
 		case INT_CONSTANT_BUTTON_SNAP:
@@ -546,8 +546,8 @@ void ofxAntescofog::setupUI() {
 
 	//////////////////
 	// Cues
-	mCuesMenu = [[[NSMenu new] autorelease] initWithTitle:@"Cues"];
-	mCuesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Cues" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	mCuesMenu = [[[NSMenu new] autorelease] initWithTitle:@"Labels"];
+	mCuesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Labels" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	/*
 	id toggleViewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[toggleViewMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEVIEW];
@@ -889,7 +889,7 @@ void ofxAntescofog::setup(){
 	bSetupDone = true;
 
 	if (mScore_filename.size())
-		loadScore(mScore_filename);
+		loadScore(mScore_filename, true);
 
 #ifdef USE_HTTPD
 	if (!disable_httpd) setup_httpd();
@@ -900,6 +900,7 @@ void ofxAntescofog::setup(){
 void ofxAntescofog::update() {
 	if (!bSetupDone)
 		return;
+	bool reloadFile = true;
 
 	timeline.setWidth(score_w);
 	timeline.setOffset(ofVec2f(score_x, score_y));
@@ -964,10 +965,12 @@ void ofxAntescofog::update() {
 				bShouldRedraw = true;
 			} else if(m.getAddress() == "/antescofo/loadscore"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
 				string scorefile = m.getArgAsString(0);
-				if (_debug) cout << "OSC received: loadscore: "<< scorefile << endl;
+				//if (_debug)
+					cout << "OSC received: loadscore: "<< scorefile << endl;
 				mHasReadMessages = true;
 				cues_clear_menu();
-				loadScore(scorefile, false);
+				reloadFile = (scorefile != mScore_filename);
+				loadScore(scorefile, reloadFile);
 				bShouldRedraw = true;
 			} else {
 				mHasReadMessages = false;
@@ -1006,9 +1009,12 @@ void ofxAntescofog::update() {
 	if (mHasReadMessages) {
 
 		mLastOSCmsgDate = ofGetSystemTime();
-		fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
+		if (mOsc_beat && reloadFile) {
+			fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
 
-		if (_debug) cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
+			//if (_debug) 
+				cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
+		}
 		mHasReadMessages = false;
 		bShouldRedraw = true;
 	}
@@ -1701,7 +1707,7 @@ void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 			ofxAntescofoNote->clear();
 			string str = "ofxAntescofog: trying to load file :" + dragInfo.files[i];
 			console->addln(str);
-			int n = loadScore(string(dragInfo.files[i]));
+			int n = loadScore(string(dragInfo.files[i]), true);
 
 			if (!n)
 				return;
@@ -1738,7 +1744,7 @@ void ofxAntescofog::saveScore(bool stopSimu) {
 			outfile.open (mScore_filename.c_str());
 			outfile << s;
 			outfile.close();
-			loadScore(mScore_filename);
+			loadScore(mScore_filename, false);
 		}
 	}
 
@@ -1765,7 +1771,7 @@ bool ofxAntescofog::edited() {
 	delete memblock;
 
 	cout << "original file len:" << filecontent.size() << endl;
-	if (filecontent.size() != editorcontent.size()
+	if (fsize != editorcontent.size()
 		|| filecontent.compare(editorcontent)) {
 		return true;
 	} else {
@@ -1812,7 +1818,7 @@ void ofxAntescofog::saveAsScore() {
 				outfile.open (mScore_filename.c_str());
 				outfile << s;
 				outfile.close();
-				loadScore(mScore_filename);
+				loadScore(mScore_filename, false);
 			} else {
 				ofLogVerbose("Cancel load score hit.");
 			}
@@ -1821,18 +1827,20 @@ void ofxAntescofog::saveAsScore() {
 }
 
 
-int ofxAntescofog::loadScore(string filename, bool sendOsc) {
+int ofxAntescofog::loadScore(string filename, bool reloadEditor, bool sendOsc) {
+	console->clear();
 	ofxAntescofoNote->clear_error();
-	cout << "Trying to load score : " << filename << endl;
+	cout << "Trying to load score (reload=" << reloadEditor << ": " << filename << endl;
 	// save zoom view range
 	ofRange z = ofxAntescofoZoom->getViewRange(); 
+	mOsc_beat = 0.;
 
 	// save editor position
 	int lineEditorPos = [ editor getCurrentPos];
 	int lineEditor = [ editor getCurrentLine];
 	int lineEditorScroll = 0; //[ editor getCurrentPosScroll];
 
-	cout << "loadScore: lineEditor: " << lineEditor <<" linEScroll: " << lineEditorScroll << endl;
+	//cout << "loadScore: lineEditor: " << lineEditor <<" linEScroll: " << lineEditorScroll << endl;
 	string antescore = filename;
 	ofxAntescofoNote->clear_actions();
 
@@ -1888,7 +1896,7 @@ int ofxAntescofog::loadScore(string filename, bool sendOsc) {
 	}
 
 	// update editor if opened
-	if (bEditorShow) {
+	if (bEditorShow && reloadEditor) {
 		[ editor loadFile:mScore_filename ];
 		cout << "Editor scrolling to pos: " << lineEditor << " scroll:"<< lineEditorScroll << endl;
 		[ editor gotoPos:lineEditorPos];
@@ -1962,7 +1970,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 			string f = openFileResult.filePath;
 			string str = "Selected file: " + f;
 			console->addln(str);
-			loadScore(mScore_filename);
+			loadScore(mScore_filename, true);
 			ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
 			b->setValue(false);
 				} else {
@@ -1971,7 +1979,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		}
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_RELOAD)
     {
-            loadScore(mScore_filename);
+            loadScore(mScore_filename, false);
             ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
             b->setValue(false);
     }

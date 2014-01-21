@@ -296,7 +296,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		bool bShowError, bErrorInitDone;
 
 		// open/save file
-		int loadScore(string filename, bool sendOsc = true);
+		int loadScore(string filename, bool reloadEditor, bool sendOsc = true);
 		void saveScore(bool stopSimu = true);
 		void saveAsScore();
 		void newScore();

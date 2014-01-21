@@ -1,4 +1,5 @@
 NOTE C4 1.
 group {
-	toto
-	toto2
+	toto a
+	toto2 a
+}

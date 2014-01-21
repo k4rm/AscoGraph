@@ -52,6 +52,13 @@ BeatCurve::BeatCurve()
 	bDrawApplyButton = false;
 }
 
+BeatCurve::~BeatCurve()
+{
+	while(!easingFunctions.empty()) delete easingFunctions.back(), easingFunctions.pop_back();
+	while(!easingTypes.empty()) delete easingTypes.back(), easingTypes.pop_back();
+}
+
+
 float BeatCurve::interpolateValueForKeys(BeatKeyframe* start, BeatKeyframe* end, float sampleBeat){
 	//cout << "interpolate: " << sampleBeat << endl;; 
 	TweenBeatKeyframe* tweenKeyStart = (TweenBeatKeyframe*)start;

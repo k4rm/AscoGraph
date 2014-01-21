@@ -1,8 +1,10 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.091")
+set(ASCOGRAPH_VERSION_NUMBER "0.093")
 
-set(FAUST 0)
+set(ANTESCOFO_FAUST 0)
+set(ANTESCOFO_FLUIDSYNTH 0)
+
 set(GUIDO 0)
 set(USE_HTTPD 0)
 
@@ -435,13 +437,12 @@ endif ()
 set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib ${ANTESCOFO_LIB_PATH} ${LIB_GUIDO_PATH}/)
 set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain//usr/include/ /usr/include /usr/local/include )
 
-message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
 
 include_directories(${CMAKE_INCLUDE_PATH})
 
 
 # Faust/LLVM
-if (FAUST)
+if (ANTESCOFO_FAUST)
 	set (LLVM_CONFIG "/opt/local/bin/llvm-config")
 	execute_process(COMMAND ${LLVM_CONFIG} "--version" OUTPUT_VARIABLE LLVM_VERSION)
 	STRING(REGEX REPLACE "(\r?\n)+$" "" LLVM_VERSION "${LLVM_VERSION}")
@@ -468,11 +469,23 @@ if (FAUST)
 	set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
 	set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_LD_FLAGS} ${FAUST_LDFLAGS} ${LLVM_LDFLAGS}")
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FAUST_CFLAGS}")
-endif(FAUST)
+endif(ANTESCOFO_FAUST)
+
+if ("${ANTESCOFO_FLUIDSYNTH}" MATCHES 1)
+	set (OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS ${MUTANT_LIBS_PATH}/fluidsynth-1.1.6/build/src/ "${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
+	#set (FLUIDSYNTH_LDFLAGS "-F${MUTANT_LIBS_PATH}/fluidsynth-1.1.6/build/src/FluidSynth.framework/FluidSynth -framework FluidSynth")
+	#set (FLUIDSYNTH_LDFLAGS "/opt/local/lib/libfluidsynth.a")
+	set (FLUIDSYNTH_CFLAGS "-I${MUTANT_LIBS_PATH}/fluidsynth-1.1.6/build/src/FluidSynth.framework/Headers ")
+	#set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${FLUIDSYNTH_LDFLAGS}")
+	# set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_LD_FLAGS} /opt/local/lib/libfluidsynth.a")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLUIDSYNTH_CFLAGS}")
+endif()
+
 
 #######################################################
 # Find library and include 
 #
+message(STATUS "Looking for libraries in : ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
 macro(of_find_include includefile)
   find_path(${includefile}_INCPATH NAMES ${includefile} PATHS ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS})
   if ( ${${includefile}_INCPATH} STREQUAL "${includefile}_INCPATH-NOTFOUND")
@@ -554,6 +567,9 @@ if ( APPLE )
     of_find_library("glut")
     of_find_library("rtAudio")
     of_find_library("sndfile")
+    if ("${ANTESCOFO_FLUIDSYNTH}" MATCHES 1)
+      of_find_library("fluidsynth")
+    endif()
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
     #of_find_library("microhttpd")
     of_find_library("antescofo")
@@ -701,6 +717,14 @@ ADD_CUSTOM_COMMAND(
 		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
 )
 
+
+if ("${ANTESCOFO_FLUIDSYNTH}" MATCHES 1)
+	ADD_CUSTOM_COMMAND(
+    		TARGET ${PROJECT_NAME}
+    		POST_BUILD
+		COMMAND cp -rf ${MUTANT_LIBS_PATH}/fluidsynth-1.1.6/build/src/FluidSynth.framework ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/
+	)
+endif()
 
 ###################################################################
 SET_SOURCE_FILES_PROPERTIES(../src/midiconvert.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")

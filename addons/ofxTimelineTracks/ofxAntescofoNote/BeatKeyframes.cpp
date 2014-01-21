@@ -49,6 +49,7 @@ BeatKeyframes::BeatKeyframes()
 }
 
 BeatKeyframes::~BeatKeyframes(){
+	while(!keyframes.empty()) delete keyframes.back(), keyframes.pop_back();
 }
 
 void BeatKeyframes::recomputePreviews(){

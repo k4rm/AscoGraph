@@ -114,6 +114,12 @@ void ofxConsole::addln(string strin)
 	add(strin);
 }
 
+void ofxConsole::clear()
+{
+	content.clear();
+	contentlines.clear();
+}
+
 void ofxConsole::add(string strin)
 {
 	cout << "console:> "<< strin;

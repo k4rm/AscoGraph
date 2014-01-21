@@ -50,6 +50,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 
 ofxTLAntescofoAction::~ofxTLAntescofoAction()
 {
+	clear_actions();
 }
 
 void ofxTLAntescofoAction::setup()
@@ -194,9 +195,7 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 
 void ofxTLAntescofoAction::clear_actions()
 {
-	for (list<ActionGroupHeader*>::iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
-		delete *i;
-	mActionGroups.clear();
+	while(!mActionGroups.empty()) delete mActionGroups.front(), mActionGroups.pop_front();
 }
 
 
@@ -1085,10 +1084,7 @@ ActionGroup::~ActionGroup()
 		_timeline->removeTrack(trackName);
 	}
 
-	list<ActionGroup*>::const_iterator i;
-	for (i = sons.begin(); i != sons.end(); i++) {
-		delete *i;
-	}
+	while(!sons.empty()) delete sons.front(), sons.pop_front();
 }
 
 int ActionGroup::getHeight()
@@ -1339,6 +1335,7 @@ void ActionCurve::split()
 
 ActionMultiCurves::~ActionMultiCurves()
 {
+	while(!curves.empty()) delete curves.back(), curves.pop_back();
 }
 
 void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
@@ -1564,6 +1561,9 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 
 ActionCurve::~ActionCurve()
 {
+	while(!beatcurves.empty()) delete beatcurves.back(), beatcurves.pop_back();
+	if (dur_vect)
+		while(!dur_vect->empty()) delete dur_vect->back(), dur_vect->pop_back();
 }
 
 
