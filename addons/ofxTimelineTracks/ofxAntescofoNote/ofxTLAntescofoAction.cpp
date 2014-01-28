@@ -1562,8 +1562,9 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 ActionCurve::~ActionCurve()
 {
 	while(!beatcurves.empty()) delete beatcurves.back(), beatcurves.pop_back();
-	if (dur_vect)
-		while(!dur_vect->empty()) delete dur_vect->back(), dur_vect->pop_back();
+	// XXX should delete parser objects,
+	// but for some incredible reason now it crashes (worked til 28/01/14)
+	//if (dur_vect) while(!dur_vect->empty()) delete dur_vect->back(), dur_vect->pop_back();
 }
 
 
