@@ -34,6 +34,8 @@
 - (void) gotoPos:(int) pos;
 - (int) modified;
 - (void) clear;
+- (void) undo;
+- (void) redo;
 - (int) getNbLines;
 - (int) getLenght;
 - (string) getSelection;

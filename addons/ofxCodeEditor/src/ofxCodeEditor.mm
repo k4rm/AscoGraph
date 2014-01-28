@@ -472,6 +472,16 @@ static const char * box_xpm[] = {
 
 }
 
+- (void) undo
+{
+	[mEditor setGeneralProperty:SCI_UNDO parameter:0 value:0];
+}
+
+- (void) redo
+{
+	[mEditor setGeneralProperty:SCI_REDO parameter:0 value:0];
+}
+
 //void ofxCodeEditor::showLine(int linea, int lineb)
 - (void) showLine: (int) linea lineb:(int)lineb cola:(int)cola colb:(int)colb
 {

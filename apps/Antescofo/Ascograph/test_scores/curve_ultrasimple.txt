@@ -21,8 +21,8 @@ Curve slider  @Grain := 0.05s, @Action :=
         0.198215 { 2.46621 } @type "sine"
         1.48662 { 2.0912 } @type "linear"
         0.346878 { 1.99181 } @type "circ"
-        0.134586 { 1.29746 } @type "linear"
-        10.9703 { 1.90209 }
+        4.65808 { 0.789452 } @type "linear"
+        6.44681 { 1.90209 }
     }
     $y
     {
@@ -34,6 +34,8 @@ Curve slider  @Grain := 0.05s, @Action :=
         6.93806 { 0.742857 }
     }
 }
+
+
 NOTE A1 4
 
 CHORD (G2 E4) 10

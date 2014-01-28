@@ -70,6 +70,12 @@ void ofxAntescofog::menu_item_hit(int n)
 {
 	//cout << "menu = " << n << endl;
 	switch (n) {
+		case INT_CONSTANT_BUTTON_UNDO:
+			[editor undo];
+			break;
+		case INT_CONSTANT_BUTTON_REDO:
+			[editor redo];
+			break;
 		case INT_CONSTANT_BUTTON_LOAD:
 			{
 				ofFileDialogResult openFileResult = ofSystemLoadDialog(TEXT_CONSTANT_TITLE_LOAD_SCORE);
@@ -311,7 +317,9 @@ static ofxAntescofog *fog;
 		if (fog) {
 			fog->editorDoubleclicked(line);
 		}
+	} else if ([[notification name] isEqualToString:@"CharAdded"]) {
 	}
+	NSLog(@"Notification: %@", [notification name]);
 }
 @end
 
@@ -395,8 +403,18 @@ void ofxAntescofog::setupUI() {
 	// . select all
 	/*id selectMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Select All" action:@selector(menu_item_hit:) keyEquivalent:@"a"] autorelease];
 	[editMenuItem setTag:INT_CONSTANT_BUTTON_SELECTALL];
-	[editMenu addItem:selectMenuItem];
-	*/
+	[editMenu addItem:selectMenuItem]; */
+
+	// . undo
+	id undoMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Undo" action:@selector(menu_item_hit:) keyEquivalent:@"z"] autorelease];
+	[undoMenuItem setTag:INT_CONSTANT_BUTTON_UNDO];
+	[editMenu addItem:undoMenuItem];
+
+	// . redo
+	id redoMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Redo" action:@selector(menu_item_hit:) keyEquivalent:@"Z"] autorelease];
+	[redoMenuItem setTag:INT_CONSTANT_BUTTON_REDO];
+	[editMenu addItem:redoMenuItem];
+
 	// . find
 	id findMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Find text" action:@selector(menu_item_hit:) keyEquivalent:@"f"] autorelease];
 	[findMenuItem setTag:INT_CONSTANT_BUTTON_FIND];
@@ -583,6 +601,7 @@ void ofxAntescofog::setupUI() {
 
 	// register double click on editor notification callback
 	[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"" object:nil];
 
 	//guiSetup_Colors->setScrollableDirections(false, true);
 	guiError->setScrollAreaToScreen();

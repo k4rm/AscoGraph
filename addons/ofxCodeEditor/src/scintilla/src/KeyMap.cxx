@@ -156,7 +156,8 @@ const KeyToCommand KeyMap::MapDefault[] = {
 #if OS_X_KEYS
     {'Z', 			SCI_CSHIFT,	SCI_REDO},
 #else
-    {'Y', 			SCI_CTRL,	SCI_REDO},
+    {'Z', 			SCI_CSHIFT,	SCI_REDO},
+    //{'Y', 			SCI_CTRL,	SCI_REDO},
 #endif
     {'X', 			SCI_CTRL,	SCI_CUT},
     {'C', 			SCI_CTRL,	SCI_COPY},
