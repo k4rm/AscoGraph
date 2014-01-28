@@ -401,8 +401,15 @@ static const char * box_xpm[] = {
 	editorContent = [NSString stringWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]
 		encoding:NSUTF8StringEncoding
 		error: &error];
-	if (error && [[error domain] isEqual: NSCocoaErrorDomain])
+	if (error && [[error domain] isEqual: NSCocoaErrorDomain]) {
 		NSLog(@"%@", error);
+		editorContent = [NSString stringWithContentsOfFile:[[NSString alloc] initWithCString:filename.c_str()]
+			encoding:NSMacOSRomanStringEncoding
+			error: &error];
+		if (error && [[error domain] isEqual: NSCocoaErrorDomain])
+			NSLog(@"%@", error);
+	}
+
 
 	[mEditor setString: editorContent];
 	if (!error)
