@@ -1,5 +1,5 @@
 BPM 60
 
 NOTE C4 8.0
-	action_one
+	action_one 3
 	2 action_two 12

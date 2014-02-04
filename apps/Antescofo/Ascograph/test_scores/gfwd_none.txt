@@ -1,6 +1,8 @@
 BPM 60
 
 NOTE C4 8.0
+	action_oneone hh
+
 
 NOTE C4 8.0
 
@@ -17,4 +19,4 @@ NOTE 60 1.0	e2035
 	antescofo-mess analysis 4096 128, pedal 0
 NOTE 60 10.0	e2035
 	msg j
-NOTE 160 100.0	e2035
+NOTE 160 10.0	e2035

@@ -28,7 +28,6 @@ class ofxTLAntescofoNote;
 class Curve;
 class ActionRect;
 class BeatCurve;
-class ActionGroupHeader;
 class ActionGroup;
 class ActionMessage;
 class ActionCurve;
@@ -48,6 +47,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void update_groups();
 		int update_sub_height(ActionGroup *ag);
 		int update_sub_height_curve(ActionMultiCurves* c, int& cury, int& curh);
+		int update_sub_height_message(ActionMessage* m, int& cury, int& curh);
 		float update_sub_duration(ActionGroup *ag);
 		int update_sub_width(ActionGroup *ag);
 		void update_avoid_overlap();
@@ -83,7 +83,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		int get_max_note_beat();
 		void clear_actions();
 		void move_action();
-		void attribute_header_colors(list<ActionGroupHeader*> actiongroups);
+		void attribute_header_colors(list<ActionGroup*> actiongroups);
 		ofColor get_random_color();
 		void drawBitmapStringHighlight(string text, int x, int y, const ofColor& background, const ofColor& foreground);
 
@@ -97,7 +97,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		Score *mScore;
 		ofxAntescofog *mAntescofog;
 
-		list<ActionGroupHeader*> mActionGroups;
+		list<ActionGroup*> mActionGroups;
 		bool bEditorShow;
 		bool draggingSelectionRange, movingAction;
 		ofRectangle movingActionRect;
@@ -114,54 +114,76 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 class ActionGroup {
 	public:
-		ActionGroup(Action* a, Event *e, ActionGroupHeader* header_);
+		ActionGroup(float beatnum_, float delay_, Action* a, Event *e);
 		ActionGroup() {}
-		
 		virtual ~ActionGroup();
 
 		void createActionGroup(Action* tmpa, Event* e, float delay_);
+		void createActionGroup_fill(Action* action);
+
 		string get_period();
 		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual void draw_header(ofxTLAntescofoAction *tlAction);
 		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		virtual string dump();
 		virtual int getHeight();
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
 
+		// hierarchy related
 		list<ActionGroup*> sons;
-		ActionGroupHeader *header;
-		Action *action;
-		Event *event;
 		string trackName;
 		float period;
-		bool selected;
+		string group_type;
+
+		// header related
+		void drawArrow(); 
+		bool is_in_arrow(int x, int y);
+
+		// display
+		ofColor headerColor;
+		string title, realtitle;
+		float duration;
 		float delay;
+		float beatnum;
+		bool hidden;
+		ofRectangle rect;
+		ofPath arrow;
+		int ARROW_LEN, LINE_HEIGHT, LINE_SPACE;
+		int HEADER_HEIGHT;
+		bool top_level_group;
+		// TODO float bpm tempo local a un groupe
+
+		// antescofo score objects
+		Action *action;
+		Event *event;
+		unsigned int lineNum_begin;
+		unsigned int lineNum_end;
+		unsigned int colNum_begin;
+		unsigned int colNum_end;
 };
 
 
 class ActionMessage : public ActionGroup {
 	public:
-		ActionMessage(Message* g, float delay_, Event* e, ActionGroupHeader* header_);
+		ActionMessage(float beatnum_, float delay_, Message* g, Event* e);
 		virtual ~ActionMessage() {}
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		string action;
-		int x, y;
 };
 
 class ActionMultiCurves : public ActionGroup {
 	public:
-		ActionMultiCurves(/*ofxTLAntescofoAction *tlAction_, */ Curve* c, float delay_, Event* e, ActionGroupHeader* header_);
+		ActionMultiCurves(float beatnum_, float delay_, Curve* c, Event* e);
 		virtual ~ActionMultiCurves();
 
 		virtual void draw(ofxTLAntescofoAction *tlAction_);
 		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		virtual string dump();
-		void show();
-		void hide();
 		int getWidth();
 		virtual int getHeight();
 		void setWidth(int w);
@@ -215,44 +237,6 @@ class ActionCurve {
 		// parser strucs:
 		vector<SimpleContFunction>* simple_vect;
 		vector<AnteDuration*>* dur_vect;
-};
-
-
-class ActionGroupHeader {
-	public:
-		ActionGroupHeader(float beatnum_, float delay_, Action* a_, Event *e_, ActionGroup* parentGroup_ = NULL);
-		~ActionGroupHeader();
-
-		virtual void draw(ofxTLAntescofoAction *tlAction);
-		void drawArrow(); 
-		void print();
-		virtual string dump();
-		bool is_in_arrow(int x, int y);
-
-		// display
-		ofColor headerColor;
-		string title, realtitle;
-		float duration;
-		float beatnum;
-		double delay;
-		bool hidden;
-		ofRectangle rect;
-		ofPath arrow;
-		int ARROW_LEN, LINE_HEIGHT, LINE_SPACE;
-		int HEADER_HEIGHT;
-		bool top_level_group;
-		// TODO float bpm tempo local a un groupe
-
-		ActionGroup *group;
-		ActionGroup *parentGroup; // used for MultiCurves delay passing, null for others objects
-
-		// antescofo internal
-		Action *action;
-		Event *event;
-		unsigned int lineNum_begin;
-		unsigned int lineNum_end;
-		unsigned int colNum_begin;
-		unsigned int colNum_end;
 };
 
 

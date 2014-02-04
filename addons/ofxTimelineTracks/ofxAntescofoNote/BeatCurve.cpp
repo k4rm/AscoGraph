@@ -332,7 +332,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 	keysAreDraggable = false;
 	if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y)) {
 		if (curve_debug_) cout << "BeatCurve::mouseReleased: should apply" << endl;
-		if (curve_debug_) cout << "-----> ligne " << ref->parentCurve->header->lineNum_begin << " - " << ref->parentCurve->header->lineNum_end << " <------" << endl;
+		if (curve_debug_) cout << "-----> ligne " << ref->parentCurve->lineNum_begin << " - " << ref->parentCurve->lineNum_end << " <------" << endl;
 		if (tlAction) tlAction->replaceEditorScore(ref);
 		bDrawApplyButton = false;
 		return;
