@@ -236,6 +236,23 @@ void ofxAntescofog::menu_item_hit(int n)
 				{}
 				break;
 			}
+		case INT_CONSTANT_BUTTON_GET_PATCH_RECEIVERS:
+			{
+				ofxOscMessage m;
+				m.setAddress("/antescofo/cmd");
+				string msg = [editor getSelection];
+				cout << "<<<<<<<<<<<<<<<<<<<< sending get_patch_receivers >>>>>>>>>>>>>>>>>>>>>" << endl;
+				cout << msg << endl;
+				msg += "\n";
+				m.addStringArg("get_patch_receivers");
+				m.addStringArg(msg);
+				try {
+					mOSCsender.sendMessage(m);
+				} catch(...)
+				{}
+				break;
+
+			}
 		case INT_CONSTANT_BUTTON_PREVEVENT:
 			{
 				ofxOscMessage m;
@@ -317,8 +334,8 @@ static ofxAntescofog *fog;
 		if (fog) {
 			fog->editorDoubleclicked(line);
 		}
-	} else if ([[notification name] isEqualToString:@"CharAdded"]) {
-	}
+		return;
+	} 
 	NSLog(@"Notification: %@", [notification name]);
 }
 @end
@@ -549,6 +566,10 @@ void ofxAntescofog::setupUI() {
 	id openAllGroupsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Open all groups" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[openAllGroupsMenuItem setTag:INT_CONSTANT_BUTTON_OPEN_ALL_GROUPS];
 	[viewMenu addItem:openAllGroupsMenuItem];
+	// get patch receivers
+	id getRecvrsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Get patch receivers names" action:@selector(menu_item_hit:) keyEquivalent:@"R"] autorelease];
+	[getRecvrsMenuItem setTag:INT_CONSTANT_BUTTON_GET_PATCH_RECEIVERS];
+	[viewMenu addItem:getRecvrsMenuItem];
 	// zoom +
 	id zoomInMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Zoom in" action:@selector(menu_item_hit:) keyEquivalent:@"+"] autorelease];
 	[zoomInMenuItem setTag:INT_CONSTANT_BUTTON_ZOOM_IN];
@@ -601,6 +622,8 @@ void ofxAntescofog::setupUI() {
 
 	// register double click on editor notification callback
 	[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:NSTextDidChangeNotification object:nil];
+	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:nil object:nil];
 	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"" object:nil];
 
 	//guiSetup_Colors->setScrollableDirections(false, true);
@@ -991,7 +1014,16 @@ void ofxAntescofog::update() {
 				reloadFile = (scorefile != mScore_filename);
 				loadScore(scorefile, reloadFile);
 				bShouldRedraw = true;
-			} else {
+			} else if(m.getAddress() == "/antescofo/patch_receivers") {
+				patch_receivers.clear();
+				cout << "OSC received: " << m.getNumArgs() << endl;
+				for(int i = 0; i < m.getNumArgs(); i++){
+					string s = m.getArgAsString(i);
+					cout << "\t receiver name= " << s << endl;
+					patch_receivers.push_back(s);
+				}
+				[ editor set_action_keywords: patch_receivers ];
+			} else { 
 				mHasReadMessages = false;
 				// unrecognized message: display on the bottom of the screen
 				string msg_string;
@@ -2262,7 +2294,7 @@ void ofxAntescofog::editorDoubleclicked(int line)
 void ofxAntescofog::editorShowLine(int linea, int lineb, int cola, int colb)
 {
 	if (bEditorShow) {
-		[ editor showLine:linea-1 lineb:lineb-1 cola:cola colb:colb];
+		[ editor showLine:linea-1 lineb:lineb-1 cola:cola-1 colb:colb-1];
 		int n = [ editor getNbLines ];
 		if (linea + 35 < n)
 			[ editor scrollLine:(-35) ];
@@ -2275,7 +2307,7 @@ void ofxAntescofog::editorShowLine(int linea, int lineb, int cola, int colb)
 void ofxAntescofog::replaceEditorScore(int linebegin, int lineend, int cola, int colb, string actstr) {
 	if (bEditorShow && actstr.size() && linebegin <= lineend) {
 		cout << "ofxAntescofog::replaceEditorScore: replacing between line " << linebegin-1 << ":" << cola << " -> " << lineend-1 << ":" << colb << " str:" << actstr << endl;
-		[ editor replaceString:linebegin-1 lineb:lineend-1 cola:cola colb:colb str:actstr.c_str()];
+		[ editor replaceString:linebegin-1 lineb:lineend-1 cola:cola-1 colb:colb-1 str:actstr.c_str()];
 		//editorShowLine(linebegin, lineend);
 
 		bShouldRedraw = true;

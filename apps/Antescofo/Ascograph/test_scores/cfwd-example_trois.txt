@@ -3,6 +3,7 @@ BPM 120
 
 NOTE a3 3
 NOTE a3 3
+group {
 curve @action := plot $NOW $x $y $z
 {
 	$x
@@ -16,11 +17,12 @@ curve @action := plot $NOW $x $y $z
 			3.0 {0.3 ,7.0}
 	}
 }	
+}
 
 NOTE a3 3
 
 NOTE a3 3
-
+/*
 NOTE a3 3
 NOTE a3 3
 NOTE a3 3
@@ -28,8 +30,8 @@ curve slider  @Grain := 0.05s, @Action := print $x $y
 {
 	$x
 	{
-	    { 0.  } /*@type "exp"*/
+	    { 0.  }
 	1   { 1. }
-	; ...
 	}
 }
+*/

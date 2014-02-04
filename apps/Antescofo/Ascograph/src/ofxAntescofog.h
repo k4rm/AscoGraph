@@ -58,6 +58,7 @@
 #define INT_CONSTANT_BUTTON_HIDE		35
 #define INT_CONSTANT_BUTTON_UNDO		36
 #define INT_CONSTANT_BUTTON_REDO		37
+#define INT_CONSTANT_BUTTON_GET_PATCH_RECEIVERS 38
 #define INT_CONSTANT_BUTTON_CUES_INDEX  	300
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -231,6 +232,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		string mScore_filename;
 
 		vector<float> accomp_map_index, accomp_map_markers;
+		vector<string> patch_receivers;
 
 #ifdef TARGET_OSX
 		ofxCocoaWindow*	cocoaWindow;

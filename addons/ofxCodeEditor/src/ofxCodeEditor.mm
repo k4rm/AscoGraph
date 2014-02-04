@@ -6,12 +6,31 @@
 
 static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
+/*
+@implementation MyScintillaView
+
+- (void)notification: (Scintilla::SCNotification*)notification
+{
+	cout << "MyScintillaView: notify " << endl;
+
+}
+@end
+*/
+
 @implementation ofxCodeEditor
+//@synthesize delegate;
+
+@synthesize delegate = mDelegate;
+
+- (void)notification: (Scintilla::SCNotification*)notification
+{
+	cout << "MyScintillaView: notify " << endl;
+	//[self.delegate notification:self];
+}
 
 - (void) set_normal_keywords: (const char*)normal_keywords_ {
 	normal_keywords = normal_keywords_;
 }
-
 
 - (void) set_major_keywords: (const char*)major_keywords_ {
 	major_keywords = major_keywords_;
@@ -23,6 +42,60 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 - (void) set_system_keywords: (const char*)system_keywords_ {
 	system_keywords = system_keywords_;
+}
+
+- (void) set_action_keywords: (vector<string>&)system_keywords_ {
+	action_keywords = system_keywords_;
+}
+
+- (void) pushback_keywords: (const char*)keyw {
+	if (keyw) {
+		string tmp;
+		for (int i = 0; i < strlen(keyw); i++) {
+			if (keyw[i] != ' ')
+				tmp.push_back(keyw[i]);
+			else {
+				dic_keywords.push_back(tmp);
+				tmp.clear();
+			}
+			//NSLog(@"--> PUSH auto-completion dic: %s", tmp.c_str());
+		}
+		if (tmp.size()) // last elt
+			dic_keywords.push_back(tmp);
+	}
+}
+
+
+- (void) setAutoCompleteOn
+{
+	dic_keywords.clear();
+
+	if (normal_keywords) [self pushback_keywords:normal_keywords];
+	if (major_keywords) [self pushback_keywords:major_keywords];
+	if (procedure_keywords) [self pushback_keywords:procedure_keywords];
+	if (system_keywords) [self pushback_keywords:system_keywords];
+	if (action_keywords.size()) dic_keywords.insert(dic_keywords.end(), action_keywords.begin(), action_keywords.end());
+
+	std::sort(dic_keywords.begin(), dic_keywords.end());
+	for (int i = 0; i < dic_keywords.size(); i++) {
+		NSLog(@"--> auto-completion dic: %s", dic_keywords[i].c_str());
+	}
+
+	int cnt = 0;
+	for (int i = 0; i < dic_keywords.size(); i++) {
+		cnt += dic_keywords[i].size();
+	}
+	dic_char_list = new char[cnt + dic_keywords.size() + 2];
+	int j = 0;
+	for (int i = 0; i < dic_keywords.size(); i++) {
+		for (int c = 0; c < dic_keywords[i].size(); c++, j++)
+			dic_char_list[j] = dic_keywords[i][c];
+		j++;
+		dic_char_list[j] = ' ';
+		j++;
+	}
+	[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 8 value:dic_char_list];
+	//[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)0 value:(sptr_t)dic_char_list];
 }
 
 
@@ -237,9 +310,29 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 	[mEditor setInfoBar: infoBar top: NO];
 
 	[mEditor setGeneralProperty: SCI_SETTABWIDTH parameter: 4 value: 0];
+
+	intptr_t windowid;
+	//[mEditor registerNotifyCallback:windowid value:notify];
+
+	//delegate = self;
+	//[self.delegate myClassDelegateMethod:self];
+
+	//[mEditor setGeneralProperty: SCI_AUTOCCOMPLETE parameter:0 value:0];
+	[self setAutoCompleteOn];
 	[mEditor setStatusText: @"Operation complete"];
 }
 
+
+/*j
+
+- (void) notify(intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam)
+{
+	cout << "CodeEditor: notify " << iMessage << endl;
+
+
+	//[mEditor setGeneralProperty: SCI_AUTOCCOMPLETE parameter: 0 value: 0];
+}
+*/
 
 - (void) setWrapMode:(bool)mode
 {
@@ -569,6 +662,11 @@ static const char * box_xpm[] = {
 
 @implementation SplitViewDelegate
 
+- (void)notification: (Scintilla::SCNotification*)notification
+{
+	cout << "SplitViewDelegate: notify " << endl;
+
+}
 #define kMinOutlineViewSplit    120.0f
 
 // -------------------------------------------------------------------------------

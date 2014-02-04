@@ -12,6 +12,8 @@
 namespace Scintilla {
 #endif
 
+using namespace std;
+
 /**
  */
 class Caret {
@@ -555,6 +557,29 @@ protected:	// ScintillaBase subclass needs access to much of Editor
 	static const char *StringFromEOLMode(int eolMode);
 
 	static sptr_t StringResult(sptr_t lParam, const char *val);
+
+	string autoCompleteStartCharacters;
+	string calltipWordCharacters, currentCallTipWord;
+	string calltipParametersStart;
+	string calltipParametersEnd;
+	string calltipParametersSeparators, wordCharacters;
+	int currentCallTip;
+
+	bool contains(string& str, int ch);
+
+	void AutoCompleteStart(int lenEntered, const char *list);
+	void AutoCompleteCancel();
+	void AutoCompleteMove(int delta);
+	int AutoCompleteGetCurrent();
+	int AutoCompleteGetCurrentText(char *buffer);
+	void AutoCompleteCharacterAdded(char ch);
+	void AutoCompleteCharacterDeleted();
+	void AutoCompleteCompleted();
+	void AutoCompleteMoveToCurrentWord();
+	static void AutoCompleteDoubleClick(void *p);
+
+	void StartCallTip();
+	void StartAutoComplete();
 
 public:
 	// Public so the COM thunks can access it.

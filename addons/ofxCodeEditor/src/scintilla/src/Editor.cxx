@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <cmath>
 #include <assert.h>
 
 #include <string>
@@ -4357,7 +4358,67 @@ void Editor::NotifyErrorOccurred(Document *, void *, int status) {
 	errorStatus = status;
 }
 
+bool Editor::contains(string& str, int ch) {
+	bool ret = false;
+	for (int i = 0; i < str.size(); i++) {
+		if (str[i] == ch) {
+			ret = true;
+			break;
+		}
+	}
+	return ret;
+}
+
+void Editor::StartCallTip() {
+	printf("StartCallTip()");
+	SCNotification scn = {0};
+	scn.nmhdr.code = SCI_CALLTIPCANCEL;
+	NotifyParent(scn);
+}
+
+
+void Editor::StartAutoComplete() {
+	SCNotification scn = {0};
+	scn.nmhdr.code = SCI_AUTOCSHOW; //SCI_AUTOCCOMPLETE;
+	NotifyParent(scn);
+}
+
 void Editor::NotifyChar(int ch) {
+	static string laststring;
+	printf("Editor::NotifyChar: %d\n", ch);
+	if (ch == ' ' || ch == ',' || ch == '.' || ch == '\n' || ch == '(' || ch == ')' || ch == '[' || ch ==']' || ch == '{'||  ch == '}') {
+		laststring.clear();
+		SCNotification scn = {0};
+		scn.nmhdr.code = SCI_CALLTIPCANCEL;
+		NotifyParent(scn);
+	} else {
+		/*const char list[] = "oneword three twoword";
+		[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)list value:(sptr_t)list];
+		*/
+		StartAutoComplete();
+		if (contains(calltipParametersStart, ch)) {
+			//braceCount = 1;
+			StartCallTip();
+		} else {
+			//autoCCausedByOnlyOne = false;
+			//if (indentMaintain)
+			//	MaintainIndentation(ch);
+			//else if (props.GetInt("indent.automatic")) AutomaticIndentation(ch);
+			if (contains(autoCompleteStartCharacters, ch)) {
+				printf("start contains");
+				printf("Should StartAutoComplete();");
+			} else if (contains(wordCharacters, ch)) {
+				printf("word contains");
+				// StartAutoCompleteWord(true);
+				SCNotification scn = {0};
+				//scn.nmhdr.code = SCI_AUTOCACTIVE;
+				scn.nmhdr.code = SCI_AUTOCSHOW;
+				char* listwords = "oaz io ooi ";
+				scn.text = listwords;
+				NotifyParent(scn);
+			}
+		}
+	}
 	SCNotification scn = {0};
 	scn.nmhdr.code = SCN_CHARADDED;
 	scn.ch = ch;
@@ -5857,7 +5918,7 @@ void Editor::GoToLine(int lineNo) {
 }
 
 static bool Close(Point pt1, Point pt2) {
-	if (abs(pt1.x - pt2.x) > 3)
+	if (fabs(pt1.x - pt2.x) > 3)
 		return false;
 	if (abs(pt1.y - pt2.y) > 3)
 		return false;

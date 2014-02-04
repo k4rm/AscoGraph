@@ -141,7 +141,10 @@ void AutoComplete::Move(int delta) {
 	lb->Select(current);
 }
 
+#include <iostream>
+
 void AutoComplete::Select(const char *word) {
+	std::cout << "AutoComplete::Select: "<<  word << std::endl;
 	size_t lenWord = strlen(word);
 	int location = -1;
 	int start = 0; // lower bound of the api array block to search

@@ -2,25 +2,20 @@ BPM 60
 NOTE C4 4
 BPM 60
 NOTE C4 4.0
-CURVE multislider grain:=0.05s action:=print $x $y $z; the grain size is 50 milliseconds
-{
-	$x,$y {
-	{ 0 0.4}
-	1.0 { 0.5 1}
-	0.5 { 1.0 0.3} 
-	0.5 { 0 0.2}
-	1.0 { 0 0.9}
-	0.5 { 0.8 0.1}
-	0.5 { 2.0 1.0}
+group {
+curve @action := plot $NOW $x $y $z {
+	$x
+	{		{ 2.0 }
+		1.0	{ 4.0 }
+		1.0	{ 1.4 }
 	}
-	$z
-{
-	{ 5}
-	4.0 {10}
-}
+	$y, $z
+	{		{5.0, 4.0}
+		3.0	{0.3 ,7.0}
+	}
 }
 
-
+}
 ;CURVE multislider grain:=0.05s ; the grain size is 50 milliseconds
 ;{
 ;	0 [ 0 1 0.2 0.7 ]; we have 4 parallel breakpoint functions

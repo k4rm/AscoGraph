@@ -64,16 +64,16 @@ protected:
 	virtual void CancelModes();
 	virtual int KeyCommand(unsigned int iMessage);
 
-	void AutoCompleteStart(int lenEntered, const char *list);
-	void AutoCompleteCancel();
-	void AutoCompleteMove(int delta);
-	int AutoCompleteGetCurrent();
-	int AutoCompleteGetCurrentText(char *buffer);
-	void AutoCompleteCharacterAdded(char ch);
-	void AutoCompleteCharacterDeleted();
-	void AutoCompleteCompleted();
-	void AutoCompleteMoveToCurrentWord();
-	static void AutoCompleteDoubleClick(void *p);
+	virtual void AutoCompleteStart(int lenEntered, const char *list);
+	virtual void AutoCompleteCancel();
+	virtual void AutoCompleteMove(int delta);
+	virtual int AutoCompleteGetCurrent();
+	virtual int AutoCompleteGetCurrentText(char *buffer);
+	virtual void AutoCompleteCharacterAdded(char ch);
+	virtual void AutoCompleteCharacterDeleted();
+	virtual void AutoCompleteCompleted();
+	virtual void AutoCompleteMoveToCurrentWord();
+	virtual void AutoCompleteDoubleClick(void *p);
 
 	void CallTipClick();
 	void CallTipShow(Point pt, const char *defn);

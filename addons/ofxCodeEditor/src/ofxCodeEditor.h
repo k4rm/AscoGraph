@@ -6,7 +6,14 @@
 #import <Cocoa/Cocoa.h>
 #import "ScintillaView.h"
 
-@interface ofxCodeEditor : NSObject {
+
+@class ofxCodeEditor;
+@protocol ScintillaViewMyDelegate <ScintillaNotificationProtocol>
+//- (void) myClassDelegateMethod: (ofxCodeEditor *) sender;
+- (void)notification: (Scintilla::SCNotification*)notification;
+@end
+
+@interface ofxCodeEditor : NSObject <ScintillaViewMyDelegate>{
     NSSplitView*	splitView;
     NSScrollView*	scrollview;
     NSTextView*		textView;
@@ -18,9 +25,16 @@
     NSString*		editorContent;
     ScintillaView*	mEditor;
     const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords, *client_keywords, *user_keywords;
+    vector<string> action_keywords;
+    vector<string> dic_keywords;
+    char *dic_char_list;
+    //id <ScintillaViewMyDelegate> delegate;
+    id<ScintillaViewMyDelegate> mDelegate;
 };
 
+//@property (nonatomic, assign) id <ScintillaViewMyDelegate> delegate;
 
+@property (nonatomic, assign) id<ScintillaViewMyDelegate> delegate;
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect;
 - (void) die;
 - (void) setupEditor;
@@ -54,10 +68,16 @@
 - (void) set_major_keywords: (const char*)major_keywords_;
 - (void) set_procedure_keywords: (const char*)procedure_keywords_;
 - (void) set_system_keywords: (const char*)system_keywords_;
+- (void) set_action_keywords: (vector<string>&)system_keywords_;
+- (void) setAutoCompleteOn;
+
+//- (void) notify(intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
+//- (void)notification: (Scintilla::SCNotification*)notification;
 
 @end
 
-@interface SplitViewDelegate : NSObject <NSSplitViewDelegate>
+@interface SplitViewDelegate : NSObject <NSSplitViewDelegate, ScintillaViewMyDelegate>
 {
 }
+- (void)notification: (Scintilla::SCNotification*)notification;
 @end

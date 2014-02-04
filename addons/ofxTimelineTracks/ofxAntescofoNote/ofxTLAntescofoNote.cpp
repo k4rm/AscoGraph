@@ -62,7 +62,10 @@
 
 #define RT_TEMPO_VAR_OK
 
-#include <Action.h>
+#include "Expression.h"
+#include "Action.h"
+#include "ActionCompound.h"
+#include "ActionAtomic.h"
 #include <Antescofo_AscoGraph.h>
 #include <Score.h>
 #include <location.hh>
@@ -1241,8 +1244,8 @@ bool ofxTLAntescofoNote::getAccompanimentMarkers_rec_group(Gfwd *g, vector<float
 					const MapList *ml = md->map_list;
 					for(MapList::const_iterator it = ml->begin(); it!=ml->end(); it++) {
 						if (debug) cout << "map: rel: " << (*it)->first << ", " << (*it)->second << endl;
-						const Value *k = (*it)->first->is_value();
-						const Value *n = (*it)->second->is_value();
+						const TaggedValue *k = (*it)->first->is_value();
+						const TaggedValue *n = (*it)->second->is_value();
 						float l, o;
 						if (k && k->is_numeric() && n && n->is_numeric()) {
 							l = eval_double(k);
@@ -1260,8 +1263,8 @@ bool ofxTLAntescofoNote::getAccompanimentMarkers_rec_group(Gfwd *g, vector<float
 					const MapList *ml = md->map_list;
 					for(MapList::const_iterator it = ml->begin(); it!=ml->end(); it++) {
 						if (debug) cout << "map: abs: " << (*it)->first << ", " << (*it)->second << endl;
-						const Value *k = (*it)->first->is_value();
-						const Value *n = (*it)->second->is_value();
+						const TaggedValue *k = (*it)->first->is_value();
+						const TaggedValue *n = (*it)->second->is_value();
 						float l, o;
 						if (k && k->is_numeric() && n && n->is_numeric()) {
 							l = eval_double(k);
@@ -1285,9 +1288,12 @@ bool ofxTLAntescofoNote::getAccompanimentMarkers(vector<float>& map_index, vecto
 	if (!mNetscore) return res;
 	for (vector<Event *>::iterator e = mNetscore->begin(); e != mNetscore->end(); e++) {
 		if ((*e)->gfwd) {
-			res = getAccompanimentMarkers_rec_group((*e)->gfwd, map_index, map_markers);
-			if (res)
-				break;
+			Gfwd *g = dynamic_cast<Gfwd *>((*e)->gfwd);
+			if (g) {
+				res = getAccompanimentMarkers_rec_group(g, map_index, map_markers);
+				if (res)
+					break;
+			}
 		}
 	}
 	return res;
@@ -1342,16 +1348,22 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		Event *e = *i;
 		//if (!e->isEvent() /*&& i != score->begin()*/) continue; // TODO store and display actions on first dummy silence
 		if (e->gfwd) {
-			Gfwd *g = e->gfwd;
-			oss.str(""); oss.clear();
-			list<Action*> l = e->gfwd->bloc();
-			for (list<Action*>::iterator a = l.begin(); a != l.end(); a++) {
-				if (*a)
-					oss << *a;
+			Gfwd *g = dynamic_cast<Gfwd*>(e->gfwd); //TODO may be useful to display other things than Gfwd
+			if (g) {
+				oss.str(""); oss.clear();
+				list<Action*> l = g->bloc();
+				for (list<Action*>::iterator a = l.begin(); a != l.end(); a++) {
+					if (*a)
+						oss << *a;
+				}
+				actstr = oss.str();
+				if (actstr.size()) bGot_Action = true;
+			} else {
+				oss.str(""); oss.clear();
+				oss << *(e->gfwd);
+				actstr = oss.str();
+				if (actstr.size()) bGot_Action = true;
 			}
-			actstr = oss.str();
-			if (actstr.size())
-				bGot_Action = true;
 		}
 
 		int newtype = getNoteType(e);

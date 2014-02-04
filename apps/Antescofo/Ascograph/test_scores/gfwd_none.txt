@@ -4,7 +4,7 @@ NOTE C4 8.0
 
 NOTE C4 8.0
 
-	action_one
+	action_one hh
 	2 action_two 12
 
 	
@@ -16,5 +16,5 @@ NOTE 60 1.0	e2035
 		spat3_cyc	stop 
 	antescofo-mess analysis 4096 128, pedal 0
 NOTE 60 10.0	e2035
-	msg
+	msg j
 NOTE 160 100.0	e2035

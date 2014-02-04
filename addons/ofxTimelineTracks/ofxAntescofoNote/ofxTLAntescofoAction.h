@@ -10,6 +10,9 @@
 
 #include <iostream>
 #include <list>
+#include "Action.h"
+#include "ActionCompound.h"
+#include "ActionAtomic.h"
 #include "ofxTimeline.h"
 #include "ofxTLTrack.h"
 #include "pre_Antescofo.h"
@@ -44,9 +47,9 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		virtual void update();
 		void update_groups();
 		int update_sub_height(ActionGroup *ag);
+		int update_sub_height_curve(ActionMultiCurves* c, int& cury, int& curh);
 		float update_sub_duration(ActionGroup *ag);
 		int update_sub_width(ActionGroup *ag);
-		int update_sub_y(ActionGroup *ag);
 		void update_avoid_overlap();
 		void update_avoid_overlap_rec(ActionGroup* g, int w);
 
@@ -111,11 +114,12 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 class ActionGroup {
 	public:
-		ActionGroup(Gfwd* g, Event *e, ActionGroupHeader* header_);
+		ActionGroup(Action* a, Event *e, ActionGroupHeader* header_);
 		ActionGroup() {}
 		
 		virtual ~ActionGroup();
 
+		void createActionGroup(Action* tmpa, Event* e, float delay_);
 		string get_period();
 		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
@@ -127,7 +131,7 @@ class ActionGroup {
 
 		list<ActionGroup*> sons;
 		ActionGroupHeader *header;
-		Gfwd *gfwd;
+		Action *action;
 		Event *event;
 		string trackName;
 		float period;
@@ -216,7 +220,7 @@ class ActionCurve {
 
 class ActionGroupHeader {
 	public:
-		ActionGroupHeader(float beatnum_, float delay_, Action* a_, Event *e_);
+		ActionGroupHeader(float beatnum_, float delay_, Action* a_, Event *e_, ActionGroup* parentGroup_ = NULL);
 		~ActionGroupHeader();
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
@@ -240,6 +244,7 @@ class ActionGroupHeader {
 		// TODO float bpm tempo local a un groupe
 
 		ActionGroup *group;
+		ActionGroup *parentGroup; // used for MultiCurves delay passing, null for others objects
 
 		// antescofo internal
 		Action *action;

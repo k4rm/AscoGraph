@@ -73,6 +73,7 @@ void ScintillaBase::AddCharUTF(char *s, unsigned int len, bool treatAsDBCS) {
 	if (!isFillUp) {
 		Editor::AddCharUTF(s, len, treatAsDBCS);
 	}
+	cout << "ScintillaBase::AddCharUTF: " << ac.Active() << endl;
 	if (ac.Active()) {
 		AutoCompleteCharacterAdded(s[0]);
 		// For fill ups add the character after the autocompletion has
@@ -254,7 +255,8 @@ void ScintillaBase::AutoCompleteStart(int lenEntered, const char *list) {
 	ac.lb->SetFont(vs.styles[STYLE_DEFAULT].font);
 	unsigned int aveCharWidth = vs.styles[STYLE_DEFAULT].aveCharWidth;
 	ac.lb->SetAverageCharWidth(aveCharWidth);
-	ac.lb->SetDoubleClickAction(AutoCompleteDoubleClick, this);
+	//ac.lb->SetDoubleClickAction(AutoCompleteDoubleClick, this);
+	printf("ac.lb->SetDoubleClickAction(AutoCompleteDoubleClick, this)");
 
 	ac.SetList(list);
 

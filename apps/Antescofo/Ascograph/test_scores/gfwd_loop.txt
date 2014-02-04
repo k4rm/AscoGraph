@@ -12,7 +12,7 @@ group testgroup
 		1.333	harm2	3.0	(1.333)
 	}
 	msg1 a
-	2 msg2 a
+	2 msg2 a   
 }
 NOTE g2 3
 NOTE A2 1
