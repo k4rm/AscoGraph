@@ -36,7 +36,7 @@ Curve slider  @Grain := 0.05s, @Action :=
 }
 
 
-NOTE A1 4
+NOTE A1 20
 
 CHORD (G2 E4) 10
 

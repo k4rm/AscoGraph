@@ -195,7 +195,6 @@ class ActionMultiCurves : public ActionGroup {
 		Curve* antescofo_curve;
 		vector<ActionCurve* > curves;
 		int howmany, nbvects;
-		string label;
 		bool isValid;
 };
 
@@ -223,10 +222,7 @@ class ActionCurve {
 		bool create_from_parser_objects(list<Var*> &var, vector<AnteDuration*>* dur_vect_, ActionMultiCurves* parentCurve_);
 		ofRectangle mSplitBtnRect;
 
-		string action;
-
-		string label;
-		string varname;
+		string action, label, varname;
 		double grain;
 		string symb;
 		ActionMultiCurves* parentCurve;
