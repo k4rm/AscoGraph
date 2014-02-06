@@ -22,7 +22,7 @@
 
 ofxTimeline *_timeline;
 
-bool debug_edit_curve = true;
+bool debug_edit_curve = false;
 bool debug_actiongroup = true;
 template<class T>
 int inline findAndReplace(T& source, const T& find, const T& replace)
@@ -140,21 +140,28 @@ int ofxTLAntescofoAction::get_x(float beat) {
 ofColor ofxTLAntescofoAction::get_random_color() {
 	static ofColor color(205, 1, 1, 200);
 
-	color += ofColor(10, 210, 155, 200);
+	//color += ofColor(10, 210, 155, 200);
+	color.r = (color.r + 10) % 255;
+	color.g = (color.g + 210) % 255;
+	color.b = (color.b + 155) % 255;
 	return color;
 }
 
 void ofxTLAntescofoAction::attribute_header_colors(list<ActionGroup*> groups) {
 	for (list<ActionGroup*>::const_iterator i = groups.begin(); i != groups.end(); i++)
 	{
+		if (!*i) abort();
 		(*i)->headerColor = get_random_color();
 		ActionGroup *a = *i;
+		attribute_header_colors((*i)->sons);
+		/*
 		if (a->sons.size()) {
 			for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 				if (*j)
 					(*j)->headerColor = get_random_color();
 			}
 		}
+		*/
 	}
 }
 
@@ -174,15 +181,18 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 
 		ActionGroup *ag = 0;
 		// can be group
-		Gfwd *g = dynamic_cast<Gfwd*>(e->gfwd);
-		Message *m = dynamic_cast<Message*>(e->gfwd);
+		Gfwd* g = dynamic_cast<Gfwd*>(e->gfwd);
+		Message* m = dynamic_cast<Message*>(e->gfwd);
 		Curve* c = dynamic_cast<Curve*>(e->gfwd);
 		Lfwd* l = dynamic_cast<Lfwd*>(e->gfwd);
+		KillAction* k = dynamic_cast<KillAction*>(e->gfwd);
 
 		if (g) {
 			ag = new ActionGroup(beatnum, d, g, e);
 		} else if (m) { // can be message
-			ag = new ActionMessage(beatnum, d, m, e); 
+			ag = new ActionMessage(beatnum, d, m, e);
+		} else if (k) { // can be kill/abort
+			ag = new ActionMessage(beatnum, d, k, e);
 		} else if (c) { // can be a curve
 			ag = new ActionMultiCurves(beatnum, d, c, e);
 		} else if (l && l->_group) { // can be a loop
@@ -191,15 +201,14 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 				ag->period = l->_period->eval();
 			ag->realtitle = ag->title = l->label();
 		}
-
-		mActionGroups.push_back(ag);
+		if (ag)
+			mActionGroups.push_back(ag);
 	}
-
 	if (mActionGroups.size()) {
 		enable();
+		attribute_header_colors(mActionGroups);
 	} else
 		disable();
-	attribute_header_colors(mActionGroups);
 }
 
 
@@ -243,9 +252,6 @@ int ofxTLAntescofoAction::get_max_note_beat()
 
 int ofxTLAntescofoAction::update_sub_height_curve(ActionMultiCurves* c, int& cury, int& curh)
 {
-	//cury += c->HEADER_HEIGHT;
-	//curh += c->HEADER_HEIGHT;
-
 	c->rect.y = cury;
 	// update curves rectangle bounds
 	int boxy = c->rect.y + c->HEADER_HEIGHT;
@@ -256,7 +262,7 @@ int ofxTLAntescofoAction::update_sub_height_curve(ActionMultiCurves* c, int& cur
 	//int boxx = get_x(ag->header->beatnum + ag->header->delay + c->delay);
 	if (c->delay) boxx = get_x(c->beatnum /*c->header->delay*/ + c->delay);
 	//g->header->rect.x = boxx;
-	cout << "boxx: " << boxx << " delay:" << c->delay << endl;
+	//cout << "boxx: " << boxx << " delay:" << c->delay << endl;
 	ofRectangle cbounds(boxx, boxy, boxw, boxh);
 	for (int k = 0; k < c->curves.size(); k++) {
 		ActionCurve *ac = c->curves[k];
@@ -272,19 +278,17 @@ int ofxTLAntescofoAction::update_sub_height_curve(ActionMultiCurves* c, int& cur
 	}
 	int h = c->getHeight();
 	c->rect.height = h;
+
 	return 0;
 }
 
 int ofxTLAntescofoAction::update_sub_height_message(ActionMessage* m, int& cury, int& curh)
 {
-	//cout << "m->header-> " << ag->header->realtitle << endl;
-	//m->x = ag->rect.x;
-
-	//if (m->delay) 
-	m->rect.x = get_x(m->beatnum + m->delay);//+ m->delay); XXX ???
+	m->rect.x = get_x(m->beatnum + m->delay);
 	m->rect.y = cury;
+	m->rect.height = m->HEADER_HEIGHT;
+	curh = m->HEADER_HEIGHT;
 
-	//cout << m->action << "m->x=" << m->x << " m->y=" << m->y << " curh:" << curh << " toth:" << toth << endl;
 	return 0;
 }
 
@@ -294,26 +298,37 @@ int ofxTLAntescofoAction::update_sub_height_message(ActionMessage* m, int& cury,
 int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 {
 	int debugsub = 1;
-	if (debugsub) cout << "<<<< update_sub_height : " << ag->title << endl;
+	if (debugsub) cout << endl << "<<<< update_sub_height : " << ag->realtitle << endl;
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->rect.y;
-	//if (! ag->header->top_level_group) cury += ag->header->HEADER_HEIGHT;
 
 	if (ag->hidden) {
 		return ag->HEADER_HEIGHT;
 	} else if (ag->sons.size()) {
+		//ag->rect.height = 0;
+		cury += ag->HEADER_HEIGHT;
+		/*
 		cury += ag->HEADER_HEIGHT;
 		curh += ag->HEADER_HEIGHT;
 		toth += curh;
+		*/
+		toth += ag->HEADER_HEIGHT;
 	}
+	ag->rect.height = toth;
 
 	ActionMessage *m = 0;
 	ActionMultiCurves *c = 0;
 	
 	if ((c = dynamic_cast<ActionMultiCurves*>(ag))) {
 		update_sub_height_curve(c, cury, curh);
-	} else if ((m = dynamic_cast<ActionMessage*>(ag)))
+		cury += curh;
+		toth += curh;
+	}
+	else if ((m = dynamic_cast<ActionMessage*>(ag))) {
 		update_sub_height_message(m, cury, curh);
+		cury += curh;
+		toth += curh;
+	}
 
 	// go deep
 	list<ActionGroup*>::iterator g;
@@ -324,25 +339,29 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 		else if ((c = dynamic_cast<ActionMultiCurves*>(*g)))
 			update_sub_height_curve(c, cury, curh);
 
-		if (!m && !(*g)->top_level_group) {
+		else { curh = (*g)->HEADER_HEIGHT; /*cury += curh;*/ }
+
+		if (!(*g)->top_level_group) {
 			(*g)->rect.x = ag->rect.x;
 			if ((*g)->delay)
 				(*g)->rect.x = get_x((*g)->beatnum + (*g)->delay);
 			(*g)->rect.y = cury;
+			if (debugsub) cout << "update_sub_height: x:" << (*g)->rect.x << " y:"<< (*g)->rect.y << endl;
 		}
-	 	curh = update_sub_height(*g);
+
+		curh = update_sub_height(*g);
+
 		if (debugsub) cout << " curh from update_sub_height:" << curh << endl;
-		//ag->header->rect.height += curh;
-		toth += curh;
+		ag->rect.height += curh;
 		cury += curh;
+		toth += curh;
 	}
-	if (ag->sons.empty()) toth += ag->getHeight();
-	if (debugsub) cout << "update_sub_height: returning " << toth << endl;
-	if (!toth) // leaf elmt -> message 
-		toth = ag->LINE_HEIGHT;
+	//if (ag->sons.empty()) toth = ag->HEADER_HEIGHT; //toth += ag->getHeight();
+	//if (!toth) // leaf elmt -> message toth = ag->HEADER_HEIGHT + 1;
 	
-	if (toth != ag->HEADER_HEIGHT)
-		ag->rect.height = toth;
+	// if (toth != ag->HEADER_HEIGHT) ag->rect.height = toth;
+
+	if (debugsub) cout << "update_sub_height: returning toth=" << toth << endl;
 	return toth;
 }
 
@@ -379,15 +398,16 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	ag->duration = 0;
 
 	//if (!ag->is_in_bounds(this)) { ag->rect.width = 0; return 0; }
-	int debugsub = 1;
+	int debugsub = 0;
 	if (debugsub) cout << "update_width: " << ag->title << endl;
 	ActionMessage *m;
 	ActionMultiCurves *c;
 	if ((m = dynamic_cast<ActionMessage*>(ag))) {
 		int sizec = mFont.stringWidth(string("_"));
-		int len = sizec * (m->action.size());
+		int len = sizec * (m->action.size() - 1);
 		if (m->delay)
-			len += get_x(m->beatnum + m->delay) - get_x(m->beatnum);
+			//len += get_x(m->beatnum + m->delay) - get_x(m->beatnum);
+			;
 		maxw = len;
 		if (debugsub) cout << "\tupdate_width: msg maxw:" << maxw << endl;
 
@@ -471,7 +491,7 @@ void ofxTLAntescofoAction::update_groups()
 		
 		if (!(*i)->hidden) {
 			(*i)->rect.height = update_sub_height(*i);
-		}
+		} else (*i)->rect.height = (*i)->HEADER_HEIGHT;
 	}
 
 	update_avoid_overlap();
@@ -482,7 +502,7 @@ void ofxTLAntescofoAction::windowResized(int w, int h){
 
 }
 
-bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group) {
+bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group) {
 	bool res = false;
 	if (!group) return res;
 	//cout << "mousePressed: rect:"<< header->realtitle<< " x:" << header->rect.x << " y:" << header->rect.y << " w:"<< header->rect.width << " h:" << header->rect.height << endl; 
@@ -501,22 +521,20 @@ bool ofxTLAntescofoAction::mousePressed_In_Arrow(ofMouseEventArgs& args, ActionG
 
 			}
 			return res;
-		} else if (group->is_in_arrow(args.x, args.y)) {
+		} else if (group->is_in_header(args.x, args.y)) {
 			group->hidden = true;
 			res = true;
 
-			// hide curve tracks
-			ActionMultiCurves* c = 0;
+			// hide curve tracks WHY WTF?
+			/*ActionMultiCurves* c = 0;
 			if ((c = dynamic_cast<ActionMultiCurves*>(group)))
-				c->hidden = true;
+				c->hidden = true;*/
 		} else {
 			if (group) { // not hidden and click in group
-				Event *e = group->event;
-				//mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
 				if (group->sons.size()) { // rec in subgroups
 					ActionGroup *a = group;
 					for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
-						if (*j && *j != group && mousePressed_In_Arrow(args, *j)) {
+						if (*j && *j != group && mousePressed_in_header(args, *j)) {
 							return true;
 						}
 					}
@@ -531,7 +549,7 @@ ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint_rec(ActionGroup* group, 
 	ActionGroup* rg = 0;
 	for (list<ActionGroup*>::const_iterator i = group->sons.begin(); i != group->sons.end(); i++) {
 		if ((*i)->rect.inside(x, y) && *i != group) {
-			if (!(rg = groupFromScreenPoint_rec(*i, x, y))) //&& *i == *(group->sons.end())) 
+			if (!(rg = groupFromScreenPoint_rec(*i, x, y)))
 				return *i;
 			else return rg;
 		}
@@ -632,23 +650,25 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	}
 	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 
-		if (mousePressed_In_Arrow(args, *i)) {
+		if (mousePressed_in_header(args, *i)) {
 			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
-			res = true;
-			return res;
+			return true;
 		} else if (*i) { // look for subgroups
 			ActionGroup* a = *i;
+			if (!(*i)->hidden) {
+				// handle curve click
+				res = mousePressed_search_curve_rec(*i, args, millis);
+			}
 			if (a->sons.size()) {
 				for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					// handle arrow click
-					if (*j &&  mousePressed_In_Arrow(args, *j)) {
+					if (*j &&  mousePressed_in_header(args, *j)) {
 						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 						res = true;
 					} else if (!(*i)->hidden) {
 						// handle curve click
 						res = mousePressed_search_curve_rec(*j, args, millis);
 					}
-
 					if (res)
 						return res;
 				}
@@ -1016,7 +1036,7 @@ void ActionGroup::createActionGroup_fill(Action* action)
 {
 	if (action) {
 		string lab = action->label();
-		if (strncmp(lab.c_str(), "_anonymous", 9) != 0) 
+		if (strncmp(lab.c_str(), "_anonymous", 9) != 0 && strncmp(lab.c_str(), "eventgroup", 10) != 0)
 			realtitle = lab;
 		//if (lab.size() && strncmp(lab.c_str(), "eventgroup", 10) == 0) {
 		if (event->gfwd == action) {
@@ -1029,13 +1049,15 @@ void ActionGroup::createActionGroup_fill(Action* action)
 		colNum_end = action->locate()->end.column;
 		//if (debug_actiongroup) cout << "ActionGroupHeader: location : " << lineNum_begin << ":" << colNum_begin << " -> "<< lineNum_end << ":" << colNum_end << endl;
 		Curve* c = dynamic_cast<Curve*>(action);
+		Gfwd *g = dynamic_cast<Gfwd*>(action);
 		if (c) {
-			title = "Curve " + action->label() + "   ";
+			title = "Curve " + realtitle + "   ";
 			rect.height = HEADER_HEIGHT;
-			cout << "ActionGroupHeader : -----create curve from beatnum=" << beatnum << " ----" << endl;
+			cout << "ActionGroup: createActionGroup_fill -----create curve from beatnum=" << beatnum << " ----" << endl;
 			//group = new ActionMultiCurves(c, delay, event, this); 
-		} else {
-			title = "Group " + action->label();
+		} else if (g) {
+			title = "Group " + realtitle;
+			cout << "ActionGroup: createActionGroup_fill -----create group "<< title<< " from beatnum=" << beatnum << " ----" << endl;
 			rect.height = HEADER_HEIGHT;
 			//if (debug_actiongroup) cout << "ActionGroupHeader: adding group" << endl;
 			//group = new ActionGroup(action, event, this);
@@ -1044,24 +1066,33 @@ void ActionGroup::createActionGroup_fill(Action* action)
 }
 
 void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
+	/*
 	double delay = 0;
 	if (e->gfwd && e->gfwd->delay() && e->gfwd->delay()->value() && e->gfwd->delay()->value()->is_value())
 		delay = (double)e->gfwd->delay()->eval();
-
+	*/
 	ActionGroup *ag = 0;
 	// can be group
 	Gfwd *g = dynamic_cast<Gfwd*>(tmpa);
 	Message *m = dynamic_cast<Message*>(tmpa);
 	Curve* c = dynamic_cast<Curve*>(tmpa);
 	Lfwd* l = dynamic_cast<Lfwd*>(tmpa);
+	KillAction* k = dynamic_cast<KillAction*>(tmpa);
 
 	if (g) {
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [group] ("<<action->label()<<")" << endl;
 		ag = new ActionGroup(beatnum, d, g, e);
 	} else if (m) { // can be message
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [message] ("<<action->label()<<")" << endl;
 		ag = new ActionMessage(beatnum, d, m, e); 
+	} else if (k) { // can be a kill/abort
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [kill] ("<<action->label()<<")" << endl;
+		ag = new ActionMessage(beatnum, d, k, e);
 	} else if (c) { // can be a curve
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [curve] ("<<action->label()<<")" << endl;
 		ag = new ActionMultiCurves(beatnum, d, c, e);
 	} else if (l && l->_group) { // can be a loop
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [loop] ("<<action->label()<<")" << endl;
 		ag = new ActionGroup(beatnum, d, l->_group, e);
 		if (l->_period && l->_period->value() && l->_period->value()->is_value())
 			ag->period = l->_period->eval();
@@ -1074,20 +1105,22 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 
 ActionGroup::ActionGroup(float beatnum_, float delay_, Action* a, Event *e) 
 			: beatnum(beatnum_), delay(delay_), action(a), event(e),
-			  period(0), duration(0), hidden(true),
-			  HEADER_HEIGHT(16), ARROW_LEN(15), LINE_HEIGHT(18), LINE_SPACE(12)
+			  period(0.), duration(0.), hidden(true), top_level_group(false),
+			  HEADER_HEIGHT(16), ARROW_LEN(15), LINE_SPACE(12)
 {
+	if (debug_actiongroup) cout << "ActionGroup::ActionGroup("<<action->label()<<")" << endl;
 	createActionGroup_fill(action);
 
+	float d = delay;
 	Gfwd *g = dynamic_cast<Gfwd*>(action);
 	if (g) {
 		vector<Action*>::const_iterator i;
-		float d = 0.;
 		for (i = g->actions().begin(); i != g->actions().end(); i++) {
 			Action *tmpa = *i;
 
 			d += get_delay(tmpa);
 
+			if (debug_actiongroup) cout << "ActionGroup::ActionGroup(): son createActionGroup: " << tmpa->label()<< endl;
 			createActionGroup(tmpa, event, d);
 
 			duration += get_delay(tmpa);
@@ -1162,8 +1195,8 @@ double ActionGroup::get_delay(Action* tmpa)
 }
 
 void ActionGroup::print() {
-	cout << "***** ActionGroup :" << realtitle << " line:" << lineNum_begin << ":" << colNum_begin << " -> "<< lineNum_end<< ":" << colNum_end << " beat:" << beatnum 
-	     << " delay:"<< delay <<" dur:" << duration << " hidden:"<< hidden 
+	cout << "***** ActionGroup: " << title << " (" << realtitle << ") "<< " line:" << lineNum_begin << ":" << colNum_begin << " -> "<< lineNum_end<< ":" << colNum_end << " beat:" << beatnum 
+	     << " delay:"<< delay <<" dur:" << duration << " hidden:"<< hidden << " top_level:" << top_level_group
 	     << " x:" << rect.x << " y:" << rect.y << " w:" << rect.width << " h:" << rect.height << endl;
 
 	if (period) cout << "ActionGroup loop period: " << period << endl;
@@ -1181,23 +1214,26 @@ void ActionGroup::draw_header(ofxTLAntescofoAction* tlAction)
 {
 	ofFill(); // rect color filled
 	ofSetColor(headerColor);
-	rect.height = HEADER_HEIGHT;
-	ofRect(tlAction->getBoundedRect(rect)); // header filled rect
+	ofRectangle r(rect);
+	r.height = HEADER_HEIGHT;
+	ofRect(tlAction->getBoundedRect(r)); // header filled rect
 	ofNoFill();
 	ofSetColor(0, 0, 0, 255);
 	if (rect.width > ARROW_LEN + 4) drawArrow(); // arrow
 	string name = title;
-	if (period > 0) {name = "Loop " + realtitle; name += " period:"; name += get_period(); }
-	tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + LINE_HEIGHT - 6);
+	if (period > 0.) {name = "Loop " + realtitle; name += " period:"; name += get_period(); }
+	tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 5);
 	ofNoFill();
+	ofRect(tlAction->getBoundedRect(r)); // black border rect
 	ofRect(tlAction->getBoundedRect(rect)); // black border rect
 }
 
 void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 {
 	ofSetLineWidth(1);
-	cout << "ActionGroup::draw: label:"<< realtitle << " toplevel:" << top_level_group << " inbounds:" << is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y
+	/*cout << "ActionGroup::draw: label:"<< realtitle << " toplevel:" << top_level_group << " inbounds:" << is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y
 	     << " " << rect.width <<  "x"<< rect.height << " sons size: " << sons.size() << endl;
+	     */
 
 	draw_header(tlAction);
 
@@ -1228,10 +1264,13 @@ void ActionGroup::drawModalContent(ofxTLAntescofoAction *tlAction)
    Curve
  */
 ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Event* e)
-	: resize_factor(0.6),
-	  ActionGroup(beatnum_, delay_, c, e)
+	: resize_factor(0.6)
 {
+	beatnum = beatnum_;
 	delay = delay_;
+	action = c;
+	event = e;
+
 	antescofo_curve = c;
 	period = 0.;
 	isValid = true;
@@ -1365,7 +1404,7 @@ ActionMultiCurves::~ActionMultiCurves()
 }
 
 void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
-	cout << "ActionMultiCurves::draw: x:"<< rect.x << " y:" << rect.y << endl;
+	//cout << "ActionMultiCurves::draw: x:"<< rect.x << " y:" << rect.y << endl;
 	draw_header(tlAction);
 	if (!hidden) {
 		vector<ActionCurve*>::iterator j;
@@ -1386,7 +1425,7 @@ void ActionMultiCurves::drawModalContent(ofxTLAntescofoAction *tlAction) {
 
 
 void ActionMultiCurves::print() {
-	cout << "***** ActionMultiCurves: got " << howmany << " curves." << endl;
+	cout << "\t***** ActionMultiCurves: got " << howmany << " curves." << endl;
 	ActionGroup::print();
 	for (int i = 0; i < curves.size(); i++)
 		curves[i]->print();
@@ -1629,10 +1668,10 @@ bool ActionCurve::set_y(Expression* y, double val) {
 
 void ActionCurve::print()
 {
-	cout << "ActionCurve::print: "<< endl; 
+	cout << "\tActionCurve::print: "<< endl; 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
 	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, s++) {
-		cout << "\tdelay: " << (*k)->eval();
+		cout << "\t\tdelay: " << (*k)->eval();
 		if (s != simple_vect->end())
 			cout << "  y0: " << s->y0 << " y1: " << s->y1 << endl;
 	}
@@ -1989,13 +2028,27 @@ void ActionCurve::drawModalContent(ofxTLAntescofoAction* tlAction) {
 /*
 	Message
  */
-ActionMessage::ActionMessage(float beatnum_, float delay_, Message* m, Event *e) 
-	: ActionGroup(beatnum_, delay_, m, e)
+ActionMessage::ActionMessage(float beatnum_, float delay_, Action* a, Event *e) 
+	: is_kill(false)
 {
+	period = 0, duration = 0., hidden = true,
+	HEADER_HEIGHT = 16, ARROW_LEN = 15, LINE_SPACE = 12;
+
+	top_level_group = false;
+	beatnum = beatnum_;
+	delay = delay_;
+	event = e;
+	createActionGroup_fill(a);
+
 	ostringstream oss;
-	oss << *m;
+	oss << *a;
 	action = oss.str();
 	hidden = false;
+
+
+	if (dynamic_cast<KillAction*>(a))
+		is_kill = true;
+
 	//header->hidden = false;
 	//ofRectangle tmprect = rect; tmprect.y += HEADER_HEIGHT;
 	//ActionRect *newact = new ActionRect(act, header->beatnum + get_delay(m), NULL, event);
@@ -2006,10 +2059,13 @@ ActionMessage::ActionMessage(float beatnum_, float delay_, Message* m, Event *e)
 }
 
 void ActionMessage::print() {
-	cout << "**** Action Message: " <<  action;// << endl;
-	ActionGroup::print();
+	cout << "\t**** Action Message: " <<  action 
+	     << " x:" << rect.x << " y:" << rect.y << " w:" << rect.width << " h:" << rect.height << endl;
 }
 
+int ActionMessage::getHeight() {
+	return HEADER_HEIGHT;
+}
 
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	ofFill();
@@ -2019,7 +2075,17 @@ void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	ofNoFill();
 	ofSetColor(0, 0, 0, 255);
 	int strw = rect.width + rect.x - MAX(rect.x, 0);
-	tlAction->mFont.drawString(tlAction->cut_str(strw, action), rect.x + 1, rect.y + LINE_HEIGHT - 6);
+	if (is_kill )
+		ofSetColor(255, 0, 0, 255);
+	else
+		ofSetColor(0, 0, 0, 255);
+
+	tlAction->mFont.drawString(tlAction->cut_str(strw, action), rect.x + 1, rect.y + HEADER_HEIGHT - 3);
+
+	if (is_kill )
+		ofSetColor(255, 0, 0, 80);
+	else
+		ofSetColor(0, 0, 0, 80);
 	ofRect(tlAction->getBoundedRect(rect));
 }
 
@@ -2076,12 +2142,17 @@ void ActionGroup::drawArrow() {
 }
 
 
-bool ActionGroup::is_in_arrow(int x, int y)
+bool ActionGroup::is_in_header(int x, int y)
 {
+	/* was: is_in_arrow
 	bool res = false;
 	if (x > rect.x + rect.width - ARROW_LEN && y < rect.y + HEADER_HEIGHT)
 		res = true;
-	//cout << "is in arrow: " << x << " " << y << " return " << res << endl;
 	return res;
+	*/
+	//cout << "is in arrow: " << x << " " << y << " return " << res << endl;
+	ofRectangle r(rect);
+	r.height = HEADER_HEIGHT;
+	return r.inside(x, y);
 }
 

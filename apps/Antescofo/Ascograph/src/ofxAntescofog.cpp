@@ -1815,19 +1815,19 @@ bool ofxAntescofog::edited() {
 	file.seekg (0, ios::beg);
 	if (fsize <= 0)
 		return false;
-	char* memblock = new char[fsize];
+	char* memblock = new char[fsize + 1];
 	file.read (memblock, fsize);
+	memblock[fsize] = 0;
 	filecontent = string(memblock);
 	file.close();
-	delete memblock;
 
-	cout << "original file len:" << filecontent.size() << endl;
-	if (fsize != editorcontent.size()
-		|| filecontent.compare(editorcontent)) {
-		return true;
-	} else {
+	bool same = (filecontent.compare(editorcontent) == 0);
+	delete memblock;
+	cout << "original file len:" << fsize << endl;
+	if (same)
 		return false;
-	}
+	else
+		return true;
 }
 
 void ofxAntescofog::askToSaveScore() {

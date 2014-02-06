@@ -861,6 +861,7 @@ void BeatCurve::draw(){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor);
 		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
+		ofSetColor(255, 0, 0, 255);
 		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
 		ofPopStyle();
 	}
@@ -889,7 +890,8 @@ void BeatCurve::draw(){
 					timeline->getFont().drawString(ofToString(selectedKeyframes[i]->orig_value, 4), screenpoint.x+5, screenpoint.y-5);
 			}
 			ofSetColor(255, 0, 0, 255);
-			ofCircle(screenpoint.x, screenpoint.y, 4);
+			ofNoFill();
+			ofCircle(screenpoint.x, screenpoint.y, 5);
 			//if (curve_debug_) cout << "Keyframes::draw(): circle "<<screenpoint.x << ", "<< screenpoint.y << endl;
 		}
 	}

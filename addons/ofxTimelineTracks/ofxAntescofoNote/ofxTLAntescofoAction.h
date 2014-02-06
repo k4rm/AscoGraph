@@ -54,7 +54,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void update_avoid_overlap_rec(ActionGroup* g, int w);
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
-		bool mousePressed_In_Arrow(ofMouseEventArgs& args, ActionGroup* group);
+		bool mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group);
 		virtual bool mousePressed_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis);
 		virtual bool mousePressed_search_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
@@ -139,7 +139,7 @@ class ActionGroup {
 
 		// header related
 		void drawArrow(); 
-		bool is_in_arrow(int x, int y);
+		bool is_in_header(int x, int y);
 
 		// display
 		ofColor headerColor;
@@ -167,12 +167,14 @@ class ActionGroup {
 
 class ActionMessage : public ActionGroup {
 	public:
-		ActionMessage(float beatnum_, float delay_, Message* g, Event* e);
+		ActionMessage(float beatnum_, float delay_, Action* a, Event* e);
 		virtual ~ActionMessage() {}
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual int getHeight();
 		virtual void print();
 		string action;
+		bool is_kill;
 };
 
 class ActionMultiCurves : public ActionGroup {

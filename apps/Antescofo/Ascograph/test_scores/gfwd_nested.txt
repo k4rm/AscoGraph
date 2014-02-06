@@ -6,10 +6,13 @@ GFWD testgroup
 {
 	an_action1 1 $RT_TEMPO
 	2 an_action2 12
+
 	GFWD 3 nestedgrp {
 		an_action2 1
 		1 an_action3 3
 	}
 	action4 	action5
+	action5 	action6
+
 }
 NOTE C3 17
