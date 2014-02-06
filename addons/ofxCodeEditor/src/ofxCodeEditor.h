@@ -26,8 +26,9 @@
     ScintillaView*	mEditor;
     const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords, *client_keywords, *user_keywords;
     vector<string> action_keywords;
-    vector<string> dic_keywords;
+    vector<string> dic_keywords, curr_dic_keywords;
     char *dic_char_list;
+    char *curr_dic_char_list;
     //id <ScintillaViewMyDelegate> delegate;
     id<ScintillaViewMyDelegate> mDelegate;
 };
@@ -54,6 +55,7 @@
 - (int) getLenght;
 - (string) getSelection;
 - (void) braceMatch;
+- (void) autocomplete;
 //- (void) showAutocompletion;
 - (void) loadFile: (string) filename;
 - (void) getEditorContent: (string&) content;

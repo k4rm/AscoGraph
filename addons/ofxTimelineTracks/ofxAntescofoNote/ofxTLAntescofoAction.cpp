@@ -294,7 +294,7 @@ int ofxTLAntescofoAction::update_sub_height_message(ActionMessage* m, int& cury,
 // return height of ActionGroup in px
 int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 {
-	int debugsub = 1;
+	int debugsub = 0;
 	if (debugsub) cout << endl << "<<<< update_sub_height : " << ag->realtitle << endl;
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->rect.y;
@@ -460,7 +460,7 @@ void ofxTLAntescofoAction::update_groups()
 {
 	// update actions' rect
 	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		cout << "--------------------------------------------------------------" << endl;
+		if (debug_actiongroup) cout << "--------------------------------------------------------------" << endl;
 		//if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
 		(*i)->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
 		(*i)->rect.y = bounds.y + 1;
@@ -1025,20 +1025,16 @@ void ActionGroup::createActionGroup_fill(Action* action)
 		lineNum_end = action->locate()->end.line;
 		colNum_begin = action->locate()->begin.column;
 		colNum_end = action->locate()->end.column;
-		//if (debug_actiongroup) cout << "ActionGroupHeader: location : " << lineNum_begin << ":" << colNum_begin << " -> "<< lineNum_end << ":" << colNum_end << endl;
 		Curve* c = dynamic_cast<Curve*>(action);
 		Gfwd *g = dynamic_cast<Gfwd*>(action);
 		if (c) {
 			title = "Curve " + realtitle + "   ";
 			rect.height = HEADER_HEIGHT;
-			cout << "ActionGroup: createActionGroup_fill -----create curve from beatnum=" << beatnum << " ----" << endl;
-			//group = new ActionMultiCurves(c, delay, event, this); 
+			if (debug_actiongroup) cout << "ActionGroup: createActionGroup_fill -----create curve from beatnum=" << beatnum << " ----" << endl;
 		} else if (g) {
 			title = "Group " + realtitle;
-			cout << "ActionGroup: createActionGroup_fill -----create group "<< title<< " from beatnum=" << beatnum << " ----" << endl;
+			if (debug_actiongroup) cout << "ActionGroup: createActionGroup_fill -----create group "<< title<< " from beatnum=" << beatnum << " ----" << endl;
 			rect.height = HEADER_HEIGHT;
-			//if (debug_actiongroup) cout << "ActionGroupHeader: adding group" << endl;
-			//group = new ActionGroup(action, event, this);
 		}
 	}
 }
@@ -1254,7 +1250,7 @@ ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Eve
 	isValid = true;
 	top_level_group = false;
 	if (antescofo_curve) {
-		cout << "got MultiCurve: " << antescofo_curve->label() << endl; 
+		if (debug_edit_curve) cout << "got MultiCurve: " << antescofo_curve->label() << endl; 
 		title = string("Curve ") + antescofo_curve->label();
 
 		lineNum_begin = antescofo_curve->locate()->begin.line;
@@ -1264,17 +1260,17 @@ ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Eve
 
 		nbvects = antescofo_curve->seq_vect.size();
 
-		cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
+		if (debug_edit_curve) cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
 		for (uint i = 0; i < nbvects; i++)
 		{
 			howmany = antescofo_curve->seq_vect[i].var_list->size();
-			cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< howmany << endl;
+			if (debug_edit_curve) cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< howmany << endl;
 			SeqContFunction& s = antescofo_curve->seq_vect[i];
 			list<Var*>::iterator it_var = s.var_list->begin();
 			//for (uint j = 0; /*j < s->s_vect[0][0].size() &&*/ it_var != s->var_list->end(); j++, it_var++)
 			//{
 				string var = (*it_var)->name();
-				cout << "ActionMultiCurves: adding sub curve:" << endl;
+				if (debug_edit_curve) cout << "ActionMultiCurves: adding sub curve:" << endl;
 
 				ActionCurve* newc = new ActionCurve(*(s.var_list), &s, &s.dur_vect, 0, e, this);
 				newc->label = antescofo_curve->label();
@@ -1305,20 +1301,20 @@ ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Eve
  */
 void ActionCurve::split()
 {
-	cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl; 
+	if (debug_edit_curve) cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl; 
 	if (parentCurve->antescofo_curve) {
-		cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl; 
+		if (debug_edit_curve) cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl; 
 		label = parentCurve->antescofo_curve->label();
 		int nbvects = parentCurve->antescofo_curve->seq_vect.size();
 
 		vector<SeqContFunction> listseq;
 		ofxTLAntescofoAction* actionTrack = (ofxTLAntescofoAction *)_timeline->getTrack("Actions");
-		cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
+		if (debug_edit_curve) cout << "ActionMultiCurves: contains " << nbvects << " vectors." << endl;
 		int nbtracks = 0;
 		for (uint i = 0; i < nbvects; i++)
 		{
 			parentCurve->howmany = parentCurve->antescofo_curve->seq_vect[i].var_list->size();
-			cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< parentCurve->howmany << endl;
+			if (debug_edit_curve) cout << "ActionMultiCurves: contains vect:" << nbvects << " howmany:"<< parentCurve->howmany << endl;
 			SeqContFunction& s = parentCurve->antescofo_curve->seq_vect[i];
 			list<Var*>::iterator it_var = s.var_list->begin();
 			// accumulate types
@@ -1387,7 +1383,7 @@ ActionMultiCurves::~ActionMultiCurves()
 
 void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
 	//cout << "ActionMultiCurves::draw: x:"<< rect.x << " y:" << rect.y << endl;
-	if (!hidden) {
+	if (!hidden && is_in_bounds(tlAction)) {
 		vector<ActionCurve*>::iterator j;
 		for (j = curves.begin(); j != curves.end(); j++) {
 			(*j)->draw(tlAction);
@@ -1472,7 +1468,7 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 	dur_vect = dur_vect_;
 	parentCurve = parentCurve_;
 
-	cout << "ofxTLAntescofoAction::adding ActionCurve: for var: "<< varname << " : " << dur_vect->size() << " delays" << endl;// << seq->label() << endl; 
+	if (debug_edit_curve) cout << "ofxTLAntescofoAction::adding ActionCurve: for var: "<< varname << " : " << dur_vect->size() << " delays" << endl;// << seq->label() << endl; 
 	if (values.empty() && delays.empty()) {
 		for (int i = 0; i < var.size(); i++) {
 			vector<SimpleContFunction>* simple_vect = &(seq->s_vect[i]);
@@ -1483,11 +1479,11 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 				FloatValue* f = dynamic_cast<FloatValue*>((*simple_vect)[j].y0);
 				if (f) {
 					double dou = f->get_double();
-					cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
+					if (debug_edit_curve) cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
 					hvalues.push_back(dou);
 				} else if ((in = dynamic_cast<IntValue*>((*simple_vect)[j].y0))) {
 					int ii = in->get_int();
-					cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
+					if (debug_edit_curve) cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
 					hvalues.push_back(ii);
 				} else return false;
 				//cout << "ActionCurve : got y0:" << s_vect[j].y0->get_double() << " y1:" << s_vect[j].y1->get_double() << " type:"<< s_vect[j].type << endl;
@@ -1496,11 +1492,11 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			FloatValue* f = dynamic_cast<FloatValue*>((*simple_vect)[simple_vect->size()-1].y1);
 			if (f) {
 				double dou = f->get_double();
-				cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
+				if (debug_edit_curve) cout << "ofxTLAntescofoAction::add_action: got values:" << dou << endl;
 				hvalues.push_back(dou);
 			} else if ((in = dynamic_cast<IntValue*>((*simple_vect)[simple_vect->size()-1].y1))) {
 				int ii = in->get_int();
-				cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
+				if (debug_edit_curve) cout << "ofxTLAntescofoAction::add_action: got values:" << ii << endl;
 				hvalues.push_back(ii);
 			} else return false;
 			values.push_back(hvalues);
@@ -1512,7 +1508,7 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 				double dou = (*j)->eval();
 				if (j == dur_vect->begin())
 					dou +=  groupDelay;
-				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
+				if (debug_edit_curve) cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
 				delays.push_back(dou);
 			} else return false;
 			/*
@@ -1586,13 +1582,13 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 				dcumul += parentgrp->delay;
 				parentgrp = parentgrp->parentGroup;
 			}*/
-			cout << "====================== dcumul=" << dcumul << endl;
+			if (debug_edit_curve) cout << "====================== dcumul=" << dcumul << endl;
 			//cout << "====================== parentdelay= " << parentCurve->parentGroup->delay << endl;
 			vector<SimpleContFunction>::iterator s = simple_vect->begin();
 			for (int k = 0; k < delays.size(); k++, s++) {
 				dcumul += delays[k];
 				float b = parentCurve->beatnum + dcumul;
-				cout << "ofxTLAntescofoAction::add_action: CURVE add keyframe[" << k << "] beat=" << b << " msec=" << _timeline->beatToMillisec(b)
+				if (debug_edit_curve) cout << "ofxTLAntescofoAction::add_action: CURVE add keyframe[" << k << "] beat=" << b << " msec=" << _timeline->beatToMillisec(b)
 					<< " val=" <<  values[i][k] << endl;
 				string easetype;
 				if (s != simple_vect->end() && s->type && s->type->is_value()) {
@@ -1624,7 +1620,7 @@ ActionCurve::~ActionCurve()
 
 bool ActionCurve::set_dur_val(double d, AnteDuration* a)
 {
-	cout << "ActionCurve::set_dur_val: " << d << endl;
+	if (debug_edit_curve) cout << "ActionCurve::set_dur_val: " << d << endl;
 	//assert(d);
 	if (!d) return false;
 	Value* v;

@@ -98,6 +98,59 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	//[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)0 value:(sptr_t)dic_char_list];
 }
 
+- (void) autocomplete
+{
+	// get last word:
+	int pos = [self getCurrentPos];
+	int line = [self getCurrentLine];
+
+	bool notspace = true;
+	string prefix;
+	pos--;
+	while (pos >= 0) {
+		char ch = (char)[mEditor getGeneralProperty:SCI_GETCHARAT parameter:pos];
+		if (ch == ' ' || ch == ',' || ch == '.' || ch == '\n' || ch == '(' || ch == ')'
+		    || ch == '[' || ch ==']' || ch == '{'||  ch == '}')
+			break;
+		prefix = ch + prefix;;
+		//NSLog(@"autocomplete: last char='%c' prefix=%s", ch, prefix.c_str());
+		pos--;
+	}
+
+	NSLog(@"autocomplete: prefix=\"%s\"  dic size:%ld", prefix.c_str(), dic_keywords.size());
+
+	// now we've got our prefix, for each prefix char, we filter the full list
+	for (int j = 0; j < dic_keywords.size(); j++) {
+		int sz = MIN(prefix.size(), dic_keywords[j].size());
+		int i = 0; 
+		for (;i < sz; i++) {
+			if (prefix[i] != dic_keywords[j][i])
+				break;
+		}
+		if (i == sz) { // if for each letter of prefix, the dic words matches
+			NSLog(@"autocomplete: adding \"%s\"", dic_keywords[j].c_str());
+			curr_dic_keywords.push_back(dic_keywords[j]);
+		}
+	}
+	int cnt = 0;
+	for (int i = 0; i < curr_dic_keywords.size(); i++) {
+		cnt += curr_dic_keywords[i].size();
+	}
+	if (curr_dic_char_list) { delete[] curr_dic_char_list; curr_dic_char_list = 0; }
+	curr_dic_char_list = new char[cnt + curr_dic_keywords.size() + 2];
+	int j = 0;
+	for (int i = 0; i < curr_dic_keywords.size(); i++) {
+		for (int c = 0; c < curr_dic_keywords[i].size(); c++, j++)
+			curr_dic_char_list[j] = curr_dic_keywords[i][c];
+		j++;
+		curr_dic_char_list[j] = ' ';
+		j++;
+	}
+	curr_dic_char_list[j] = 0;
+	NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
+
+	[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)0 value:(sptr_t)curr_dic_char_list];
+}
 
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect {
 	NSLog(@"ofxCodeEditor: setup: %.1f, %.1f : %.1fx%.1f", rect.x, rect.y, rect.width, rect.height);

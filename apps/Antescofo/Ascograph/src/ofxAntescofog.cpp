@@ -167,6 +167,10 @@ void ofxAntescofog::menu_item_hit(int n)
 			cout << "Setting line wrapping mode:" << bLineWrapMode << endl; 
 			[ editor setWrapMode:bLineWrapMode ];
 			break;
+		case INT_CONSTANT_BUTTON_AUTOCOMPLETE:
+			cout << "Autocompletion key pressed." << endl;
+			[ editor autocomplete];
+			break;
 		case INT_CONSTANT_BUTTON_FIND:
 			cout << "Setting find text mode" << endl; 
 			if (!bShowFind) {
@@ -437,6 +441,11 @@ void ofxAntescofog::setupUI() {
 	[findMenuItem setTag:INT_CONSTANT_BUTTON_FIND];
 	[editMenu addItem:findMenuItem];
 
+	// . autocomplete
+	NSMenuItem* autocompleteMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Autocomplete text" action:@selector(menu_item_hit:) keyEquivalent:@"\t"] autorelease];
+	[autocompleteMenuItem setTag:INT_CONSTANT_BUTTON_AUTOCOMPLETE];
+	autocompleteMenuItem.keyEquivalentModifierMask = NSControlKeyMask;
+	[editMenu addItem:autocompleteMenuItem];
 	[editMenuItem setSubmenu:editMenu];
 	[menubar addItem:editMenuItem];
 
