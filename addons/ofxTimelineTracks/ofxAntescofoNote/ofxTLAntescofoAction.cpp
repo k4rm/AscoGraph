@@ -226,6 +226,7 @@ void ofxTLAntescofoAction::save()
 void ofxTLAntescofoAction::load()
 {
 	mFont.loadFont ("DroidSansMono.ttf", 8);
+	//mFont.loadFont ("menlo.ttf", 8);
 
 }
 
@@ -350,7 +351,7 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 		else if ((c = dynamic_cast<ActionMultiCurves*>(*g)))
 			update_sub_height_curve(c, cury, curh);
 
-		else { curh = (*g)->HEADER_HEIGHT; }
+		else { (*g)->rect.height = curh = (*g)->HEADER_HEIGHT; }
 
 		if (!(*g)->top_level_group) {
 			(*g)->rect.x = ag->rect.x;
@@ -362,7 +363,7 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 
 		curh = update_sub_height(*g);
 
-		if (debugsub) cout << " curh from update_sub_height:" << curh << endl;
+		if (debugsub) cout << " curh from update_sub_height:" << curh <<" ag->rect.height =" << ag->rect.height  << endl;
 		ag->rect.height += curh;
 		cury += curh;
 		toth += curh;
@@ -414,6 +415,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 			//len += get_x(m->beatnum + m->delay) - get_x(m->beatnum);
 			;
 		maxw = len;
+		m->rect.width = len;
 		if (debugsub) cout << "\tupdate_width: msg maxw:" << maxw << endl;
 
 	} else if ((c = dynamic_cast<ActionMultiCurves*>(ag))) {

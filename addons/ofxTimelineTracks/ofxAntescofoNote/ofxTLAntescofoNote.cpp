@@ -1393,13 +1393,13 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->lineNum_end = e->scloc->end.line;
 					newSwitch->colNum_end = e->scloc->end.column;
 					newSwitch->isLast = false;
-					if (m == e->multi_source.begin()) { 
+					/*if (m == e->multi_source.begin()) { 
 						newSwitch->label = e->cuename;
 						if (bGot_Action)  {
 							newSwitch->action = actstr;
 							add_action(e->beatcum, actstr, e);
 						}
-					}
+					}*/
 					switches.push_back(newSwitch);
 					if (debug_loadscore) { str << "added new switch for MULTI source: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 					line2note[e->scloc->begin.line] = switches.size() - 1;

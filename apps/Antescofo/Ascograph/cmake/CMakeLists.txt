@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.094")
+set(ASCOGRAPH_VERSION_NUMBER "0.095")
 
 set(ANTESCOFO_FAUST 0)
 set(ANTESCOFO_FLUIDSYNTH 0)
@@ -670,7 +670,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	MACOSX_BUNDLE_SHORT_VERSION_STRING ${ASCOGRAPH_VERSION_NUMBER}
 	MACOSX_BUNDLE_BUNDLE_VERSION ${ASCOGRAPH_VERSION_NUMBER}
 	MACOSX_BUNDLE_NSPRINCIPAL_CLASS "NSApplication"
-	MACOSX_BUNDLE_COPYRIGHT "Copyright 2013, Thomas Coffy\n\n Ascograph is the open-source\n graphical score editor for Antescofo scores.\nSee http://repmus.ircam.fr/mutant/ascograph\n\nbuilt with Antescofo ${ANTESCOFO_VERSION}"
+	MACOSX_BUNDLE_COPYRIGHT "Copyright 2012-2014, Thomas Coffy\nAscograph is the open-source\n graphical score editor for Antescofo scores.\nSee http://repmus.ircam.fr/mutant/ascograph\nbuilt with Antescofo ${ANTESCOFO_VERSION}"
 )
 
 message("fmodex: ${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/osx/libfmodex.dylib")
