@@ -7,6 +7,9 @@
 #include "ofxCocoaWindow.h"
 #include "ofxTLBeatTicker.h"
 #include "ofxMidiparser.h"
+#include "Function.h"
+#include "Environment.h"
+#include "AntescofoCore.h"
 
 bool enable_simulate = true;
 bool disable_httpd = true;
@@ -1409,6 +1412,23 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 			[ editor loadFile:mScore_filename];
 		else if (access(mScore_filename.c_str(), R_OK) != -1)
 			[ editor loadFile:TEXT_CONSTANT_TEMP_FILENAME ];
+
+		// add Antescofo internal commands for autocompletion
+		if (ofxAntescofoNote->mAntescofo) {
+			for (map<string, internal_function>::iterator i = ofxAntescofoNote->mAntescofo->internal_func_map.begin();
+			     i != ofxAntescofoNote->mAntescofo->internal_func_map.end(); i++) {
+				string cmd = i->first;
+				cmd = "antescofo::" + cmd;
+				cout << "autocompletion: adding internal command: " << cmd << endl;
+				[editor pushback_keywords:cmd.c_str()];
+			}
+			for (Environment::dicof_t::iterator i = ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.begin();
+			     i !=  ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.end(); i++) {
+				string cmd = i->second->name();
+				cout << "autocompletion: adding internal function: " << cmd << endl;
+				[editor pushback_keywords:cmd.c_str()];
+			}
+		}
 	} else {
 		if (editor) {
 			[ editor die];
@@ -1959,7 +1979,8 @@ int ofxAntescofog::loadScore(string filename, bool reloadEditor, bool sendOsc) {
 	if (bEditorShow && reloadEditor) {
 		[ editor loadFile:mScore_filename ];
 		cout << "Editor scrolling to pos: " << lineEditor << " scroll:"<< lineEditorScroll << endl;
-		[ editor gotoPos:lineEditorPos];
+		if (lineEditorPos)
+			[ editor gotoPos:lineEditorPos];
 		int totLines = [ editor getMaxLines ];
 		if (lineEditor > totLines/2) {
 			[ editor setCurrentPos:lineEditorPos]; //[ editor scrollLine:lineEditor];

@@ -29,7 +29,6 @@
     vector<string> dic_keywords, curr_dic_keywords;
     char *dic_char_list;
     char *curr_dic_char_list;
-    //id <ScintillaViewMyDelegate> delegate;
     id<ScintillaViewMyDelegate> mDelegate;
 };
 
@@ -57,6 +56,7 @@
 - (void) braceMatch;
 - (void) autocomplete;
 //- (void) showAutocompletion;
+- (void) pushback_keywords: (const char*)keyw;
 - (void) loadFile: (string) filename;
 - (void) getEditorContent: (string&) content;
 - (void) searchText:(string) str;

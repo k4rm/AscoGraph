@@ -46,6 +46,8 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 - (void) set_action_keywords: (vector<string>&)system_keywords_ {
 	action_keywords = system_keywords_;
+
+	if (action_keywords.size()) dic_keywords.insert(dic_keywords.end(), action_keywords.begin(), action_keywords.end());
 }
 
 - (void) pushback_keywords: (const char*)keyw {
@@ -68,8 +70,11 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 - (void) setAutoCompleteOn
 {
-	dic_keywords.clear();
-
+	if (dic_keywords.size())
+		return;
+	vector<string>::iterator i = std::unique (dic_keywords.begin(), dic_keywords.end());
+	dic_keywords.resize(i - dic_keywords.begin());
+	
 	if (normal_keywords) [self pushback_keywords:normal_keywords];
 	if (major_keywords) [self pushback_keywords:major_keywords];
 	if (procedure_keywords) [self pushback_keywords:procedure_keywords];
@@ -94,7 +99,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		dic_char_list[j] = ' ';
 		j++;
 	}
-	[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 8 value:dic_char_list];
+	//[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 8 value:dic_char_list];
 	//[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)0 value:(sptr_t)dic_char_list];
 }
 
@@ -119,17 +124,24 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 	NSLog(@"autocomplete: prefix=\"%s\"  dic size:%ld", prefix.c_str(), dic_keywords.size());
 
+	curr_dic_keywords.clear();
 	// now we've got our prefix, for each prefix char, we filter the full list
 	for (int j = 0; j < dic_keywords.size(); j++) {
 		int sz = MIN(prefix.size(), dic_keywords[j].size());
 		int i = 0; 
 		for (;i < sz; i++) {
-			if (prefix[i] != dic_keywords[j][i])
+			if (tolower(prefix[i]) != tolower(dic_keywords[j][i]))
 				break;
 		}
 		if (i == sz) { // if for each letter of prefix, the dic words matches
-			NSLog(@"autocomplete: adding \"%s\"", dic_keywords[j].c_str());
-			curr_dic_keywords.push_back(dic_keywords[j]);
+			string s = dic_keywords[j].substr(sz, dic_keywords[j].size());
+			if (0) {
+				NSLog(@"autocomplete: adding \"%s\"", dic_keywords[j].c_str());
+				curr_dic_keywords.push_back(dic_keywords[j]);
+			} else {
+				NSLog(@"autocomplete: adding \"%s\"", s.c_str());
+				curr_dic_keywords.push_back(s);
+			}
 		}
 	}
 	int cnt = 0;
@@ -137,14 +149,18 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		cnt += curr_dic_keywords[i].size();
 	}
 	if (curr_dic_char_list) { delete[] curr_dic_char_list; curr_dic_char_list = 0; }
-	curr_dic_char_list = new char[cnt + curr_dic_keywords.size() + 2];
+	curr_dic_char_list = new char[cnt + curr_dic_keywords.size()];
 	int j = 0;
 	for (int i = 0; i < curr_dic_keywords.size(); i++) {
+		if (i >= 1) {
+			curr_dic_char_list[j] = ' ';
+			j++;
+		}
+		NSLog(@"autocomplete: j=%d adding to list \"%s\"", j, curr_dic_keywords[i].c_str());
 		for (int c = 0; c < curr_dic_keywords[i].size(); c++, j++)
 			curr_dic_char_list[j] = curr_dic_keywords[i][c];
-		j++;
-		curr_dic_char_list[j] = ' ';
-		j++;
+		
+		//NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
 	}
 	curr_dic_char_list[j] = 0;
 	NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
