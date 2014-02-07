@@ -124,7 +124,7 @@ class ActionGroup {
 		string get_period();
 		double get_delay(Action* tmpa);
 		virtual void draw(ofxTLAntescofoAction *tlAction);
-		virtual void draw_header(ofxTLAntescofoAction *tlAction);
+		virtual void draw_header(ofxTLAntescofoAction *tlAction, bool draw_rect = true);
 		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
 		virtual void print();
 		virtual string dump();

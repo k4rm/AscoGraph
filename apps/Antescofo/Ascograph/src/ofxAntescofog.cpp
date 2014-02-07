@@ -52,7 +52,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bSetupDone = false;
 	editor = 0;
 	bShouldRedraw = true;
-	bLineWrapMode = false;
+	bLineWrapMode = true;
 	bIsSimulating = false;
 	bScoreFromCommandLine = false;
 	ofxJumpTrack = 0;
@@ -1408,6 +1408,7 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 		ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
 		[ editor setup: nswin glview:nsview_ rect:r];
 
+		[ editor setWrapMode:bLineWrapMode ];
 		if (mScore_filename.size() && access(mScore_filename.c_str(), R_OK) != -1)
 			[ editor loadFile:mScore_filename];
 		else if (access(mScore_filename.c_str(), R_OK) != -1)

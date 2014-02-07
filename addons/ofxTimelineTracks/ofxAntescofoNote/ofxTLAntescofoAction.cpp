@@ -45,6 +45,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	movingAction = false;
 	movingActionRect = ofRectangle(0, 0, 40, 20);
 	shouldDrawModalContent = false;
+	
 }
 
 
@@ -59,7 +60,7 @@ void ofxTLAntescofoAction::setup()
 
 	load();
 
-	update();
+	//update();
 	disable();
 }
 
@@ -234,6 +235,25 @@ void ofxTLAntescofoAction::update()
 	mRectCross.y = bounds.y - 15;
 	mRectCross.width = 14;
 	mRectCross.height = 14;
+
+#if 0
+	ofxTLTrackHeader* th = timeline->getTrackHeader(this);
+	if (th) {
+		cout << "track bounds: x:" << bounds.x << " y:" << bounds.y << " w:" << bounds.width << " h:" << bounds.height << endl;
+		ofRectangle bh = th->getDrawRect();
+		cout << "headerbounds: x:" << bh.x << " y:" << bh.y << " w:" << bh.width << " h:" << bh.height << endl;
+	}
+#endif
+
+	int h = ofGetWindowHeight();
+	int y = bounds.y + bounds.height;
+	bounds.height = h - bounds.y;
+	ofxTLTrackHeader* th = timeline->getTrackHeader(this);
+	if (th && bounds != th->getDrawRect()) {
+		ofRectangle r(bounds.x, bounds.y - 18, bounds.width, 18);
+		th->setDrawRect(r);
+	}
+	//cout << "track bounds: x:" << bounds.x << " y:" << bounds.y << " w:" << bounds.width << " h:" << bounds.height << endl;
 }
 
 
@@ -647,8 +667,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 						// handle curve click
 						res = mousePressed_search_curve_rec(*j, args, millis);
 					}
-					if (res)
-						return res;
+					//if (res) return res;
 				}
 			}
 		}
@@ -1184,7 +1203,7 @@ bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction) {
 	return tlAction->getZoomBounds().intersects(r);
 }
 
-void ActionGroup::draw_header(ofxTLAntescofoAction* tlAction)
+void ActionGroup::draw_header(ofxTLAntescofoAction* tlAction, bool draw_rect)
 {
 	ofFill(); // rect color filled
 	ofSetColor(headerColor);
@@ -1199,7 +1218,8 @@ void ActionGroup::draw_header(ofxTLAntescofoAction* tlAction)
 	tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 5);
 	ofNoFill();
 	ofRect(tlAction->getBoundedRect(r)); // black border rect
-	ofRect(tlAction->getBoundedRect(rect)); // black border rect
+	if (draw_rect)
+		ofRect(tlAction->getBoundedRect(rect)); // black border rect
 }
 
 void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
@@ -1239,7 +1259,7 @@ ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Eve
 	: resize_factor(0.6)
 {
 	HEADER_HEIGHT = 16;
-	ARROW_LEN = 15;
+	ARROW_LEN = 12;
 	beatnum = beatnum_;
 	delay = delay_;
 	action = c;
@@ -1389,7 +1409,7 @@ void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
 			(*j)->draw(tlAction);
 		}
 	}
-	draw_header(tlAction);
+	draw_header(tlAction, false);
 }
 
 void ActionMultiCurves::drawModalContent(ofxTLAntescofoAction *tlAction) {

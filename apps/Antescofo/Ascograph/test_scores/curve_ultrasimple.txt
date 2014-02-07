@@ -7,6 +7,7 @@ NOTE C4 4.0
      
 NOTE C2 10
 NOTE C2 10
+/*
 Curve slider  @Grain := 0.05s, @Action :=
         {
             print $x $y 
@@ -21,34 +22,47 @@ Curve slider  @Grain := 0.05s, @Action :=
         0.198215 { 2.46621 } @type "sine"
         1.48662 { 2.0912 } @type "linear"
         0.346878 { 1.99181 } @type "circ"
-        4.65808 { 0.789452 } @type "linear"
-        6.44681 { 1.90209 }
+        7.00293 { 0.585138 } @type "circ_in_out"
+        4.10196 { 1.90209 }
     }
     $y
     {
           { 2.0 } @type "linear"
-        6.15956 { 0.743436 } @type "bounce"
-        0.491187 { 1.2502 } @type "bounce"
+        1.64651 { 0.366348 } @type "bounce"
+        5.00423 { 1.2502 } @type "bounce"
         4.76154 { 1.21932 } @type "linear"
         4.36075 { 1.66255 } @type "back"
         6.93806 { 0.742857 }
     }
 }
 
+*/
+
+
 
 NOTE A1 20
-
-CHORD (G2 E4) 10
-
-NOTE C2 10
-curve @action := plot $NOW $x $y $z {
-	$x
-	{		{ 2.0 }
-		1.0	{ 4.0 }
-		1.0	{ 1.4 }
-	}
-	$y, $z
-	{		{5.0, 4.0}
-		3.0	{0.3 ,7.0}
-	}
+Curve _anonymous100_curve  @Action :=
+        {
+            plot $NOW $x $y $z 
+        }
+{
+    $x
+    {
+          { 2.0 } @type "linear"
+        1.0 { 4.0 } @type "linear"
+        1.0 { 1.4 }
+    }
+    $y
+    {
+          { 5.0 } @type "linear"
+        3.0 { 0.3 }
+    }
+    $z
+    {
+          { 4.0 } @type "linear"
+        3.0 { 7.0 } @type "linear"
+        0.0623112 { 3.20833 }
+    }
 }
+
+
