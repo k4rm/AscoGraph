@@ -1393,8 +1393,8 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->lineNum_end = e->scloc->end.line;
 					newSwitch->colNum_end = e->scloc->end.column;
 					newSwitch->isLast = false;
+					newSwitch->label = e->cuename;
 					/*if (m == e->multi_source.begin()) { 
-						newSwitch->label = e->cuename;
 						if (bGot_Action)  {
 							newSwitch->action = actstr;
 							add_action(e->beatcum, actstr, e);

@@ -1030,6 +1030,35 @@ void ofxTLAntescofoAction::show_all_groups(bool bJustCurves)
 	}
 }
 
+void ofxTLAntescofoAction::hide_all_curves()
+{
+	hide_all_groups(true);
+}
+
+void ofxTLAntescofoAction::hide_all_groups_rec(bool bJustCurves, ActionGroup* gf)
+{
+	list<ActionGroup*>::const_iterator i;
+	for (i = gf->sons.begin(); i != gf->sons.end(); i++) {
+		ActionGroup* g = *i;
+		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g)) {
+			g->hidden = true;
+			continue;
+		}
+		hide_all_groups_rec(bJustCurves, g);
+	}
+
+}
+
+void ofxTLAntescofoAction::hide_all_groups(bool bJustCurves)
+{
+	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		ActionGroup* g = *i;
+		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g))
+			(*i)->hidden = true;
+		hide_all_groups_rec(bJustCurves, g);
+	}
+}
+
 ////////////////////////////////////////////////////
 void ActionGroup::createActionGroup_fill(Action* action)
 {

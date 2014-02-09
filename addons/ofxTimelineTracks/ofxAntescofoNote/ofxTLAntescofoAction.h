@@ -110,6 +110,9 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void show_all_curves();
 		void show_all_groups(bool bJustCurves=false);
 		void show_all_groups_rec(bool bJustCurves, ActionGroup* gf);
+		void hide_all_curves();
+		void hide_all_groups(bool bJustCurves=false);
+		void hide_all_groups_rec(bool bJustCurves, ActionGroup* gf);
 };
 
 class ActionGroup {

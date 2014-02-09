@@ -288,7 +288,6 @@ void ofxAntescofog::menu_item_hit(int n)
 			}
 		case INT_CONSTANT_BUTTON_OPEN_ALL_CURVES:
 			{
-
 				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
 				if (actiontrack) actiontrack->show_all_curves();
 				break;
@@ -297,6 +296,18 @@ void ofxAntescofog::menu_item_hit(int n)
 			{
 				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
 				if (actiontrack) actiontrack->show_all_groups();
+				break;
+			}
+		case INT_CONSTANT_BUTTON_CLOSE_ALL_CURVES:
+			{
+				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
+				if (actiontrack) actiontrack->hide_all_curves();
+				break;
+			}
+		case INT_CONSTANT_BUTTON_CLOSE_ALL_GROUPS:
+			{
+				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
+				if (actiontrack) actiontrack->hide_all_groups();
 				break;
 			}
 	}
@@ -578,6 +589,15 @@ void ofxAntescofog::setupUI() {
 	id openAllGroupsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Open all groups" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[openAllGroupsMenuItem setTag:INT_CONSTANT_BUTTON_OPEN_ALL_GROUPS];
 	[viewMenu addItem:openAllGroupsMenuItem];
+	// close all curves
+	id closeAllCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Close all curves" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[closeAllCurvesMenuItem setTag:INT_CONSTANT_BUTTON_CLOSE_ALL_CURVES];
+	[viewMenu addItem:closeAllCurvesMenuItem];
+	// close all groups
+	id closeAllGroupsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Close all groups" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[closeAllGroupsMenuItem setTag:INT_CONSTANT_BUTTON_CLOSE_ALL_GROUPS];
+	[viewMenu addItem:closeAllGroupsMenuItem];
+
 	// get patch receivers
 	id getRecvrsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Get patch receivers names" action:@selector(menu_item_hit:) keyEquivalent:@"R"] autorelease];
 	[getRecvrsMenuItem setTag:INT_CONSTANT_BUTTON_GET_PATCH_RECEIVERS];
