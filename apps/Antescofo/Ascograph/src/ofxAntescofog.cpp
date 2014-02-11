@@ -235,12 +235,36 @@ void ofxAntescofog::menu_item_hit(int n)
 				cout << "<<<<<<<<<<<<<<<<<<<< sending playstring >>>>>>>>>>>>>>>>>>>>>" << endl;
 				cout << msg << endl;
 				msg += "\n";
-				m.addStringArg("playstring");
-				m.addStringArg(msg);
-				try {
-					mOSCsender.sendMessage(m);
-				} catch(...)
-				{}
+				if (msg.size() < 4000) { // hard coded max lenght of msg in oscpack
+					m.addStringArg("playstring");
+					m.addStringArg(msg);
+					try {
+						mOSCsender.sendMessage(m);
+					} catch(exception& e) {
+						cerr << "OSC error: " << e.what() << endl;
+					}
+				} else {
+					ofxOscBundle bu;
+					int b = 0, sz = 4000;
+					bool done = false;
+					while (sz <= msg.size()) {
+						cout << "<<<<<<<<<<<<<<<<<<<< adding bundle: size=" << sz - b << endl;
+						string sub = msg.substr(b, sz);
+						ofxOscMessage m;
+						m.setAddress("/antescofo/cmd");
+						m.addStringArg("playstring");
+						m.addStringArg(sub);
+						cout << sub << endl;
+						bu.addMessage(m);
+						if (done) break;
+						b = sz;
+						if (sz + 4000 > msg.size()) {
+							sz = msg.size();
+							if (!done) done = true;
+						} else sz += 4000;
+					}
+					try { mOSCsender.sendBundle(bu); } catch(exception& e) { cerr << "OSC error: " << e.what() << endl; }
+				}
 				break;
 			}
 		case INT_CONSTANT_BUTTON_GET_PATCH_RECEIVERS:

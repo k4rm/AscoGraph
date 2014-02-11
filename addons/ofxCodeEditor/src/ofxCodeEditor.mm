@@ -135,7 +135,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		}
 		if (i == sz) { // if for each letter of prefix, the dic words matches
 			string s = dic_keywords[j].substr(sz, dic_keywords[j].size());
-			if (0) {
+			if (0) { // completion list contains only the possible rests of words..
 				NSLog(@"autocomplete: adding \"%s\"", dic_keywords[j].c_str());
 				curr_dic_keywords.push_back(dic_keywords[j]);
 			} else {
@@ -148,24 +148,26 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	for (int i = 0; i < curr_dic_keywords.size(); i++) {
 		cnt += curr_dic_keywords[i].size();
 	}
-	if (curr_dic_char_list) { delete[] curr_dic_char_list; curr_dic_char_list = 0; }
-	curr_dic_char_list = new char[cnt + curr_dic_keywords.size()];
-	int j = 0;
-	for (int i = 0; i < curr_dic_keywords.size(); i++) {
-		if (i >= 1) {
-			curr_dic_char_list[j] = ' ';
-			j++;
-		}
-		NSLog(@"autocomplete: j=%d adding to list \"%s\"", j, curr_dic_keywords[i].c_str());
-		for (int c = 0; c < curr_dic_keywords[i].size(); c++, j++)
-			curr_dic_char_list[j] = curr_dic_keywords[i][c];
-		
-		//NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
-	}
-	curr_dic_char_list[j] = 0;
-	NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
+	if (cnt) {
+		if (curr_dic_char_list) { delete[] curr_dic_char_list; curr_dic_char_list = 0; }
+		curr_dic_char_list = new char[cnt + curr_dic_keywords.size()];
+		int j = 0;
+		for (int i = 0; i < curr_dic_keywords.size(); i++) {
+			if (i >= 1) {
+				curr_dic_char_list[j] = ' ';
+				j++;
+			}
+			NSLog(@"autocomplete: j=%d adding to list \"%s\"", j, curr_dic_keywords[i].c_str());
+			for (int c = 0; c < curr_dic_keywords[i].size(); c++, j++)
+				curr_dic_char_list[j] = curr_dic_keywords[i][c];
 
-	[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)0 value:(sptr_t)curr_dic_char_list];
+			//NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
+		}
+		curr_dic_char_list[j] = 0;
+		NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
+		[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)0 value:(sptr_t)curr_dic_char_list];
+	} else
+		NSLog(@"autocomplete: nothing to complete.");
 }
 
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect {
