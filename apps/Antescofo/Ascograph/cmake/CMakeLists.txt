@@ -713,8 +713,8 @@ ADD_CUSTOM_COMMAND(
 		#COMMAND cp -f ${CMAKE_SOURCE_DIR}/${LIB_GUIDO_PATH}/GUIDOEngine.framework/Versions/C/GUIDOEngine ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/GUIDOEngine.dylib
 		#COMMAND install_name_tool -change ./GUIDOEngine.dylib @executable_path/../Frameworks/GUIDOEngine.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
 		COMMAND sed "s/ASCOGRAPHVERSION/${ASCOGRAPH_VERSION_NUMBER}/g" Info.plist_orig > Info.plist
-		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
-		COMMAND codesign -f -v --deep -s "Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
+		COMMAND codesign -f -v --deep -s "Mac Developer: Thomas Coffy" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
+		COMMAND codesign -f -v --deep -s "Mac Developer: Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
 )
 
 

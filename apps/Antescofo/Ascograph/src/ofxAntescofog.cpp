@@ -146,6 +146,10 @@ void ofxAntescofog::menu_item_hit(int n)
 		case INT_CONSTANT_BUTTON_TOGGLEEDIT:
 			setEditorMode(!bEditorShow, 0);
 			break;
+		case INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR:
+			bEditorShow = true;
+			setEditorMode(bEditorShow, 0, true);
+			break;
 		case INT_CONSTANT_BUTTON_SHOWHIDE_ACTION:
 			if (ofxAntescofoNote->getActionTrack()) {
 				ofxAntescofoNote->deleteActionTrack();
@@ -589,6 +593,10 @@ void ofxAntescofog::setupUI() {
 	id toggleEditorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Editor" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[toggleEditorMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEEDIT];
 	[viewMenu addItem:toggleEditorMenuItem];
+	// . toggle full editor
+	id toggleFullEditorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Full Text Editor" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[toggleFullEditorMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR];
+	[viewMenu addItem:toggleFullEditorMenuItem];
 	// . show/hide action track
 	id showhideActiontrackMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle actions track display" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[showhideActiontrackMenuItem setTag:INT_CONSTANT_BUTTON_SHOWHIDE_ACTION];
@@ -1429,12 +1437,13 @@ void ofxAntescofog::save()
     guiBottom->getWidget("CHORD")->setColorBack(ofxAntescofoNote->color_note_chord);
 }
 
-void ofxAntescofog::setEditorMode(bool state, float beatn) {
+void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) {
 	bEditorShow = state;
 
 	if (bEditorShow) {
 		float editor_x = ofGetWidth();
-		cocoaWindow->setWindowShape(ofGetWidth() + CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
+		if (!fullTextEditor)
+			cocoaWindow->setWindowShape(ofGetWidth() + CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
 #ifdef TARGET_OSX
 		NSSize siz;
 		editor = [ ofxCodeEditor alloc];
@@ -1447,10 +1456,17 @@ void ofxAntescofog::setEditorMode(bool state, float beatn) {
 		[ editor  set_major_keywords: major_keywords ];
 		[ editor  set_procedure_keywords: procedure_keywords ];
 		[ editor  set_system_keywords: system_keywords ];
-		NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
-		NSView *nsview_ = [cocoaWindow->delegate getNSView];
-		ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
-		[ editor setup: nswin glview:nsview_ rect:r];
+		if (!fullTextEditor) {
+			NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
+			NSView *nsview_ = [cocoaWindow->delegate getNSView];
+			ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
+			[ editor setup: nswin glview:nsview_ rect:r];
+		} else {
+			NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
+			NSView *nsview_ = [cocoaWindow->delegate getNSView];
+			ofRectangle r(0, 0, ofGetWidth(), ofGetHeight());
+			[ editor setup: nswin glview:nsview_ rect:r];
+		}
 
 		[ editor setWrapMode:bLineWrapMode ];
 		if (mScore_filename.size() && access(mScore_filename.c_str(), R_OK) != -1)

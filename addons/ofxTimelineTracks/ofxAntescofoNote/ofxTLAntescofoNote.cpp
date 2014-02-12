@@ -782,7 +782,7 @@ void ofxTLAntescofoNote::draw_showStaves() {
 					}
 
 					// glissando : draw line
-					if (switches[i]->type == ANTESCOFO_MULTI && i+1 < switches.size()
+					/*if (switches[i]->type == ANTESCOFO_MULTI && i+1 < switches.size()
 							&& (switches[i+1]->type == ANTESCOFO_MULTI || switches[i+1]->type == ANTESCOFO_MULTI_STOP)) {
 						//setNoteColor(i);
 						// next note:
@@ -793,7 +793,7 @@ void ofxTLAntescofoNote::draw_showStaves() {
 
 						ofLine(startX+notehead_w, noteBounds.y + noteBounds.height/2,
 								startX2, noteBounds2.y + noteBounds2.height/2);
-					}
+					}*/
 
 				} else { // rest
 					int y = note_pitch2y(71);

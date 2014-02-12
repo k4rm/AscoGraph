@@ -62,6 +62,7 @@
 #define INT_CONSTANT_BUTTON_REDO		39
 #define INT_CONSTANT_BUTTON_GET_PATCH_RECEIVERS 40
 #define INT_CONSTANT_BUTTON_AUTOCOMPLETE	41
+#define INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR	42
 #define INT_CONSTANT_BUTTON_CUES_INDEX  	300
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -207,7 +208,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void addTrackCurve(string trackname);
 
 		void parse_AntescofoScore(const string filename);
-		void setEditorMode(bool state, float beatn);
+		void setEditorMode(bool state, float beatn, bool fullTextEditor=false);
 		ofxCodeEditor* editor;
 		void editorShowLine(int linea, int lineb, int cola, int colb);
 		void editorDoubleclicked(int line);
