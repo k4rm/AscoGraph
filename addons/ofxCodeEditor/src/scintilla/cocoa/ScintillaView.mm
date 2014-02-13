@@ -41,8 +41,7 @@ NSString *SCIAutoCompleteNotification = @"SCIAutoCompleteNotification";
     mCurrentTrackingRect = 0;
     mMarkedTextRange = NSMakeRange(NSNotFound, 0);
     
-    [self registerForDraggedTypes: [NSArray arrayWithObjects:
-                                   NSStringPboardType, ScintillaRecPboardType, NSFilenamesPboardType, nil]];
+    //[self registerForDraggedTypes: [NSArray arrayWithObjects: NSStringPboardType, ScintillaRecPboardType, NSFilenamesPboardType, nil]];
   }
   
   return self;

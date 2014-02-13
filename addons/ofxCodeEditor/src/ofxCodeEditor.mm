@@ -385,13 +385,99 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 	intptr_t windowid;
 	//[mEditor registerNotifyCallback:windowid value:notify];
 
-	//delegate = self;
-	//[self.delegate myClassDelegateMethod:self];
+
+	/* TODO try to register for dragndrop
+	[[[splitView subviews] objectAtIndex:1] registerForDraggedTypes: [NSArray arrayWithObjects:
+                                   NSStringPboardType, ScintillaRecPboardType, NSFilenamesPboardType, nil]];
+	 */
 
 	//[mEditor setGeneralProperty: SCI_AUTOCCOMPLETE parameter:0 value:0];
 	[self setAutoCompleteOn];
 	[mEditor setStatusText: @"Operation complete"];
 }
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Called when an external drag operation enters the view. 
+ */
+- (NSDragOperation) draggingEntered: (id <NSDraggingInfo>) sender
+{
+	NSLog(@"CodeEditor: dragginEntered");
+ // return mOwner.backend->DraggingEntered(sender);
+}
+
+//--------------------------------------------------------------------------------------------------
+
+/**
+ * Called frequently during an external drag operation if we are the target.
+ */
+- (NSDragOperation) draggingUpdated: (id <NSDraggingInfo>) sender
+{
+	NSLog(@"CodeEditor: draggingU");
+  //return mOwner.backend->DraggingUpdated(sender);
+}
+
+//--------------------------------------------------------------------------------------------------
+
+/**
+ * Drag image left the view. Clean up if necessary.
+ */
+- (void) draggingExited: (id <NSDraggingInfo>) sender
+{
+	NSLog(@"CodeEditor: draggingE");
+  //mOwner.backend->DraggingExited(sender);
+}
+
+//--------------------------------------------------------------------------------------------------
+
+- (BOOL) prepareForDragOperation: (id <NSDraggingInfo>) sender
+{
+	NSLog(@"CodeEditor: drag prep");
+  //return YES;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+- (BOOL) performDragOperation: (id <NSDraggingInfo>) sender
+{
+	NSLog(@"CodeEditor: drag perf");
+  //return mOwner.backend->PerformDragOperation(sender);  
+}
+
+//--------------------------------------------------------------------------------------------------
+
+/**
+ * Returns operations we allow as drag source.
+ */
+- (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL) flag
+{
+	NSLog(@"CodeEditor: drag sour");
+ // return NSDragOperationCopy | NSDragOperationMove | NSDragOperationDelete;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+/**
+ * Finished a drag: may need to delete selection.
+ */
+
+- (void) draggedImage: (NSImage *) image endedAt: (NSPoint) screenPoint operation: (NSDragOperation) operation
+{
+	NSLog(@"CodeEditor: drag im");
+  //if (operation == NSDragOperationDelete) mOwner.backend->WndProc(SCI_CLEAR, 0, 0);
+}
+
+//--------------------------------------------------------------------------------------------------
+
+/**
+ * Drag operation is done. Notify editor.
+ */
+- (void) concludeDragOperation: (id <NSDraggingInfo>) sender
+{
+  // Clean up is the same as if we are no longer the drag target.
+  //mOwner.backend->DraggingExited(sender);
+}
+
 
 
 /*j
@@ -727,6 +813,12 @@ static const char * box_xpm[] = {
 	//[ self gotopos:posa ];
 	[ mEditor setGeneralProperty: SCI_INSERTTEXT parameter:posa value:(long)str ];
 	//[ self showLine:linea lineb:lineb ];
+}
+
+
+- (NSSplitView*) get_splitview
+{
+	return splitView;
 }
 @end
 

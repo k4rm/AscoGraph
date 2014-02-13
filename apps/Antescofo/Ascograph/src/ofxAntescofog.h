@@ -322,7 +322,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void stop_simulate_and_goedit();
 		void draw_simulate();
 
-		bool bEditorShow;
+		bool bEditorShow, bFullTextEditorShow;
 
 		struct timeval last_draw_time;
 

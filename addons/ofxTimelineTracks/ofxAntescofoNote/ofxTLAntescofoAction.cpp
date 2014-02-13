@@ -784,7 +784,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); !done && j != clickedCurves.end(); j++) {
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); !done && i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
-			cout << "mouseReleased: splitbtn: x:" << c->mSplitBtnRect.x << " y:"<< c->mSplitBtnRect.y << " " << c->mSplitBtnRect.width << "x" << c->mSplitBtnRect.height << endl;
+			//cout << "mouseReleased: splitbtn: x:" << c->mSplitBtnRect.x << " y:"<< c->mSplitBtnRect.y << " " << c->mSplitBtnRect.width << "x" << c->mSplitBtnRect.height << endl;
 			// split btn
 			if (c->mSplitBtnRect.inside(args.x, args.y)) {
 				cout << "mouseReleased: split" << endl;

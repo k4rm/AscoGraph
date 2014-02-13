@@ -330,6 +330,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 	if (ref->parentCurve->howmany != 1) return;
 
 	keysAreDraggable = false;
+	//cout << "BeatCurve::mouseReleased: x="<< args.x << " y=" << args.y << " mApplyRect: " << mApplyBtnRect.x << ", " << mApplyBtnRect.y << " - " << mApplyBtnRect.width << "-" << mApplyBtnRect.height << " isInside: " << mApplyBtnRect.inside(args.x, args.y) << endl;
 	if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y)) {
 		if (curve_debug_) cout << "BeatCurve::mouseReleased: should apply" << endl;
 		if (curve_debug_) cout << "-----> ligne " << ref->parentCurve->lineNum_begin << " - " << ref->parentCurve->lineNum_end << " <------" << endl;
@@ -436,12 +437,11 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 		lastKeyframeIndex = 1;
 		lastSampleBeat = 0;
 		for (int i = 0; i < selectedKeyframes.size(); i++) {
-			if (curve_debug_) cout << "BeatCurve::mouseReleased: selectedkeyframe: origbeat: " << selectedKeyframes[i]->orig_beat << " beat:" << selectedKeyframes[i]->beat << endl;
+			if (curve_debug_) cout << "BeatCurve::mouseReleased: selectedkeyframe: origbeat: " << selectedKeyframes[i]->orig_beat << " beat:" << selectedKeyframes[i]->beat << " tmpval:" << selectedKeyframes[i]->tmp_value << " origvalue:"<< selectedKeyframes[i]->orig_value << endl;
 
 			//ref->moveKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->orig_beat, selectedKeyframes[i]->tmp_value, selectedKeyframe->orig_value);
 			EasingFunction* func = ((TweenBeatKeyframe*)(selectedKeyframes[i]))->easeFunc;
 			EasingType* type = ((TweenBeatKeyframe*)(selectedKeyframes[i]))->easeType;
-
 
 			ref->deleteKeyframeAtBeat(selectedKeyframes[i]->orig_beat);
 			ref->addKeyframeAtBeat(selectedKeyframes[i]->beat, selectedKeyframes[i]->tmp_value);
@@ -465,9 +465,12 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 			bDrawApplyButton = true;
 
 			selectedKeyframes[i]->orig_value = selectedKeyframes[i]->tmp_value;
-			selectedKeyframes[i]->tmp_value = 0;
+			//selectedKeyframes[i]->tmp_value = 0;
+			if (curve_debug_) cout << "BeatCurve::mouseReleased: selectedkeyframe: valureRange.min=" << valueRange.min << " valueRange.max=" << valueRange.max << endl;
 			selectedKeyframes[i]->value = ofMap(selectedKeyframes[i]->orig_value, valueRange.min, valueRange.max, 0, 1.0, true);
+			if (curve_debug_) cout << "BeatCurve::mouseReleased: selectedkeyframe: orig_value=" << selectedKeyframes[i]->orig_value << " tmp_value=" << selectedKeyframes[i]->tmp_value<< endl;
 			setKeyframeBeat(selectedKeyframes[i], selectedKeyframes[i]->beat);
+			if (curve_debug_) cout << "BeatCurve::mouseReleased: selectedkeyframe: value=" << selectedKeyframes[i]->value << endl;
 			selectedKeyframes[i]->orig_beat = selectedKeyframes[i]->beat;
 		}
 	}

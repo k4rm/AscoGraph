@@ -56,6 +56,7 @@
 - (void) braceMatch;
 - (void) autocomplete;
 //- (void) showAutocompletion;
+- (NSSplitView*) get_splitview;
 - (void) pushback_keywords: (const char*)keyw;
 - (void) loadFile: (string) filename;
 - (void) getEditorContent: (string&) content;

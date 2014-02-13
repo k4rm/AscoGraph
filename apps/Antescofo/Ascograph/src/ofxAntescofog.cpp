@@ -49,6 +49,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bShowFind = false;
 	bErrorInitDone = false;
 	bEditorShow = true;
+	bFullTextEditorShow = false;
 	bSetupDone = false;
 	editor = 0;
 	bShouldRedraw = true;
@@ -148,7 +149,17 @@ void ofxAntescofog::menu_item_hit(int n)
 			break;
 		case INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR:
 			bEditorShow = true;
-			setEditorMode(bEditorShow, 0, true);
+			bFullTextEditorShow = !bFullTextEditorShow;
+			if (bFullTextEditorShow)
+				setEditorMode(bEditorShow, 0, bFullTextEditorShow);
+			else {
+				NSView *right = [[ [ editor get_splitview ]subviews] objectAtIndex:1];
+				NSRect rightFrame = [right frame];
+				rightFrame.size.width = CONSTANT_EDITOR_VIEW_WIDTH;
+				float editor_x = ofGetWidth() - CONSTANT_EDITOR_VIEW_WIDTH;
+				rightFrame.origin.x = editor_x;
+				[right setFrame:rightFrame];
+			}
 			break;
 		case INT_CONSTANT_BUTTON_SHOWHIDE_ACTION:
 			if (ofxAntescofoNote->getActionTrack()) {
