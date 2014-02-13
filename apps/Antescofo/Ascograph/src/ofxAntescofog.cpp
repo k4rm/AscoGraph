@@ -1076,7 +1076,7 @@ void ofxAntescofog::update() {
 				mHasReadMessages = true;
 				cues_clear_menu();
 				reloadFile = (scorefile != mScore_filename);
-				loadScore(scorefile, reloadFile);
+				loadScore(scorefile, reloadFile, false);
 				bShouldRedraw = true;
 			} else if(m.getAddress() == "/antescofo/patch_receivers") {
 				patch_receivers.clear();
