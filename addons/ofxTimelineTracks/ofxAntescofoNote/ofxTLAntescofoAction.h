@@ -178,6 +178,7 @@ class ActionMessage : public ActionGroup {
 		virtual void print();
 		string action;
 		bool is_kill;
+		bool is_proc;
 };
 
 class ActionMultiCurves : public ActionGroup {

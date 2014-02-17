@@ -187,6 +187,7 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 		Curve* c = dynamic_cast<Curve*>(e->gfwd);
 		Lfwd* l = dynamic_cast<Lfwd*>(e->gfwd);
 		KillAction* k = dynamic_cast<KillAction*>(e->gfwd);
+		ProcCall* p = dynamic_cast<ProcCall*>(e->gfwd);
 
 		if (g) {
 			ag = new ActionGroup(beatnum, d, g, e);
@@ -196,6 +197,8 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 			ag = new ActionMessage(beatnum, d, k, e);
 		} else if (c) { // can be a curve
 			ag = new ActionMultiCurves(beatnum, d, c, e);
+		} else if (p) { // can be a proc call
+			ag = new ActionMessage(beatnum, d, p, e);
 		} else if (l && l->_group) { // can be a loop
 			ag = new ActionGroup(beatnum, d, l->_group, e);
 			if (l->_period && l->_period->value() && l->_period->value()->is_value())
@@ -1102,6 +1105,7 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 	Curve* c = dynamic_cast<Curve*>(tmpa);
 	Lfwd* l = dynamic_cast<Lfwd*>(tmpa);
 	KillAction* k = dynamic_cast<KillAction*>(tmpa);
+	ProcCall* p = dynamic_cast<ProcCall*>(tmpa);
 
 	if (g) {
 		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [group] ("<<action->label()<<")" << endl;
@@ -1112,6 +1116,9 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 	} else if (k) { // can be a kill/abort
 		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [kill] ("<<action->label()<<")" << endl;
 		ag = new ActionMessage(beatnum, d, k, e);
+	} else if (p) { // can be a proc call
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [proc call] ("<<action->label()<<")" << endl;
+		ag = new ActionMessage(beatnum, d, p, e);
 	} else if (c) { // can be a curve
 		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [curve] ("<<action->label()<<")" << endl;
 		ag = new ActionMultiCurves(beatnum, d, c, e);
@@ -2039,7 +2046,7 @@ void ActionCurve::drawModalContent(ofxTLAntescofoAction* tlAction) {
 	Message
  */
 ActionMessage::ActionMessage(float beatnum_, float delay_, Action* a, Event *e) 
-	: is_kill(false)
+	: is_kill(false), is_proc(false)
 {
 	period = 0, duration = 0., hidden = true,
 	HEADER_HEIGHT = 16, ARROW_LEN = 15, LINE_SPACE = 12;
@@ -2059,10 +2066,8 @@ ActionMessage::ActionMessage(float beatnum_, float delay_, Action* a, Event *e)
 	if (dynamic_cast<KillAction*>(a))
 		is_kill = true;
 
-	//header->hidden = false;
-	//ofRectangle tmprect = rect; tmprect.y += HEADER_HEIGHT;
-	//ActionRect *newact = new ActionRect(act, header->beatnum + get_delay(m), NULL, event);
-	//ActionRects.push_back(newact);
+	if (dynamic_cast<ProcCall*>(a))
+		is_proc = true;
 
 	delay = delay_;
 	if (debug_actiongroup) 	cout << "Action: adding message with delay: " << delay << " : " << action << endl;
@@ -2087,6 +2092,8 @@ void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	int strw = rect.width + rect.x - MAX(rect.x, 0);
 	if (is_kill )
 		ofSetColor(255, 0, 0, 255);
+	else if (is_proc)
+		ofSetColor(0, 168, 0, 255);
 	else
 		ofSetColor(0, 0, 0, 255);
 
