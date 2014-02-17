@@ -793,7 +793,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 				done = true;
 			}
 
-			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
+			for (int iac = 0; iac < c->beatcurves.size() && !done; iac++) {
 				if (c->beatcurves.size()) { 
 					//if (c->beatcurves.size() == 1) {
 						if (shouldDrawModalContent && c->beatcurves[iac]->drawingEasingWindow == false)
@@ -1398,32 +1398,12 @@ void ActionCurve::split()
 		parentCurve->antescofo_curve->seq_vect = listseq;
 		parentCurve->antescofo_curve->show(cout);
 
-
-		// remove track
-		/*
-		list<ActionGroup*>::iterator j;
-		for (j = sons.begin(); j != sons.end(); ) {
-			list<ActionGroup*>::iterator currentg;
-			ActionGroup *g = *j;
-			j++;
-			sons.erase(currentg);
-			//delete g;
-		}*/
-		//_timeline->removeTrack(trackName);
-		/*
-		parentCurve->howmany = 1;
-		// add tracks
-		vector<SeqContFunction*>::iterator i;
-		for (i = listseq.begin(); i != listseq.end(); i++) {
-			createTracks_from_parser_objects(*(*i)->var_list, *i, &(*i)->dur_vect, 0, event, header, parentCurve);
-		}
-		*/
-
 		actionTrack->replaceEditorScore(this);
 		string newscore;
 		[actionTrack->mAntescofog->editor getEditorContent:newscore];
-		((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore);
-		actionTrack->show(label);
+		ofxAntescofog* fog = actionTrack->mAntescofog;
+		if (((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore))
+			actionTrack->show(label);
 	}
 }
 

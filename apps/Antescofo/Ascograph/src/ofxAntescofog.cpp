@@ -1846,6 +1846,7 @@ void ofxAntescofog::dragEvent(ofDragInfo dragInfo){
 					ofxAntescofoNote->clear_error();
 					bShowError = false;
 					timeline.addTrack(dragInfo.files[i], audioTrack);
+					audioTrack->enable();
 					//timeline.setDurationInSeconds(audioTrack->getDuration());
 					// the 2 following 2 lines should not be done if editing markers 
 					//timeline.setTimecontrolTrack(audioTrack);

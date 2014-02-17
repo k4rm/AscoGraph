@@ -1740,10 +1740,6 @@ bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 // -> parse tmp file, if parse error : restore backup score
 bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 {
-	ostringstream str;
-	str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: " << newscore << endl;
-	ofxAntescofoAction->clear_actions();
-
 	// save a copy of current score
 	vector<ofxTLAntescofoNoteOn*> bkpswitches = switches;
 
@@ -1757,13 +1753,13 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
 	reset_global_error_counter();
 	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
 		::error("%s\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+		mAntescofog->display_error();
 		return 0;
+	} 
+	
+	ofxAntescofoAction->clear_actions();
 
-		str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: display dialog box saying [Error action syntax error]" << endl;
-		str << "ofxTLAntescofoNote::loadscoreAntescofo_fromString: display dialog box asking [keep current action ? or cancel change]";
-		console->addln(str.str()); str.str("");
-		switches = bkpswitches;
-	} else return loadscoreAntescofo(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+	return loadscoreAntescofo(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
 }
 
 

@@ -215,6 +215,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void replaceEditorScore(int linebegin, int lineend, int cola, int colb, string actstr);
 		void createCodeTemplate(int which);
 		void showJumpTrack();
+		void display_error();
 		
 		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker, *ofxAntescofoBeatTickerSim;
@@ -299,7 +300,6 @@ class ofxAntescofog : public ofxNSWindowApp
 		ofxUITextInput* mTextOscPort, *mTextOscHost, *mTextOscPortRemote;
 
 		// error handling
-		void display_error();
 		void draw_error();
 		bool bShowError, bErrorInitDone;
 

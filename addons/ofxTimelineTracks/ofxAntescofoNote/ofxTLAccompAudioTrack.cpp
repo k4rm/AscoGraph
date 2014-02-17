@@ -204,7 +204,7 @@ void ofxTLAccompAudioTrack::update(ofEventArgs& args){
 }
  
 void ofxTLAccompAudioTrack::draw(){
-	//cout << "ofxTLAccompAudioTrack::draw: zoomBounds:[ "<< zoomBounds.min << " - " << zoomBounds.max << " ] playheadBounds:[ "<< playheadBounds.min << " - " << playheadBounds.max << " ]" << endl << endl;
+	//cout << "ofxTLAccompAudioTrack::draw: zoomBounds:[ "<< zoomBounds.min << " - " << zoomBounds.max << " ] playheadBounds:[ "<< playheadBounds.min << " - " << playheadBounds.max << " ]" << " bounds:" << bounds.x << "-" << bounds.y << endl << endl;
 	if (trackHeader->isBeingDragged()) return;
 
 	if(!soundLoaded || player.getBuffer().size() == 0){
@@ -326,7 +326,7 @@ void ofxTLAccompAudioTrack::draw(){
 				ofSetColor(0, 0, 0, 255);
 			ofLine(x, bounds.y, x, bounds.y+bounds.height);
 			m->rect = ofRectangle(x - 5, bounds.y + bounds.height - 12, 10, 10);
-			ofSetColor(10, 0, 200, 100);
+			ofSetColor(10, 0, 200, 255);
 			ofFill();
 			ofRect(m->rect);
 
@@ -511,6 +511,15 @@ void ofxTLAccompAudioTrack::mouseMoved(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLAccompAudioTrack::mouseDragged(ofMouseEventArgs& args, long millis){
+		if (!bounds.inside(args.x, args.y)) return;
+
+	for (vector<AlignMarker>::iterator m = markers.begin(); m != markers.end(); m++) {
+		if (m->selected) {
+			cout << "ms selected changin from " << m->ms << endl;
+			m->ms = screenXToMillis(normalizedXtoScreenX(screenXtoNormalizedX(args.x, zoomBounds)));
+			cout << " to: " << m->ms << endl;
+		}
+	}
 }
 
 void ofxTLAccompAudioTrack::mouseReleased(ofMouseEventArgs& args, long millis){
