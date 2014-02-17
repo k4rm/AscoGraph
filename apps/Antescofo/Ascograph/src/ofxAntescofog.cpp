@@ -247,8 +247,8 @@ void ofxAntescofog::menu_item_hit(int n)
 				ofxOscMessage m;
 				m.setAddress("/antescofo/cmd");
 				string msg = [editor getSelection];
-				cout << "<<<<<<<<<<<<<<<<<<<< sending playstring >>>>>>>>>>>>>>>>>>>>>" << endl;
-				cout << msg << endl;
+				//cout << "<<<<<<<<<<<<<<<<<<<< sending playstring >>>>>>>>>>>>>>>>>>>>>" << endl;
+				//cout << msg << endl;
 				msg += "\n";
 				if (msg.size() < 4000) { // hard coded max lenght of msg in oscpack
 					m.addStringArg("playstring");
@@ -263,14 +263,18 @@ void ofxAntescofog::menu_item_hit(int n)
 					int b = 0, sz = 4000;
 					bool done = false;
 					while (sz <= msg.size()) {
-						cout << "<<<<<<<<<<<<<<<<<<<< adding bundle: size=" << sz - b << endl;
 						string sub = msg.substr(b, sz);
 						ofxOscMessage m;
 						m.setAddress("/antescofo/cmd");
-						m.addStringArg("playstring");
+						string cmd;
+						if (msg.size() - 4000 <= b)
+							cmd = "playstring";
+						else cmd = "playstring_append";
+						cout << "<<<<<<<<<<<<<<<<<<<< adding " << cmd << " : size=" << sz - b << " sz="<< sz << " b=" << b << endl;
+						m.addStringArg(cmd);
 						m.addStringArg(sub);
 						cout << sub << endl;
-						bu.addMessage(m);
+						try { mOSCsender.sendMessage(m); } catch(exception& e) { cerr << "OSC error: " << e.what() << endl; }
 						if (done) break;
 						b = sz;
 						if (sz + 4000 > msg.size()) {
@@ -278,7 +282,7 @@ void ofxAntescofog::menu_item_hit(int n)
 							if (!done) done = true;
 						} else sz += 4000;
 					}
-					try { mOSCsender.sendBundle(bu); } catch(exception& e) { cerr << "OSC error: " << e.what() << endl; }
+					//try { mOSCsender.sendBundle(bu); } catch(exception& e) { cerr << "OSC error: " << e.what() << endl; }
 				}
 				break;
 			}
