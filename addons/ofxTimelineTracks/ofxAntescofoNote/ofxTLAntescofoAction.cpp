@@ -279,7 +279,8 @@ int ofxTLAntescofoAction::update_sub_height_curve(ActionMultiCurves* c, int& cur
 	c->rect.y = cury;
 	// update curves rectangle bounds
 	int boxy = c->rect.y + c->HEADER_HEIGHT;
-	int boxh = (bounds.height - c->HEADER_HEIGHT - curh - 5) / c->curves.size();
+	//int boxh = (bounds.height - c->HEADER_HEIGHT - curh - 5) / c->curves.size();
+	int boxh = 120 / c->curves.size();
 	boxh *= c->resize_factor;
 	int boxw = c->getWidth();
 	int boxx = c->rect.x;
@@ -473,8 +474,8 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 		list<ActionGroup*>::const_iterator j = i;
 
 		if (++j != mActionGroups.end() && (*i)->is_in_bounds(this) ) {
-			if ( ((*i)->rect.x + (*i)->rect.width) + 1 >= (*j)->rect.x) {
-				update_avoid_overlap_rec((*i), (*j)->rect.x /*- (*i)->rect.x*/ - 2);
+			if ( ((*i)->rect.x + (*i)->rect.width) > (*j)->rect.x) {
+				update_avoid_overlap_rec((*i), (*j)->rect.x /*- (*i)->rect.x*/ - 1);
 			}
 		}
 		//cout << "Action hearder height:"  << (*i)->rect.height <<" x:" << bounds.x << endl;
