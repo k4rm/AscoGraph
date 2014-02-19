@@ -165,6 +165,8 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		}
 		curr_dic_char_list[j] = 0;
 		NSLog(@"autocomplete: So eventually: list is \"%s\"", curr_dic_char_list);
+
+		[mEditor setScreen:[mWindow screen]];
 		[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter:(uptr_t)0 value:(sptr_t)curr_dic_char_list];
 	} else
 		NSLog(@"autocomplete: nothing to complete.");
@@ -181,6 +183,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	mGLview = glview;
 	mWindow = window;
 	mEditor = [[[ScintillaView alloc] initWithFrame:r] autorelease];
+	[mEditor setScreen:[window screen]];
 
 	[mEditor setOwner:mWindow];
 	NSLog(@"ofxEditor: scintillaview allocated");

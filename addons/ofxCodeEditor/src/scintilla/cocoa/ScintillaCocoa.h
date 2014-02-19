@@ -134,6 +134,7 @@ protected:
   virtual void CancelModes();
 public:
   NSView* ContentView();
+  void setScreen(NSScreen* scr);
 
   ScintillaCocoa(NSView* view);
   virtual ~ScintillaCocoa();

@@ -158,5 +158,5 @@ extern NSString *SCIAutoCompleteNotification;
                  matchCase: (BOOL) matchCase
                  wholeWord: (BOOL) wholeWord
                      doAll: (BOOL) doAll;
-
+- (void)setScreen: (NSScreen*) screen;
 @end

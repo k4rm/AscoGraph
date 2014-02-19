@@ -2123,4 +2123,9 @@ void ScintillaCocoa::HideFindIndicator()
 #endif
 }
 
+void ScintillaCocoa::setScreen(NSScreen* scr)
+{
+	wMain.screen = scr;
+
+}
 

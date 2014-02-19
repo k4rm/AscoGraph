@@ -380,6 +380,7 @@ public:
 #if PLAT_MACOSX
 	void SetWindow(void *ref) { windowRef = ref; }
 	void SetControl(void *_control) { control = _control; }
+	void* screen;
 #endif
 private:
 	Cursor cursorLast;

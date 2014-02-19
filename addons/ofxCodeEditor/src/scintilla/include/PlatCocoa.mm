@@ -1549,7 +1549,7 @@ public:
   void DoubleClick();
 };
 
-void ListBoxImpl::Create(Window& /*parent*/, int /*ctrlID*/, Scintilla::Point pt,
+void ListBoxImpl::Create(Window& parent, int /*ctrlID*/, Scintilla::Point pt,
     int lineHeight_, bool unicodeMode_, int)
 {
   lineHeight = lineHeight_;
@@ -1560,7 +1560,8 @@ void ListBoxImpl::Create(Window& /*parent*/, int /*ctrlID*/, Scintilla::Point pt
   NSWindow* winLB = [[NSWindow alloc] initWithContentRect: lbRect
     styleMask: NSBorderlessWindowMask
     backing: NSBackingStoreBuffered
-    defer: NO];
+    defer: NO
+    screen:(NSScreen*)parent.screen];
   [winLB setLevel:NSFloatingWindowLevel];
   [winLB setHasShadow:YES];
   scroller = [NSScrollView alloc];

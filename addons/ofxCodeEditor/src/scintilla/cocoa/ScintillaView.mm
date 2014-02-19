@@ -1804,6 +1804,11 @@ static void notification(intptr_t windowid, unsigned int iMessage, uintptr_t wPa
 }
 
 //--------------------------------------------------------------------------------------------------
+- (void)setScreen: (NSScreen*) screen 
+{
+	if (mBackend)
+		mBackend->setScreen(screen);
+}
 
 @end
 
