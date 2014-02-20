@@ -120,7 +120,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	guido->GuidoInit("GUI/NewMedia Fett.ttf", "GUI/guido2.ttf");
 	GuidoLayoutSettings layoutSettings;
 	layoutSettings.systemsDistance = 75;
-	layoutSettings.spring = 1.1;
+	layoutSettings.spring = 110; //1.1;
 	layoutSettings.force = 750;
 	layoutSettings.systemsDistribLimit = 0.25;
 	layoutSettings.systemsDistribution = kAutoDistrib;
@@ -424,19 +424,13 @@ void ofxTLAntescofoNote::draw_guido() {
 		GuidoPageFormat format;
     		format.width = bounds.width;// * xfactor;
 		format.height = bounds.height;
-#if 0
-    		format.marginleft = bounds.x;
-    		format.margintop = bounds.y + 200;
-    		format.marginright = bounds.x + bounds.width;
-		format.marginbottom = bounds.y + bounds.height - 200;
-#else
-    		format.marginleft = 0;
-    		format.margintop = 0;
-    		format.marginright = bounds.width;
-		format.marginbottom = bounds.height;
-#endif
-		//TODO regarder code de GuidoGetDrawBoundingBoxes
+
+    		format.marginleft = 10;
+    		format.margintop = 50;
+    		format.marginright = 10;
+		format.marginbottom = 50;
 		GuidoSetDefaultPageFormat(&format);
+#if 0
 		GuidoLayoutSettings layoutSettings;
 		layoutSettings.systemsDistance = 75;
 		layoutSettings.spring = 1.1; //5;
@@ -446,6 +440,7 @@ void ofxTLAntescofoNote::draw_guido() {
 		layoutSettings.neighborhoodSpacing = 0;
 		layoutSettings.optimalPageFill = 0;
 		guido->setGuidoLayoutSettings(layoutSettings);
+#endif
 
 		//int err = guido->setGMNCode("[ \\clef<\"treble\"> \\key<\"D\"> \\meter<\"4/4\"> d \\space<10> e \\space<10> g \\space<10> e\\space<1> d  \\space<1> c \\space<1> d \\space<1> e  \\space<1>]");
 		// 1/ get first and last beat displayed
@@ -462,27 +457,51 @@ void ofxTLAntescofoNote::draw_guido() {
 				endi = i;
 			}
 		}
-		endi--;
+		//endi--;
 		string gstr = getGuidoString(startX, starti, endX, endi);
-		cout << "Displaying Guido code: " << gstr << endl;
+		cout << "Displaying Guido code: \"" << gstr<< "\"" << endl;
 		//guido->getDevice()->SetScale(1/4, 1/4);
 		int err = guido->setGMNCode(gstr.c_str());
 		cout << "Guido returned err:" << err << endl;
+		if (err == -1)
+			return;
 
+		guido->setWidth(bounds.width);
+		guido->setHeight(bounds.height);
 		guido->draw(0, 0);
+		guido->getDevice()->drawCache.draw(bounds.x, bounds.y + bounds.height/3);
+#if 1
 		// retrieve graphic2time mapping
 		guido::GuidoMapCollector mapcol(guido->getGRHandler(), kGuidoEvent);
 		Time2GraphicMap outmap;
-		mapcol.process(1, bounds.width, bounds.height, &outmap);
-		for (int i = 0; i < outmap.size(); i++) {
-			cout << "Mapcol: " << i << " -> ";
-			outmap[i].first.print(cout);
-			cout << " <-> ";
-			outmap[i].second.print(cout);
-			cout << endl;
+		err = GuidoGetSystemMap(guido->getGRHandler(), 1, guido->getWidth(), guido->getHeight(), outmap);
+
+		cout << "GuidoGetSystemMap: size=" << outmap.size() << endl;
+		int j = 50;
+		int maxh = 0;
+		for (int v = 0; v < outmap.size(); v++) {
+			float x = outmap[v].second.left;
+			float y = outmap[v].second.top;
+			float w = outmap[v].second.right - x;
+			float h = outmap[v].second.bottom - y;
+			if (h > maxh) maxh = h;
+			//cout << "GuidoGetSystemMap: v=" << v << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+			ofFill();
+			if (v % 2)
+				ofSetColor(100+j, 0, 0, 55);
+			else if (v % 3)
+				ofSetColor(100+j, 100+j, 0, 55);
+			else 
+				ofSetColor(0, 100+j, 0, 55);
+			ofRect(x + bounds.x, y + bounds.y + bounds.height/3, w, h);
+			j += 60;
+			if (j > 255) j=10;
 		}
+
+
+#endif
 		// 2/ find their corresponding position in fbo
-#if 1
+#if 0
 		/*for (int i = 0; i < outmap.size(); i++) {
 			if (outmap[i].first.include(switches
 		}*/
@@ -494,12 +513,13 @@ void ofxTLAntescofoNote::draw_guido() {
 #endif
 		// 3/ draw
 		//int pxmin = 0;
-#if 1
+#if 0
+
 		float fact = (pxmax - pxmin) /  bounds.width;
 		cout << "fact=" << fact << endl;
 		//ofScale(fact, fact);
 #endif
-		guido->getDevice()->drawCache.draw(bounds.x + pxmin, bounds.y);
+		//guido->getDevice()->drawCache.draw(bounds.x + pxmin, bounds.y);
 
 		ofPopStyle();
 	}
@@ -521,16 +541,16 @@ string ofxTLAntescofoNote::getGuidoStringNoteName(int pitch) {
 	if (pitch >= 108 && pitch <= 120) o = 8;
 	string c = "";
 	if (p == 0) c = "c";
-	if (p == 1) c = "c" + ofToString(o) + "#";
+	if (p == 1) c = "c#" + ofToString(o);
 	if (p == 2) c = "d";
-	if (p == 3) c = "d" + ofToString(o) + "#";
+	if (p == 3) c = "d#" + ofToString(o);
 	if (p == 4) c = "e";
 	if (p == 5) c = "f";
-	if (p == 6) c = "f" + ofToString(o) + "#";
+	if (p == 6) c = "f#" + ofToString(o);
 	if (p == 7) c = "g";
-	if (p == 8) c = "g" + ofToString(o) + "#";
+	if (p == 8) c = "g#" + ofToString(o);
 	if (p == 9) c = "a";
-	if (p == 10) c = "a" + ofToString(o) + "#";
+	if (p == 10) c = "a#" + ofToString(o);
 	if (p == 11) c = "b";
 	return c ;
 }
@@ -562,24 +582,26 @@ string ofxTLAntescofoNote::getGuidoStringNote(int switchnb) {
 	return ret;
 }
 string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi) {
-	string ret = "[";
+	cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
+	string ret = "[ ";
 	if (fromi == 0) {
 		ret += "\\clef<\"treble\">";
 	}
 	int curx = fromx;
-	for (int i = fromi; i < toi; i++) {
+	for (int i = fromi; i <= toi; i++) {
 		int x = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
-		if (x != curx) {
+		/*if (x != curx) {
 			int space = (x - curx)/4;
 			ret += "\\space<";
 			ret += ofToString(space) + "> ";
-		}
+		}*/
 		ret += getGuidoStringNote(i);
-		if (x == curx && switches[i]->isLast) ret += "}\n" ;
+		if (i != toi) ret += " ";
+		//if (x == curx && switches[i]->isLast) ret += "}\n" ;
 		//"e \\space<10> g \\space<10> e\\space<1> d  \\space<1> c \\space<1> d \\space<1> e  \\space<1>]");
-		curx = x;
+		//curx = x;
 	}
-	ret += "]";
+	ret += " ]";
 	return ret;
 }
 #endif

@@ -133,6 +133,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		kCGLPFADoubleBuffer,
 		kCGLPFAColorSize, 24,
 		kCGLPFADepthSize, 0,
+		
+		//NSOpenGLPFASampleBuffers, NSOpenGLPFASamples,
+		kCGLPFASampleBuffers, 1,
+		kCGLPFASamples, 4,
 		0
     };
     
@@ -163,7 +167,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 												 selector:@selector(reshape) 
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
-		 //glEnable(GL_MULTISAMPLE_ARB);
+		glEnable(GL_MULTISAMPLE_ARB);
 	} else {
             cerr << "!!!!!!!!!!!!!!!!!!!!! CocoaWindow: GLView: no frameRect" << endl;
         }

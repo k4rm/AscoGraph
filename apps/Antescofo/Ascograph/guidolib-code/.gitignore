@@ -1,0 +1,13 @@
+CMakeFiles
+CMakeScripts
+CMakeCache.txt
+cmake_*
+*.xcodeproj
+build
+Debug
+Release
+tmpSrc
+.DS_Store
+*.o
+*~
+DerivedData

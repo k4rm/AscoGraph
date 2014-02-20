@@ -2,10 +2,10 @@
 
 set(ASCOGRAPH_VERSION_NUMBER "0.100")
 
-set(ANTESCOFO_FAUST 0)
-set(ANTESCOFO_FLUIDSYNTH 0)
+set(ANTESCOFO_FAUST 1)
+set(ANTESCOFO_FLUIDSYNTH 1)
 
-set(GUIDO 0)
+set(GUIDO 1)
 set(USE_HTTPD 0)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
@@ -58,7 +58,8 @@ set (OFX_MUSICXML_INCL_PATH
 		${LIB_MUSICXML_PATH}/antescofo/
 )
 if (GUIDO)
-	set (LIB_GUIDO_PATH ../guidolib-1.51-src/)
+	#set (LIB_GUIDO_PATH ../guidolib-1.51-src/)
+	set (LIB_GUIDO_PATH ../guidolib-code/)
 	set (OFX_GUIDO_INCL_PATH 
 			${LIB_GUIDO_PATH}/openFrameworks/Device
 			${LIB_GUIDO_PATH}/src/include/
