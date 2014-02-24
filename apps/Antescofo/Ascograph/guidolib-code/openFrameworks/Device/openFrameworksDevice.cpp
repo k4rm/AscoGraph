@@ -79,15 +79,15 @@ bool openFrameworksDevice::BeginDraw()	{
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE);
 	//glBlendFunc (GL_SRC_ALPHA, GL_SRC_ALPHA);
-	glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+	/*glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
 	glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
 	glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 	//glHint (GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
 	glEnable (GL_POLYGON_SMOOTH);
 	glEnable (GL_LINE_SMOOTH);
 	glEnable (GL_POINT_SMOOTH);
-
-	glEnable(GL_MULTISAMPLE_ARB);
+*/
+	//glEnable(GL_MULTISAMPLE_ARB);
 	//initialize ();
 	ofPushStyle();
 	drawCache.begin();
@@ -194,13 +194,13 @@ void openFrameworksDevice::SelectPen( const VGColor & color, float witdh )
 }
 void openFrameworksDevice::PushPen( const VGColor & color, float width )
 {
-	ofPushStyle();
+	//ofPushStyle();
 	ofSetColor (Color2ofColor(color));
 	ofSetLineWidth (width);
 }
 void openFrameworksDevice::PopPen()
 {
-	ofPopStyle();
+	//ofPopStyle();
 }
 
 void openFrameworksDevice::SelectFillColor( const VGColor & color )

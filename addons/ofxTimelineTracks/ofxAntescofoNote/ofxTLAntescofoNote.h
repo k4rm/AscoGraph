@@ -280,6 +280,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void draw_showStaves();
 #ifdef USE_GUIDO
 	void draw_guido();
+	bool render_guido();
 	string getGuidoString(int fromx, int fromi, int tox, int toi, bool& twostaves);
 	string getGuidoStringNote(int switchnb);
 	string getGuidoStringNoteName(int pitch);

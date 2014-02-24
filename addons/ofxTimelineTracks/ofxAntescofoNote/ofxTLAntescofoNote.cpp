@@ -400,6 +400,67 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 }
 
 #ifdef USE_GUIDO
+bool ofxTLAntescofoNote::render_guido()
+{
+	guido->setSize(bounds.width, bounds.height);
+	guido->getDevice()->NotifySize(bounds.width, bounds.height);
+
+	int xfactor = 1;
+	GuidoPageFormat format;
+	format.width = bounds.width * xfactor;
+	format.height = bounds.height;
+
+	format.marginleft = 10;
+	format.margintop = 50;
+	format.marginright = 10;
+	format.marginbottom = 50;
+	GuidoSetDefaultPageFormat(&format);
+#if 0
+	GuidoLayoutSettings layoutSettings;
+	layoutSettings.systemsDistance = 75;
+	layoutSettings.spring = 1.1; //5;
+	layoutSettings.force = 750;
+	layoutSettings.systemsDistribLimit = 0.25;
+	layoutSettings.systemsDistribution = kAutoDistrib;
+	layoutSettings.neighborhoodSpacing = 0;
+	layoutSettings.optimalPageFill = 0;
+	guido->setGuidoLayoutSettings(layoutSettings);
+#endif
+
+	float startX = 0.;
+	float endX = bounds.x + bounds.width;
+	int starti = 0, endi = switches.size() - 1;
+	/*
+	   for(int i = 0; i < switches.size(); i++){
+		if(isSwitchInBounds(switches[i])){
+			if (startX == -1) {
+				startX = std::min((int)floor(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds)), 0);
+				starti = i;
+			}
+			endX = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
+			endi = i;
+		}
+	}
+	//endi--;
+	*/
+	bool twostaves = false;
+	string gstr = getGuidoString(startX, starti, endX, endi, twostaves);
+	cout << "Converted score to Guido code: \"" << gstr<< "\"" << endl;
+	int err = guido->setGMNCode(gstr.c_str());
+	if (err == -1) {
+		cout << "Guido returned err:" << err << endl;
+		return false;
+	}
+
+	guido->setWidth(bounds.width * xfactor);
+	guido->setHeight(bounds.height);
+	ofPushStyle();
+	guido->draw(0, 0);
+	ofPopStyle();
+	return true;
+}
+
+
 void ofxTLAntescofoNote::draw_guido() {
 	if (guido) {
 		ofPushStyle();
@@ -407,76 +468,17 @@ void ofxTLAntescofoNote::draw_guido() {
 		ofSetColor(255, 255, 255, 255);
 		ofFill();
 		ofRect(bounds);
-
-		//guido->setResizePageToMusic(true);
-		int w = guido->getWidth();
-		int h = guido->getHeight();
-		int sw = w / bounds.width;
-		int sh = h / bounds.height;
-
-		//guido->getDevice()->OffsetOrigin(bounds.x, bounds.y);
-		guido->setSize(bounds.width, bounds.height);
-		guido->getDevice()->NotifySize(bounds.width, bounds.height);
-		//guido->getDevice()->SetScale(sw, sh);
-		//guido->getDevice()->SetScale(4, 4);
-		//guido->getDevice()->SetScale(1/4, 1/4);
-
-		GuidoPageFormat format;
-    		format.width = bounds.width;// * xfactor;
-		format.height = bounds.height;
-
-    		format.marginleft = 10;
-    		format.margintop = 50;
-    		format.marginright = 10;
-		format.marginbottom = 50;
-		GuidoSetDefaultPageFormat(&format);
-#if 0
-		GuidoLayoutSettings layoutSettings;
-		layoutSettings.systemsDistance = 75;
-		layoutSettings.spring = 1.1; //5;
-		layoutSettings.force = 750;
-		layoutSettings.systemsDistribLimit = 0.25;
-		layoutSettings.systemsDistribution = kAutoDistrib;
-		layoutSettings.neighborhoodSpacing = 0;
-		layoutSettings.optimalPageFill = 0;
-		guido->setGuidoLayoutSettings(layoutSettings);
-#endif
-
-		//int err = guido->setGMNCode("[ \\clef<\"treble\"> \\key<\"D\"> \\meter<\"4/4\"> d \\space<10> e \\space<10> g \\space<10> e\\space<1> d  \\space<1> c \\space<1> d \\space<1> e  \\space<1>]");
-		// 1/ get first and last beat displayed
-		float startX = -1;
-		float endX = -1;
-		int starti = 0, endi = 0;
-		for(int i = 0; i < switches.size(); i++){
-			if(isSwitchInBounds(switches[i])){
-				if (startX == -1) {
-					startX = std::min((int)floor(normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds)), 0);
-					starti = i;
-				}
-				endX = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
-				endi = i;
-			}
-		}
-		//endi--;
-		bool twostaves = false;
-		string gstr = getGuidoString(startX, starti, endX, endi, twostaves);
-		cout << "Displaying Guido code: \"" << gstr<< "\"" << endl;
-		int err = guido->setGMNCode(gstr.c_str());
-		cout << "Guido returned err:" << err << endl;
-		if (err == -1)
-			return;
-
-		guido->setWidth(bounds.width);
-		guido->setHeight(bounds.height);
-		
-		guido->draw(0, 0);
 		int y = bounds.y;
+		/*
 		if (!twostaves)
 			y+= bounds.height/3;
 		else
 			y+= bounds.height/7;
+		*/
 		guido->getDevice()->drawCache.draw(bounds.x, y);
-#if 0 // draw note color rect 
+
+
+#if 0 // draw note color rect
 		// retrieve graphic2time mapping
 		guido::GuidoMapCollector mapcol(guido->getGRHandler(), kGuidoEvent);
 		Time2GraphicMap outmap;
@@ -1706,8 +1708,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	sort(switches.begin(), switches.end(), switchsort);
 
 #ifdef USE_GUIDO
-	// guido
-	guido->getDevice()->NotifySize(bounds.width, bounds.height);
+	render_guido();
 #endif
 
 	update_duration();
