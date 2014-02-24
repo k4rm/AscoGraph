@@ -36,7 +36,6 @@ GuidoComponent::GuidoComponent ()
 	: fARHandler(0), fGRHandler(0), fPage(0), fResizeToMusic(false), fScoreColor(0,0,0)
 {
 	GuidoGetDefaultLayoutSettings (&fSettings);
-	//setSize (600, 300);
 }
 
 GuidoComponent::~GuidoComponent()
@@ -81,10 +80,7 @@ GuidoErrCode GuidoComponent::setGMNFile (const char* file )
 GuidoErrCode GuidoComponent::setGMNCode (const char* gmnCode )
 {
 	ARHandler arh;
-#if 0
-	GuidoErrCode err = GuidoParseString (gmnCode, &arh);
-	if (err != guidoNoErr) return err;
-#endif
+
 	GuidoParser* parser = GuidoOpenParser();
 	arh = GuidoString2AR(parser, gmnCode);
 	int l, c;
@@ -198,7 +194,6 @@ void GuidoComponent::draw (int x, int y)
 
 	//GuidoUpdateGR(fGRHandler, &fSettings);
 	GuidoErrCode err = GuidoOnDraw (&desc);
-	cout << "GuidoComponent::drawn" << endl;
 	if (err != guidoNoErr)
 		cerr << "error while painting: " << GuidoGetErrorString(err) << endl;
 }

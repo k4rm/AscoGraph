@@ -93,6 +93,7 @@ typedef struct {
 	bool startHovered;
 	bool endHovered;
 	bool isLast;
+	rational duration;
 
 	int pitch;
 	int velocity;
@@ -101,6 +102,7 @@ typedef struct {
 	bool triggeredOn;
 	bool triggeredOff;
 	bool missed;
+	bool is_tied;
 	int type;
 
 	string label;
@@ -182,6 +184,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void showNote(int line);
 	ofRectangle getBounds();
 	float get_max_note_beat();
+	void get_rational_duration(rational& r, float f);
 
 	bool change_action(float beatnum, string action);
 
@@ -277,7 +280,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void draw_showStaves();
 #ifdef USE_GUIDO
 	void draw_guido();
-	string getGuidoString(int fromx, int fromi, int tox, int toi);
+	string getGuidoString(int fromx, int fromi, int tox, int toi, bool& twostaves);
 	string getGuidoStringNote(int switchnb);
 	string getGuidoStringNoteName(int pitch);
 	GuidoComponent* guido;

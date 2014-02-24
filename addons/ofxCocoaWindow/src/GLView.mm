@@ -108,7 +108,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context
 {
     bEnableSetupScreen = true;
-    /*
+ 
     NSOpenGLPixelFormatAttribute attribs[] =
     {
 		kCGLPFAAccelerated,
@@ -123,10 +123,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		kCGLPFASamples, 4,
 		0
     };
-*/
-                
-                  
-    NSOpenGLPixelFormatAttribute attribs[] =
+
+    /*
+       NSOpenGLPixelFormatAttribute attribs[] =
     {
 		kCGLPFAAccelerated,
 		kCGLPFANoRecovery,
@@ -138,7 +137,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		kCGLPFASampleBuffers, 1,
 		kCGLPFASamples, 4,
 		0
-    };
+    };*/
     
 	
     pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
@@ -167,7 +166,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 												 selector:@selector(reshape) 
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
-		glEnable(GL_MULTISAMPLE_ARB);
+		//glEnable(GL_MULTISAMPLE_ARB);
 	} else {
             cerr << "!!!!!!!!!!!!!!!!!!!!! CocoaWindow: GLView: no frameRect" << endl;
         }

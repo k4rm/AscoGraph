@@ -31,7 +31,7 @@ openFrameworksFont::openFrameworksFont(const char * faceName, int size, int prop
 	*/
 	
 	std::string guido("guido2");
-	float scale = (guido == faceName) ? 0.7 : 1.; //2.49 : 1.;
+	float scale = (guido == faceName) ? 0.7 : 1.;
 	//fNativeFont = new Font(faceName, float(size * scale), style);
 	fNativeFont = new ofTrueTypeFont();
 	fNativeFont->setGlobalDpi(72);

@@ -9,9 +9,13 @@ BPM 46.00
 	; Here, we have activate the PEDAL mode of Antescofo
 ; ---------- measure 1 beat 0.00 ---------
 
- CHORD ( 6700 6300 ) 3/4 ; OK
+NOTE d#5 2
 
-; CHORD ( 6700 6300 5900 ) 3/4 ; KO
-CHORD ( -5900 4400 ) 1/4
+;TRILL (e5 e6) 4
+
+CHORD ( 6700 6300 ) 1 ; OK
+
+ CHORD ( 6700 6300 5900 ) 1/2 ; KO
+;CHORD ( -5900 4400 ) 1/4
 
 

@@ -74,16 +74,28 @@ openFrameworksDevice::~openFrameworksDevice()
 // - Drawing services ------------------------------------------------
 // --------------------------------------------------------------
 bool openFrameworksDevice::BeginDraw()	{ 
-	cout << "openFrameworksDevice::BeginDraw()" << endl;
+	//glClear (GL_COLOR_BUFFER_BIT);
+	//glEnable (GL_BLEND);
+	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc (GL_SRC_ALPHA, GL_ONE);
+	//glBlendFunc (GL_SRC_ALPHA, GL_SRC_ALPHA);
+	glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+	glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
+	glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	//glHint (GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
+	glEnable (GL_POLYGON_SMOOTH);
+	glEnable (GL_LINE_SMOOTH);
+	glEnable (GL_POINT_SMOOTH);
+
+	glEnable(GL_MULTISAMPLE_ARB);
 	//initialize ();
 	ofPushStyle();
 	drawCache.begin();
 	return true;
 }
 void openFrameworksDevice::EndDraw()		{ 
-	ofPopStyle(); 
-	cout << "openFrameworksDevice::EndDraw()" << endl;
 	drawCache.end();
+	ofPopStyle(); 
 }
 void openFrameworksDevice::InvalidateRect( float /*left*/, float /*top*/, float /*right*/, float /*bottom*/ ) {}
 
@@ -114,7 +126,9 @@ void openFrameworksDevice::Line( float x1, float y1, float x2, float y2 ) {
 	ofLine(x1, y1, x2, y2);
 }
 void openFrameworksDevice::Frame( float left, float top, float right, float bottom ) {
-	cout << "openFrameworksDevice::Frame" << endl;
+	/*glEnable (GL_LINE_SMOOTH);
+	glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+	*/
 	ofRect (left, top, right-left, bottom-top);
 }
 
@@ -153,26 +167,40 @@ void openFrameworksDevice::Polygon( const float * xCoords, const float * yCoords
 }
 
 void openFrameworksDevice::Rectangle( float left,  float top, float right, float bottom )	
-{ ofRect(left, top, right-left, bottom-top); }
+{ 
+	/*
+	   glEnable (GL_LINE_SMOOTH);
+	   glEnable (GL_BLEND);
+	   glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	   glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);//GL_DONT_CARE);
+	   */
+	/*
+	   glCullFace (GL_BACK);
+	   glEnable (GL_CULL_FACE);
+	   glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE);
+	   glClear (GL_COLOR_BUFFER_BIT);
+	   glEnable (GL_BLEND);
+	   glEnable (GL_POLYGON_SMOOTH);
+	   glDisable (GL_DEPTH_TEST);
+	   */
+	ofRect(left, top, right-left, bottom-top);
+}
 
 // - Pen & brush services --------------------------------------------
 void openFrameworksDevice::SelectPen( const VGColor & color, float witdh ) 
 {
-	cout << "openFrameworksDevice::SelectPen" << endl;
 	ofSetColor (Color2ofColor(color));
 	ofSetLineWidth (witdh);
 }
 void openFrameworksDevice::PushPen( const VGColor & color, float width )
 {
-	//ofPushStyle();
-	cout << "openFrameworksDevice::PushPen" << endl;
+	ofPushStyle();
 	ofSetColor (Color2ofColor(color));
 	ofSetLineWidth (width);
 }
 void openFrameworksDevice::PopPen()
 {
-	cout << "openFrameworksDevice::PopPen" << endl;
-	//ofPopStyle();
+	ofPopStyle();
 }
 
 void openFrameworksDevice::SelectFillColor( const VGColor & color )
@@ -227,14 +255,14 @@ bool openFrameworksDevice::CopyPixels( int /*xDest*/, int /*yDest*/, int /*dstWi
 // - Coordinate services ------------------------------------------------
 void openFrameworksDevice::SetOrigin( float x, float y )	
 { 
-	cout << "openFrameworksDevice::SetOrigin:" << x << " " << y << endl;
+	//cout << "openFrameworksDevice::SetOrigin:" << x << " " << y << endl;
 	ofTranslate(x-fXOrigin, y-fYOrigin);
 	ofTranslate(x, y);
 	fXOrigin = x; fYOrigin = y; 
 }
 void openFrameworksDevice::OffsetOrigin( float x, float y )
 { 
-	cout << "openFrameworksDevice::OffsetOrigin" << x << " " << y <<  endl;
+	//cout << "openFrameworksDevice::OffsetOrigin" << x << " " << y <<  endl;
 	ofTranslate(x, y);
 	fXOrigin += x; fYOrigin += y; 
 }
@@ -256,7 +284,7 @@ void openFrameworksDevice::DeviceToLogical( float * x, float * y ) const
 
 void openFrameworksDevice::SetScale( float x, float y )	
 { 
-	cout << "openFrameworksDevice::SetScale " << x << " " << y << endl;
+	//cout << "openFrameworksDevice::SetScale " << x << " " << y << endl;
 	ofScale(x, y);
 	fXScale = x;
 	fYScale = y;
@@ -267,7 +295,7 @@ float openFrameworksDevice::GetYScale() const				{ return fYScale; }
 void openFrameworksDevice::NotifySize( int width, int height ) { 
 	fWidth = width; fHeight = height;
 
-	cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
+	//cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
 	drawCache.allocate(fWidth, fHeight, GL_RGBA);
 	drawCache.begin();
 	ofClear(255,255,255, 0);
@@ -339,14 +367,14 @@ unsigned int openFrameworksDevice::GetFontAlign() const				{ return fFontAlign; 
 
 // - Printer informations services ----------------------------------------
 void openFrameworksDevice::SetDPITag( float inDPI )				{ fDPI = inDPI; }
-float openFrameworksDevice::GetDPITag() const						{ return fDPI; }
+float openFrameworksDevice::GetDPITag() const					{ return fDPI; }
 
 // - VGDevice extension --------------------------------------------
 void openFrameworksDevice::SelectPenColor( const VGColor & color)	{ fPenColor = color; }
 void openFrameworksDevice::PushPenColor( const VGColor & color)	{ fPenColor = color; fPenColorStack.push(color); }
-void openFrameworksDevice::PopPenColor()							{ fPenColorStack.pop(); fPenColor = fPenColorStack.top();  }
+void openFrameworksDevice::PopPenColor()				{ fPenColorStack.pop(); fPenColor = fPenColorStack.top();  }
 
 void openFrameworksDevice::SelectPenWidth( float width)			{ fLineThick = width; }
-void openFrameworksDevice::PushPenWidth( float width)				{ fPenWidthStack.push(width); fLineThick = width; }
-void openFrameworksDevice::PopPenWidth()							{ fLineThick = fPenWidthStack.top(); fPenWidthStack.pop(); }
+void openFrameworksDevice::PushPenWidth( float width)			{ fPenWidthStack.push(width); fLineThick = width; }
+void openFrameworksDevice::PopPenWidth()				{ fLineThick = fPenWidthStack.top(); fPenWidthStack.pop(); }
 
