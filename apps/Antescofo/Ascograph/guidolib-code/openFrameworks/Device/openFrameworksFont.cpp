@@ -32,11 +32,15 @@ openFrameworksFont::openFrameworksFont(const char * faceName, int size, int prop
 	
 	std::string guido("guido2");
 	float scale = (guido == faceName) ? 0.7 : 1.;
-	//fNativeFont = new Font(faceName, float(size * scale), style);
 	fNativeFont = new ofTrueTypeFont();
 	fNativeFont->setGlobalDpi(72);
-	fNativeFont->loadFont(faceName, float(size * scale));
-	fName = faceName;
+	string font = faceName;
+	if (font == "Times New Roman") // for an obscure reason, the text facename lack file extension
+		font += ".ttf";
+	cout << "Guido::openFrameworksFont loading " << font << endl;
+	if (!fNativeFont->loadFont(font, float(size * scale)))
+		cerr << "Error: can not load font : " << font << endl;
+	fName = font;
 }
 
 openFrameworksFont::~openFrameworksFont()	{ delete fNativeFont; }

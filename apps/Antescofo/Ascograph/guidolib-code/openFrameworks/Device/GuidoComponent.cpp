@@ -172,7 +172,7 @@ int GuidoComponent::getHeight() {
 
 
 //==============================================================================
-void GuidoComponent::draw (int x, int y)
+void GuidoComponent::draw (int x, int y, int w, int h)
 {
 	if (!fGRHandler) return;
 
@@ -184,13 +184,13 @@ void GuidoComponent::draw (int x, int y)
 	desc.scrollx = 0; //x;
 	desc.scrolly = 0; //y-450;
 	desc.isprint = false;
-	desc.updateRegion.left = 0;
-	desc.updateRegion.top = 0;
-	desc.updateRegion.right = getWidth();
-	desc.updateRegion.bottom = getHeight();
+	desc.updateRegion.left = x;
+	desc.updateRegion.top = y;
+	desc.updateRegion.right = w; //getWidth();
+	desc.updateRegion.bottom = h; //getHeight();
 	desc.updateRegion.erase = true;
-	desc.sizex = getWidth();
-	desc.sizey = getHeight();
+	desc.sizex = w; //getWidth();
+	desc.sizey = h; //getHeight();
 
 	//GuidoUpdateGR(fGRHandler, &fSettings);
 	GuidoErrCode err = GuidoOnDraw (&desc);

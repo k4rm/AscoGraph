@@ -1,9 +1,10 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.100")
+set(ASCOGRAPH_VERSION_NUMBER "0.101")
 
-set(ANTESCOFO_FAUST 1)
-set(ANTESCOFO_FLUIDSYNTH 1)
+set(ANTESCOFO_FAUST 0)
+set(ANTESCOFO_CSOUND 0)
+set(ANTESCOFO_FLUIDSYNTH 0)
 
 set(GUIDO 1)
 set(USE_HTTPD 0)
@@ -482,6 +483,14 @@ if ("${ANTESCOFO_FLUIDSYNTH}" MATCHES 1)
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLUIDSYNTH_CFLAGS}")
 endif()
 
+if (ANTESCOFO_CSOUND)
+	set (CSOUND_CFLAGS "-DUSE_CSOUND=1 -I/Library/Frameworks/CsoundLib.framework/Headers/")
+	set (CSOUND_LDFLAGS "-F /Library/Frameworks/ -framework CsoundLib")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CSOUND_CFLAGS}")
+	set (CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} ${CSOUND_LDFLAGS}")
+	set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_LD_FLAGS} ${CSOUND_LDFLAGS}")
+endif(ANTESCOFO_CSOUND)
+
 
 #######################################################
 # Find library and include 
@@ -596,10 +605,12 @@ set( MACOSX_RESOURCE_FILES
 	${CMAKE_SOURCE_DIR}/../bin/data/logo_ircam.png
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
 	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
+	"${CMAKE_SOURCE_DIR}/../bin/data/Times New Roman.ttf"
 )
 
 set( MACOSX_RESOURCE_FILES_FONTS
 	"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
+	"${CMAKE_SOURCE_DIR}/../bin/data/Times New Roman.ttf"
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/Ascograph.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 

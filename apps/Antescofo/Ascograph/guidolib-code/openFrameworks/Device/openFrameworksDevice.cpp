@@ -30,7 +30,7 @@ void openFrameworksDevice::initialize()
 	fXOrigin = fYOrigin = 0; 
 	fLineThick = 1.0;
 	fXScale = fYScale = 1.0f;
-	fDPI = 300.f;
+	fDPI = 72.f;
 	fCurrentFont = 0;
 	fFontAlign   = 0;
 	fRasterOpMode = kOpCopy;
@@ -59,11 +59,6 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 	drawCache.begin();
 	ofClear(255,255,255, 0);
 	drawCache.end();
-
-	//Image img (Image::ARGB, width, height, true);
-	//ofImage img;
-	//img.allocate(width, height, OF_IMAGE_COLOR);
-	//fGraphics = new Graphics(img);
 }
 
 // --------------------------------------------------------------
@@ -86,11 +81,13 @@ bool openFrameworksDevice::BeginDraw()	{
 	glEnable (GL_POLYGON_SMOOTH);
 	glEnable (GL_LINE_SMOOTH);
 	glEnable (GL_POINT_SMOOTH);
-*/
+	*/
+
 	//glEnable(GL_MULTISAMPLE_ARB);
 	//initialize ();
 	ofPushStyle();
 	drawCache.begin();
+	ofClear(255,255,255, 0);
 	return true;
 }
 void openFrameworksDevice::EndDraw()		{ 
@@ -110,25 +107,21 @@ void openFrameworksDevice::LineTo( float x, float y ) {
 	fXPos = x; fYPos = y;
 	path.draw();
 	*/
-	ofSetLineWidth(2);
+	//ofSetLineWidth(fLineThick);
+	ofFill();
 	ofLine(fXPos, fYPos, x, y);
 	fXPos = x; fYPos = y;
 }
 void openFrameworksDevice::Line( float x1, float y1, float x2, float y2 ) {
-	//cout <<"openFrameworksDevice::Line( "<< x1 << ", " << y1 << ", " << x2 << "  " << y2<< ")" << endl; 
-	/* ofPath path;
-	path.moveTo(x1, y1);
-	path.lineTo(x2, y2);
-	path.close();
-	path.draw();
-	*/
-	ofSetLineWidth(2);
+	ofFill();
 	ofLine(x1, y1, x2, y2);
 }
 void openFrameworksDevice::Frame( float left, float top, float right, float bottom ) {
 	/*glEnable (GL_LINE_SMOOTH);
 	glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
 	*/
+	ofNoFill();
+	ofSetLineWidth(fLineThick);
 	ofRect (left, top, right-left, bottom-top);
 }
 
@@ -142,15 +135,19 @@ void openFrameworksDevice::Arc( float left, float top, float right,  float botto
 	const float fromRadians = CoordToRadian( startX - midX, startY - midY );	
 	const float toRadians = CoordToRadian( endX - midX, endY - midY );
 	ofPath path;
-	//path.arc(left, top, width, height, fromRadians, toRadians, true);
-	path.arc(left, top, width, height, fromRadians, toRadians);
+	path.arc(left, top, width, height, fromRadians, toRadians, true);
+	//path.arc(left, top, width, height, fromRadians, toRadians);
+	//path.close();
 	//fGraphics->strokePath (path, st);
+	path.setFilled(true);
+	//ofFill();
 	path.draw();
 }
 
 // - Filled surfaces --------------------------------------
 void openFrameworksDevice::Triangle( float x1, float y1, float x2, float y2, float x3, float y3 ) 
 {
+	ofFill();
 	ofTriangle(x1, y1, 0, x2, y2, 0, x3, y3, 0);
 }
 
@@ -159,10 +156,14 @@ void openFrameworksDevice::Polygon( const float * xCoords, const float * yCoords
 	if (count < 2) return;
 	
 	ofPath path;
+		
+	path.newSubPath();
 	path.moveTo(xCoords[0], yCoords[0]);
 	for (int i = 1; i < count; i++)
 		path.lineTo (xCoords[i], yCoords[i]);
-	path.close();
+	//path.close();
+	path.setFilled(true);
+	//ofFill();
 	path.draw();
 }
 
@@ -183,6 +184,8 @@ void openFrameworksDevice::Rectangle( float left,  float top, float right, float
 	   glEnable (GL_POLYGON_SMOOTH);
 	   glDisable (GL_DEPTH_TEST);
 	   */
+	//cout << "=============================================================== ofRectangle: " << left << ", "<< top << " : "<< right - left << "x" << bottom - top << endl;
+	ofFill();
 	ofRect(left, top, right-left, bottom-top);
 }
 
@@ -194,13 +197,13 @@ void openFrameworksDevice::SelectPen( const VGColor & color, float witdh )
 }
 void openFrameworksDevice::PushPen( const VGColor & color, float width )
 {
-	//ofPushStyle();
+	ofPushStyle();
 	ofSetColor (Color2ofColor(color));
 	ofSetLineWidth (width);
 }
 void openFrameworksDevice::PopPen()
 {
-	//ofPopStyle();
+	ofPopStyle();
 }
 
 void openFrameworksDevice::SelectFillColor( const VGColor & color )
@@ -374,7 +377,7 @@ void openFrameworksDevice::SelectPenColor( const VGColor & color)	{ fPenColor = 
 void openFrameworksDevice::PushPenColor( const VGColor & color)	{ fPenColor = color; fPenColorStack.push(color); }
 void openFrameworksDevice::PopPenColor()				{ fPenColorStack.pop(); fPenColor = fPenColorStack.top();  }
 
-void openFrameworksDevice::SelectPenWidth( float width)			{ fLineThick = width; }
+void openFrameworksDevice::SelectPenWidth( float width)			{ fLineThick = width; ofSetLineWidth(fLineThick);}
 void openFrameworksDevice::PushPenWidth( float width)			{ fPenWidthStack.push(width); fLineThick = width; }
 void openFrameworksDevice::PopPenWidth()				{ fLineThick = fPenWidthStack.top(); fPenWidthStack.pop(); }
 

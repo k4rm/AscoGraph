@@ -118,7 +118,7 @@ public:
 		int getWidth();
 		void setSize(int w, int h) { width = w; height = h; }
 
-		void draw(int x, int y);
+		void draw(int x, int y, int w, int h);
 //		void resized();
 
 		openFrameworksDevice* getDevice();
