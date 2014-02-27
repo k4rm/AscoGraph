@@ -105,6 +105,7 @@ typedef struct {
 	bool is_tied;
 	int type;
 	ofRectangle guidoCoords;
+	int guido_nb;
 
 	string label;
 	string action;
@@ -273,7 +274,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	bool hoveringHandle;
 
 	MusicXML2::antescofowriter* AntescofoWriter;
-	float mDur_in_secs, mDur_in_beats, mCurSecs;
+	float mDur_in_secs, mDur_in_beats, mCurSecs, mCurBeat;
 	int getNoteType(Event *e);
 	void getcues();
 
@@ -283,7 +284,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void draw_guido();
 	bool render_guido(float xfactor);
 	void guido_store_notes();
-	string getGuidoString(int fromx, int fromi, int tox, int toi, bool& twostaves);
+	string getGuidoString(int fromx, int fromi, int tox, int toi);
 	string getGuidoStringNote(int switchnb);
 	string getGuidoStringNoteName(int pitch);
 	GuidoComponent* guido;
@@ -291,6 +292,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	int guido_x, guido_y, guido_w, guido_h;
 	float guido_span;
 	ofRectangle guido_bounds;
+	map<float, int> beat2switchId;
 #endif
 
 	bool bShowPianoRoll;

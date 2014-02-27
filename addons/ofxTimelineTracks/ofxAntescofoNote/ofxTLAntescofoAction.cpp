@@ -256,6 +256,7 @@ void ofxTLAntescofoAction::update()
 	if (th && bounds != th->getDrawRect()) {
 		ofRectangle r(bounds.x, bounds.y - 18, bounds.width, 18);
 		th->setDrawRect(r);
+		th->recalculateFooter();		
 	}
 	//cout << "track bounds: x:" << bounds.x << " y:" << bounds.y << " w:" << bounds.width << " h:" << bounds.height << endl;
 }

@@ -67,11 +67,11 @@ class ofxTLTrackHeader : public ofxTLTrack
     virtual string getDisplayName();
     	bool isBeingDragged() { return draggingSize; }
 	
+	void recalculateFooter();
   protected:
 	ofxTLTrack* track;
 	ofxTextInputField nameField;
 	
-	void recalculateFooter();
 	
 	ofRectangle footerRect;
 	

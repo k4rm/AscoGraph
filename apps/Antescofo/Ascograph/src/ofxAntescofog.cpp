@@ -60,6 +60,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	audioTrack = NULL;
 	ofxAntescofoSim = 0;
 	subWindow = NULL;
+	mOsc_beat = -1;
 
 	if (argc > 1 && argv[1][0] != '-') {
 		bScoreFromCommandLine = true;
@@ -1139,7 +1140,7 @@ void ofxAntescofog::update() {
 	if (mHasReadMessages) {
 
 		mLastOSCmsgDate = ofGetSystemTime();
-		if (mOsc_beat && reloadFile) {
+		if (mOsc_beat != -1 && reloadFile) {
 			fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
 
 			//if (_debug) 
@@ -1990,7 +1991,7 @@ int ofxAntescofog::loadScore(string filename, bool reloadEditor, bool sendOsc) {
 	cout << "Trying to load score (reload=" << reloadEditor << ": " << filename << endl;
 	// save zoom view range
 	ofRange z = ofxAntescofoZoom->getViewRange(); 
-	mOsc_beat = 0.;
+	mOsc_beat = -1;
 
 	// save editor position
 	int lineEditorPos = [ editor getCurrentPos];
