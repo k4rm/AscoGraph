@@ -166,7 +166,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 												 selector:@selector(reshape) 
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
-		//glEnable(GL_MULTISAMPLE_ARB);
+		glEnable(GL_MULTISAMPLE_ARB);
 	} else {
             cerr << "!!!!!!!!!!!!!!!!!!!!! CocoaWindow: GLView: no frameRect" << endl;
         }

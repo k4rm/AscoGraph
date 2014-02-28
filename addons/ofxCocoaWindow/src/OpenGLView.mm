@@ -164,6 +164,9 @@ static CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeSt
 	
 	float nearDist = dist / 10.0f;
 	float farDist = dist * 10.0f;
+
+	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_MULTISAMPLE_ARB);
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

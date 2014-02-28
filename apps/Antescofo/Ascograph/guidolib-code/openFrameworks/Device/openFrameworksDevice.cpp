@@ -58,6 +58,7 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 	drawCache.allocate(fWidth, fHeight, GL_RGBA);
 	drawCache.begin();
 	ofClear(255,255,255, 0);
+
 	drawCache.end();
 }
 
@@ -69,25 +70,17 @@ openFrameworksDevice::~openFrameworksDevice()
 // - Drawing services ------------------------------------------------
 // --------------------------------------------------------------
 bool openFrameworksDevice::BeginDraw()	{ 
-	//glClear (GL_COLOR_BUFFER_BIT);
-	//glEnable (GL_BLEND);
-	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glBlendFunc (GL_SRC_ALPHA, GL_ONE);
-	//glBlendFunc (GL_SRC_ALPHA, GL_SRC_ALPHA);
-	/*glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
-	glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
-	glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-	//glHint (GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
-	glEnable (GL_POLYGON_SMOOTH);
-	glEnable (GL_LINE_SMOOTH);
-	glEnable (GL_POINT_SMOOTH);
-	*/
 
-	//glEnable(GL_MULTISAMPLE_ARB);
-	//initialize ();
+	ofClear(255,255,255, 0);
+	glClearColor( 0.0, 0.0, 0.0, 0.0 );
+	glClear (GL_COLOR_BUFFER_BIT);
+	glEnable (GL_BLEND);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable( GL_DEPTH_TEST );
+	glEnable(GL_MULTISAMPLE_ARB);
+
 	ofPushStyle();
 	drawCache.begin();
-	ofClear(255,255,255, 0);
 	return true;
 }
 void openFrameworksDevice::EndDraw()		{ 
@@ -299,7 +292,7 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
 	fWidth = width; fHeight = height;
 
 	//cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
-	drawCache.allocate(fWidth, fHeight, GL_RGBA);
+	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
 	drawCache.begin();
 	ofClear(255,255,255, 0);
 	drawCache.end();
