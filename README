@@ -5,12 +5,13 @@ Ascograph Features:
 -------------------
 
 * automatic conversion from MusicXML files to Antescofo Language.
+* pianoroll or classical musical staff notes display.
 * automatic scrolling of notes view and editor view with Antescofo Score
   Follower.
 * note selection from editor or interface, in both directions
   for fast and easy modifications : double click on a line in the text
   editor to see which note it is in the pianoroll.
-* syntax coloring
+* syntax coloring, autocompletion (Ctr-Tab)
 
 
 
@@ -21,8 +22,8 @@ Ascograph is built on OpenFrameworks, version 72.
 
 
 
-Build :
--------
+Build : (for now, works just on MacOS X) 
+----------------------------------------
 
 To build Ascograph, you will need CMake, minimum version 2.8.
 
