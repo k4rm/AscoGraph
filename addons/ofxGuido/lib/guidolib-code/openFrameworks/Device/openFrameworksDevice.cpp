@@ -36,7 +36,6 @@ void openFrameworksDevice::initialize()
 	fRasterOpMode = kOpCopy;
 	fFillColorStack.push( VGColor(0,0,0) );
 	fPenColorStack.push( VGColor(0,0,0) );
-	//ofEnableSmoothing();
 }
 
 // --------------------------------------------------------------
@@ -92,15 +91,6 @@ void openFrameworksDevice::InvalidateRect( float /*left*/, float /*top*/, float 
 // - Standard graphic primitives -------------------------
 void openFrameworksDevice::MoveTo( float x, float y )			{ fXPos = x; fYPos = y; }
 void openFrameworksDevice::LineTo( float x, float y ) {
-	//cout <<"openFrameworksDevice::LineTo( "<< x << ", " << y << ")" << endl; 
-	/*ofPath path;
-	path.moveTo(fXPos, fYPos);
-	//path.lineTo(fXPos, fYPos);
-	path.lineTo(x, y);
-	fXPos = x; fYPos = y;
-	path.draw();
-	*/
-	//ofSetLineWidth(fLineThick);
 	ofFill();
 	ofLine(fXPos, fYPos, x, y);
 	fXPos = x; fYPos = y;
@@ -126,11 +116,7 @@ void openFrameworksDevice::Arc( float left, float top, float right,  float botto
 	const float toRadians = CoordToRadian( endX - midX, endY - midY );
 	ofPath path;
 	path.arc(left, top, width, height, fromRadians, toRadians, true);
-	//path.arc(left, top, width, height, fromRadians, toRadians);
-	//path.close();
-	//fGraphics->strokePath (path, st);
 	path.setFilled(true);
-	//ofFill();
 	path.draw();
 }
 
@@ -151,9 +137,7 @@ void openFrameworksDevice::Polygon( const float * xCoords, const float * yCoords
 	path.moveTo(xCoords[0], yCoords[0]);
 	for (int i = 1; i < count; i++)
 		path.lineTo (xCoords[i], yCoords[i]);
-	//path.close();
 	path.setFilled(true);
-	//ofFill();
 	path.draw();
 }
 
@@ -305,9 +289,6 @@ void openFrameworksDevice::DrawMusicSymbol(float x, float y, unsigned int inSymb
 {
 	string text;
 	text += wchar_t(inSymbolID);
-	/* fGraphics->setColour (Color2JColor(fFontColor));
-	fGraphics->drawSingleLineText (text, int(x), int(y));
-	fGraphics->setColour (Color2JColor(fFillColor)); */
 
 	ofSetColor(Color2ofColor(fFontColor));
 	ofTrueTypeFont* f = (ofTrueTypeFont*)(&static_cast<const openFrameworksFont*>(fCurrentFont)->NativeFont());
@@ -325,9 +306,6 @@ void openFrameworksDevice::DrawString( float x, float y, const char * s, int inC
 		x -= w;
 
 	string text (s, inCharCount);
-	/*fGraphics->setColour (Color2JColor(fFontColor));
-	fGraphics->drawSingleLineText (text, int(x), int(y));
-	fGraphics->setColour (Color2JColor(fFillColor));*/
 
 	ofSetColor(Color2ofColor(fFontColor));
 	ofTrueTypeFont* f = (ofTrueTypeFont*)(&static_cast<const openFrameworksFont*>(fCurrentFont)->NativeFont());
