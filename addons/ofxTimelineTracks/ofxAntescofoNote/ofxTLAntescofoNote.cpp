@@ -119,8 +119,6 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	mNetscore = 0;
 
 #ifdef USE_GUIDO
-	guido = new GuidoComponent();
-	guido->GuidoInit("DroidSansMono.ttf", "GUI/guido2.ttf");
 	GuidoLayoutSettings layoutSettings;
 	layoutSettings.systemsDistance = 75;
 	layoutSettings.spring = 110; //1.1;
@@ -130,8 +128,8 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	layoutSettings.resizePage2Music = true;
 	layoutSettings.neighborhoodSpacing = 0;
 	layoutSettings.optimalPageFill = 0;
-	guido->setGuidoLayoutSettings(layoutSettings);
-	guido->setResizePageToMusic(true);
+	oguido = new ofxGuido(layoutSettings);
+	oguido->guido->setResizePageToMusic(true);
 #endif
 }
 
@@ -409,9 +407,9 @@ void ofxTLAntescofoNote::guido_store_notes() {
 	guido_bounds.x = guido_bounds.y = 800;
 	guido_bounds.width = guido_bounds.height = 0;
 	// retrieve graphic2time mapping
-	guido::GuidoMapCollector mapcol(guido->getGRHandler(), kGuidoEvent);
+	guido::GuidoMapCollector mapcol(oguido->guido->getGRHandler(), kGuidoEvent);
 	Time2GraphicMap outmap;
-	int err = GuidoGetSystemMap(guido->getGRHandler(), 1, guido->getWidth(), guido->getHeight(), outmap);
+	int err = GuidoGetSystemMap(oguido->guido->getGRHandler(), 1, oguido->getWidth(), oguido->getHeight(), outmap);
 
 	cout << "GuidoGetSystemMap: size=" << outmap.size() << endl;
 	int j = 50;
@@ -458,7 +456,6 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 {
 	if (debug_guido) cout << "render_guido : [[[[ " << xfactor << " ]]]]" << endl;
 
-	GuidoPageFormat format;
 
 	float startX = 0.;
 	float endX = bounds.x + bounds.width;
@@ -466,26 +463,28 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 
 	guido_string = getGuidoString(startX, starti, endX, endi);
 	if (debug_guido) cout << "Converted score to Guido code: \"" << guido_string<< "\"" << endl;
-	int err = guido->setGMNCode(guido_string.c_str());
-	if (err == -1) {
-		if (debug_guido) cout << "Guido returned err:" << err << endl;
+	int err = oguido->compile_string(guido_string.c_str());
+	if (debug_guido) cout << "Guido returned err:" << err << endl;
+	if (!err) {
+		cerr << "Guido returned err:" << err << endl;
 		return false;
 	}
 	guido_h = bounds.height;
 	guido_span = zoomBounds.span();
 
-	guido->setWidth(bounds.width);
-	guido->setHeight(bounds.height);
+	oguido->setWidth(bounds.width);
+	oguido->setHeight(bounds.height);
 
 	if (debug_guido) cout << "bounds rect: " << bounds.width << " x "<< bounds.height << endl;
-	if (debug_guido) cout << "guido rect: " << guido->getWidth() << " x "<< guido->getHeight() << endl;
+	if (debug_guido) cout << "guido rect: " << oguido->getWidth() << " x "<< oguido->getHeight() << endl;
 	ofPushStyle();
 	ofSetColor(0,0,0, 255);
 
 	int margin_x = 20;
 	int margin_y = 20;
 
-	GuidoGetPageFormat(guido->getGRHandler(), 1, &format);
+	GuidoPageFormat format;
+	oguido->getPageFormat(format);
 
 	if (debug_guido) cout << "guido page rect: " << format.width << " x "<< format.height << endl;
 	float ratio = (format.width / format.height);
@@ -496,11 +495,10 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	float render_w = render_h * ratio; 
 	cout << "Setting Guido Size: " << render_w << " x " << render_h << endl;
 
-	guido->setSize(render_w, render_h);
-	guido->getDevice()->NotifySize(render_w, render_h);
+	oguido->setSize(render_w, render_h);
 
 	if (debug_guido) cout << "Rendering Guido: " << render_x << ", " << render_y << " : " << render_w << " x " << render_h << endl;
-	guido->draw(render_x, render_y, render_w, render_h);
+	oguido->draw(render_x, render_y, render_w, render_h);
 	ofPopStyle();
 
 	// once drawn to FBO, build a map of beat to switchId: beat2switchId
@@ -528,7 +526,7 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 
 
 void ofxTLAntescofoNote::draw_guido() {
-	if (guido) {
+	if (oguido) {
 		if (bounds.height != guido_h) 
 			render_guido(1.);
 		ofPushStyle();
@@ -541,7 +539,7 @@ void ofxTLAntescofoNote::draw_guido() {
 
 		//if (debug_guido) cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
 		ofSetColor(0,0,0, 255);
-		guido->getDevice()->drawCache.draw(guido_x, guido_y);//, bounds.width, bounds.height);
+		oguido->draw_cache(guido_x, guido_y);
 
 		ofPopStyle();
 	}

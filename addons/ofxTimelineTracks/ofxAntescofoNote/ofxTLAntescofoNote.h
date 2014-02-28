@@ -47,8 +47,7 @@
 #include "rational.h"
 #include <sndfile.h>    // Sound-file reader
 #ifdef USE_GUIDO
-# include "GuidoComponent.h"
-# include "openFrameworksDevice.h"
+# include "ofxGuido.h"
 #endif
 
 
@@ -287,7 +286,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	string getGuidoString(int fromx, int fromi, int tox, int toi);
 	string getGuidoStringNote(int switchnb);
 	string getGuidoStringNoteName(int pitch);
-	GuidoComponent* guido;
+	ofxGuido *oguido;
 	string guido_string;
 	int guido_x, guido_y, guido_w, guido_h;
 	float guido_span;
