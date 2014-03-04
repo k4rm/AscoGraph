@@ -614,6 +614,8 @@ string ofxTLAntescofoNote::getGuidoStringNote(int switchnb) {
 string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi) {
 	if (debug_guido) cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
 	string ret = "[ ";
+	int pageFormat_w = switches.size() / 2; // TODO utiliser le maxbeat dur ?
+	ret += 	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 1cm, 1cm, 1cm, 1cm>";
 	if (fromi == 0) {
 		ret += "\\clef<\"g\">";
 	} else 

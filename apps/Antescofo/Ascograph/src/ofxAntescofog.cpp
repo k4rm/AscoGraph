@@ -1898,6 +1898,7 @@ void ofxAntescofog::saveScore(bool stopSimu) {
 		[ editor getEditorContent:s ];
 		if (!s.empty()) {
 			// save and try to parse
+			cout << "Saving score: " << mScore_filename << endl;
 			ofstream outfile;
 			outfile.open (mScore_filename.c_str());
 			outfile << s;
@@ -1968,6 +1969,7 @@ void ofxAntescofog::saveAsScore() {
 			ofFileDialogResult openFileResult = ofSystemSaveDialog("ascograph-score.txt", TEXT_CONSTANT_TITLE_SAVE_AS_SCORE);
 			if (openFileResult.bSuccess){
 				string f = openFileResult.filePath;
+				cout << "Selected file: " << f << endl;
 				ofLogVerbose("Selected file: " + f);
 				// save and try to parse
 				// show dialog confirming
