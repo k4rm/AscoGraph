@@ -15,7 +15,9 @@ ofxConsole::ofxConsole(int x_, int y_, int w_, int h_, int maxNbLines_) : maxNbL
 void ofxConsole::setup()
 {
 	//mFont.loadFont ("DroidSansMono.ttf", 7, true, true, true);
-	mFont.loadFont ("menlo.ttf", 8, true, true, true);
+	//mFont.loadFont ("GUI/NewMedia Fett.ttf", 7, true, true, true);
+	//mFont.loadFont ("menlo.ttf", 8, true, true, true);
+	mFont.loadFont (OF_TTF_MONO, 8, true, true, true);
 	string s("L");
 	fontHeight = mFont.stringHeight(s) + mFont.getSpaceSize();
 

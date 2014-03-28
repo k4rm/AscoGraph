@@ -23,7 +23,7 @@ bool ofGetModifierPressed(unsigned int mod)
 			  ||((key_map_stat[alt_r >> 3] >> (alt_r & 7)) & 1));
 	}
 
-	if ((OF_KEY_CTRL & mod) == OF_KEY_CTRL){
+	if ((OF_KEY_CONTROL & mod) == OF_KEY_CONTROL){
 		const KeyCode control_l = XKeysymToKeycode(disp,XK_Control_L);
 		const KeyCode control_r = XKeysymToKeycode(disp,XK_Control_R);
 

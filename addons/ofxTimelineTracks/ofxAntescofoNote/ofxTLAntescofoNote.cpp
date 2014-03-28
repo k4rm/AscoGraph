@@ -145,15 +145,9 @@ void ofxTLAntescofoNote::setup(){
 
 	ofAddListener(ofEvents().update, this, &ofxTLAntescofoNote::update);
 
-	//noteFont.loadFont ("Boulez.ttf", 10, true, true, true);
-	noteImage = new ofImage();
-	if (!noteImage->loadImage("note.png")) {
-		cerr << "Can not load note.png" << endl;
-		abort();
-	}
-
-	mFont.loadFont ("DroidSansMono.ttf", 13); //15);
-
+	string fontfile = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
+	cout << "ofxTLAntescofoNote::setup: fontfile = " << fontfile << endl;
+	mFont.loadFont (fontfile, 13); //15);
 
 	for (int i = 0; i < 127; i++) {
 		activeNotes[i] = false;

@@ -228,9 +228,9 @@ void ofxTLAntescofoAction::save()
 
 void ofxTLAntescofoAction::load()
 {
-	mFont.loadFont ("DroidSansMono.ttf", 8);
+	string fontfile = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
+	mFont.loadFont (fontfile, 8);
 	//mFont.loadFont ("menlo.ttf", 8);
-
 }
 
 void ofxTLAntescofoAction::update()

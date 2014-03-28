@@ -8,7 +8,7 @@ bool ofGetModifierPressed(unsigned int mod)
 {
 	unsigned int t = 0;
 	
-	if ((OF_KEY_CTRL & mod) == OF_KEY_CTRL)
+	if ((OF_KEY_CONTROL & mod) == OF_KEY_CONTROL)
 		t += NSControlKeyMask;
 	
 	if ((OF_KEY_ALT & mod) == OF_KEY_ALT)

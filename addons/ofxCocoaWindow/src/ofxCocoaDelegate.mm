@@ -135,10 +135,13 @@ static int 			diffMillis;
     frameRate   = 60;
 	nFrameCount = 0;
     
+    NSLog(@"ofxCocoaDelegate: applicationDidFinishLaunching: notify setup");
     ofNotifySetup();
+    NSLog(@"ofxCocoaDelegate: applicationDidFinishLaunching: notify setup done");
     
     if( self.windowModeInit == OF_WINDOW )
     {
+	NSLog(@"ofxCocoaDelegate: applicationDidFinishLaunching: starting animation");
         [ self.openGLView startAnimation ];
     }
     else if( self.windowModeInit == OF_FULLSCREEN )

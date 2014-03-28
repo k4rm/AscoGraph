@@ -26,7 +26,7 @@ void testApp::draw()
 	string str;
 	
 	str += "OF_KEY_SHIFT: " + string(ofGetModifierPressed(OF_KEY_SHIFT) ? "ON" : "OFF") + "\n";
-	str += "OF_KEY_CTRL: " + string(ofGetModifierPressed(OF_KEY_CTRL) ? "ON" : "OFF") + "\n";
+	str += "OF_KEY_CONTROL: " + string(ofGetModifierPressed(OF_KEY_CONTROL) ? "ON" : "OFF") + "\n";
 	str += "OF_KEY_ALT: " + string(ofGetModifierPressed(OF_KEY_ALT) ? "ON" : "OFF") + "\n";
 	str += "OF_KEY_SPECIAL: " + string(ofGetModifierPressed(OF_KEY_SPECIAL) ? "ON" : "OFF") + "\n";
 	

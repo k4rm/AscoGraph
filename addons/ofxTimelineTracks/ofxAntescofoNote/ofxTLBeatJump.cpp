@@ -119,7 +119,7 @@ void ofxTLBeatJump::draw(){
 		ofTranslate(end);
 		ofMultMatrix(mat.getPtr());
 		ofTranslate(0, headSize*0.5 ,0);
-		ofCone(headSize, headSize);
+		ofDrawCone(headSize, headSize);
 		ofPopMatrix();
 	}
 	int textH, textW;

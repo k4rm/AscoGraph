@@ -82,9 +82,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	if (action_keywords.size()) dic_keywords.insert(dic_keywords.end(), action_keywords.begin(), action_keywords.end());
 
 	std::sort(dic_keywords.begin(), dic_keywords.end());
-	for (int i = 0; i < dic_keywords.size(); i++) {
-		NSLog(@"--> auto-completion dic: %s", dic_keywords[i].c_str());
-	}
+	//for (int i = 0; i < dic_keywords.size(); i++) NSLog(@"--> auto-completion dic: %s", dic_keywords[i].c_str());
 
 	int cnt = 0;
 	for (int i = 0; i < dic_keywords.size(); i++) {
@@ -157,7 +155,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 				curr_dic_char_list[j] = ' ';
 				j++;
 			}
-			NSLog(@"autocomplete: j=%d adding to list \"%s\"", j, curr_dic_keywords[i].c_str());
+			//NSLog(@"autocomplete: j=%d adding to list \"%s\"", j, curr_dic_keywords[i].c_str());
 			for (int c = 0; c < curr_dic_keywords[i].size(); c++, j++)
 				curr_dic_char_list[j] = curr_dic_keywords[i][c];
 

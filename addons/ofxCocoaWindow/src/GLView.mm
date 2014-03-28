@@ -333,7 +333,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	int w = self.frame.size.width;
 	int h = self.frame.size.height;
 	
-	//NSLog(@"GLView : reshape: %dx%d", w, h);
+	NSLog(@"GLView : reshape: %dx%d", w, h);
 	ofNotifyWindowResized(w, h);
 	ofSetupScreen();
    
@@ -367,10 +367,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	}
     
     
-	if (ofGetFrameNum() > 0) {
+	//if (ofGetFrameNum() > 0) {
     ofNotifyUpdate();
     ofNotifyDraw();
-	}
+	//}
     
     
 	//[[self openGLContext] flushBuffer];
@@ -417,6 +417,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 {
 	if (displayLink && !CVDisplayLinkIsRunning(displayLink))
 		CVDisplayLinkStart(displayLink);
+	NSLog(@"GLView start animation...");
 }
 
 - (void) stopAnimation

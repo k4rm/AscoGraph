@@ -7,9 +7,9 @@
 #define OF_KEY_SHIFT 1
 #endif
 
-#ifdef OF_KEY_CTRL
-#undef OF_KEY_CTRL
-#define OF_KEY_CTRL 2
+#ifdef OF_KEY_CONTROL
+#undef OF_KEY_CONTROL
+#define OF_KEY_CONTROL 2
 #endif
 
 #ifdef OF_KEY_ALT

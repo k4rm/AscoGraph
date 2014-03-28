@@ -68,6 +68,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	}
 
 	gettimeofday(&last_draw_time, 0);
+	guiBottom = 0;
 }
 
 
@@ -685,13 +686,13 @@ void ofxAntescofog::setupUI() {
 	[menubar addItem:helpMenuItem];
 
 	guiBottom = new ofxUICanvas(0, 0, score_x+score_w, score_y);
-	guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight());
-	guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y);
-	guiSetup_Colors = new ofxUICanvas(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
-	guiFind = new ofxUICanvas(300, score_y, ofGetWindowWidth()-300, ofGetWindowHeight()-100-score_y);
+	guiBottom->setFont(ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf");
+	guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight(), guiBottom);
+	guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y, guiBottom);
+	guiSetup_Colors = new ofxUICanvas(0, 0, ofGetWindowWidth(), ofGetWindowHeight(), guiBottom);
+	guiFind = new ofxUICanvas(300, score_y, ofGetWindowWidth()-300, ofGetWindowHeight()-100-score_y, guiBottom);
 
-	guiBottom->setFont("DroidSansMono.ttf");
-	guiFind->setFont("DroidSansMono.ttf");
+	//guiFind->setFont("DroidSansMono.ttf");
 	/*
 	   guiBottom->setFont("NewMedia Fett.ttf");
 	   guiSetup_OSC->setFont("NewMedia Fett.ttf");
@@ -715,8 +716,11 @@ void ofxAntescofog::setupUI() {
 	guiBottom->loadSettings("GUI/guiSettings.xml");
 	//guiTop->loadSettings("GUI/guiSettings.xml");
 
-	//guiTop->setUIColors(ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_key, ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_staves_fg,
-	//                    ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_gui_bg);
+	guiBottom->setColorBack(ofxAntescofoNote->color_staves_bg);
+	/*
+	guiBottom->setUIColors(ofxAntescofoNote->color_staves_bg, &ofColor(0, 0, 0, 0), ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_staves_fg,
+	                    ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_gui_bg);
+	*/
 
 	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
 	//mSliderBPM = new ofxUISlider(16*4*10, 0, 70, 12, 30, 300, 120, TEXT_CONSTANT_BUTTON_BPM);
@@ -751,38 +755,45 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetDown(tempoCurve);
 	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
 	tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
-	ofRectangle* r = tempoCurve->getRect();
+	ofxUIRectangle* r = tempoCurve->getRect();
 	r->x = 3; r->y = 3;
+
+	string path_prefix_img = ofFilePath::getCurrentExeDir() + "../Resources/";
 
 	// transport btns
 
 	int wi = 32;
 	int xi = 358, yi = 28, dxi = 12;
-	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/prev_.png", TEXT_CONSTANT_BUTTON_PREV_EVENT);
+	string img_path("GUI/prev_.png");
+	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_PREV_EVENT);
 	prevToggle->setLabelVisible(false);
 	prevToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(prevToggle, "bpm");
 	r = prevToggle->getRect(); r->x = xi; r->y = yi;
 
-	ofxUIMultiImageToggle* stopToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/stop_.png", TEXT_CONSTANT_BUTTON_STOP);
+	img_path = "GUI/stop_.png";
+	ofxUIMultiImageToggle* stopToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_STOP);
 	stopToggle->setLabelVisible(false);
 	stopToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(stopToggle, TEXT_CONSTANT_BUTTON_PREV_EVENT);
 	r = stopToggle->getRect(); r->x = xi + wi + dxi; r->y = yi;
 
-	ofxUIMultiImageToggle* playToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/play_.png", TEXT_CONSTANT_BUTTON_PLAY);
+	img_path = "GUI/play_.png";
+	ofxUIMultiImageToggle* playToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_PLAY);
 	playToggle->setLabelVisible(false);
 	playToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(playToggle, TEXT_CONSTANT_BUTTON_STOP);
 	r = playToggle->getRect(); r->x = xi + 2*(wi+dxi); r->y = yi;
 
-	ofxUIMultiImageToggle* startToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/start_.png", TEXT_CONSTANT_BUTTON_START);
+	img_path = "GUI/start_.png";
+	ofxUIMultiImageToggle* startToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_START);
 	startToggle->setLabelVisible(false);
 	startToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(startToggle, TEXT_CONSTANT_BUTTON_PLAY);
 	r = startToggle->getRect(); r->x = xi + 3*(wi+dxi); r->y = yi;
 
-	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi, wi, false, "GUI/next_.png", TEXT_CONSTANT_BUTTON_NEXT_EVENT);
+	img_path = "GUI/next_.png";
+	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_NEXT_EVENT);
 	nextToggle->setLabelVisible(false);
 	nextToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(nextToggle, TEXT_CONSTANT_BUTTON_START);
@@ -819,15 +830,15 @@ void ofxAntescofog::setupUI() {
 	guiBottom->addWidgetEastOf(bu, "bpm");
 	bu->setColorBack(ofxAntescofoNote->color_note);
 
-	bu = new ofxUIButton(30, 15, false, "CHORD");
+	bu = new ofxUIButton("CHORD", false, 30, 15);
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_chord);
 
-	bu = new ofxUIButton(30, 15, false, "MULTI"); 
+	bu = new ofxUIButton("MULTI", false, 30, 15); 
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_multi);
 
-	bu = new ofxUIButton(30, 15, false, "TRILL"); 
+	bu = new ofxUIButton("TRILL", false, 30, 15);
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_trill);
 
@@ -846,7 +857,7 @@ void ofxAntescofog::setupUI() {
 	elevator->setColorFill(ofColor(timeline.getColors().outlineColor, 72)); //ofColor(0, 0, 0, 255));
 	elevator->setVisible(false);
 	guiElevator->setVisible(false);
-	guiElevator->setFont("DroidSansMono.ttf");
+	guiElevator->setFont(path_prefix_img+"DroidSansMono.ttf");
 	guiElevator->disable();
 
 	guiFind->setColorBack(ofColor(0, 0, 0, 0));
@@ -862,7 +873,7 @@ void ofxAntescofog::setupUI() {
 	guiTop->addWidgetRight(new ofxUILabelToggle(false, TEXT_CONSTANT_BUTTON_TOGGLE_EDITOR, OFX_UI_FONT_SMALL));
 #endif
 
-	mSaveColorButton = new ofxUILabelButton(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2, 100, false, TEXT_CONSTANT_BUTTON_SAVE_COLOR);
+	mSaveColorButton = new ofxUILabelButton(TEXT_CONSTANT_BUTTON_SAVE_COLOR, false, ofGetWindowWidth() / 2, ofGetWindowHeight() / 2, 100);
 	guiSetup_Colors->addWidget(mSaveColorButton);
 	mSaveColorButton->setVisible(false);
 	mSaveColorButton->setLabelVisible(false);
@@ -871,8 +882,8 @@ void ofxAntescofog::setupUI() {
 	guiError->setVisible(false);
 	guiError->disable();
 
-	mLogoInria.loadImage("logo_inria.png");
-	mLogoIrcam.loadImage("logo_ircam.png");
+	mLogoInria.loadImage(path_prefix_img+"logo_inria.png");
+	mLogoIrcam.loadImage(path_prefix_img+"logo_ircam.png");
 
 	ofAddListener(guiError->newGUIEvent, this, &ofxAntescofog::guiEvent);
 	ofAddListener(guiBottom->newGUIEvent, this, &ofxAntescofog::guiEvent);
@@ -965,17 +976,25 @@ void ofxAntescofog::setup(){
 	console->addln("ofxAntescofo::setup()");
 	ofSetDataPathRoot("../Resources/");
 
-	//ofSetFrameRate(60);
+	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
 	ofEnableSmoothing();
-	ofEnableAlphaBlending();
-
+	//ofEnableAlphaBlending();
+	
+	//glewExperimental=TRUE;
+	GLenum err=glewInit();
+	if(err!=GLEW_OK)
+	{
+		//Problem: glewInit failed, something is seriously wrong.
+		cout<<"glewInit failed, aborting."<<endl;
+		abort();
+	}
 	//cocoaWindow->setUpdateRate(1);
 	ofSetLogLevel(OF_LOG_VERBOSE);
 
 	fog = this;
 	score_x = 5;
-	score_y = 72;
+	score_y = 82;
 	mUIbottom_y = 40;
 
 	bpm = 120; 
@@ -1161,6 +1180,9 @@ void ofxAntescofog::update() {
 
 //--------------------------------------------------------------
 void ofxAntescofog::draw() {
+	// since update to openFrameworks 8, it is needed to translate down Y of 20 pixel, I don't know why...
+	ofTranslate(0, 20);
+
 	if (!bSetupDone)
 		return;
 
@@ -1496,13 +1518,13 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 			     i != ofxAntescofoNote->mAntescofo->internal_func_map.end(); i++) {
 				string cmd = i->first;
 				cmd = "antescofo::" + cmd;
-				cout << "autocompletion: adding internal command: " << cmd << endl;
+				//cout << "autocompletion: adding internal command: " << cmd << endl;
 				[editor pushback_keywords:cmd.c_str()];
 			}
 			for (Environment::dicof_t::iterator i = ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.begin();
 			     i !=  ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.end(); i++) {
 				string cmd = i->second->name();
-				cout << "autocompletion: adding internal function: " << cmd << endl;
+				//cout << "autocompletion: adding internal function: " << cmd << endl;
 				[editor pushback_keywords:cmd.c_str()];
 			}
 		}
@@ -1575,7 +1597,7 @@ void ofxAntescofog::draw_ColorAsset(string name, ofColor *color)
 {
     //guiSetup_Colors->centerWidgets();
     ofSetColor(*color);
-    ofxUIButton *b = new ofxUIButton(200, 25, false, name);
+    ofxUIButton *b = new ofxUIButton(name, false, 200, 25);
     guiSetup_Colors->addWidgetDown(b);
     b->setColorBack(*color);
 }
@@ -1591,7 +1613,7 @@ void ofxAntescofog::draw_ColorSetup()
     if (!bColorSetupInitDone) {// init and create buttons with color rect
 
         guiSetup_Colors->addWidgetDown(new ofxUILabel("Choose a color to change then press \"Save color\"", OFX_UI_FONT_LARGE));
-        guiSetup_Colors->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
+        guiSetup_Colors->addWidgetDown(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_BACK, false, ofGetWindowWidth()/2, score_y, fontsize));
         for (map<string, ofColor*>::const_iterator c = colorString2var.begin(); c != colorString2var.end(); c++)
             draw_ColorAsset(c->first, c->second);
         
@@ -1614,21 +1636,21 @@ void ofxAntescofog::draw_OSCSetup() {
     ofSetColor(0, 0, 0, 100);
     ofRect(40, mUIbottom_y, score_w - 40, ofGetWindowHeight() - mUIbottom_y);
     if (!bOSCSetupInitDone) {// init and create buttons with color rect
-        guiSetup_OSC->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
+        guiSetup_OSC->addWidgetDown(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_BACK, false, ofGetWindowWidth()/2, score_y, fontsize));
 	// host
 	map<string, string*>::const_iterator c = oscString2var.begin();
 	guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
-	mTextOscHost = new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM);
+	mTextOscHost = new ofxUITextInput(c->first, *(c->second), 300, OFX_UI_FONT_MEDIUM);
 	guiSetup_OSC->addWidgetRight(mTextOscHost);
 	// port
 	c++;
 	guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
-	mTextOscPort = new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM);
+	mTextOscPort = new ofxUITextInput(c->first, *(c->second), 300, OFX_UI_FONT_MEDIUM);
 	guiSetup_OSC->addWidgetRight(mTextOscPort);
 	// port remote
 	c++;
 	guiSetup_OSC->addWidgetDown(new ofxUILabel(c->first, OFX_UI_FONT_MEDIUM));
-	mTextOscPortRemote = new ofxUITextInput(300, c->first, *(c->second), OFX_UI_FONT_MEDIUM);
+	mTextOscPortRemote = new ofxUITextInput(c->first, *(c->second), 300, OFX_UI_FONT_MEDIUM);
 	guiSetup_OSC->addWidgetRight(mTextOscPortRemote);
         
         bOSCSetupInitDone = true;
@@ -1647,12 +1669,12 @@ void ofxAntescofog::draw_FindText() {
     ofSetColor(0, 0, 0, 100);
     ofRect(40, mUIbottom_y, score_w - 40, ofGetWindowHeight() - mUIbottom_y);
     if (!bFindTextInitDone) {// init and create buttons with color rect
-        guiFind->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_BACK, fontsize));
+        guiFind->addWidgetDown(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_BACK, false, ofGetWindowWidth()/2, score_y, fontsize));
 	guiFind->addWidgetDown(new ofxUILabel("Enter your text to search or replace: ", OFX_UI_FONT_MEDIUM));
-	guiFind->addWidgetDown(new ofxUITextInput(300, TEXT_CONSTANT_BUTTON_TEXT, "", OFX_UI_FONT_MEDIUM));
-        guiFind->addWidgetRight(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_FIND, fontsize));
-	guiFind->addWidgetDown(new ofxUITextInput(300, TEXT_CONSTANT_BUTTON_REPLACE_TEXT, "", OFX_UI_FONT_MEDIUM));
-        guiFind->addWidgetRight(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_REPLACE, fontsize));
+	guiFind->addWidgetDown(new ofxUITextInput(TEXT_CONSTANT_BUTTON_TEXT, "", 300, OFX_UI_FONT_MEDIUM));
+        guiFind->addWidgetRight(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_FIND, false, ofGetWindowWidth()/2, score_y, fontsize));
+	guiFind->addWidgetDown(new ofxUITextInput(TEXT_CONSTANT_BUTTON_REPLACE_TEXT, "", 300, OFX_UI_FONT_MEDIUM));
+        guiFind->addWidgetRight(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_REPLACE, false, ofGetWindowWidth()/2, score_y, fontsize));
         ((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_BACK))->setLabelVisible(true);
         ((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND))->setLabelVisible(true);
 	//((ofxUITextInput*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->setClicked();
@@ -1722,6 +1744,7 @@ void ofxAntescofog::mouseMoved( int x, int y){
 
 //--------------------------------------------------------------
 void ofxAntescofog::mousePressed( int x, int y, int button ) {
+	cout << "mouse: " << x << " : " << y << endl;
 	//if (args.button == 3) { }
 	bShouldRedraw = true;
     //cout << "Fog : mousePressed r:"<< mEditorRect.x << ","<< mEditorRect.y << ","<< mEditorRect.width << "," << mEditorRect.height <<" inside:"<< mEditorRect.inside(x, y) << endl;
@@ -1764,6 +1787,7 @@ void ofxAntescofog::mouseReleased( int x, int y, int button ){
 //--------------------------------------------------------------
 void ofxAntescofog::windowResized(ofResizeEventArgs& resizeEventArgs) { // (int w, int h){
 	cout << "ofxAntescofog::windowResized: "<< resizeEventArgs.width << "x"<< resizeEventArgs.height << endl;
+	if (!guiBottom) return; //setup();
 
 #ifdef TARGET_OSX
 	NSView *glview = [cocoaWindow->delegate getNSView];
@@ -1828,7 +1852,7 @@ void ofxAntescofog::display_error()
         string err = ofxAntescofoNote->get_error();
         ofDrawBitmapString(ofxAntescofoNote->get_error(), 100, 100);
         bErrorInitDone = true;
-        guiError->addWidgetDown(new ofxUILabelToggle(ofGetWindowWidth()/2, score_y, false, TEXT_CONSTANT_BUTTON_CANCEL, fontsize));
+        guiError->addWidgetDown(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_CANCEL, false, ofGetWindowWidth()/2, score_y, fontsize));
     } else {
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setState(0);
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setVisible(true);

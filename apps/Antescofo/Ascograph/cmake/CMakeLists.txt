@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.101")
+set(ASCOGRAPH_VERSION_NUMBER "0.103")
 
 set(ANTESCOFO_FAUST 0)
 set(ANTESCOFO_CSOUND 0)
@@ -44,6 +44,7 @@ set (OFX_FREEIMAGE_INCL_PATH ../../../../libs/FreeImage/include/)
 set (OFX_FREETYPE_INCL_PATH ../../../../libs/freetype/include/ ../../../../libs/freetype/include/freetype2/)
 set (OFX_RTAUDIO_INCL_PATH ../../../../libs/rtAudio/include/)
 set (GST_INCL_PATH ../../../../../gstreamer-1.0.2/)
+set (OFX_GLFW_INCL_PATH ../../../../libs/glfw/include/)
 set (MUTANT_LIBS_PATH ${ANTESCOFO_LIB_PATH}/../Mutant-libs)
 set (SNDFILE_INCL_PATH ${MUTANT_LIBS_PATH}/libsndfile-1.0.25/Buildlib/i386/include/)
 
@@ -71,6 +72,7 @@ include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_
 					${OFX_POCO_INCL_PATH}
 					${OFX_TESS2_INCL_PATH}
 					${OFX_CAIRO_INCL_PATH}
+					${OFX_GLFW_INCL_PATH}
 					${OFX_FMOD_INCL_PATH}
 					${OFX_FREEIMAGE_INCL_PATH}
 					${OFX_FREETYPE_INCL_PATH}
@@ -94,12 +96,14 @@ include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_
 
 set (OPENFRAMEWORKS_LIB_SOURCES
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/of3dUtils.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/of3dPrimitives.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/ofCamera.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/ofEasyCam.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/ofMesh.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/3d/ofNode.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/app/ofAppGlutWindow.cpp
+#	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/app/ofAppGlutWindow.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/app/ofAppRunner.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/app/ofAppGLFWWindow.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/communication/ofArduino.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/communication/ofSerial.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/events/ofEvents.cpp
@@ -109,11 +113,15 @@ set (OPENFRAMEWORKS_LIB_SOURCES
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/gl/ofMaterial.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/gl/ofShader.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/gl/ofTexture.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/gl/ofGLUtils.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/gl/ofVbo.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/gl/ofVboMesh.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/ofBitmapFont.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/ofCairoRenderer.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/ofRendererCollection.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/ofGraphics.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/of3dGraphics.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/ofImage.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/ofPath.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/graphics/ofPixels.cpp
@@ -126,17 +134,17 @@ set (OPENFRAMEWORKS_LIB_SOURCES
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/math/ofQuaternion.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/math/ofVec2f.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/math/ofVec4f.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofBaseSoundPlayer.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofBaseSoundStream.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofSoundPlayer.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofSoundStream.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofPASoundStream.cpp
+#${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp
+#	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofPASoundStream.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofSoundPlayer.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/sound/ofSoundStream.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/types/ofBaseTypes.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/types/ofColor.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/types/ofPoint.cpp
+#	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/types/ofPoint.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/types/ofRectangle.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofFileUtils.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofLog.cpp
@@ -144,6 +152,7 @@ set (OPENFRAMEWORKS_LIB_SOURCES
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofThread.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofURLFileLoader.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofUtils.cpp
+	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofMatrixStack.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofDirectShowGrabber.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQtUtils.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQuickTimeGrabber.cpp
@@ -163,6 +172,8 @@ SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQ
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitPlayer.mm
 	PROPERTIES COMPILE_FLAGS "-x objective-c++")
 SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitMovieRenderer.m
+	PROPERTIES COMPILE_FLAGS "-x objective-c++")
+SET_SOURCE_FILES_PROPERTIES( ${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/app/ofAppGLFWWindow.cpp
 	PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
 if (APPLE)
@@ -301,6 +312,50 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxGuido/src/ofxGuido.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUI2DGraph.cpp
+  	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUI2DPad.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIBaseDraws.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIButton.cpp
+  	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUICanvas.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUICircleSlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIDropDownList.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIEventArgs.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIImage.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIImageButton.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIImageSampler.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIImageSlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIImageToggle.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUILabel.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUILabelButton.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUILabelToggle.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIMovingGraph.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIMultiImageButton.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIMultiImageToggle.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIRadio.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIRangeSlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIRectangle.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIScrollableCanvas.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUISlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUISortableList.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUISpacer.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUISpectrum.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUITextArea.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUITextInput.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIToggle.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIToggleMatrix.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIWaveform.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIFPS.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIFPSSlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIDragableLabelButton.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUINumberDialer.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIRotarySlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIBiLabelSlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIMinimalSlider.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIEnvelopeEditor.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIEnvelope.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIValuePlotter.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIWidget.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIWidgetWithLabel.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
@@ -392,6 +447,7 @@ if(APPLE)
                                      ${OPENFRAMEWORKS_ROOT}/libs/glu/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/glu/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/glew/lib/osx
+                                     ${OPENFRAMEWORKS_ROOT}/libs/glfw/lib/osx
 			   	     ${OPENFRAMEWORKS_ROOT}/libs/glut/lib/osx
 				     ${OPENFRAMEWORKS_ROOT}/libs/glut/lib/osx/GLUT.framework/
                                      ${OPENFRAMEWORKS_ROOT}/libs/gstappsink/lib/osx
@@ -437,7 +493,7 @@ elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 endif ()
 
-set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib /usr/local/lib ${ANTESCOFO_LIB_PATH} ../bin/Ascograph.app/Contents/Frameworks) # ${LIB_GUIDO_PATH}/)
+set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib ${ANTESCOFO_LIB_PATH} /usr/local/lib ../bin/Ascograph.app/Contents/Frameworks) # ${LIB_GUIDO_PATH}/)
 set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain//usr/include/ /usr/include /usr/local/include )
 
 
@@ -550,6 +606,7 @@ if ( APPLE )
     of_find_library("accelerate")
     of_find_library("veclib")
     of_find_library("qtkit")
+    of_find_library("IOkit")
     of_find_library("coreaudio")
     of_find_library("corevideo")
     of_find_library("coremidi")
@@ -567,8 +624,8 @@ if ( APPLE )
     of_find_library("PocoZIp")
     of_find_library("PocoDataODBC")
     of_find_library("PocoDataSQLite")
-    of_find_library("fmodex")
     of_find_library("FreeImage")
+    of_find_library("fmodex")
     of_find_library("cairo")
     of_find_library("cairo-script-interpreter")
     of_find_library("pixman-1")
@@ -584,6 +641,9 @@ if ( APPLE )
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
     #of_find_library("microhttpd")
     of_find_library("antescofo")
+    of_find_library("glfw3")
+    of_find_library("crypto")
+    of_find_library("ssl")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
     of_find_library("openal")
     of_find_library("stdc++")
@@ -601,17 +661,18 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSCI_NAMESPACE -DSCI_LEXER ")
 
 set( MACOSX_RESOURCE_FILES
 	${CMAKE_SOURCE_DIR}/../bin/data/info_bar_bg.png
-	${CMAKE_SOURCE_DIR}/../bin/data/note.png
 	${CMAKE_SOURCE_DIR}/../bin/data/logo_inria.png
 	${CMAKE_SOURCE_DIR}/../bin/data/logo_ircam.png
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
 	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
+	${CMAKE_SOURCE_DIR}/../bin/data/menlo.ttf
 	"${CMAKE_SOURCE_DIR}/../bin/data/Times New Roman.ttf"
 )
 
 set( MACOSX_RESOURCE_FILES_FONTS
 	"${CMAKE_SOURCE_DIR}/../bin/data/GUI/NewMedia Fett.ttf"
 	"${CMAKE_SOURCE_DIR}/../bin/data/Times New Roman.ttf"
+	${CMAKE_SOURCE_DIR}/../bin/data/menlo.ttf
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/Ascograph.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 

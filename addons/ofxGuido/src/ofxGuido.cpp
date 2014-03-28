@@ -4,7 +4,9 @@
 ofxGuido::ofxGuido(GuidoLayoutSettings& layoutSettings)
 {
 	guido = new GuidoComponent();
-	guido->GuidoInit("DroidSansMono.ttf", "GUI/guido2.ttf");
+	string textfont =  ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
+	string guidofont =  ofFilePath::getCurrentExeDir() + "../Resources/GUI/guido2.ttf";
+	guido->GuidoInit(textfont.c_str(), guidofont.c_str());
 	guido->setGuidoLayoutSettings(layoutSettings);
 }
 

@@ -67,7 +67,7 @@ namespace MusicXML2
 
 class measure_elt {
 	public:
-		measure_elt() : bFermata(false), bpm(""), nMeasure(0), m_pos(rational(0)), type(0) { }
+		measure_elt() : bFermata(false), bpm(""), nMeasure(0), m_pos(rational(0)), type(0), duration(0, 0) { }
 		int 			type;
 		rational 		duration;
 		vector<int>		pitches;

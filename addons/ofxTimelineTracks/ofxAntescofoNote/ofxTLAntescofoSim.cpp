@@ -238,7 +238,8 @@ void ofxTLAntescofoSim::windowResized(int w, int h) {
 
 void ofxTLAntescofoSim::save() {}
 void ofxTLAntescofoSim::load() {
-	mFont.loadFont ("DroidSansMono.ttf", 8);
+	string fontfile = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
+	mFont.loadFont (fontfile, 8);
 }
 
 

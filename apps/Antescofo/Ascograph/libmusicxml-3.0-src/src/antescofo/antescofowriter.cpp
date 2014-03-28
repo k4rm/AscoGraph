@@ -348,7 +348,6 @@ void antescofowriter::insertNote(int type, float pitch, rational dur, float nmea
 void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasure, rational &curBeat, int flag_, string rehearsal) {
 	vector<measure_elt>::iterator i;
 	if (debug_) cout << "; Addnote(beat:"<<curBeat.getNumerator() << "/" << curBeat.getDenominator() << ", meas:" << nmeasure <<" pitch:"<<pitch << " dur:"<< dur.getNumerator()<<"/"<<dur.getDenominator() << " type:"<<  type << " bpm:"<<fBPM<<") ";
-	if (debug_) { cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl; print(false); }
 	if (dur.toFloat() < 0.00001) return;
 
 	//cout << "AddBeat: beat:" << curBeat.toFloat() << " measure " << nmeasure << endl;
@@ -625,6 +624,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 							newbeat = curBeat; i->duration.rationalise();
 							newbeat += i->duration;
 							newbeat.rationalise();
+							if (debug_) cout << "insert " << newbeat.toFloat() << " new note: type=" << type << endl;
 							AddNote(type, pitch, new_dur, nmeasure, newbeat, ANTESCOFO_FLAG_TIED_END);
 							//AddNote(ANTESCOFO_CHORD, pitch, new_dur, nmeasure, newbeat);
 						}
@@ -657,14 +657,17 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 						// get measure_elt to know its type
 						//e->type = (v_Notes[curBeat].pitches.size() + 1 > 1 ? ANTESCOFO_CHORD : ANTESCOFO_NOTE);
 						v_Notesfind(curBeat, j);
+						if (debug_) { cout << "v_Notesfind returned: beat:" << j->m_pos.toFloat() << " dur=" << j->duration.toFloat() << endl; }
 						e->type = (j->pitches.size() + 1 > 1 ? ANTESCOFO_CHORD : ANTESCOFO_NOTE);
 						new_dur.rationalise();
 						e->duration = new_dur;
 						rational tmpbeat = curBeat + i->duration; tmpbeat.rationalise();
 						v_Notesfind(tmpbeat, j);
 						//for (vector<int>::iterator c = v_Notes[tmpbeat].pitches.begin(); c != v_Notes[tmpbeat].pitches.end(); c++)
-						for (vector<int>::iterator c = j->pitches.begin(); c != j->pitches.end(); c++)
-							e->pitches.push_back(-(*c));
+						if (!j->pitches.empty()) {
+							for (vector<int>::iterator c = j->pitches.begin(); c != j->pitches.end(); c++)
+								e->pitches.push_back(-(*c));
+						}
 						e->pitches.push_back(-pitch);
 						if (flag_ == ANTESCOFO_FLAG_TIED_END) i->tiednotes.push_back(pitch);
 						e->nMeasure = nmeasure;
@@ -706,6 +709,8 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 	i->rehearsal = rehearsal;
 	std::sort(v_Notes.begin(), v_Notes.end(), v_Notesless);
 	final_compress();
+
+	if (debug_) { cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << endl; print(false); }
 }
 
 void antescofowriter::print(bool with_header) {
@@ -811,6 +816,7 @@ void antescofowriter::merge_notes(vector<measure_elt>::iterator a, vector<measur
 		//a->second.nMeasure++;
 	}
 	a->duration += b->duration;
+	a->duration.rationalise();
 	if (a->pitches != b->pitches)
 		a->pitches.insert(a->pitches.end(), b->pitches.begin(), b->pitches.end());
 	v_Notes.erase(b);
