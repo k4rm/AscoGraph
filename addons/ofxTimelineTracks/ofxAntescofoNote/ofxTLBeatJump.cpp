@@ -9,7 +9,7 @@
 #include <string>
 #include "ofxTimeline.h"
 #include "ofxTLBeatJump.h"
-#include "ofxAntescofog.h"
+//#include "ofxAntescofog.h"
 
 vector<ofPoint> circlePoints;
 ofPolyline circlePolyline;

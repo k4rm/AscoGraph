@@ -1,13 +1,13 @@
 dependencies: \
-  /Users/coffy/Documents/ircam/git/openFrameworks/addons/ofxAccelerometer/src/ofxAccelerometer.cpp \
+  /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxAccelerometer/src/ofxAccelerometer.cpp \
   ../../../../addons/ofxAccelerometer/src/ofxAccelerometer.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofTypes.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofConstants.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofTypes.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofConstants.h \
   ../../../../libs/tess2/include/tesselator.h \
   ../../../../libs/openFrameworks/types/ofColor.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
   ../../../../libs/openFrameworks/math/ofVec2f.h \
   ../../../../libs/openFrameworks/math/ofVec4f.h \
   ../../../../libs/poco/include/Poco/Mutex.h \
@@ -20,7 +20,7 @@ dependencies: \
   ../../../../libs/poco/include/Poco/Exception.h \
   ../../../../libs/poco/include/Poco/ScopedLock.h \
   ../../../../libs/poco/include/Poco/Mutex_POSIX.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/events/ofEvents.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/events/ofEvents.h \
   ../../../../libs/openFrameworks/events/ofEventUtils.h \
   ../../../../libs/poco/include/Poco/PriorityEvent.h \
   ../../../../libs/poco/include/Poco/AbstractEvent.h \

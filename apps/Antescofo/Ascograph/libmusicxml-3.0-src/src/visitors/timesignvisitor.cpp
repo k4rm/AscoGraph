@@ -49,7 +49,7 @@ void timesignvisitor::visitStart ( S_time& elt ) {
 	fSymbol = elt->getAttributeValue("symbol");
 }
 
-void timesignvisitor::visitStart ( S_beats& elt )			{ fCurrentBeat = elt->getValue(); }
+void timesignvisitor::visitStart ( S_beats& elt )			{  fCurrentBeat = elt->getValue(); }
 void timesignvisitor::visitStart ( S_beat_type& elt )		{ fTimeSign.push_back(make_pair(fCurrentBeat, elt->getValue())); }
 void timesignvisitor::visitStart ( S_senza_misura& elt )	{ fSenzaMisura = true; }
 

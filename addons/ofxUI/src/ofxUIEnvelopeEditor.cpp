@@ -348,6 +348,7 @@ bool ofxUIEnvelopeEditor::checkForClosestPointNode(float x, float y)
             return true;
         }
     }
+    return false;
 }
 
 bool ofxUIEnvelopeEditor::deleteClosestPointNode(float x, float y)

@@ -15,9 +15,15 @@
 #include "Action.h"
 #include <location.hh>
 #include <position.hh>
-#include <ofxAntescofog.h>
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+#else
+# include <ofxAntescofog.h>
+#endif
 #include "ofxHotKeys.h"
-#include "ofxCodeEditor.h"
+#ifndef ASCOGRAPH_IOS
+# include "ofxCodeEditor.h"
+#endif
 #include "BeatCurve.h"
 
 ofxTimeline *_timeline;
@@ -38,7 +44,11 @@ int inline findAndReplace(T& source, const T& find, const T& replace)
 	return num;
 }
 
+#ifdef ASCOGRAPH_IOS
+ofxTLAntescofoAction::ofxTLAntescofoAction(iOSAscoGraph *Antescofog)
+#else
 ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
+#endif
 {
 	mAntescofog = Antescofog;
 	bEditorShow = false;
@@ -635,8 +645,9 @@ bool ofxTLAntescofoAction::mousePressed_search_curve_rec(ActionGroup* a, ofMouse
 
 bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 {
-	cout << "mousePressed: x:"<< args.x << " y:" << args.y << endl; 
+	cout << "mousePressed: x:"<< args.x << " y:" << args.y << endl;
 	bool res = false;
+#ifndef ASCOGRAPH_IOS
 	// selection
 	ActionGroup* clickedGroup = groupFromScreenPoint(args.x, args.y);
 	if (clickedGroup) {
@@ -690,6 +701,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		dragSelection.width = 0;
 		dragSelection.height = 0;
 	}
+#endif
 #endif
 	return res;
 }
@@ -992,6 +1004,7 @@ ofRectangle ofxTLAntescofoAction::getBoundedRect(ofRectangle& r)
 }
 
 void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
+#ifndef ASCOGRAPH_IOS
 	vector<Action*>::const_iterator i;
 	float d = 0;
 	string newscore;
@@ -1004,6 +1017,7 @@ void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
 		mAntescofog->replaceEditorScore(actioncurve->parentCurve->lineNum_begin, actioncurve->parentCurve->lineNum_end,
 				actioncurve->parentCurve->colNum_begin, actioncurve->parentCurve->colNum_end, actstr);
 	}
+#endif
 }
 
 void ofxTLAntescofoAction::show_all_curves()
@@ -1361,7 +1375,8 @@ ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Eve
  */
 void ActionCurve::split()
 {
-	if (debug_edit_curve) cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl; 
+#ifndef ASCOGRAPH_IOS
+	if (debug_edit_curve) cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl;
 	if (parentCurve->antescofo_curve) {
 		if (debug_edit_curve) cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl; 
 		label = parentCurve->antescofo_curve->label();
@@ -1414,6 +1429,7 @@ void ActionCurve::split()
 		if (((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore))
 			actionTrack->show(label);
 	}
+#endif
 }
 
 ActionMultiCurves::~ActionMultiCurves()

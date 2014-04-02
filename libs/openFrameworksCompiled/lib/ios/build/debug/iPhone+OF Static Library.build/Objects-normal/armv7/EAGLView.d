@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/coffy/Documents/ircam/git/openFrameworks/addons/ofxiOS/src/gl/EAGLView.m \
+  /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/gl/EAGLView.m \
   ../../../../addons/ofxiOS/src/gl/EAGLView.h \
   ../../../../addons/ofxiOS/src/gl/ESRenderer.h \
   ../../../../addons/ofxiOS/src/gl/ES1Renderer.h \

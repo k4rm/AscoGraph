@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofFileUtils.cpp \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.cpp \
   ../../../../libs/openFrameworks/utils/ofFileUtils.h \
   ../../../../libs/openFrameworks/utils/ofConstants.h \
   ../../../../libs/tess2/include/tesselator.h \
@@ -14,11 +14,11 @@ dependencies: \
   ../../../../libs/poco/include/Poco/File_UNIX.h \
   ../../../../libs/openFrameworks/utils/ofUtils.h \
   ../../../../libs/openFrameworks/utils/ofLog.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofTypes.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofTypes.h \
   ../../../../libs/openFrameworks/types/ofColor.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
   ../../../../libs/openFrameworks/math/ofVec2f.h \
   ../../../../libs/openFrameworks/math/ofVec4f.h \
   ../../../../libs/poco/include/Poco/Mutex.h \

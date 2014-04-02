@@ -43,14 +43,18 @@
 #include <Antescofo_AscoGraph.h>
 #include "ofxMidi.h"
 #include "ofxTLAntescofoAction.h"
+#ifdef USE_MUSICXML
 #include "antescofowriter.h"
+#endif
 #include "rational.h"
 #include <sndfile.h>    // Sound-file reader
 #ifdef USE_GUIDO
 # include "ofxGuido.h"
 #endif
 
-
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+#endif
 
 #define ANTESCOFO_REST              0
 #define ANTESCOFO_CHORD             1
@@ -120,7 +124,11 @@ typedef struct {
 class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 {
 	public:
+#ifdef ASCOGRAPH_IOS
+	ofxTLAntescofoNote(iOSAscoGraph *mAntescofog);
+#else
 	ofxTLAntescofoNote(ofxAntescofog *mAntescofog);
+#endif
 	~ofxTLAntescofoNote();
 	friend class ofxTLAntescofoAction;
 	friend class ofxTLBeatTicker;
@@ -140,7 +148,9 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	virtual void save();
 	virtual void load();
+#ifdef USE_MUSICXML
 	virtual int loadscoreMusicXML(string filename, string outfilename);
+#endif
 	virtual int loadscoreAntescofo(string filename);
 	virtual bool loadscoreAntescofo_fromString(string newscore);
 	bool getAccompanimentMarkers(vector<float>& map_index, vector<float>& map_markers);
@@ -258,8 +268,9 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	string getXMLStringForSwitches(bool selectedOnly);
 	vector<ofxTLAntescofoNoteOn*> switchesFromXML(ofxXmlSettings xml);
+#ifdef USE_MUSICXML
 	vector<ofxTLAntescofoNoteOn*> switchesFromMusicXML(string filename, string outfilename);
-
+#endif
 	ofxTLAntescofoNoteOn* switchForScreenXY(float screenPos, int y);
 	ofxTLAntescofoNoteOn* switchForPoint(float percent, int y);
 	ofxTLAntescofoNoteOn* nearestGrowingNoteBeforePointWithPitch(float percent, int pitch);
@@ -271,8 +282,9 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofxTLAntescofoNoteOn* hoverSwitch;
 	bool hoveringStartTime;
 	bool hoveringHandle;
-
+#ifdef USE_MUSICXML
 	MusicXML2::antescofowriter* AntescofoWriter;
+#endif
 	float mDur_in_secs, mDur_in_beats, mCurSecs, mCurBeat;
 	int getNoteType(Event *e);
 	void getcues();
@@ -297,8 +309,11 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	bool bShowPianoRoll;
 	bool bAutoScroll;
 	float mLastBeat;
-
-	ofxAntescofog *mAntescofog;
+#ifdef ASCOGRAPH_IOS
+    iOSAscoGraph* mAntescofog;
+#else
+	ofxAntescofog* mAntescofog;
+#endif
 	ofxTLAntescofoAction* ofxAntescofoAction;
 
 	// Antescofo score support

@@ -1,11 +1,11 @@
 dependencies: \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/types/ofParameter.cpp \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameter.cpp \
   ../../../../libs/openFrameworks/types/ofParameter.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/events/ofEvents.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofConstants.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/events/ofEvents.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofConstants.h \
   ../../../../libs/tess2/include/tesselator.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
   ../../../../libs/openFrameworks/math/ofVec2f.h \
   ../../../../libs/openFrameworks/math/ofVec4f.h \
   ../../../../libs/openFrameworks/events/ofEventUtils.h \
@@ -48,8 +48,8 @@ dependencies: \
   ../../../../libs/openFrameworks/events/ofDelegate.h \
   ../../../../libs/openFrameworks/types/ofTypes.h \
   ../../../../libs/openFrameworks/types/ofColor.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofUtils.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofUtils.h \
   ../../../../libs/openFrameworks/utils/ofLog.h \
   ../../../../libs/openFrameworks/utils/ofFileUtils.h \
   ../../../../libs/poco/include/Poco/File.h \

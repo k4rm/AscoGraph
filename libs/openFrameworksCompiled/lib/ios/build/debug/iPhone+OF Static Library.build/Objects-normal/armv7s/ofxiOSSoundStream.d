@@ -1,17 +1,17 @@
 dependencies: \
-  /Users/coffy/Documents/ircam/git/openFrameworks/addons/ofxiOS/src/sound/ofxiOSSoundStream.mm \
+  /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/ofxiOSSoundStream.mm \
   ../../../../addons/ofxiOS/src/sound/ofxiOSSoundStream.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/sound/ofBaseSoundStream.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofConstants.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/sound/ofBaseSoundStream.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofConstants.h \
   ../../../../libs/tess2/include/tesselator.h \
   ../../../../addons/ofxiOS/src/sound/ofxiOSSoundStreamDelegate.h \
   ../../../../addons/ofxiOS/src/sound/SoundStream.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/app/ofBaseApp.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/app/ofBaseApp.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofPoint.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofVec3f.h \
   ../../../../libs/openFrameworks/math/ofVec2f.h \
   ../../../../libs/openFrameworks/math/ofVec4f.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/events/ofEvents.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/events/ofEvents.h \
   ../../../../libs/openFrameworks/events/ofEventUtils.h \
   ../../../../libs/poco/include/Poco/PriorityEvent.h \
   ../../../../libs/poco/include/Poco/AbstractEvent.h \
@@ -50,21 +50,21 @@ dependencies: \
   ../../../../libs/poco/include/Poco/Timestamp.h \
   ../../../../libs/poco/include/Poco/FunctionPriorityDelegate.h \
   ../../../../libs/openFrameworks/events/ofDelegate.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofBaseTypes.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofBaseTypes.h \
   ../../../../libs/openFrameworks/types/ofRectangle.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofLog.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofLog.h \
   ../../../../libs/openFrameworks/utils/ofFileUtils.h \
   ../../../../libs/poco/include/Poco/File.h \
   ../../../../libs/poco/include/Poco/File_UNIX.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofTypes.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/types/ofTypes.h \
   ../../../../libs/openFrameworks/types/ofColor.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/3d/ofMesh.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofUtils.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMath.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/3d/ofMesh.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/utils/ofUtils.h \
   ../../../../libs/poco/include/Poco/Path.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/gl/ofGLUtils.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/graphics/ofPixels.h \
-  /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMatrix4x4.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/gl/ofGLUtils.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/graphics/ofPixels.h \
+  /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../openFrameworks/math/ofMatrix4x4.h \
   ../../../../libs/openFrameworks/math/ofQuaternion.h \
   ../../../../addons/ofxiOS/src/sound/SoundInputStream.h \
   ../../../../addons/ofxiOS/src/sound/SoundOutputStream.h

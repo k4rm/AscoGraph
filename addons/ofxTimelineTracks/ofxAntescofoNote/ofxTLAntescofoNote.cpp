@@ -42,6 +42,7 @@
 #include <string>
 #include <sys/stat.h>
 
+#ifdef USE_MUSICXML
 // libmusicxcml/guido includes
 #include "libmusicxml.h"
 #include "xml.h"
@@ -49,6 +50,7 @@
 #include "xmlreader.h"
 #include "xml2antescofovisitor.h"
 #include "antescofowriter.h"
+#endif
 #ifdef USE_GUIDO
 # include "GuidoComponent.h"
 # include "GUIDOScoreMap.h"
@@ -57,7 +59,13 @@
 
 #include "ofMain.h"
 #include "ofxTLAntescofoNote.h"
-#include <ofxAntescofog.h>
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+# include "ofxConsole.h"
+# include "ofxTLZoomer2D.h"
+#else
+# include <ofxAntescofog.h>
+#endif
 #include "ofxModifierKeys.h"
 
 #define RT_TEMPO_VAR_OK
@@ -89,7 +97,12 @@ bool switchsort(ofxTLAntescofoNoteOn* a, ofxTLAntescofoNoteOn* b){
 	return a->beat.min < b->beat.min;
 }
 
-ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
+#ifdef ASCOGRAPH_IOS
+ofxTLAntescofoNote::ofxTLAntescofoNote(iOSAscoGraph* g)
+#else
+ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
+#endif
+{
 	mAntescofog = g;
 	changingRangeMin = false;
 	changingRangeMax = false;
@@ -106,15 +119,17 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g) {
 	bounds.height = 275;
 
 	ofxAntescofoAction = 0;
+#ifdef USE_MUSICXML
 	AntescofoWriter = new MusicXML2::antescofowriter();
+#endif
 	mDur_in_secs = 0;
 	mCurBeat = -1;
 	mCurSecs = 0.;
 	bAutoScroll = true;
 	bShowPianoRoll = true;
 	bLockNotes = true;
-
-	mAntescofo = new antescofo_ascograph_offline();
+	
+    mAntescofo = new antescofo_ascograph_offline();
 	//cout << "================= This Name : " << mAntescofo->thisName()<< endl;
 	mNetscore = 0;
 
@@ -995,6 +1010,7 @@ void ofxTLAntescofoNote::draw_playhead() {
 		ofSetLineWidth(3);
 		ofPopStyle();
 	} else { // guido playhead
+#ifdef USE_GUIDO
 		if (mCurBeat == -1) return;
 
 		//float x = normalizedXtoScreenX( mCurSecs/mDur_in_secs, zoomBounds);
@@ -1038,6 +1054,7 @@ void ofxTLAntescofoNote::draw_playhead() {
 			}
 		}
 		*/
+#endif
 	}
 }
 
@@ -1092,7 +1109,7 @@ int ofxTLAntescofoNote::pitchForScreenY(int y) {
 }
 
 bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
-
+#ifndef ASCOGRAPH_IOS
 	//cout << "ofxTLAntescofoNote::mousePressed " << endl;
 	ofVec2f screenpoint(args.x, args.y);
 	shouldCreateNewSwitch = false;
@@ -1203,7 +1220,7 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 #endif
 	}
 	draggingSelectionRange = false;
-
+#endif
 	return true;
 }
 
@@ -1295,7 +1312,7 @@ void ofxTLAntescofoNote::save(){
 	settings.saveFile(xmlFileName);
 }
 
-
+#ifdef USE_MUSICXML
 int ofxTLAntescofoNote::loadscoreMusicXML(string filename, string outfilename){
 	clear();
 	switches = switchesFromMusicXML(filename, outfilename);
@@ -1303,6 +1320,7 @@ int ofxTLAntescofoNote::loadscoreMusicXML(string filename, string outfilename){
 	trimRange();
 	return switches.size();
 }
+#endif
 
 
 string ofxTLAntescofoNote::get_error()
@@ -1848,9 +1866,10 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 			switchA->missed = false;
 		}
 	}
+#ifndef ASCOGRAPH_IOS
 	if(switchA != NULL && bAutoScroll)
 		mAntescofog->editorShowLine(switchA->lineNum_begin, switchA->lineNum_end, switchA->colNum_begin, switchA->colNum_end);
-
+#endif
 	// TODO : save detectedPitch = mOsc_pitch; in order to display it in a purple color in draw()
 	return r;
 }
@@ -1869,6 +1888,7 @@ ofRectangle ofxTLAntescofoNote::getBounds()
 // -> reload modified file, if parse error : restore backup score
 bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 {
+#ifndef ASCOGRAPH_IOS
 	ostringstream str;
 	str << "ofxTLAntescofoNote::change_action : " << beatnum << ", new action: "<< newaction;
 	console->addln(str.str()); str.str("");
@@ -1905,6 +1925,9 @@ bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 		console->addln(str.str()); str.str("");
 		switches = bkpswitches;
 	} else return loadscoreAntescofo(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+#else
+    return false;
+#endif
 }
 
 // called from ofxTLAntescofoAction with a score not saved to parse from the text editor
@@ -2071,7 +2094,7 @@ vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromXML(ofxXmlSettings
 	return newSwitches;
 }
 
-
+#ifdef USE_MUSICXML
 vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromMusicXML(string filename, string outfilename){
 	vector<ofxTLAntescofoNoteOn*> newSwitches;
 
@@ -2107,7 +2130,7 @@ vector<ofxTLAntescofoNoteOn*> ofxTLAntescofoNote::switchesFromMusicXML(string fi
 	}
 	return switches;
 }
-
+#endif
 
 string ofxTLAntescofoNote::copyRequest(){
 	return getXMLStringForSwitches(true);
@@ -2162,7 +2185,9 @@ int ofxTLAntescofoNote::getSelectedItemCount()
 
 void ofxTLAntescofoNote::clear(){
 	if (mNetscore) {
+#ifdef USE_GUIDO
 		guido_string.clear();
+#endif
 		deleteActionTrack();
 		//mAntescofo // TODO rajouter l'appel au ~Score() !!!
 		delete mNetscore;
@@ -2178,9 +2203,10 @@ void ofxTLAntescofoNote::clear(){
 
 		}
 	}
-
+#ifdef USE_MUSICXML
 	delete AntescofoWriter;
 	AntescofoWriter = new MusicXML2::antescofowriter();
+#endif
 }
 
 void ofxTLAntescofoNote::playbackStarted(ofxTLPlaybackEventArgs& args){

@@ -9,7 +9,11 @@
 #include <string>
 #include "ofxTimeline.h"
 #include "ofxTLBeatTicker.h"
-#include "ofxAntescofog.h"
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+#else
+# include "ofxAntescofog.h"
+#endif
 
 template <typename T> string tostr(const T& t) { ostringstream os; os<<t; return os.str(); } 
 

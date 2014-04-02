@@ -10,6 +10,9 @@
 
 #include <iostream>
 #include <list>
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+#endif
 #include "Action.h"
 #include "ActionCompound.h"
 #include "ActionAtomic.h"
@@ -37,7 +40,11 @@ class ActionMultiCurves;
 class ofxTLAntescofoAction : public ofxTLTrack
 {
 	public:
-		ofxTLAntescofoAction(ofxAntescofog* Antescofog);
+#ifndef ASCOGRAPH_IOS
+    ofxTLAntescofoAction(ofxAntescofog* Antescofog);
+#else
+    ofxTLAntescofoAction(iOSAscoGraph* Antescofog);
+#endif
 		~ofxTLAntescofoAction();
 
 		friend class ofxTLAntescofoNote;
@@ -96,8 +103,11 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		ofTrueTypeFont mFont;
 		Score *mScore;
+#ifdef ASCOGRAPH_IOS
+        iOSAscoGraph *mAntescofog;
+#else
 		ofxAntescofog *mAntescofog;
-
+#endif
 		list<ActionGroup*> mActionGroups;
 		bool bEditorShow;
 		bool draggingSelectionRange, movingAction;

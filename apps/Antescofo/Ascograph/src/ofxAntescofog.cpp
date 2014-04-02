@@ -685,7 +685,7 @@ void ofxAntescofog::setupUI() {
 	[helpMenuItem setSubmenu:helpMenu];
 	[menubar addItem:helpMenuItem];
 
-	guiBottom = new ofxUICanvas(0, 0, score_x+score_w, score_y);
+	guiBottom = new ofxUICanvas(0, 0, score_x+score_w - 300, score_y);
 	guiBottom->setFont(ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf");
 	guiSetup_OSC = new ofxUICanvas(score_x + 50, score_y, ofGetWindowWidth(), ofGetWindowHeight(), guiBottom);
 	guiError = new ofxUIScrollableCanvas(score_x, score_y, ofGetWindowWidth(), ofGetWindowHeight()-100-score_y, guiBottom);
@@ -716,7 +716,9 @@ void ofxAntescofog::setupUI() {
 	guiBottom->loadSettings("GUI/guiSettings.xml");
 	//guiTop->loadSettings("GUI/guiSettings.xml");
 
-	guiBottom->setColorBack(ofxAntescofoNote->color_staves_bg);
+	ofxUIColor col = ofxAntescofoNote->color_staves_bg;
+	col.a = 255;
+	guiBottom->setColorBack(col);
 	/*
 	guiBottom->setUIColors(ofxAntescofoNote->color_staves_bg, &ofColor(0, 0, 0, 0), ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_staves_fg,
 	                    ofxAntescofoNote->color_highlight, ofxAntescofoNote->color_gui_bg, ofxAntescofoNote->color_gui_bg);
@@ -1798,7 +1800,7 @@ void ofxAntescofog::windowResized(ofResizeEventArgs& resizeEventArgs) { // (int 
 	cocoaWindow->setWindowShape(ofGetWidth(), ofGetHeight());
 
 	score_w = resizeEventArgs.width - score_x - 10;
-	guiBottom->getRect()->width = score_w + score_x;
+	guiBottom->getRect()->width = score_w + score_x - 300;
 
 	drawCache.allocate(resizeEventArgs.width, ofGetHeight(), GL_RGBA);
 

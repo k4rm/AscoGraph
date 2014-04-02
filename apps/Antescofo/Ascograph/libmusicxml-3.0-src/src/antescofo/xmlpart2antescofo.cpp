@@ -512,6 +512,7 @@ void xmlpart2antescofo::visitStart ( S_barline& elt )
 //______________________________________________________________________________
 void xmlpart2antescofo::visitEnd ( S_time& elt ) 
 {
+	cout << "************** timesignvisitor::fTimeSign.size() = "<< timesignvisitor::fTimeSign.size() << endl;
 	string timesign;
 	if (!timesignvisitor::fSenzaMisura) {
     	if (timesignvisitor::fSymbol == "common") {
@@ -912,6 +913,19 @@ rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
 		if (dots) 
 			dur += (dur * dots) / 2;
 	}
+
+	// get measure time signature, check for ternary
+	cout << "TimeSignature: " << w.nBeats << " / " << w.nBeat_type << " is ";
+	bool is_tern = false;
+	if ((w.nBeats == 6 && (w.nBeat_type == 4 || w.nBeat_type == 8 || w.nBeat_type == 16))
+	   || (w.nBeats == 9 && (w.nBeat_type == 4 || w.nBeat_type == 8 || w.nBeat_type == 16))
+	   || (w.nBeats == 12 && (w.nBeat_type == 4 || w.nBeat_type == 8 || w.nBeat_type == 16)))
+		is_tern = true;
+	cout << (is_tern ? "ternaire" : "binary") << endl;
+
+	if (is_tern)
+		dur *= rational(2, 3);
+
 	dur.rationalise();
 	return dur;
 }
