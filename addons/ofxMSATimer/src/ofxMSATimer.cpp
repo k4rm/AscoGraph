@@ -83,6 +83,16 @@ uint64_t ofxMSATimer::getAppTimeMicros(){
 	return  ((int64_t)diffTime.tv_sec*1000000000 + (int64_t)diffTime.tv_nsec)/1000;
 }
 
+#else
+ofxMSATimer::ofxMSATimer(){
+    cerr << "ofxMSATimer::ofxMSATimer TODO" << endl;
+
+}
+
+uint64_t ofxMSATimer::getAppTimeMicros(){
+    cerr << "ofxMSATimer::getAppTimeMicros TODO" << endl;
+	return 0.;
+}
 #endif
 
 float ofxMSATimer::getAppTimeSeconds(){

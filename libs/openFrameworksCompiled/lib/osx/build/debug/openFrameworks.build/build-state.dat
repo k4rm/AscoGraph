@@ -2,73 +2,73 @@ TopenFrameworks
 v6
 r1
 cCheck dependencies
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppRunner.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/app/ofAppRunner.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofArduino.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/communication/ofArduino.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSerial.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/communication/ofSerial.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQtUtils.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofQtUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoGrabber.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofVideoGrabber.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoPlayer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofVideoPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEvents.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/events/ofEvents.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimeGrabber.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofQuickTimeGrabber.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dUtils.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/3d/of3dUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCamera.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/3d/ofCamera.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEasyCam.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/3d/ofEasyCam.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofNode.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/3d/ofNode.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFmodSoundPlayer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundPlayer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/sound/ofSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundStream.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/sound/ofSoundStream.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMath.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/math/ofMath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix3x3.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/math/ofMatrix3x3.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix4x4.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/math/ofMatrix4x4.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuaternion.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/math/ofQuaternion.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec2f.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/math/ofVec2f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec4f.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/math/ofVec4f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBaseTypes.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/types/ofBaseTypes.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofColor.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/types/ofColor.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRectangle.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/types/ofRectangle.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFileUtils.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofFileUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLog.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofLog.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSystemUtils.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofSystemUtils.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofThread.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofThread.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofURLFileLoader.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofURLFileLoader.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofUtils.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBitmapFont.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofBitmapFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGraphics.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dGraphics.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/of3dGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofImage.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPixels.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofPixels.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTessellator.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofTessellator.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofTrueTypeFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCairoRenderer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofCairoRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMesh.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/3d/ofMesh.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPolyline.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofPolyline.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFbo.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofFbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLRenderer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofGLRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dPrimitives.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/3d/of3dPrimitives.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLight.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofLight.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMaterial.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofMaterial.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofShader.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofShader.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTexture.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofTexture.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVbo.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofVbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVboMesh.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofVboMesh.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPath.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofPath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRtAudioSoundStream.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofOpenALSoundPlayer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitGrabber.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofQTKitGrabber.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitPlayer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofQTKitPlayer.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimePlayer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofQuickTimePlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitMovieRenderer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/video/ofQTKitMovieRenderer.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameter.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/types/ofParameter.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameterGroup.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/types/ofParameterGroup.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLUtils.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofGLUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGLFWWindow.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/app/ofAppGLFWWindow.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRendererCollection.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/ofRendererCollection.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrixStack.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofMatrixStack.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLProgrammableRenderer.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGlutWindow.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/app/ofAppGlutWindow.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppNoWindow.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/app/ofAppNoWindow.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofXml.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
-cLibtool /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a normal i386
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppRunner.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppRunner.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofArduino.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofArduino.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSerial.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofSerial.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQtUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQtUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoGrabber.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEvents.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofEvents.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimeGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCamera.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofCamera.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEasyCam.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofEasyCam.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofNode.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofNode.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFmodSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundStream.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundStream.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMath.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix3x3.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix3x3.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix4x4.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix4x4.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuaternion.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofQuaternion.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec2f.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec2f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec4f.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec4f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBaseTypes.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofBaseTypes.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofColor.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofColor.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRectangle.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofRectangle.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFileUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLog.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofLog.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSystemUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofSystemUtils.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofThread.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofThread.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofURLFileLoader.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofURLFileLoader.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBitmapFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofBitmapFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGraphics.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dGraphics.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/of3dGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPixels.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPixels.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTessellator.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTessellator.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCairoRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofCairoRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMesh.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofMesh.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPolyline.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPolyline.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFbo.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofFbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dPrimitives.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dPrimitives.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLight.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofLight.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMaterial.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofMaterial.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofShader.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofShader.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTexture.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofTexture.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVbo.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVboMesh.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVboMesh.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPath.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRtAudioSoundStream.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofOpenALSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitGrabber.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitPlayer.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimePlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimePlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitMovieRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitMovieRenderer.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameter.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameter.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameterGroup.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameterGroup.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGLFWWindow.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGLFWWindow.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRendererCollection.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofRendererCollection.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrixStack.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofMatrixStack.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLProgrammableRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGlutWindow.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGlutWindow.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppNoWindow.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppNoWindow.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofXml.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+cLibtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a normal i386
 
 N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
 c00000000530295C100000000000000AA
@@ -189,6 +189,614 @@ N/System/Library/Frameworks/QuickTime.framework/QuickTime
 c00000000530299EF0000000000322D20
 t1392679407
 s3288352
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/glut/lib/osx/GLUT.framework/GLUT
+c00000000533448870000000000093570
+t1395935367
+s603504
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dPrimitives.cpp
+c000000005284C71C00000000000094A3
+t1384433436
+s38051
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dUtils.cpp
+c00000000533448870000000000001221
+t1395935367
+s4641
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofCamera.cpp
+c000000005284C71C0000000000001AF7
+t1384433436
+s6903
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofEasyCam.cpp
+c00000000533448870000000000001DB4
+t1395935367
+s7604
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofMesh.cpp
+c00000000533448870000000000012C70
+t1395935367
+s76912
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofNode.cpp
+c000000005284C71C000000000000276D
+t1384433436
+s10093
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGLFWWindow.cpp
+c00000000533448870000000000008081
+t1395935367
+s32897
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGlutWindow.cpp
+c000000005334488700000000000057CD
+t1395935367
+s22477
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppNoWindow.cpp
+c000000005284C71C0000000000000DDB
+t1384433436
+s3547
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppRunner.cpp
+c00000000533448870000000000003F94
+t1395935367
+s16276
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofArduino.cpp
+c000000005284C71C0000000000005678
+t1384433436
+s22136
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofSerial.cpp
+c0000000052DCF0150000000000004BC3
+t1390211093
+s19395
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofEvents.cpp
+c000000005334488700000000000029E4
+t1395935367
+s10724
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofFbo.cpp
+c0000000053344887000000000000738A
+t1395935367
+s29578
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp
+c0000000053344887000000000000D1CA
+t1395935367
+s53706
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLRenderer.cpp
+c0000000052DCF0150000000000007F8C
+t1390211093
+s32652
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLUtils.cpp
+c0000000053344887000000000000356F
+t1395935367
+s13679
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofLight.cpp
+c000000005284C71C000000000000331C
+t1384433436
+s13084
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofMaterial.cpp
+c000000005334488700000000000010BF
+t1395935367
+s4287
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofShader.cpp
+c000000005334488700000000000069C4
+t1395935367
+s27076
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofTexture.cpp
+c000000005284C71C0000000000007E5C
+t1384433436
+s32348
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVbo.cpp
+c00000000533448870000000000006C46
+t1395935367
+s27718
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVboMesh.cpp
+c000000005284C71C0000000000001395
+t1384433436
+s5013
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/of3dGraphics.cpp
+c0000000052DCF01500000000000041D4
+t1390211093
+s16852
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofBitmapFont.cpp
+c0000000052DCF015000000000000A8D7
+t1390211093
+s43223
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofCairoRenderer.cpp
+c00000000533448870000000000008A7B
+t1395935367
+s35451
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofGraphics.cpp
+c00000000533448870000000000008266
+t1395935367
+s33382
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp
+c000000005335928F0000000000009137
+t1396019855
+s37175
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPath.cpp
+c0000000052DCF015000000000000596E
+t1390211093
+s22894
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPixels.cpp
+c00000000533448870000000000005C0F
+t1395935367
+s23567
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPolyline.cpp
+c00000000533448870000000000007C9F
+t1395935367
+s31903
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofRendererCollection.cpp
+c000000005284C71C00000000000000B4
+t1384433436
+s180
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTessellator.cpp
+c000000005284C71C0000000000001772
+t1384433436
+s6002
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp
+c0000000053357B7D0000000000008A01
+t1396013949
+s35329
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMath.cpp
+c00000000533448870000000000002416
+t1395935367
+s9238
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix3x3.cpp
+c0000000052DCF0150000000000001824
+t1390211093
+s6180
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix4x4.cpp
+c000000005284C71C000000000000AC96
+t1384433436
+s44182
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofQuaternion.cpp
+c000000005284C71C00000000000024C4
+t1384433436
+s9412
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec2f.cpp
+c000000005284C71C00000000000000C7
+t1384433436
+s199
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec4f.cpp
+c000000005284C71C00000000000000E7
+t1384433436
+s231
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp
+c000000005284C71C00000000000027C4
+t1384433436
+s10180
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp
+c000000005284C71C00000000000073E1
+t1384433436
+s29665
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp
+c0000000052DCF0150000000000001DE9
+t1390211093
+s7657
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundPlayer.cpp
+c000000005284C71C0000000000001382
+t1384433436
+s4994
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundStream.cpp
+c000000005284C71C000000000000128B
+t1384433436
+s4747
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofBaseTypes.cpp
+c000000005284C71C00000000000014AE
+t1384433436
+s5294
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofColor.cpp
+c00000000533448870000000000008128
+t1395935367
+s33064
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameter.cpp
+c000000005284C71C00000000000007A3
+t1384433436
+s1955
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameterGroup.cpp
+c0000000053344887000000000000170E
+t1395935367
+s5902
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofRectangle.cpp
+c00000000533448870000000000005888
+t1395935367
+s22664
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.cpp
+c0000000052DCF015000000000000B564
+t1390211093
+s46436
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofLog.cpp
+c000000005284C71C0000000000002253
+t1384433436
+s8787
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofMatrixStack.cpp
+c000000005284C71C00000000000023A8
+t1384433436
+s9128
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofSystemUtils.cpp
+c00000000533448870000000000006177
+t1395935367
+s24951
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofThread.cpp
+c000000005284C71C000000000000129E
+t1384433436
+s4766
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofURLFileLoader.cpp
+c00000000533448870000000000001D64
+t1395935367
+s7524
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofUtils.cpp
+c000000005284C71C000000000000540F
+t1384433436
+s21519
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofXml.cpp
+c000000005334488700000000000069A5
+t1395935367
+s27045
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitGrabber.mm
+c000000005284C71C000000000000766B
+t1384433436
+s30315
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitMovieRenderer.m
+c000000005284C71C000000000000545F
+t1384433436
+s21599
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitPlayer.mm
+c000000005284C71C0000000000003413
+t1384433436
+s13331
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQtUtils.cpp
+c000000005284C71C0000000000002598
+t1384433436
+s9624
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp
+c000000005284C71C000000000000617D
+t1384433436
+s24957
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimePlayer.cpp
+c000000005284C71C0000000000005F7A
+t1384433436
+s24442
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoGrabber.cpp
+c0000000052DCF0150000000000001C05
+t1390211093
+s7173
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoPlayer.cpp
+c000000005284C71C0000000000002B23
+t1384433436
+s11043
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dGraphics.o
+t1395936087
+s226884
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dPrimitives.o
+t1395936092
+s555836
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dUtils.o
+t1395936079
+s226080
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGLFWWindow.o
+t1395936099
+s465924
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGlutWindow.o
+t1395936100
+s427836
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppNoWindow.o
+t1395936100
+s262712
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppRunner.o
+t1395936080
+s1130352
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofArduino.o
+t1395936079
+s595868
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBaseTypes.o
+t1395936082
+s129444
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBitmapFont.o
+t1395936086
+s461352
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCairoRenderer.o
+t1395936090
+s767868
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCamera.o
+t1395936079
+s136112
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofColor.o
+t1395936086
+s1743156
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEasyCam.o
+t1395936080
+s238424
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEvents.o
+t1395936080
+s1297900
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFbo.o
+t1395936092
+s505264
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFileUtils.o
+t1395936084
+s729320
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFmodSoundPlayer.o
+t1395936080
+s108948
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLProgrammableRenderer.o
+t1395936100
+s620072
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLRenderer.o
+t1395936092
+s484740
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLUtils.o
+t1395936098
+s464012
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGraphics.o
+t1395936087
+s786684
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o
+t1396472172
+s606012
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLight.o
+t1395936092
+s203592
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLog.o
+t1395936084
+s291672
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMaterial.o
+t1395936093
+s50436
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMath.o
+t1395936081
+s180684
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix3x3.o
+t1395936081
+s72964
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix4x4.o
+t1395936082
+s181992
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrixStack.o
+t1395936099
+s374672
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMesh.o
+t1395936093
+s1170812
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofNode.o
+t1395936080
+s151064
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofOpenALSoundPlayer.o
+t1395936095
+s28944
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameter.o
+t1395936097
+s206632
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameterGroup.o
+t1395936098
+s831968
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPath.o
+t1395936095
+s532352
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPixels.o
+t1395936090
+s793176
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPolyline.o
+t1395936091
+s495100
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitGrabber.o
+t1395936098
+s650812
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitMovieRenderer.o
+t1395936097
+s64368
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitPlayer.o
+t1395936097
+s261092
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQtUtils.o
+t1395936078
+s28928
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuaternion.o
+t1395936081
+s99488
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimeGrabber.o
+t1395936077
+s39624
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimePlayer.o
+t1395936096
+s39608
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRectangle.o
+t1395936083
+s193304
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRendererCollection.o
+t1395936098
+s201600
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRtAudioSoundStream.o
+t1395936096
+s196616
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSerial.o
+t1395936078
+s244860
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofShader.o
+t1395936094
+s685476
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundPlayer.o
+t1395936080
+s93344
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundStream.o
+t1395936081
+s115140
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSystemUtils.o
+t1395936085
+s86244
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTessellator.o
+t1395936089
+s331340
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTexture.o
+t1395936094
+s452812
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofThread.o
+t1395936085
+s169940
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o
+t1396472173
+s821060
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofURLFileLoader.o
+t1395936087
+s773840
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofUtils.o
+t1395936087
+s435212
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVbo.o
+t1395936094
+s495592
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVboMesh.o
+t1395936094
+s286192
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec2f.o
+t1395936082
+s43544
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec4f.o
+t1395936082
+s43624
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoGrabber.o
+t1395936078
+s589152
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoPlayer.o
+t1395936078
+s562204
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o
+t1395936100
+s724480
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/openFrameworksDebug.LinkFileList
+c00000000533C796B00000000000025B5
+t1396472171
+s9653
+
+N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a
+t1395936101
+s34638744
 
 N/Users/coffy/Documents/ircam/git/openFrameworks/libs/FreeImage/include/FreeImage.h
 c0000000053344887000000000000D165
@@ -4565,6 +5173,204 @@ r0
 CAnalyze /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../../openFrameworks/video/ofVideoPlayer.cpp
 r0
 
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dPrimitives.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dUtils.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofCamera.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofEasyCam.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofMesh.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofNode.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGLFWWindow.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGlutWindow.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppNoWindow.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppRunner.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofArduino.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofSerial.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofEvents.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofFbo.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLRenderer.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLUtils.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofLight.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofMaterial.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofShader.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofTexture.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVbo.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVboMesh.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/of3dGraphics.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofBitmapFont.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofCairoRenderer.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofGraphics.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPath.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPixels.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPolyline.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofRendererCollection.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTessellator.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMath.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix3x3.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix4x4.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofQuaternion.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec2f.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec4f.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundPlayer.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundStream.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofBaseTypes.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofColor.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameter.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameterGroup.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofRectangle.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofLog.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofMatrixStack.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofSystemUtils.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofThread.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofURLFileLoader.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofUtils.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofXml.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitGrabber.mm
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitMovieRenderer.m
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitPlayer.mm
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQtUtils.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimePlayer.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoGrabber.cpp
+r0
+
+CBuild AST from /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoPlayer.cpp
+r0
+
 CBuild AST from /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/3d/of3dPrimitives.cpp
 r0
 
@@ -4963,7 +5769,7 @@ r0
 
 CCheck dependencies
 r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies64ebbdce85e4b841^bd8bebce85e4b841^---0#1#1#--18"Check dependencies36"A5D1FD29-79DB-4D9C-A022-21557DC9EB15-
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies412ce7eab0ecb841^789c0eebb0ecb841^---0#1#1#--18"Check dependencies36"464BBB40-B557-4059-94E2-82D1B3A04C0F-
 
 CCompileC ../../lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dGraphics.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/of3dGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
 r0
@@ -6980,6 +7786,368 @@ xc++
 xcom.apple.compilers.llvm.clang.1_0.compiler
 oclang: warning: -lpthread: 'linker' input unused
 lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection135"Compile /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../../openFrameworks/utils/ofXml.cpp5c007ab2819bb841^473b56b4819bb841^-49"clang: warning: -lpthread: 'linker' input unused-0#0#0#-19%DVTDocumentLocation2@143"file://localhost/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../../openFrameworks/utils/ofXml.cpp0000000000000000^3444"CompileC ../../lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o ../../../openFrameworks/utils/ofXml.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -std=c++98 -stdlib=libstdc++ -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wno-unused-value -Wno-empty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Wno-invalid-offsetof -g -mssse3 -Wno-sign-conversion -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx/build/debug/openFrameworks.build/openFrameworksDebug.hmap -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx/include -I../../../../libs/openFrameworks -I../../../../libs/openFrameworks/.settings -I../../../../libs/openFrameworks/3d -I../../../../libs/openFrameworks/app -I../../../../libs/openFrameworks/communication -I../../../../libs/openFrameworks/events -I../../../../libs/openFrameworks/gl -I../../../../libs/openFrameworks/graphics -I../../../../libs/openFrameworks/math -I../../../../libs/openFrameworks/sound -I../../../../libs/openFrameworks/types -I../../../../libs/openFrameworks/utils -I../../../../libs/openFrameworks/video -I../../../../libs/poco/include -I../../../../libs/freetype/include -I../../../../libs/freetype/include/freetype2 -I../../../../libs/fmodex/include -I../../../../libs/glew/include -I../../../../libs/FreeImage/include -I../../../../libs/tess2/include -I../../../../libs/cairo/include/cairo -I../../../../libs/rtAudio/include -I../../../../libs/glfw/include -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx/build/debug/openFrameworks.build/DerivedSources/i386 -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx/build/debug/openFrameworks.build/DerivedSources -F/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx -F/System/Library/Frameworks -D__MACOSX_CORE__ -lpthread -MMD -MT dependencies -MF /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.d --serialize-diagnostics /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.dia -c /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../../openFrameworks/utils/ofXml.cpp -o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx/../../lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o36"DCD00916-D2D6-49E9-A2A1-52E8E7E80747-
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dGraphics.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/of3dGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dPrimitives.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dPrimitives.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGLFWWindow.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGLFWWindow.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppGlutWindow.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppGlutWindow.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppNoWindow.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppNoWindow.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofAppRunner.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppRunner.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofArduino.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofArduino.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBaseTypes.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofBaseTypes.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofBitmapFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofBitmapFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCairoRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofCairoRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofCamera.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofCamera.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofColor.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofColor.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEasyCam.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofEasyCam.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofEvents.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofEvents.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFbo.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofFbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFileUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofFmodSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofFmodSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLProgrammableRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGLUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofGraphics.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+s418164971.064997
+e418164972.756072
+r1
+xCompileC
+x/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o
+x/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp
+xnormal
+xi386
+xc++
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofConstants.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/glew/include/GL/glew.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/tess2/include/tesselator.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/File.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Foundation.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Config.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Platform.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Platform_POSIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Bugcheck.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Types.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Timestamp.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/File_UNIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofTexture.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofPoint.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec3f.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec2f.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec4f.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofRectangle.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofLog.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofTypes.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofColor.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMath.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Mutex.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Exception.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ScopedLock.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Mutex_POSIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofBaseTypes.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofMesh.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofUtils.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Path.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLUtils.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPixels.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix4x4.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofQuaternion.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVboMesh.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVbo.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppRunner.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofURLFileLoader.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofThread.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Thread.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Thread_POSIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Runnable.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/SignalHandler.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Event.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Event_POSIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/RefCountedObject.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/AtomicCounter.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/AutoPtr.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofEvents.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofEventUtils.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/PriorityEvent.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/AbstractEvent.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/SingletonHolder.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/SharedPtr.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ActiveResult.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ActiveMethod.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ActiveRunnable.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ActiveStarter.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ThreadPool.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/PriorityStrategy.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/NotificationStrategy.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/AbstractPriorityDelegate.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/AbstractDelegate.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/PriorityDelegate.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/PriorityExpire.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/FunctionPriorityDelegate.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofDelegate.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Condition.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ScopedUnlock.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofGraphics.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/FreeImage/include/FreeImage.h
+oclang: warning: -lpthread: 'linker' input unused
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection91"Compile /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp294"CompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compilerbbb510ebb0ecb841^ac8dc1ecb0ecb841^-49"clang: warning: -lpthread: 'linker' input unused-0#0#1#-19%DVTDocumentLocation2@90"file:///Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp0000000000000000^3623"CompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/osx    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=c++98 -stdlib=libstdc++ -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wno-unused-value -Wno-empty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Wno-invalid-offsetof -mmacosx-version-min=10.9 -g -mssse3 -Wno-sign-conversion -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/openFrameworksDebug.hmap -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/include -I../../../../libs/openFrameworks -I../../../../libs/openFrameworks/.settings -I../../../../libs/openFrameworks/3d -I../../../../libs/openFrameworks/app -I../../../../libs/openFrameworks/communication -I../../../../libs/openFrameworks/events -I../../../../libs/openFrameworks/gl -I../../../../libs/openFrameworks/graphics -I../../../../libs/openFrameworks/math -I../../../../libs/openFrameworks/sound -I../../../../libs/openFrameworks/types -I../../../../libs/openFrameworks/utils -I../../../../libs/openFrameworks/video -I../../../../libs/poco/include -I../../../../libs/freetype/include -I../../../../libs/freetype/include/freetype2 -I../../../../libs/fmodex/include -I../../../../libs/glew/include -I../../../../libs/FreeImage/include -I../../../../libs/tess2/include -I../../../../libs/cairo/include/cairo -I../../../../libs/rtAudio/include -I../../../../libs/glfw/include -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/DerivedSources/i386 -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/DerivedSources -F/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks -D__MACOSX_CORE__ -lpthread -MMD -MT dependencies -MF /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.d --serialize-diagnostics /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.dia -c /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp -o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofImage.o36"8D5B039B-F672-44B7-B9C2-B6309B37CE5C-
+b8CDA999F-F5C4-4B52-B8D0-EA6A267E9878
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLight.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofLight.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofLog.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofLog.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMaterial.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofMaterial.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMath.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix3x3.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix3x3.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrix4x4.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix4x4.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMatrixStack.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofMatrixStack.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofMesh.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofMesh.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofNode.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofNode.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofOpenALSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofOpenALSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameter.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameter.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofParameterGroup.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameterGroup.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPath.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPixels.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPixels.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofPolyline.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPolyline.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitGrabber.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitMovieRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitMovieRenderer.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQTKitPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQTKitPlayer.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQtUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQtUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuaternion.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofQuaternion.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimeGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimeGrabber.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofQuickTimePlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofQuickTimePlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRectangle.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofRectangle.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRendererCollection.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofRendererCollection.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofRtAudioSoundStream.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSerial.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/communication/ofSerial.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofShader.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofShader.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSoundStream.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundStream.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofSystemUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofSystemUtils.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTessellator.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTessellator.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTexture.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofTexture.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofThread.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofThread.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+s418164971.065526
+e418164973.122398
+r1
+xCompileC
+x/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o
+x/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp
+xnormal
+xi386
+xc++
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofPoint.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec3f.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec2f.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofConstants.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/glew/include/GL/glew.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/tess2/include/tesselator.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec4f.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofRectangle.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofLog.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/File.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Foundation.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Config.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Platform.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Platform_POSIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Bugcheck.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Types.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Timestamp.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/File_UNIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofTypes.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofColor.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMath.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Mutex.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Exception.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/ScopedLock.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Mutex_POSIX.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPath.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPolyline.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofBaseTypes.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofMesh.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofUtils.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Path.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLUtils.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPixels.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix4x4.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofQuaternion.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVboMesh.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVbo.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTessellator.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofTexture.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/ft2build.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/config/ftheader.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/freetype.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/config/ftconfig.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/config/ftoption.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/config/ftstdlib.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/fterrors.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/ftmoderr.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/fterrdef.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/fttypes.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/ftsystem.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/ftimage.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/ftglyph.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/ftoutln.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/freetype/include/freetype2/freetype/fttrigon.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofGraphics.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppRunner.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/TextConverter.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/UTF8Encoding.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/TextEncoding.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/SharedPtr.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/AtomicCounter.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Latin1Encoding.h
+d/Users/coffy/Documents/ircam/git/AscoGraph/libs/poco/include/Poco/Latin9Encoding.h
+oclang: warning: -lpthread: 'linker' input unused
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection98"Compile /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp308"CompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler30d510ebb0ecb841^d6571fedb0ecb841^-49"clang: warning: -lpthread: 'linker' input unused-0#0#1#-19%DVTDocumentLocation2@97"file:///Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp0000000000000000^3665"CompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/osx    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=c++98 -stdlib=libstdc++ -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wno-unused-value -Wno-empty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Wno-invalid-offsetof -mmacosx-version-min=10.9 -g -mssse3 -Wno-sign-conversion -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/openFrameworksDebug.hmap -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/include -I../../../../libs/openFrameworks -I../../../../libs/openFrameworks/.settings -I../../../../libs/openFrameworks/3d -I../../../../libs/openFrameworks/app -I../../../../libs/openFrameworks/communication -I../../../../libs/openFrameworks/events -I../../../../libs/openFrameworks/gl -I../../../../libs/openFrameworks/graphics -I../../../../libs/openFrameworks/math -I../../../../libs/openFrameworks/sound -I../../../../libs/openFrameworks/types -I../../../../libs/openFrameworks/utils -I../../../../libs/openFrameworks/video -I../../../../libs/poco/include -I../../../../libs/freetype/include -I../../../../libs/freetype/include/freetype2 -I../../../../libs/fmodex/include -I../../../../libs/glew/include -I../../../../libs/FreeImage/include -I../../../../libs/tess2/include -I../../../../libs/cairo/include/cairo -I../../../../libs/rtAudio/include -I../../../../libs/glfw/include -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/DerivedSources/i386 -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/DerivedSources -F/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks -D__MACOSX_CORE__ -lpthread -MMD -MT dependencies -MF /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.d --serialize-diagnostics /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.dia -c /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp -o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofTrueTypeFont.o36"32EA1BF3-2D46-49CD-BA5F-E30A3C56DED9-
+b8CDA999F-F5C4-4B52-B8D0-EA6A267E9878
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofURLFileLoader.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofURLFileLoader.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVbo.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVboMesh.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVboMesh.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec2f.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec2f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVec4f.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec4f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoGrabber.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofVideoPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofXml.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
 
 CCompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/of3dGraphics.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/graphics/of3dGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
 s417628886.044958
@@ -13132,6 +14300,23 @@ d/Users/coffy/Documents/ircam/git/openFrameworks/libs/poco/include/Poco/DOM/Node
 oclang: warning: -lpthread: 'linker' input unused
 lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection91"Compile /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofXml.cpp297"CompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofXml.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler5c58d3e282e4b841^aef5f5e482e4b841^-49"clang: warning: -lpthread: 'linker' input unused-0#0#1#-19%DVTDocumentLocation2@90"file:///Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofXml.cpp0000000000000000^3665"CompileC /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofXml.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/project/osx    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c++ -arch i386 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=c++98 -stdlib=libstdc++ -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wno-unused-value -Wno-empty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Wno-invalid-offsetof -mmacosx-version-min=10.9 -g -mssse3 -Wno-sign-conversion -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/openFrameworksDebug.hmap -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/include -I../../../../libs/openFrameworks -I../../../../libs/openFrameworks/.settings -I../../../../libs/openFrameworks/3d -I../../../../libs/openFrameworks/app -I../../../../libs/openFrameworks/communication -I../../../../libs/openFrameworks/events -I../../../../libs/openFrameworks/gl -I../../../../libs/openFrameworks/graphics -I../../../../libs/openFrameworks/math -I../../../../libs/openFrameworks/sound -I../../../../libs/openFrameworks/types -I../../../../libs/openFrameworks/utils -I../../../../libs/openFrameworks/video -I../../../../libs/poco/include -I../../../../libs/freetype/include -I../../../../libs/freetype/include/freetype2 -I../../../../libs/fmodex/include -I../../../../libs/glew/include -I../../../../libs/FreeImage/include -I../../../../libs/tess2/include -I../../../../libs/cairo/include/cairo -I../../../../libs/rtAudio/include -I../../../../libs/glfw/include -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/DerivedSources/i386 -I/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/DerivedSources -F/Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks -D__MACOSX_CORE__ -lpthread -MMD -MT dependencies -MF /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.d --serialize-diagnostics /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.dia -c /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworks/utils/ofXml.cpp -o /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/ofXml.o36"4BBE9B8F-357F-4E94-A535-F91A197B00A3-
 b3E5104B9-04B9-4A42-A962-39293851CA50
+
+CLibtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a normal i386
+s418164973.126515
+e418164973.843374
+r1
+xLibtool
+x/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a
+xnormal
+xi386
+owarning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/glut/lib/osx/GLUT.framework/Versions/A/GLUT is a dynamic library, not added to the static library
+owarning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/fmodex/lib/osx/libfmodex.dylib is a dynamic library, not added to the static library
+owarning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/fmodex/lib/osx/libfmodex.dylib is a dynamic library, not added to the static library
+o/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/FreeImage/lib/osx/freeimage.a(FreeImageC.o-i386) has no symbols
+o/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/FreeImage/lib/osx/freeimage.a(libmng_chunk_xs.o-i386) has no symbols
+o/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/FreeImage/lib/osx/freeimage.a(libmng_trace.o-i386) has no symbols
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection120"Libtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a normal i386120"Libtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a normal i386c57120edb0ecb841^d1e7d7edb0ecb841^-1208"warning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/glut/lib/osx/GLUT.framework/Versions/A/GLUT is a dynamic library, not added to the static librarywarning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/fmodex/lib/osx/libfmodex.dylib is a dynamic library, not added to the static librarywarning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/fmodex/lib/osx/libfmodex.dylib is a dynamic library, not added to the static library/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/FreeImage/lib/osx/freeimage.a(FreeImageC.o-i386) has no symbols/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/FreeImage/lib/osx/freeimage.a(libmng_chunk_xs.o-i386) has no symbols/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/FreeImage/lib/osx/freeimage.a(libmng_trace.o-i386) has no symbols3(21%IDEActivityLogMessage2@216"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/glut/lib/osx/GLUT.framework/Versions/A/GLUT is a dynamic library, not added to the static library-418164973#0#226#-1#-23%DVTTextDocumentLocation3@-0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#40"Apple Mach-O Librarian (libtool) Warning--2@203"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/fmodex/lib/osx/libfmodex.dylib is a dynamic library, not added to the static library-418164973#226#213#-1#-3@-0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#40"Apple Mach-O Librarian (libtool) Warning--2@203"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: file: ../../../../libs/fmodex/lib/osx/libfmodex.dylib is a dynamic library, not added to the static library-418164973#439#213#-1#-3@-0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#40"Apple Mach-O Librarian (libtool) Warning--0#0#1#--1379"Libtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a normal i386    cd /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/osx    export MACOSX_DEPLOYMENT_TARGET=10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only i386 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx -filelist /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/build/debug/openFrameworks.build/Objects-normal/i386/openFrameworksDebug.LinkFileList ../../../../libs/tess2/lib/osx/tess2.a ../../../../libs/glew/lib/osx/glew.a ../../../../libs/FreeImage/lib/osx/freeimage.a ../../../../libs/freetype/lib/osx/freetype.a ../../../../libs/glut/lib/osx/GLUT.framework/Versions/A/GLUT ../../../../libs/fmodex/lib/osx/libfmodex.dylib -framework Accelerate -framework AGL -framework ApplicationServices -framework AudioToolbox -framework CoreAudio -framework CoreFoundation -framework CoreServices -framework CoreVideo -framework OpenGL -framework QuickTime -framework QTKit -framework GLUT -o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a36"A9A56B6A-E331-45F9-AAB3-97836BA49400-
+b8CDA999F-F5C4-4B52-B8D0-EA6A267E9878
 
 CLibtool /Users/coffy/Documents/ircam/git/openFrameworks/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a normal i386
 s417628900.966849

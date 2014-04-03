@@ -26,7 +26,11 @@
 
 using namespace std;
 
+#ifndef ASCOGRAPH_IOS
 class ofxAntescofog;
+#else
+class iOSAscoGraph;
+#endif
 class Score;
 class ofxTLAntescofoNote;
 class Curve;

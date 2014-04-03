@@ -11,9 +11,12 @@
 #include <list>
 #include "ofxTLTrack.h"
 #include "ofxTLTicker.h"
-
-
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+class iOSAscoGraph;
+#else
 class ofxAntescofog;
+#endif
 
 typedef struct{
 	float screenX;
@@ -27,7 +30,11 @@ class ofxTLBeatTicker : public ofxTLTicker {
 	public:
     friend class ofxTLAntescofoNote;
 
-		ofxTLBeatTicker(ofxAntescofog* Antescofog);
+#ifdef ASCOGRAPH_IOS
+    ofxTLBeatTicker(iOSAscoGraph* Antescofog);
+#else
+    ofxTLBeatTicker(ofxAntescofog* Antescofog);
+#endif
 	virtual void draw();
 	virtual void setup();
 
@@ -41,7 +48,11 @@ class ofxTLBeatTicker : public ofxTLTicker {
 
 
 	vector<ofxTLBeatBPMPoint> bpmScreenPoints;
+#ifdef ASCOGRAPH_IOS
+    iOSAscoGraph* mAntescofog;
+#else
 	ofxAntescofog* mAntescofog;
+#endif
 	bool isSetup;
 
 };

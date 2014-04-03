@@ -42,18 +42,16 @@
 
 #include <Antescofo_AscoGraph.h>
 #include "ofxMidi.h"
-#include "ofxTLAntescofoAction.h"
+#ifndef ASCOGRAPH_IOS
+# include "ofxTLAntescofoAction.h"
+#endif
 #ifdef USE_MUSICXML
-#include "antescofowriter.h"
+# include "antescofowriter.h"
 #endif
 #include "rational.h"
 #include <sndfile.h>    // Sound-file reader
 #ifdef USE_GUIDO
 # include "ofxGuido.h"
-#endif
-
-#ifdef ASCOGRAPH_IOS
-# include "iOSAscoGraph.h"
 #endif
 
 #define ANTESCOFO_REST              0
@@ -66,6 +64,12 @@
 
 class Score;
 class ParseDriver;
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+class iOSAscoGraph;
+#else
+class ofxTLAntescofoAction;
+#endif
 
 
 // representation similar to libmusicxml antescofowriter one
@@ -128,9 +132,9 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofxTLAntescofoNote(iOSAscoGraph *mAntescofog);
 #else
 	ofxTLAntescofoNote(ofxAntescofog *mAntescofog);
+    friend class ofxTLAntescofoAction;
 #endif
 	~ofxTLAntescofoNote();
-	friend class ofxTLAntescofoAction;
 	friend class ofxTLBeatTicker;
 
 	virtual void setup();
@@ -152,12 +156,17 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual int loadscoreMusicXML(string filename, string outfilename);
 #endif
 	virtual int loadscoreAntescofo(string filename);
-	virtual bool loadscoreAntescofo_fromString(string newscore);
+	virtual bool loadscoreAntescofo_fromString(string newscore, string filepath="");
 	bool getAccompanimentMarkers(vector<float>& map_index, vector<float>& map_markers);
 	bool getAccompanimentMarkers_rec_group(Gfwd *g, vector<float>& map_index, vector<float>& map_markers);
 
+#ifndef ASCOGRAPH_IOS
 	ofxTLAntescofoAction* getActionTrack() { return ofxAntescofoAction; }
-	void deleteActionTrack();
+    ofxTLAntescofoAction* createActionTrack();
+    void add_action(float beatnum, string action, Event *e);
+    void clear_actions();
+    void deleteActionTrack();
+#endif
 
 	void update_duration();
 	string get_error();
@@ -179,8 +188,6 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual void missedAll();
 	virtual int getSelectedItemCount();
 
-	void clear_actions();
-	ofxTLAntescofoAction* createActionTrack();
 	void roundedRect(float x, float y, float w, float h, float r);
 	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY);
 
@@ -228,7 +235,6 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofRange dragSelection;
 
 	void setScore(Score* s);
-	void add_action(float beatnum, string action, Event *e);
 
 	// Track Header GUI
 	void drawLabel(string caption, ofRectangle bounds);
@@ -313,8 +319,8 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
     iOSAscoGraph* mAntescofog;
 #else
 	ofxAntescofog* mAntescofog;
+    ofxTLAntescofoAction* ofxAntescofoAction;
 #endif
-	ofxTLAntescofoAction* ofxAntescofoAction;
 
 	// Antescofo score support
 	Score       *mNetscore;

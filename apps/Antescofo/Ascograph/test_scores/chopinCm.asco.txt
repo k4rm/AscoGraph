@@ -4,7 +4,7 @@
 BPM 46.00
 	; Initialize Antescofo - These variables are automatically set upon "start"
 	;	These values might change within different performances but not between same performance.
-	antescofo-mess gamma -1.0, tune 440.0, pedal 1, pedaltime 500.0, nofharm 5, suivi 1 
+	;antescofo-mess gamma -1.0, tune 440.0, pedal 1, pedaltime 500.0, nofharm 5, suivi 1 
 	; The above also shows combinations of several messages as in Max/Pd message box
 	; Here, we have activate the PEDAL mode of Antescofo
 

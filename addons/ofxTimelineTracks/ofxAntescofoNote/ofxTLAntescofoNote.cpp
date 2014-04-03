@@ -117,8 +117,9 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
 	color_gui_bg = ofColor(30, 110, 110);
 
 	bounds.height = 275;
-
+#ifndef ASCOGRAPH_IOS
 	ofxAntescofoAction = 0;
+#endif
 #ifdef USE_MUSICXML
 	AntescofoWriter = new MusicXML2::antescofowriter();
 #endif
@@ -159,8 +160,11 @@ void ofxTLAntescofoNote::setup(){
 	//ofxTLRegisterPlaybackEvents(this);
 
 	ofAddListener(ofEvents().update, this, &ofxTLAntescofoNote::update);
-
+#ifndef ASCOGRAPH_IOS
 	string fontfile = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
+#else
+	string fontfile = "data/DroidSansMono.ttf";
+#endif
 	cout << "ofxTLAntescofoNote::setup: fontfile = " << fontfile << endl;
 	mFont.loadFont (fontfile, 13); //15);
 
@@ -1339,13 +1343,6 @@ void ofxTLAntescofoNote::set_error(string e) {
 }
 
 
-void ofxTLAntescofoNote::clear_actions()
-{
-	if (ofxAntescofoAction)
-		ofxAntescofoAction->clear_actions();
-}
-
-
 int ofxTLAntescofoNote::getNoteType(Event *e)
 {
 	if (e) {
@@ -1492,13 +1489,22 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	reset_global_error_counter();
 
 	mAntescofo->reset_error_count();
+#if 0
 	if (NULL == (score = mAntescofo->Parse(filename))) {
-		::error("%s\n", filename.c_str());
+		//::Error("%s\n", filename.c_str());
+        cerr << "PARSING ERROR: " << filename.c_str() << endl;
 		return 0;
 	}
-
+#endif
+    score = mAntescofo->Parse(filename);
+    if (score == NULL) {
+		//::Error("%s\n", filename.c_str());
+        cerr << "PARSING ERROR: " << filename.c_str() << endl;
+		return 0;
+	}
 	mNetscore = score;
 	ostringstream str;
+	ofLog() << "Duration ------------------ score size : " << score->size() << "."<< endl;
 	str << "Duration ------------------ score size : " << score->size() << "."<< endl;
 	vector<Event *>::iterator i = score->end();
 	i--; // duration is the last element index
@@ -1563,7 +1569,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->channel = 1;
 					if (bGot_Action && m == e->multi_source.begin())  { // associate action with first MULTI switch
 						newSwitch->action = actstr;
+#ifndef ASCOGRAPH_IOS
 						add_action(e->beatcum, actstr, e);
+#endif
 					}
 					// get location in text score
 					assert(e->scloc);
@@ -1625,7 +1633,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->isLast = false;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
+#ifndef ASCOGRAPH_IOS
 				add_action(e->beatcum, actstr, e);
+#endif
 			}
 			// get location in text score
 			if (!e->scloc) cout << *e;
@@ -1670,7 +1680,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				newSwitch->colNum_end = e->scloc->end.column;
 				if (bGot_Action)  {
 					newSwitch->action = actstr;
+#ifndef ASCOGRAPH_IOS
 					add_action(e->beatcum, actstr, e);
+#endif
 				}
 				p++;
 				bGot_Action = false;
@@ -1699,7 +1711,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->channel = 1;
 					if (bGot_Action)  {
 						newSwitch->action = actstr;
+#ifndef ASCOGRAPH_IOS
 						add_action(e->beatcum, actstr, e);
+#endif
 					}
 					// get location in text score
 					assert(e->scloc);
@@ -1731,7 +1745,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->isLast = false;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
+#ifndef ASCOGRAPH_IOS
 				add_action(e->beatcum, actstr, e);
+#endif
 			}
 			// get location in text score
 			if (!e->scloc) cout << *e;
@@ -1815,9 +1831,13 @@ void ofxTLAntescofoNote::getcues() {
 }
 
 void ofxTLAntescofoNote::update_duration() {
+#ifndef ASCOGRAPH_IOS
 	if (!ofxAntescofoAction)
 		createActionTrack();
-	int maxdur = ofxAntescofoAction->get_max_note_beat();
+    int maxdur = ofxAntescofoAction->get_max_note_beat();
+#else
+    int maxdur = get_max_note_beat();
+#endif
 	if (maxdur) cout << "Maximum note beat calculated from actions: " << maxdur << " beats." << endl;
 	float dur_in_beats = mDur_in_secs * timeline->getBPM() / 60;
 	if (maxdur > dur_in_beats) {
@@ -1834,17 +1854,44 @@ void ofxTLAntescofoNote::update_duration() {
 
 void ofxTLAntescofoNote::load() {}
 
+#ifndef ASCOGRAPH_IOS
 void ofxTLAntescofoNote::add_action(float beatnum, string action, Event *e) {
 	if (!ofxAntescofoAction)
 		createActionTrack();
-
 	ofxAntescofoAction->add_action(beatnum, action, e);
 }
 
+void ofxTLAntescofoNote::clear_actions()
+{
+	if (ofxAntescofoAction)
+		ofxAntescofoAction->clear_actions();
+}
+
+ofxTLAntescofoAction* ofxTLAntescofoNote::createActionTrack() {
+	if (ofxAntescofoAction) return ofxAntescofoAction;
+	ofxAntescofoAction = new ofxTLAntescofoAction(mAntescofog);
+	getTimeline()->addTrack("Actions", ofxAntescofoAction);
+	ofxAntescofoAction->setNoteTrack(this);
+	return ofxAntescofoAction;
+}
+
+void ofxTLAntescofoNote::deleteActionTrack() {
+	if (ofxAntescofoAction) {
+		getTimeline()->removeTrack(ofxAntescofoAction);
+		if (ofxAntescofoAction) {
+			delete ofxAntescofoAction;
+		}
+		ofxAntescofoAction = 0;
+	}
+}
+#endif
+
 void ofxTLAntescofoNote::setScore(Score* s) {
 	mNetscore = s;
-	if (ofxAntescofoAction) 
+#ifndef ASCOGRAPH_IOS
+	if (ofxAntescofoAction)
 		ofxAntescofoAction->setScore(s);
+#endif
 }
 
 
@@ -1934,49 +1981,30 @@ bool ofxTLAntescofoNote::change_action(float beatnum, string newaction)
 // -> save the text editor content to a tmp file
 // -> save a backup of current score
 // -> parse tmp file, if parse error : restore backup score
-bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore)
+bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore, string filepath)
 {
 	// save a copy of current score
 	vector<ofxTLAntescofoNoteOn*> bkpswitches = switches;
 
 	// try to parse resulting new score
+    remove(filepath.c_str());
 	ofstream f;
-	f.open(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+	f.open(filepath.c_str());
 	f << newscore;
 	f.close();
 	str_error.erase();
 	Score *score;
 	reset_global_error_counter();
-	if (NULL == (score = mAntescofo->Parse(TEXT_CONSTANT_TEMP_ACTION_FILENAME))) {
-		::error("%s\n", TEXT_CONSTANT_TEMP_ACTION_FILENAME);
+	if (NULL == (score = mAntescofo->Parse(filepath))) {
+		::error("%s\n", filepath.c_str());
 		mAntescofog->display_error();
 		return 0;
-	} 
-	
-	ofxAntescofoAction->clear_actions();
-
-	return loadscoreAntescofo(TEXT_CONSTANT_TEMP_ACTION_FILENAME);
-}
-
-
-ofxTLAntescofoAction* ofxTLAntescofoNote::createActionTrack() {
-	if (ofxAntescofoAction) return ofxAntescofoAction;
-	ofxAntescofoAction = new ofxTLAntescofoAction(mAntescofog);
-	getTimeline()->addTrack("Actions", ofxAntescofoAction);
-	ofxAntescofoAction->setNoteTrack(this);
-	return ofxAntescofoAction;
-}
-
-void ofxTLAntescofoNote::deleteActionTrack() {
-	if (ofxAntescofoAction) {
-		getTimeline()->removeTrack(ofxAntescofoAction);
-		if (ofxAntescofoAction) {
-			delete ofxAntescofoAction;
-		}
-		ofxAntescofoAction = 0;
 	}
+#ifndef ASCOGRAPH_IOS
+	ofxAntescofoAction->clear_actions();
+#endif
+	return loadscoreAntescofo(filepath);
 }
-
 
 string ofxTLAntescofoNote::getXMLStringForSwitches(bool selectedOnly){
 	ofxXmlSettings settings;
@@ -2188,7 +2216,9 @@ void ofxTLAntescofoNote::clear(){
 #ifdef USE_GUIDO
 		guido_string.clear();
 #endif
+#ifndef ASCOGRAPH_IOS
 		deleteActionTrack();
+#endif
 		//mAntescofo // TODO rajouter l'appel au ~Score() !!!
 		delete mNetscore;
 		mNetscore = 0;

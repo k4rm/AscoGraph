@@ -17,7 +17,12 @@
 
 template <typename T> string tostr(const T& t) { ostringstream os; os<<t; return os.str(); } 
 
-ofxTLBeatTicker::ofxTLBeatTicker(ofxAntescofog* Antescofog) : mAntescofog(Antescofog), ofxTLTicker() 
+#ifdef ASCOGRAPH_IOS
+ofxTLBeatTicker::ofxTLBeatTicker(iOSAscoGraph* Antescofog)
+#else
+ofxTLBeatTicker::ofxTLBeatTicker(ofxAntescofog* Antescofog)
+#endif
+: mAntescofog(Antescofog), ofxTLTicker()
 {
 	isSetup = false;
 }

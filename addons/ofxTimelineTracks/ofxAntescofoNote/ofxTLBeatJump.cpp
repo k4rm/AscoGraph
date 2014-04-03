@@ -14,8 +14,12 @@
 vector<ofPoint> circlePoints;
 ofPolyline circlePolyline;
 
-
-ofxTLBeatJump::ofxTLBeatJump(ofxAntescofog* Antescofog) : mAntescofog(Antescofog)
+#ifndef ASCOGRAPH_IOS
+ofxTLBeatJump::ofxTLBeatJump(ofxAntescofog* Antescofog)
+#else
+ofxTLBeatJump::ofxTLBeatJump(iOSAscoGraph* Antescofog)
+#endif
+: mAntescofog(Antescofog)
 {
 	isSetup = false;
 }

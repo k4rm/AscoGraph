@@ -12,7 +12,13 @@
 #include "ofxTLTrack.h"
 
 
+#ifndef ASCOGRAPH_IOS
 class ofxAntescofog;
+#else
+#include "iOSAscoGraph.h"
+class iOSAscoGraph;
+#endif
+
 
 class antescofoJump {
 public:
@@ -27,8 +33,13 @@ public:
 class ofxTLBeatJump : public ofxTLTrack {
 public:
 	friend class ofxTLAntescofoNote;
-
+#ifndef ASCOGRAPH_IOS
 	ofxTLBeatJump(ofxAntescofog* Antescofog);
+    ofxAntescofog* mAntescofog;
+#else
+	ofxTLBeatJump(iOSAscoGraph* Antescofog);
+    iOSAscoGraph* mAntescofog;
+#endif
 	~ofxTLBeatJump() { clear_jumps(); }
 	virtual void draw();
 	virtual void update();
@@ -43,7 +54,6 @@ public:
 	void add_jump(float beat_, float destBeat_, string destLabel_);
 
 	vector<antescofoJump*> jumpList;
-	ofxAntescofog* mAntescofog;
 	bool isSetup;
 	int oldBoundsH;
 };

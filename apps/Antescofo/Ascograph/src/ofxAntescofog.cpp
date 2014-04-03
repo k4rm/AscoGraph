@@ -1164,8 +1164,7 @@ void ofxAntescofog::update() {
 		if (mOsc_beat != -1 && reloadFile) {
 			fAntescofoTimeSeconds = ofxAntescofoNote->convertAntescofoOutputToTime(mOsc_beat, mOsc_tempo, mOsc_pitch);
 
-			//if (_debug) 
-				cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
+			if (_debug) cout << "Moving playHead to beat:"<<mOsc_beat << " tempo:"<<mOsc_tempo << " => "<<fAntescofoTimeSeconds << "sec"<<endl;
 		}
 		mHasReadMessages = false;
 		bShouldRedraw = true;
