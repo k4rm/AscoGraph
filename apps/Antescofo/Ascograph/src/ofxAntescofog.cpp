@@ -710,6 +710,7 @@ void ofxAntescofog::setupUI() {
 	//guiSetup_Colors->setScrollableDirections(false, true);
 	guiError->setScrollAreaToScreen();
 	guiError->setScrollableDirections(true, false);
+	guiError->setColorBack(ofColor(0, 0, 0, 0));
 	guiSetup_OSC->setColorBack(ofColor(0, 0, 0, 0));
 	guiSetup_Colors->setColorBack(ofColor(0, 0, 0, 0));
 
@@ -976,7 +977,8 @@ void ofxAntescofog::setupTimeline(){
 //--------------------------------------------------------------
 void ofxAntescofog::setup(){
 	console->addln("ofxAntescofo::setup()");
-	ofSetDataPathRoot("../Resources/");
+	//ofSetDataPathRoot("../Resources/");
+	ofSetDataPathRoot([[NSString stringWithFormat:@"%@/", [[NSBundle mainBundle] resourcePath]] cStringUsingEncoding:NSUTF8StringEncoding]);
 
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
@@ -1257,7 +1259,7 @@ void ofxAntescofog::draw() {
 
 void ofxAntescofog::load()
 {
-    string xmlFileName = "GUI/Ascograph.xml";
+	string xmlFileName = "GUI/Ascograph.xml";
 	ofxXmlSettings settings;
     
 	if(settings.loadFile(xmlFileName)){
@@ -1818,11 +1820,14 @@ void ofxAntescofog::gotMessage(ofMessage msg){
 
 void ofxAntescofog::draw_error()
 {
-    ofSetColor(0, 0, 0, 100);
-    ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+    //ofSetColor(0, 0, 0, 100);
+    ofRect(0, 0, ofGetWidth(), ofGetHeight());
     ofSetColor(255, 255, 255, 240);
 
+    guiError->draw();
+
     string err = ofxAntescofoNote->get_error();
+   // cout << "draw_error: err=" << err << endl;
     string err2;
     int c = 0;
     for (int i = 0; i < err.size(); i++, c++) {
@@ -1834,9 +1839,11 @@ void ofxAntescofog::draw_error()
 		    c = 0;
 	    err2 += err[i];
     }
+    ofSetColor(255, 255, 255, 200);
+    ofFill();
+    ofSetDrawBitmapMode(OF_BITMAPMODE_SIMPLE);
     ofDrawBitmapString(err2, 50, 300);
 
-    guiError->draw();
 }
 
 void ofxAntescofog::display_error()
@@ -1853,7 +1860,7 @@ void ofxAntescofog::display_error()
         string err = ofxAntescofoNote->get_error();
         ofDrawBitmapString(ofxAntescofoNote->get_error(), 100, 100);
         bErrorInitDone = true;
-        guiError->addWidgetDown(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_CANCEL, false, ofGetWindowWidth()/2, score_y, fontsize));
+        guiError->addWidget(new ofxUILabelToggle(TEXT_CONSTANT_BUTTON_CANCEL, false, ofGetWindowWidth()/2, score_y, 200, 600, fontsize));
     } else {
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setState(0);
         guiError->getWidget(TEXT_CONSTANT_BUTTON_CANCEL)->setVisible(true);

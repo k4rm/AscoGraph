@@ -42,9 +42,6 @@
 
 #include <Antescofo_AscoGraph.h>
 #include "ofxMidi.h"
-#ifndef ASCOGRAPH_IOS
-# include "ofxTLAntescofoAction.h"
-#endif
 #ifdef USE_MUSICXML
 # include "antescofowriter.h"
 #endif
@@ -64,11 +61,10 @@
 
 class Score;
 class ParseDriver;
+class ofxTLAntescofoAction;
 #ifdef ASCOGRAPH_IOS
 # include "iOSAscoGraph.h"
 class iOSAscoGraph;
-#else
-class ofxTLAntescofoAction;
 #endif
 
 
@@ -132,10 +128,10 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	ofxTLAntescofoNote(iOSAscoGraph *mAntescofog);
 #else
 	ofxTLAntescofoNote(ofxAntescofog *mAntescofog);
-    friend class ofxTLAntescofoAction;
 #endif
 	~ofxTLAntescofoNote();
 	friend class ofxTLBeatTicker;
+    friend class ofxTLAntescofoAction;
 
 	virtual void setup();
 	virtual void draw();
@@ -160,13 +156,11 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	bool getAccompanimentMarkers(vector<float>& map_index, vector<float>& map_markers);
 	bool getAccompanimentMarkers_rec_group(Gfwd *g, vector<float>& map_index, vector<float>& map_markers);
 
-#ifndef ASCOGRAPH_IOS
 	ofxTLAntescofoAction* getActionTrack() { return ofxAntescofoAction; }
     ofxTLAntescofoAction* createActionTrack();
     void add_action(float beatnum, string action, Event *e);
     void clear_actions();
     void deleteActionTrack();
-#endif
 
 	void update_duration();
 	string get_error();
@@ -219,6 +213,8 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	antescofo_ascograph_offline *mAntescofo;
 	vector<string> cuepoints;
 	vector<ofxTLAntescofoNoteOn*>& getSwitches() {return switches;}
+    ofTrueTypeFont mFont;
+
 	protected:
 	virtual void update(ofEventArgs& args);
 	bool isSwitchInBounds(ofxTLAntescofoNoteOn* s);
@@ -319,14 +315,13 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
     iOSAscoGraph* mAntescofog;
 #else
 	ofxAntescofog* mAntescofog;
-    ofxTLAntescofoAction* ofxAntescofoAction;
 #endif
+    ofxTLAntescofoAction* ofxAntescofoAction;
 
 	// Antescofo score support
 	Score       *mNetscore;
 	map<int,int> line2note;
 
-	ofTrueTypeFont mFont;
 	ofImage* noteImage;
 
 	bool bLockNotes;

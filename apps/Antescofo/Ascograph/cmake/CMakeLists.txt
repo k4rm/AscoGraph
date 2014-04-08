@@ -6,7 +6,7 @@ set(ANTESCOFO_FAUST 0)
 set(ANTESCOFO_CSOUND 0)
 set(ANTESCOFO_FLUIDSYNTH 0)
 
-set(GUIDO 0)
+set(GUIDO 1)
 set(USE_HTTPD 0)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
@@ -651,6 +651,7 @@ endif(APPLE)
 
 if (GUIDO)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_GUIDO=1")
+    set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
     of_find_library("GUIDOEngine")
 endif(GUIDO)
 
@@ -781,7 +782,7 @@ if (GUIDO)
 ADD_CUSTOM_COMMAND(
     TARGET ${PROJECT_NAME}
     PRE_BUILD
-		COMMAND cp -rf ${LIB_GUIDO_PATH}/GUIDOEngine.framework ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/
+		COMMAND cp -rf ${LIB_GUIDO_PATH}/build/MacOSX/GUIDOEngine.framework ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/Frameworks/
 )
 endif()
 
@@ -794,8 +795,9 @@ ADD_CUSTOM_COMMAND(
 		COMMAND install_name_tool -change ./libfmodex.dylib @executable_path/../Frameworks/libfmodex.dylib ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
 		COMMAND install_name_tool -change ./GUIDOEngine @executable_path/../Frameworks/GUIDOEngine.framework/GUIDOEngine ${CMAKE_SOURCE_DIR}/../bin/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}
 		COMMAND sed "s/ASCOGRAPHVERSION/${ASCOGRAPH_VERSION_NUMBER}/g" Info.plist_orig > Info.plist
-		COMMAND codesign -f -v --deep -s "Mac Developer: Thomas Coffy" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
-		COMMAND codesign -f -v --deep -s "Mac Developer: Thomas Coffy" bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
+		#COMMAND codesign -f -v --deep -s "Mac Developer: Thomas Coffy (HQ2W4T359C)" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
+		#COMMAND codesign -f -v --deep -s 'Mac Developer: Thomas Coffy' bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
+		COMMAND codesign -f -v --deep -s 'Mac Developer: Thomas Coffy' bin/Ascograph.app  --all-architectures
 )
 
 

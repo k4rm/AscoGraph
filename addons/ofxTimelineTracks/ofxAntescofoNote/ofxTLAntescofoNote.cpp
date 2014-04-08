@@ -117,9 +117,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
 	color_gui_bg = ofColor(30, 110, 110);
 
 	bounds.height = 275;
-#ifndef ASCOGRAPH_IOS
 	ofxAntescofoAction = 0;
-#endif
 #ifdef USE_MUSICXML
 	AntescofoWriter = new MusicXML2::antescofowriter();
 #endif
@@ -163,7 +161,7 @@ void ofxTLAntescofoNote::setup(){
 #ifndef ASCOGRAPH_IOS
 	string fontfile = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
 #else
-	string fontfile = "data/DroidSansMono.ttf";
+	string fontfile = "DroidSansMono.ttf";
 #endif
 	cout << "ofxTLAntescofoNote::setup: fontfile = " << fontfile << endl;
 	mFont.loadFont (fontfile, 13); //15);
@@ -1569,9 +1567,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->channel = 1;
 					if (bGot_Action && m == e->multi_source.begin())  { // associate action with first MULTI switch
 						newSwitch->action = actstr;
-#ifndef ASCOGRAPH_IOS
 						add_action(e->beatcum, actstr, e);
-#endif
 					}
 					// get location in text score
 					assert(e->scloc);
@@ -1633,9 +1629,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->isLast = false;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
-#ifndef ASCOGRAPH_IOS
 				add_action(e->beatcum, actstr, e);
-#endif
 			}
 			// get location in text score
 			if (!e->scloc) cout << *e;
@@ -1680,9 +1674,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				newSwitch->colNum_end = e->scloc->end.column;
 				if (bGot_Action)  {
 					newSwitch->action = actstr;
-#ifndef ASCOGRAPH_IOS
 					add_action(e->beatcum, actstr, e);
-#endif
 				}
 				p++;
 				bGot_Action = false;
@@ -1711,9 +1703,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->channel = 1;
 					if (bGot_Action)  {
 						newSwitch->action = actstr;
-#ifndef ASCOGRAPH_IOS
 						add_action(e->beatcum, actstr, e);
-#endif
 					}
 					// get location in text score
 					assert(e->scloc);
@@ -1745,9 +1735,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->isLast = false;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
-#ifndef ASCOGRAPH_IOS
 				add_action(e->beatcum, actstr, e);
-#endif
 			}
 			// get location in text score
 			if (!e->scloc) cout << *e;
@@ -1831,13 +1819,9 @@ void ofxTLAntescofoNote::getcues() {
 }
 
 void ofxTLAntescofoNote::update_duration() {
-#ifndef ASCOGRAPH_IOS
 	if (!ofxAntescofoAction)
 		createActionTrack();
     int maxdur = ofxAntescofoAction->get_max_note_beat();
-#else
-    int maxdur = get_max_note_beat();
-#endif
 	if (maxdur) cout << "Maximum note beat calculated from actions: " << maxdur << " beats." << endl;
 	float dur_in_beats = mDur_in_secs * timeline->getBPM() / 60;
 	if (maxdur > dur_in_beats) {
@@ -1854,7 +1838,6 @@ void ofxTLAntescofoNote::update_duration() {
 
 void ofxTLAntescofoNote::load() {}
 
-#ifndef ASCOGRAPH_IOS
 void ofxTLAntescofoNote::add_action(float beatnum, string action, Event *e) {
 	if (!ofxAntescofoAction)
 		createActionTrack();
@@ -1884,14 +1867,11 @@ void ofxTLAntescofoNote::deleteActionTrack() {
 		ofxAntescofoAction = 0;
 	}
 }
-#endif
 
 void ofxTLAntescofoNote::setScore(Score* s) {
 	mNetscore = s;
-#ifndef ASCOGRAPH_IOS
 	if (ofxAntescofoAction)
 		ofxAntescofoAction->setScore(s);
-#endif
 }
 
 
@@ -2000,9 +1980,8 @@ bool ofxTLAntescofoNote::loadscoreAntescofo_fromString(string newscore, string f
 		mAntescofog->display_error();
 		return 0;
 	}
-#ifndef ASCOGRAPH_IOS
-	ofxAntescofoAction->clear_actions();
-#endif
+    if (ofxAntescofoAction)
+        ofxAntescofoAction->clear_actions();
 	return loadscoreAntescofo(filepath);
 }
 
@@ -2216,9 +2195,7 @@ void ofxTLAntescofoNote::clear(){
 #ifdef USE_GUIDO
 		guido_string.clear();
 #endif
-#ifndef ASCOGRAPH_IOS
 		deleteActionTrack();
-#endif
 		//mAntescofo // TODO rajouter l'appel au ~Score() !!!
 		delete mNetscore;
 		mNetscore = 0;

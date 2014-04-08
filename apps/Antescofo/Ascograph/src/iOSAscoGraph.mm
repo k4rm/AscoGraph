@@ -20,6 +20,9 @@ bool _debug = true;
 
 extern ofxConsole* console;
 
+iOSAscoGraphMenu* guiMenu;
+
+
 // callback for traces... unused yet.
 void ascograph_send_action_trace(const string& action_name, const string& fathername, double now, double rnow, const string& s) {}
 void ascograph_send_cont_trace(const string& action_name, const string& fathername, double now, double rnow, double s) {}
@@ -42,6 +45,26 @@ void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 
 //--------------------------------------------------------------
 void iOSAscoGraph::setup(){
+    //ofSetDataPathRoot("../Resources/data");
+    //ofSetDataPathRoot(".");
+    
+    ofEnableSmoothing();
+	ofEnableAlphaBlending();
+#if 0
+	//glewExperimental=TRUE;
+	GLenum err=glewInit();
+	if(err!=GLEW_OK)
+	{
+		//Problem: glewInit failed, something is seriously wrong.
+		cout<<"glewInit failed, aborting."<<endl;
+		abort();
+	}
+#endif
+    // settings menu
+    guiMenu = [[iOSAscoGraphMenu alloc] initWithNibName:@"iOSAscoGraphMenu" bundle:nil];
+	[ofxiOSGetGLView() addSubview:guiMenu.view];
+    guiMenu.view.hidden = true;
+    
 	console = new ofxConsole(4, 500, 800, 300, 10);
 
     score_x = 5;
@@ -60,8 +83,7 @@ void iOSAscoGraph::setup(){
     ofxAntescofoZoom = new ofxTLZoomer2D();
 	ofxAntescofoNote = new ofxTLAntescofoNote(this);
 	ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
-    
-	setupTimeline();
+    setupTimeline();
     
 	setupUI();
 
@@ -97,7 +119,8 @@ void iOSAscoGraph::setupOSC(){
 	/*std::istringstream is(mOsc_port);
 	is >> port;
 	if (! is.good() && port <= 0)
-    */mOsc_port = "6789";
+    */
+    mOsc_port = "6789";
 	ofLog() << "Listening on OSC port " << mOsc_port << endl;
 	try {
 		mOSCreceiver.setup(atoi(mOsc_port.c_str()));
@@ -137,11 +160,250 @@ void iOSAscoGraph::setupOSC(){
 }
 
 void iOSAscoGraph::setupUI(){
+    guiBottom = new ofxUICanvas(64, 0, score_x+score_w+200 /*- 300*/, score_y);
+    guiBottom->setFont("GUI/NewMedia Fett.ttf");
+	//ofxUIColor col(188, 189, 203, 255);// = ofxAntescofoNote->color_staves_bg;col.a = 255;
+	ofxUIColor col(149, 154, 162, 255);
+	
+    guiBottom->setColorBack(col);
+	mBPMbuffer = new float[256];
+	for (int i = 0; i < 256; i++) mBPMbuffer[i] = 0.;
+    
+	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
+	space->setVisible(false);
+	guiBottom->addWidgetDown(space);
+    int fontsize = 10;
+	mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
+    mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	//guiBottom->addWidgetSouthOf(mLabelBPM, TEXT_CONSTANT_BUTTON_START);
+	guiBottom->addWidgetDown(mLabelBPM);
+	mLabelBPM = new ofxUILabel("120", fontsize);
+    mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetEastOf(mLabelBPM, TEXT_CONSTANT_BUTTON_BPM);
+    
+	mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, fontsize);
+    mLabelBeat->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetSouthOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BPM);
+	mLabelBeat = new ofxUILabel("0", fontsize);
+    mLabelBeat->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetEastOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BEAT);
+    
+	mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, fontsize);
+    mLabelPitch->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetSouthOf(mLabelPitch, TEXT_CONSTANT_BUTTON_BEAT);
+	mLabelPitch = new ofxUILabel("0", fontsize);
+    mLabelPitch->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetEastOf(mLabelPitch, TEXT_CONSTANT_BUTTON_PITCH);
+    
+	// tempo curve
+	ofxUISpectrum* tempoCurve = new ofxUISpectrum(313, 64, mBPMbuffer, 256, 0., 290.0, "bpm");
+    tempoCurve->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	//tempoCurve->setDrawOutline(true);
+	guiBottom->addWidgetDown(tempoCurve);
+	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
+	tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
+	ofxUIRectangle* r = tempoCurve->getRect();
+	r->x = 3; r->y = 3;
+    
+	string path_prefix_img = ofFilePath::getCurrentExeDir() + "../Resources/";
+    
+	// transport btns
+    
+	int wi = 32;
+	int xi = 358, yi = 28, dxi = 12;
+	string img_path("GUI/prev_.png");
+	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_PREV_EVENT);
+    prevToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	prevToggle->setLabelVisible(false);
+	prevToggle->setDrawOutline(true);
+	guiBottom->addWidgetEastOf(prevToggle, "bpm");
+	r = prevToggle->getRect(); r->x = xi; r->y = yi;
+    
+	img_path = "GUI/stop_.png";
+	ofxUIMultiImageToggle* stopToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_STOP);
+    stopToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	stopToggle->setLabelVisible(false);
+	stopToggle->setDrawOutline(true);
+	guiBottom->addWidgetEastOf(stopToggle, TEXT_CONSTANT_BUTTON_PREV_EVENT);
+	r = stopToggle->getRect(); r->x = xi + wi + dxi; r->y = yi;
+    
+	img_path = "GUI/play_.png";
+	ofxUIMultiImageToggle* playToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_PLAY);
+    playToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	playToggle->setLabelVisible(false);
+	playToggle->setDrawOutline(true);
+	guiBottom->addWidgetEastOf(playToggle, TEXT_CONSTANT_BUTTON_STOP);
+	r = playToggle->getRect(); r->x = xi + 2*(wi+dxi); r->y = yi;
+    
+	img_path = "GUI/start_.png";
+	ofxUIMultiImageToggle* startToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_START);
+    startToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    startToggle->setLabelVisible(false);
+	startToggle->setDrawOutline(true);
+	guiBottom->addWidgetEastOf(startToggle, TEXT_CONSTANT_BUTTON_PLAY);
+	r = startToggle->getRect(); r->x = xi + 3*(wi+dxi); r->y = yi;
+    
+	img_path = "GUI/next_.png";
+	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_NEXT_EVENT);
+    nextToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    nextToggle->setLabelVisible(false);
+	nextToggle->setDrawOutline(true);
+	guiBottom->addWidgetEastOf(nextToggle, TEXT_CONSTANT_BUTTON_START);
+	r = nextToggle->getRect(); r->x = xi + 4*(wi+dxi); r->y = yi;
+    
+
+    
+	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
+	ofxUIButton *bu = new ofxUIButton("NOTE", false, 30, 15);
+    bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetEastOf(bu, "bpm");
+	bu->setColorBack(ofxAntescofoNote->color_note);
+    
+	bu = new ofxUIButton("CHORD", false, 30, 15);
+    bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetRight(bu);
+	bu->setColorBack(ofxAntescofoNote->color_note_chord);
+    
+	bu = new ofxUIButton("MULTI", false, 30, 15);
+    bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetRight(bu);
+	bu->setColorBack(ofxAntescofoNote->color_note_multi);
+    
+	bu = new ofxUIButton("TRILL", false, 30, 15);
+    bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	guiBottom->addWidgetRight(bu);
+	bu->setColorBack(ofxAntescofoNote->color_note_trill);
+
+    //guiBottom->addSpacer();
+    mDdl_host_lists = new ofxUIDropDownList("Antescofo hosts", antescofo_hostnames);
+    guiBottom->addWidgetRight(mDdl_host_lists);
+    mDdl_host_lists->setAllowMultiple(false);
+    mDdl_host_lists->setAutoClose(true);
+    
+	img_path = "GUI/settings_.png";
+	ofxUIMultiImageToggle* settingsToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_SETTINGS);
+    settingsToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	settingsToggle->setLabelVisible(false);
+	settingsToggle->setDrawOutline(true);
+	guiBottom->addWidgetEastOf(settingsToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
+	r = settingsToggle->getRect(); r->x = ofGetWidth() - 100;//xi + 4*(wi+dxi);
+    r->y = 4;
+    
+    img_path = "GUI/note_.png";
+	ofxUIMultiImageToggle* viewToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_TOGGLEVIEW);
+    viewToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    viewToggle->setLabelVisible(false);
+	viewToggle->setDrawOutline(true);
+	guiBottom->addWidgetSouthOf(viewToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
+	//r = viewToggle->getRect(); r->x = xi + 4*(wi+dxi); r->y = yi;
+    
+    ofAddListener(guiBottom->newGUIEvent, this, &iOSAscoGraph::guiEvent);
+
+    cout << "Screen size: " << ofGetWidth() << " x " <<  ofGetHeight() << endl;
+
+}
+
+void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
+{
+    string name = e.widget->getName();
+    if(name == "Antescofo hosts")
+    {
+        ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
+        vector<ofxUIWidget *> &selected = ddlist->getSelected();
+        for(int i = 0; i < selected.size(); i++)
+        {
+            cout << "So in the DynDropdownList we have selected: " << selected[i]->getName() << endl;
+            string antescofohost = selected[i]->getName();
+            send_OSC_getscore(antescofohost);
+        }
+    } else if(e.widget->getName() == TEXT_CONSTANT_BUTTON_PLAY)
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Play button change: " << b->getValue() << endl;
+	    if (b->getValue() == 1) {
+		    ofxOscMessage m;
+		    m.setAddress("/antescofo/cmd");
+		    /*cout << "mPlayLabel: " << mPlayLabel << endl;
+		    if (mPlayLabel.size()) {
+			    m.addStringArg("playfrom");
+			    m.addStringArg(mPlayLabel);
+		    } else*/
+			    m.addStringArg("play");
+		    mOSCsender.sendMessage(m);
+		    b->setValue(false);
+	    }
+    }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_START)
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Start button change: " << b->getValue() << endl;
+	    if (b->getValue() == 1) {
+		    ofxOscMessage m;
+		    m.setAddress("/antescofo/cmd");
+		    m.addStringArg("start");
+		    m.addStringArg("");
+		    mOSCsender.sendMessage(m);
+		    b->setValue(false);
+	    }
+    }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT || e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
+    {
+	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+	    cout << "Prev/next event button change: " << b->getValue() << endl;
+	    if (b->getValue() == 1) {
+		    ofxOscMessage m;
+		    m.setAddress("/antescofo/cmd");
+		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT)
+			    m.addStringArg("nextevent");
+		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
+			    m.addStringArg("previousevent");
+		    mOSCsender.sendMessage(m);
+		    b->setValue(false);
+	    }
+    }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_STOP)
+	{
+		ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+		cout << "Stop button change: " << b->getValue() << endl;
+        if (b->getValue() == 1) {
+            ofxOscMessage m;
+            m.setAddress("/antescofo/cmd");
+            m.addStringArg("stop");
+            //mPlayLabel.clear();
+            mOSCsender.sendMessage(m);
+            b->setValue(false);
+        }
+    }
+    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_SETTINGS)
+	{
+		ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+		cout << "Settings button change: " << b->getValue() << endl;
+        guiMenu.view.hidden = !guiMenu.view.hidden;
+
+    }
+    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_TOGGLEVIEW)
+    {
+        ofxAntescofoNote->toggleView();
+    }
+}
+void iOSAscoGraph::push_tempo_value() {
+	static unsigned long long lasttime_pushed = ofGetSystemTimeMicros();
+	
+	unsigned long long nownow;
+	nownow = ofGetSystemTimeMicros();
+    
+	if (nownow - lasttime_pushed > 50000) {
+		lasttime_pushed = nownow;
+		// shift buffer values by one to the left
+		for (int i = 0; i < 255; i++)
+			mBPMbuffer[i] = mBPMbuffer[i+1];
+		mBPMbuffer[255] = mOsc_tempo;
+	}
 }
 
 void iOSAscoGraph::setupTimeline(){
     //ofSetBackgroundAuto(false);
-    timeline.setupFont("data/GUI/NewMedia Fett.ttf", 10);
+    timeline.setupFont("GUI/NewMedia Fett.ttf", 10);
 	timeline.setOffset(ofVec2f(score_x, score_y));
 	timeline.setup(); //registers events
     
@@ -155,7 +417,7 @@ void iOSAscoGraph::setupTimeline(){
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	timeline.setBPM(bpm);
 	timeline.setLockWidthToWindow(false);
-    timeline.getColors().load("data/GUI/Ascograph.xml");
+    timeline.getColors().load("GUI/Ascograph.xml");
 
 	// use custom zoomer :
 	timeline.addTrack("zoom", ofxAntescofoZoom);
@@ -234,7 +496,7 @@ void iOSAscoGraph::update(){
 			if(m.getAddress() == "/antescofo/current_score") {
                 if(m.getArgType(0) == OFXOSC_TYPE_STRING){
                     current_score += m.getArgAsString(0);
-                    if (!bLoadingScore) loadScore(current_score);
+                    loadScore(current_score);
                     bLoadingScore = true;
                 }
             } else if(m.getAddress() == "/antescofo/current_score_append") {
@@ -305,6 +567,7 @@ void iOSAscoGraph::update(){
 		mHasReadMessages = false;
 		bShouldRedraw = true;
 	}
+    push_tempo_value();
 
 }
 
@@ -385,12 +648,42 @@ void iOSAscoGraph::showJumpTrack() {
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchDown(ofTouchEventArgs & touch){
-    cout << "touchDown:" << touch.x << ", " << touch.y << endl;
+
 }
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchMoved(ofTouchEventArgs & touch){
+    static int lastx = 0;
     
+    cout << "touchMoved:" << touch.x << ", " << touch.y << " xspeed=" << touch.xspeed << endl;
+    if (ofxAntescofoNote->getBounds().inside(touch.x, touch.y)) {
+        ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline.getZoomer();
+        
+		ofRange z = zoom->getViewRange();
+		ofRange oldz = z;
+		//cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
+		// continuous scrolling : keep playhead on center
+        
+		if (1) {
+			float c = z.center();
+			float d = ((lastx - touch.x) * 0.01) - c;
+            
+			z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+			if (z.min == .0 && z.span() < oldz.span())
+				z.max = oldz.max - oldz.min;
+			if (z.max == 1. && z.span() < oldz.span())
+				z.min = z.max - oldz.max + oldz.min;
+            
+            
+			//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			zoom->setViewRange(z);
+			//zoom->setSelectedRange(z);
+			//zoom->setViewRange(z);
+            
+			//lastpos = pos;
+		}
+    }
+    lastx = touch.x;
 }
 
 //--------------------------------------------------------------
@@ -435,15 +728,19 @@ void iOSAscoGraph::onPublishedService(const void* sender, string &serviceIp) {
 
 void iOSAscoGraph::onDiscoveredService(const void* sender, string &serviceIp) {
     ofLog() << "Received discovered service event: " << serviceIp;
-    mOsc_host = serviceIp;
-    send_OSC_getscore();
+    antescofo_hostnames.push_back(serviceIp);
+    mDdl_host_lists->addToggle(serviceIp);
+    //send_OSC_getscore();
 }
 
 void iOSAscoGraph::onRemovedService(const void* sender, string &serviceIp) {
     ofLog() << "Received removed service event: " << serviceIp;
+    if (mDdl_host_lists->getToggles().size() > 0)
+        mDdl_host_lists->removeToggle(serviceIp);
 }
 
-void iOSAscoGraph::send_OSC_getscore() {
+void iOSAscoGraph::send_OSC_getscore(string host) {
+    mOsc_host = host;
     if (mOsc_host.size()) {
         std::cout << "Connecting OSC on " << mOsc_host << ":"<< atoi(mOsc_port_MAX.c_str()) << endl;
         try {
@@ -459,6 +756,12 @@ void iOSAscoGraph::send_OSC_getscore() {
         m.addStringArg("get_current_score");
         mOSCsender.sendMessage(m);
     }
+}
+
+void iOSAscoGraph::setAutoscroll(bool newstate)
+{
+    cout << "AutoScroll changer to " << newstate << endl;
+    ofxAntescofoNote->setAutoScroll(newstate);
 }
 
 

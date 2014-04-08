@@ -21,10 +21,10 @@ endif(UNIX)
 
 #######################################
 # Options disabled by default
-option ( IOS 	"Generates project for iOS" off )
+option ( IOS 	"Generates project for iOS" on )
 option ( DIST 	"Compiles universal binaries (x86_64 i386) on MacOSX" off )
 option ( MIDIEXPORT "MIDI export support (requires MidiShareLight)" off)
-option ( STATICLIB  "Generates a static library (default for iOS)" off)
+option ( STATICLIB  "Generates a static library (default for iOS)" on)
 
 if(APPLE)
 
@@ -33,9 +33,12 @@ if(APPLE)
 	if ( IOS )
 		message (STATUS "Generates project for iOS - Use -DIOS=no to change.")
 		set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "iPhoneOS")
-		set (CMAKE_OSX_ARCHITECTURES "armv6 armv7")
-		set (CMAKE_OSX_SYSROOT "iphoneos")
+		#set (CMAKE_OSX_ARCHITECTURES "armv6 armv7")
+		set (CMAKE_OSX_ARCHITECTURES "armv7")
+		#set (CMAKE_OSX_SYSROOT "iphoneos")
+		set (CMAKE_OSX_SYSROOT "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk")
 		set (libtype STATIC)
+		add_definitions(-stdlib=libstdc++)
 	else ()
 		message (STATUS "Generates Mac OS project- Use -DIOS=yes to change.")
 	 	#######################################

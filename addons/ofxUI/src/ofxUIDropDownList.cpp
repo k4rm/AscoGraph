@@ -175,6 +175,7 @@ void ofxUIDropDownList::removeToggle(string toggleName)
             break;
         }
     }
+    /*
     if(t != NULL)
     {
         parent->removeWidget(t);
@@ -187,7 +188,7 @@ void ofxUIDropDownList::removeToggle(string toggleName)
             t->getRect()->setX(0);
             yt +=t->getRect()->getHeight();
         }
-    }
+    }*/
 }
 
 bool* ofxUIDropDownList::getShowCurrentSelectedPtr()

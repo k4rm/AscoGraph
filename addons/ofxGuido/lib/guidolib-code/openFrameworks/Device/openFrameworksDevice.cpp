@@ -15,9 +15,9 @@
 	Lesser General Public License for more details.
 */
 
-
 #include "openFrameworksDevice.h"
 #include "openFrameworksFont.h"
+
 #include <ofMain.h>
 
 // --------------------------------------------------------------
@@ -59,13 +59,25 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 
 	ofClear(255,255,255, 0);
 	glClearColor( 0.0, 0.0, 0.0, 0.0 );
+#ifndef ASCOGRAPH_IOS
 	glClear (GL_COLOR_BUFFER_BIT);
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable( GL_DEPTH_TEST );
-	glEnable(GL_MULTISAMPLE_ARB);
-
+    glEnable(GL_MULTISAMPLE_ARB);
 	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
+#else	
+    ofFbo::Settings settings;
+    settings.width = fWidth;
+    settings.height = fHeight;
+    settings.internalformat = GL_RGBA;
+    settings.numSamples = 0;
+    settings.useDepth = false;
+    settings.useStencil = false;
+    //drawCache = new ofFbo();
+    drawCache.allocate(settings);
+    //drawCache.allocate(fWidth, fHeight, GL_RGBA);
+#endif
 	drawCache.begin();
 	ofClear(255,255,255, 0);
 
@@ -258,8 +270,22 @@ float openFrameworksDevice::GetYScale() const				{ return fYScale; }
 void openFrameworksDevice::NotifySize( int width, int height ) { 
 	fWidth = width; fHeight = height;
 
-	//cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
+	cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
+#ifndef ASCOGRAPH_IOS
 	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
+#else
+    ofFbo::Settings settings;
+    settings.width = fWidth;
+    settings.height = fHeight;
+    settings.internalformat = GL_RGBA;
+    settings.numSamples = 0;
+    settings.useDepth = false;
+    settings.useStencil = false;
+    //drawCache = new ofFbo();
+    drawCache.allocate(settings);
+    //drawCache.allocate(fWidth, fHeight, GL_RGB);
+#endif
+    
 	drawCache.begin();
 	ofClear(255,255,255, 0);
 	drawCache.end();
