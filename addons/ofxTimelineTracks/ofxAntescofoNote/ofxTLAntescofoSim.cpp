@@ -1,6 +1,7 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <ofxAntescofog.h>
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
 #include "Score.h"
@@ -8,7 +9,6 @@
 #include "Action.h"
 #include <location.hh>
 #include <position.hh>
-#include <ofxAntescofog.h>
 #include "ofxCodeEditor.h"
 
 

@@ -58,7 +58,6 @@
 #endif
 
 #include "ofMain.h"
-#include "ofxTLAntescofoNote.h"
 #ifdef ASCOGRAPH_IOS
 # include "iOSAscoGraph.h"
 # include "ofxConsole.h"
@@ -66,6 +65,7 @@
 #else
 # include <ofxAntescofog.h>
 #endif
+#include "ofxTLAntescofoNote.h"
 #include "ofxModifierKeys.h"
 
 #define RT_TEMPO_VAR_OK

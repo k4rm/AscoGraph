@@ -50,6 +50,7 @@ void iOSAscoGraph::setup(){
     
     ofEnableSmoothing();
 	ofEnableAlphaBlending();
+    //ofSetFrameRate(24);
 #if 0
 	//glewExperimental=TRUE;
 	GLenum err=glewInit();
@@ -97,14 +98,14 @@ void iOSAscoGraph::setup(){
 	remove(TEXT_CONSTANT_TEMP_FILENAME.c_str());
 	remove(TEXT_CONSTANT_TEMP_ACTION_FILENAME.c_str());
     
-	drawCache.allocate(ofGetWindowWidth(), ofGetHeight(), GL_RGBA);
+	drawCache.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	drawCache.begin();
 	ofClear(255,255,255, 0);
 	drawCache.end();
     
 	//if (mScore_filename.size()) loadScore(mScore_filename, true);
 
-
+    bShouldRedraw = true;
     bLoadingScore = false;
 	bHide = true;
     
@@ -156,7 +157,8 @@ void iOSAscoGraph::setupOSC(){
 		mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
 	} catch (...)
 	{ cerr << "ERROR OSC EXCEPTION" << endl; }
-
+    
+    gettimeofday(&last_draw_time, 0);
 }
 
 void iOSAscoGraph::setupUI(){
@@ -489,19 +491,25 @@ void iOSAscoGraph::update(){
 	try {
 		while( mOSCreceiver.hasWaitingMessages() )
 		{
+            bShouldRedraw = true;
+
 			// get the next message
 			ofxOscMessage m;
 			mOSCreceiver.getNextMessage( &m );
 			if (_debug) ofLog() << "OSC received: '" << m.getAddress() << endl;
-			if(m.getAddress() == "/antescofo/current_score") {
+            if(m.getAddress() == "/antescofo/clear_score") {
+                current_score.clear();
+            }
+			else if(m.getAddress() == "/antescofo/current_score_append") {
+                if(m.getArgType(0) == OFXOSC_TYPE_STRING){
+                    current_score += m.getArgAsString(0);
+                }
+            } else if(m.getAddress() == "/antescofo/current_score") {
                 if(m.getArgType(0) == OFXOSC_TYPE_STRING){
                     current_score += m.getArgAsString(0);
                     loadScore(current_score);
                     bLoadingScore = true;
-                }
-            } else if(m.getAddress() == "/antescofo/current_score_append") {
-                if(m.getArgType(0) == OFXOSC_TYPE_STRING){
-                    current_score += m.getArgAsString(0);
+                    mOsc_host = m.getRemoteIp();
                 }
             } else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 				mOsc_tempo = m.getArgAsFloat(0);
@@ -573,8 +581,31 @@ void iOSAscoGraph::update(){
 
 //--------------------------------------------------------------
 void iOSAscoGraph::draw(){
-    ofBackgroundGradient(ofColor::white, ofColor::gray);
-    timeline.draw();
+
+    struct timeval now;
+	gettimeofday(&now, 0);
+#define DRAW_MAX_DELTA_USEC	10000
+	if ((now.tv_sec*1000000L + now.tv_usec) - (last_draw_time.tv_sec*1000000L + last_draw_time.tv_usec) < DRAW_MAX_DELTA_USEC) {
+		return;
+	}
+	gettimeofday(&last_draw_time, 0);
+	if (!bShouldRedraw) {
+        drawCache.draw(0, 0);
+    }else {
+        ofSetColor(255, 255, 255, 255);
+        drawCache.begin();
+        ofClear(255,255,255, 0);
+        ofPushStyle();
+
+        ofBackgroundGradient(ofColor::white, ofColor::gray);
+        timeline.draw();
+        ofPopStyle();
+        
+        drawCache.end();
+        
+        drawCache.draw(0, 0);
+        bShouldRedraw = false;
+    }
 }
 
 //--------------------------------------------------------------
@@ -648,11 +679,13 @@ void iOSAscoGraph::showJumpTrack() {
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchDown(ofTouchEventArgs & touch){
-
+    bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchMoved(ofTouchEventArgs & touch){
+    bShouldRedraw = true;
+
     static int lastx = 0;
     
     cout << "touchMoved:" << touch.x << ", " << touch.y << " xspeed=" << touch.xspeed << endl;
@@ -688,12 +721,14 @@ void iOSAscoGraph::touchMoved(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchUp(ofTouchEventArgs & touch){
-    
+    bShouldRedraw = true;
+
 }
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchDoubleTap(ofTouchEventArgs & touch){
-    
+    bShouldRedraw = true;
+
 }
 
 //--------------------------------------------------------------
@@ -718,7 +753,8 @@ void iOSAscoGraph::gotMemoryWarning(){
 
 //--------------------------------------------------------------
 void iOSAscoGraph::deviceOrientationChanged(int newOrientation){
-    
+    bShouldRedraw = true;
+
 }
 
 // Bonjour events handlers

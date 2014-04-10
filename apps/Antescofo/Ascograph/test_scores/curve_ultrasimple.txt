@@ -19,16 +19,17 @@ curve @action := plot $NOW $x $y $z {
 TRILL (f3 g3) 10
 Curve slider  @Grain := 0.05 s, @Action :=
         {
-            print $x
+            print $x 
         }
 {
     $x
     {
           { 0.0 } @type "linear"
-        1 { 1.0 } @type "bounce_out"
-        5 { 3.0 }
+        1.22111 { 0.923497 } @type "bounce"
+        4.77889 { 3.0 }
     }
 }
+
 
 
 

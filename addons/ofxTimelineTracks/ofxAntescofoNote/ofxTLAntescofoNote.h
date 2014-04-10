@@ -67,7 +67,6 @@ class ofxTLAntescofoAction;
 class iOSAscoGraph;
 #endif
 
-
 // representation similar to libmusicxml antescofowriter one
 class score_elt {
 	public:

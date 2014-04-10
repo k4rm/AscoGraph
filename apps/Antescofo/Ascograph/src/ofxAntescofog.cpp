@@ -980,7 +980,7 @@ void ofxAntescofog::setup(){
 	//ofSetDataPathRoot("../Resources/");
 	ofSetDataPathRoot([[NSString stringWithFormat:@"%@/", [[NSBundle mainBundle] resourcePath]] cStringUsingEncoding:NSUTF8StringEncoding]);
 
-	ofSetFrameRate(60);
+	ofSetFrameRate(24);
 	ofSetVerticalSync(true);
 	ofEnableSmoothing();
 	//ofEnableAlphaBlending();
@@ -1189,18 +1189,17 @@ void ofxAntescofog::draw() {
 	if (!bSetupDone)
 		return;
 
-	/*
 	struct timeval now;
 	gettimeofday(&now, 0);
-#define DRAW_MAX_DELTA_USEC	100000
+#define DRAW_MAX_DELTA_USEC	10000
 	if ((now.tv_sec*1000000L + now.tv_usec) - (last_draw_time.tv_sec*1000000L + last_draw_time.tv_usec) < DRAW_MAX_DELTA_USEC) {
 		return;
 	}
-	*/
-	bool bMayUseCache = false;
-	if (ofGetSystemTime() - mLastOSCmsgDate > 15000) 
+	gettimeofday(&last_draw_time, 0);
+	bool bMayUseCache = true;
+	/*if (ofGetSystemTime() > mLastOSCmsgDate > 150000) 
 		bMayUseCache = true;
-
+	*/
 	ofFill();
 	if (bShowColorSetup) { // color setup
 		ofSetColor(ofxAntescofoNote->color_staves_bg);

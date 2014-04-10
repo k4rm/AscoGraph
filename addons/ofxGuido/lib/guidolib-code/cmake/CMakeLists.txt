@@ -21,7 +21,7 @@ endif(UNIX)
 
 #######################################
 # Options disabled by default
-option ( IOS 	"Generates project for iOS" on )
+option ( IOS 	"Generates project for iOS" off )
 option ( DIST 	"Compiles universal binaries (x86_64 i386) on MacOSX" off )
 option ( MIDIEXPORT "MIDI export support (requires MidiShareLight)" off)
 option ( STATICLIB  "Generates a static library (default for iOS)" on)
@@ -48,6 +48,7 @@ if(APPLE)
 		else ()
 			message (STATUS "Only the current architecture will be compiled - Use -DDIST=yes to change.")
 		endif ()
+		add_definitions(-stdlib=libstdc++)
 	set (CMAKE_OSX_ARCHITECTURES "i386")
 	add_definitions(-D_USE_QD_COORDINATES_ -compatibility_version 1.0.0)
 	set (CMAKE_C++_FLAGS -mmacosx-version-min=10.5)

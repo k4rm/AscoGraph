@@ -109,6 +109,7 @@ public:
     float mOsc_tempo, mOsc_beat, mOsc_rnow, mOsc_pitch;
     unsigned long long mLastOSCmsgDate;
     float fAntescofoTimeSeconds;
+    struct timeval last_draw_time;
 
     // buttons...
     ofxUICanvas *guiBottom;

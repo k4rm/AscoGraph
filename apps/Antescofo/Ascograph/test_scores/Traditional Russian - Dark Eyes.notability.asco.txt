@@ -1,36 +1,19 @@
-; This is a sample score for AnteScofo - Anticipatory Score Following
-; Common messages include:
-; 	BPM <float> : indicating tempo in BPM
-;	<float1> <float2> <string> : indicate PITCH (MIDI or MIDIcent) + BEAT DURATION + CUENAME
-;		The Beat duration can be ZERO, indicating a GRACE NOTE or "hors-temps" events.
-;		A Pitch value of ZERO indicates silence.
-;	TRILL	( <float1> <float2> ... <floatN> ) <floatN+> <string>: Indicate a Trill class
-;		with based notes of <float-i> in MIDIcents. A trill, in this terminology is ONE event that
-;		possess several sub-events in time - but all these sub-events contribute to one global event
-;		in time. <floatN+> is the duration in beats and <string> is the cue name.
-;		The trill class can successfully encode multi-phonics when used with yin~ or fiddle~
-;	MULTI	( <float1> <float2> ... <floatN> ) <floatN+> <string>
-;		Multi class is the same as Trills except that we want access to EACH of the events indicated
-;		by <float-i>s. Think of the floats (MIDIcents) between parenthesis as a table of values in
-;		time.
-;		The Multi class can successfully encode continuous events such as Glissandi.
-;	AUDIO OFF: Turns off audio so that events will be triggered automatically using the current
-;		detected TEMPO and their corresponding score beat duration. It must be turned ON afterwards.
-;		AUDIO OFF/ON can successfully detect problematic repeated notes!
-;		AUDIO OFF/ON can be thought of as some sort of tempo locked Q-list.
-;	TEMPO ON/OFF:	Turns tempo decoding on or off for places in the score where the tempo should not
-;		be updated. A typical example is a FERMATA.
-; NOTE: Note the space after and before the opening and closing parenthesis for TRILL and MULTI classes.
-;
-; Transferred from NoteAbilityPro score: Untitled-1
-; Date: 2012 11 14 17:29:53 GMT+01:00
-;
+
 BPM 120.00
+
+@track_def track::testtrack { 
+	print, "synth.*"
+}
+
+@track_def track::testtrack { 
+	print, "synth.*"
+}
 
 ; ---------- measure 1 beat 0.00 ---------
 NOTE 0 1/1
 NOTE 6900 1/3
 NOTE 7000 1/3
+	print $BEAT_POS
 NOTE 6900 1/3
 NOTE 6800 1/1
 NOTE 6900 1/1
@@ -38,16 +21,20 @@ NOTE 6900 1/1
 ; ---------- measure 2 beat 4.00 ---------
 NOTE 7000 3/2
 NOTE 6900 5/2
+	print $BEAT_POS $rnow
+
 
 ; ---------- measure 3 beat 8.00 ---------
 NOTE 0 3/2
 NOTE 6900 1/2
 NOTE 6800 1/1
+	synth3 ouai 3
 NOTE 6900 1/1
 
 ; ---------- measure 4 beat 12.00 ---------
 NOTE 7000 3/2
 NOTE 6900 5/2
+	synth2 ouai 1
 
 ; ---------- measure 5 beat 16.00 ---------
 NOTE 0 2/1

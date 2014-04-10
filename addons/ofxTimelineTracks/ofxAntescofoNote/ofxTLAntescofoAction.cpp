@@ -8,6 +8,11 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+#else
+# include <ofxAntescofog.h>
+#endif
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
 #include "Score.h"
@@ -15,11 +20,6 @@
 #include "Action.h"
 #include <location.hh>
 #include <position.hh>
-#ifdef ASCOGRAPH_IOS
-# include "iOSAscoGraph.h"
-#else
-# include <ofxAntescofog.h>
-#endif
 #include "ofxHotKeys.h"
 #ifndef ASCOGRAPH_IOS
 # include "ofxCodeEditor.h"
@@ -155,6 +155,7 @@ ofColor ofxTLAntescofoAction::get_random_color() {
 	color.r = (color.r + 10) % 255;
 	color.g = (color.g + 210) % 255;
 	color.b = (color.b + 155) % 255;
+	color.a = 100;
 	return color;
 }
 
@@ -239,8 +240,8 @@ void ofxTLAntescofoAction::save()
 void ofxTLAntescofoAction::load()
 {
 	string fontfile = "DroidSansMono.ttf";
-	mFont.loadFont (fontfile, 8);
-	//mFont.loadFont ("menlo.ttf", 8);
+	mFont.loadFont (fontfile, 10);
+	//mFont.loadFont ("menlo.ttf", 10);
 }
 
 void ofxTLAntescofoAction::update()
