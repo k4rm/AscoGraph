@@ -158,13 +158,15 @@ void ofxTLAntescofoNote::setup(){
 	//ofxTLRegisterPlaybackEvents(this);
 
 	ofAddListener(ofEvents().update, this, &ofxTLAntescofoNote::update);
+
 #ifndef ASCOGRAPH_IOS
 	string fontfile = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
+    fontsize = 13;
 #else
 	string fontfile = "DroidSansMono.ttf";
 #endif
-	cout << "ofxTLAntescofoNote::setup: fontfile = " << fontfile << endl;
-	mFont.loadFont (fontfile, 13); //15);
+    cout << "ofxTLAntescofoNote::setup: fontsize="<< fontsize << " fontfile = " << fontfile << endl;
+    mFont.loadFont (fontfile, fontsize);
 
 	for (int i = 0; i < 127; i++) {
 		activeNotes[i] = false;
@@ -622,100 +624,168 @@ string ofxTLAntescofoNote::getGuidoStringNote(int switchnb) {
 	return ret;
 }
 
+// return event if curEvent+1 switch is tied to curPitch
+int ofxTLAntescofoNote::has_next_event_tied_pitch(int curEvent, int curPitch) {
+	if (curEvent + 1 >= switches.size()) return 0;
+	bool res = false;
+	// check following events, until nextBeat is different
+	float nextBeat = switches[curEvent]->beat.max;
+	int i = 1;
+
+	while (!res) {
+		if (curEvent + i >= switches.size()) return 0;
+		if (switches[curEvent+i]->beat.min <= nextBeat) { // while on next event
+			if (switches[curEvent+i]->pitch == curPitch && switches[curEvent+i]->is_tied) {
+				cout << "has_next_event_tied_pitch: " << curEvent+i << endl;
+				return curEvent+i;
+			} else {
+				i++;
+				continue;
+			}
+		} else break;
+	}
+	return 0;
+}
+
+void ofxTLAntescofoNote::add_string_staff(string &str1, string &str2, int staff, string str) {
+	if (staff == 1)
+		str1 += str;
+	else if (staff == 2)
+		str2 += str;
+}
+
 string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi) {
 	if (debug_guido) cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
-	string ret = "[ ";
+	string ret1 = "[ ", ret2 = ret1;
 	int pageFormat_w = switches.size() / 2; // TODO utiliser le maxbeat dur ?
-	ret += 	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 1cm, 1cm, 1cm, 1cm>";
+	ret1 +=	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 1cm, 1cm, 1cm, 1cm>";
 	if (fromi == 0) {
-		ret += "\\clef<\"g\">";
+		ret1 += "\\clef<\"g\">\n";
 	} else 
-		ret += "\\clef<\"none\">";
+		ret1 += "\\clef<\"g\">\n";
 	int d = tox - fromx;
 	int maxx = ( tox - fromx > bounds.width ? bounds.width : d);
 	int curx = fromx;
 	bool twostaves = false;
 	bool backtostaff1 = false;
-	bool isChord = false;
+	bool isChord1 = false, isChord2 = false;
+	rational staffbeat1(0, 1), staffbeat2(0, 1);
 	bool was_tied = false;
 	bool was_trill = false;
 	int curStaff = 1;
 	int guido_nb = 0;
 	for (int i = fromi; i <= toi; i++, guido_nb++) {
-		int x = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
+		//int x = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
 		//if (x > maxx) break;
-		if (switches[i]->type == ANTESCOFO_CHORD && !switches[i]->isLast) {
-			if (!isChord) { ret += " {"; isChord = true; }
-		}
-		if (switches[i]->pitch && abs(switches[i]->pitch) < 59 && curStaff == 1) {
-			ret += "\\staff<2> ";
-			if (fromi != 0) ret += "\\clef<\"none\">";
+
+		if (switches[i]->pitch && abs(switches[i]->pitch) < 59) {
 			curStaff = 2;
-			twostaves = true;
+			if (!twostaves) {
+				add_string_staff(ret1, ret2, curStaff, "\\staff<2>\\clef<\"f\">\n");
+				twostaves = true;
+			}
+		} else curStaff = 1;
+
+
+		if (switches[i]->type == ANTESCOFO_CHORD/* && !switches[i]->isLast*/) {
+			if (curStaff == 1) {
+				if (!isChord1) {
+					add_string_staff(ret1, ret2, 1, " {");
+					isChord1 = true;
+				} else add_string_staff(ret1, ret2, curStaff, ", ");
+			} else if (twostaves && curStaff == 2) {
+				if (!isChord2) {
+					add_string_staff(ret1, ret2, 2, " {");
+					isChord2 = true;
+				} else add_string_staff(ret1, ret2, curStaff, ", ");
+			}
 		}
-		// search if a following note with same beatnum and same pitch exist indicating a tied note
-		/* bool nextevent = false;
-		   for (int k = i+1; i <= toi; k++) {
-		   if (switches[k]->pitch == switches[i]->pitch) {
-		   if (switches[k]->is_tied) { cout << "pitch:" << switches[k]->pitch << " is_tied"<< endl;
-		   if (!was_tied) {
-		   ret += "\\tie(";
-		   was_tied = true;
-		   }
-		   }
-		   }
-		   if (
-		   }*/
 		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
 			if (!was_trill) {
-				ret += "\\trill({";
+				add_string_staff(ret1, ret2, curStaff, "\\trill({");
 				was_trill = true;
 			} else if (switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
-				ret += ",";
-			else ret += "{";
+				add_string_staff(ret1, ret2, curStaff, ",");
+			else add_string_staff(ret1, ret2, curStaff, "{");
 		} else if (was_trill) {
-			ret += ")";
+			add_string_staff(ret1, ret2, curStaff, ")");
 			was_trill = false;
 		}
+		int istied = 0;
+		if ((istied = has_next_event_tied_pitch(i, switches[i]->pitch)))
+			add_string_staff(ret1, ret2, curStaff, " \\tieBegin ");
 
 		// get Guido string for current note
-		ret += getGuidoStringNote(i);
+		add_string_staff(ret1, ret2, curStaff, getGuidoStringNote(i));
+
+		if (curStaff == 1) staffbeat1 = switches[i]->beat.max;
+		else staffbeat2 = switches[i]->beat.max;
+		
+		if (!istied && switches[i]->is_tied) {
+			add_string_staff(ret1, ret2, curStaff, " \\tieEnd ");
+		}
 
 		// store Guido note number in current switch ?
 		switches[i]->guido_nb = guido_nb;
 
+		//cout << "this switch: i = " << i << " : " << switches[i]->isLast << endl;
 		if (switches[i]->pitch >= 59)
 			backtostaff1 = true;
-		if (switches[i]->type == ANTESCOFO_CHORD && !switches[i]->isLast) {
-			ret += ", ";
-		} else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min))
-			ret += "}";
-		else {
-			if (isChord) {
-				ret += " } ";
-				isChord = false;
+		if (!istied && !switches[i]->is_tied) {
+			if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min))
+				add_string_staff(ret1, ret2, curStaff, "}");
+			else {
+				if ((isChord1 || isChord2) && switches[i]->isLast) {
+					if (isChord1) add_string_staff(ret1, ret2, curStaff, " }");
+					if (twostaves && isChord2) add_string_staff(ret1, ret2, 2, " }");
+					isChord1 = false;
+					isChord2 = false;
+				}
 			}
 		}
+		if (i != toi) add_string_staff(ret1, ret2, curStaff, " ");
+		//if (backtostaff1 && curStaff != 1) { add_string_staff(ret1, ret2, curStaff, "\\staff<1> "); backtostaff1 = false; curStaff = 1;}
 
-		/*if (was_tied && !switches[i]->is_tied) {
-		  ret += ")";
-		  was_tied = false;
-		  }*/
-		if (i != toi) ret += " ";
-		if (backtostaff1 && curStaff != 1) { ret += "\\staff<1> "; backtostaff1 = false; curStaff = 1;}
+		// advance the other staffbeat position
+		rational bmax = switches[i]->beat.max;
+		if (i+1 < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min
+		    && ((curStaff == 1 && bmax != staffbeat2) || (curStaff == 2 && bmax != staffbeat1))) {
+			rational dif = bmax - (curStaff == 1 ? staffbeat2 : staffbeat1);
+			double dur = dif.toDouble();
+			rational rdur(0, 1);
+			for (int j = 1; j < 64; j++)
+			{
+				double d2 = j * dur;
+				double dnear = rint(d2);
+				double err = d2 - dnear;
+				if (fabs(err) < BEAT_EPSILON)
+				{
+					rdur = rational((int)(dnear), j);
+				}
+			}
+			rdur /= 4; // because of guido...
+			rdur.rationalise();
+			string sdur = rdur.toString();
+			cout << "------> Adding rest: " << rdur.toString() << endl;
+			int staf = (curStaff == 1 ? 2 : 1);
+			add_string_staff(ret1, ret2, staf, "_*" + rdur.toString());
+			staffbeat1 = staffbeat2 = bmax;
+		}
 	}
 
 	if (was_trill) {
-		ret += ")}";
+		add_string_staff(ret1, ret2, curStaff, ")}");
 		was_trill = false;
 	}
 
-	ret += " ]";
+	curStaff = 1;
+	add_string_staff(ret1, ret2, curStaff, " ]");
 	if (twostaves)
-		ret = "{" + ret + "\n,[ \\clef<\"f\"> ] }";
-	return ret;
+		ret1 = "{" + ret1 + ",\n" + ret2 + "]}";
+	return ret1;
 }
 #endif
+
 
 int ofxTLAntescofoNote::note_height() {
 	return 2 * bounds.height / (noteRange.span()+1);
@@ -1018,6 +1088,7 @@ void ofxTLAntescofoNote::draw_playhead() {
 		//float x = normalizedXtoScreenX( mCurSecs/mDur_in_secs, zoomBounds);
 		//if (x < bounds.x) return;
 
+		cout << endl << "draw_playhead: mCurBeat=" << mCurBeat << endl;
 		// use map : beat2switchId
 		for (map<float, int>::iterator i = beat2switchId.begin(); i != beat2switchId.end(); i++) {
 			//cout << "i first=" << i->first << " mCurBeat="<< mCurBeat<< endl;
@@ -1031,7 +1102,7 @@ void ofxTLAntescofoNote::draw_playhead() {
 				int y = switches[gotit]->guidoCoords.y + bounds.y;
 				int w = switches[gotit]->guidoCoords.width;
 				int h = switches[gotit]->guidoCoords.height; //bounds.height - 20;
-				//cout << "ofxTLAntescofoNote::draw_playhead: gotit: " << mCurBeat << "= switch #" << gotit <<" drawing rect: " << x << ", " << y << " : " << w << " x " << h<< endl;
+				cout << "ofxTLAntescofoNote::draw_playhead: gotit: " << mCurBeat << "= switch #" << gotit <<" drawing rect: " << x << ", " << y << " : " << w << " x " << h<< endl;
 				ofRect(x, y, w, h);
 				ofSetColor(51, 51, 255, 175);
 				ofNoFill();

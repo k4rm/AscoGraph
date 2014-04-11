@@ -116,10 +116,16 @@ public:
     ofxUISlider *mSliderBPM;
     ofxUILabel  *mLabelBeat, *mLabelBPM, *mLabelPitch;
     float* mBPMbuffer;
-    ofxUIDropDownList *mDdl_host_lists;
+    ofxUIDropDownList *mDdl_host_lists, *mDdl_cues_list;
     void guiEvent(ofxUIEventArgs &e);
-    vector<string> antescofo_hostnames;
+    vector<string> antescofo_hostnames, antescofo_cuepoints;
     void setAutoscroll(bool newstate);
+    void setFastForwardOnOff(bool newstate);
+    void cues_add_menu(string& str);
+    bool bFastForwardOnOff;
+    
+    bool is_retina;
+    int fontsize;
 
 };
 

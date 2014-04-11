@@ -27,8 +27,6 @@ iOSAscoGraphMenu* guiMenu;
 void ascograph_send_action_trace(const string& action_name, const string& fathername, double now, double rnow, const string& s) {}
 void ascograph_send_cont_trace(const string& action_name, const string& fathername, double now, double rnow, double s) {}
 
-
-
 void AntescofoTimeline::setZoomer(ofxTLZoomer *z)
 {
 	//XXX if (zoomer) removeTrack(zoomer);
@@ -61,6 +59,8 @@ void iOSAscoGraph::setup(){
 		abort();
 	}
 #endif
+    fontsize = 10;
+    if (is_retina) fontsize *= 2;
     // settings menu
     guiMenu = [[iOSAscoGraphMenu alloc] initWithNibName:@"iOSAscoGraphMenu" bundle:nil];
 	[ofxiOSGetGLView() addSubview:guiMenu.view];
@@ -70,16 +70,16 @@ void iOSAscoGraph::setup(){
 
     score_x = 5;
 	score_y = 82;
-	mUIbottom_y = 40;
-    
+    if (is_retina) score_y *= 2;
 	bpm = 120;
     
 	ofSetEscapeQuitsApp(false);
-	score_w = ofGetWindowWidth() - score_x - 5;
-	score_h = ofGetWindowHeight()/3;
-
+	score_w = ofGetWidth() - score_x - 5;
+	score_h = ofGetHeight()/2;
+    
     ofSetOrientation(OF_ORIENTATION_90_LEFT);
-	ofSetVerticalSync(true);
+
+    ofSetVerticalSync(true);
 	
     ofxAntescofoZoom = new ofxTLZoomer2D();
 	ofxAntescofoNote = new ofxTLAntescofoNote(this);
@@ -107,6 +107,7 @@ void iOSAscoGraph::setup(){
 
     bShouldRedraw = true;
     bLoadingScore = false;
+    bFastForwardOnOff = true;
 	bHide = true;
     
     //screenSize = ofToString(w) + "x" + ofToString(h);
@@ -162,8 +163,11 @@ void iOSAscoGraph::setupOSC(){
 }
 
 void iOSAscoGraph::setupUI(){
-    guiBottom = new ofxUICanvas(64, 0, score_x+score_w+200 /*- 300*/, score_y);
+    guiBottom = new ofxUICanvas(64, 0, score_x+score_w+400, score_y);
     guiBottom->setFont("GUI/NewMedia Fett.ttf");
+    guiBottom->setFontSize(OFX_UI_FONT_LARGE, fontsize+1);
+    guiBottom->setFontSize(OFX_UI_FONT_MEDIUM, fontsize);
+    guiBottom->setFontSize(OFX_UI_FONT_SMALL, fontsize-1);
 	//ofxUIColor col(188, 189, 203, 255);// = ofxAntescofoNote->color_staves_bg;col.a = 255;
 	ofxUIColor col(149, 154, 162, 255);
 	
@@ -174,7 +178,6 @@ void iOSAscoGraph::setupUI(){
 	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), 1);
 	space->setVisible(false);
 	guiBottom->addWidgetDown(space);
-    int fontsize = 10;
 	mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
     mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	//guiBottom->addWidgetSouthOf(mLabelBPM, TEXT_CONSTANT_BUTTON_START);
@@ -212,6 +215,7 @@ void iOSAscoGraph::setupUI(){
 	// transport btns
     
 	int wi = 32;
+    if (is_retina) wi *= 3;
 	int xi = 358, yi = 28, dxi = 12;
 	string img_path("GUI/prev_.png");
 	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_PREV_EVENT);
@@ -282,13 +286,22 @@ void iOSAscoGraph::setupUI(){
     mDdl_host_lists->setAllowMultiple(false);
     mDdl_host_lists->setAutoClose(true);
     
+    //guiBottom->addSpacer();
+    mDdl_cues_list = new ofxUIDropDownList("Cue points", antescofo_cuepoints);
+    guiBottom->addWidgetRight(mDdl_cues_list);
+    mDdl_cues_list->setAllowMultiple(false);
+    mDdl_cues_list->setAutoClose(true);
+    mDdl_cues_list->getRect()->x = mDdl_host_lists->getRect()->x + mDdl_host_lists->getRect()->width +100;
+    
 	img_path = "GUI/settings_.png";
 	ofxUIMultiImageToggle* settingsToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_SETTINGS);
     settingsToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	settingsToggle->setLabelVisible(false);
 	settingsToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(settingsToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
-	r = settingsToggle->getRect(); r->x = ofGetWidth() - 100;//xi + 4*(wi+dxi);
+	r = settingsToggle->getRect();
+    //r->x = 00;
+    r->x = ofGetWidth() - 200 * (is_retina ? 2 : 1);//xi + 4*(wi+dxi);
     r->y = 4;
     
     img_path = "GUI/note_.png";
@@ -318,8 +331,24 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
             string antescofohost = selected[i]->getName();
             send_OSC_getscore(antescofohost);
         }
-    } else if(e.widget->getName() == TEXT_CONSTANT_BUTTON_PLAY)
-    {
+    } else if (name == "Cue points") {
+        ofxUIDropDownList *ddlist = (ofxUIDropDownList *) e.widget;
+        vector<ofxUIWidget *> &selected = ddlist->getSelected();
+        for(int i = 0; i < selected.size(); i++)
+        {
+            cout << "So in the DynDropdownList we have selected: " << selected[i]->getName() << endl;
+            string cue = selected[i]->getName();
+            string cmd = (bFastForwardOnOff ? "fastforward" : "gotolabel");
+            ofLog() << "Sending OSC: " << cmd << " "<< cue << endl;
+
+            ofxOscMessage m;
+            m.setAddress("/antescofo/cmd");
+            m.addStringArg(cmd);
+            m.addStringArg(cue);
+            mOSCsender.sendMessage(m);
+            break;
+        }
+    } else if(e.widget->getName() == TEXT_CONSTANT_BUTTON_PLAY) {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
 	    cout << "Play button change: " << b->getValue() << endl;
 	    if (b->getValue() == 1) {
@@ -334,8 +363,7 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
 	    }
-    }
-    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_START)
+    } else    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_START)
     {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
 	    cout << "Start button change: " << b->getValue() << endl;
@@ -405,7 +433,7 @@ void iOSAscoGraph::push_tempo_value() {
 
 void iOSAscoGraph::setupTimeline(){
     //ofSetBackgroundAuto(false);
-    timeline.setupFont("GUI/NewMedia Fett.ttf", 10);
+    timeline.setupFont("GUI/NewMedia Fett.ttf", fontsize);
 	timeline.setOffset(ofVec2f(score_x, score_y));
 	timeline.setup(); //registers events
     
@@ -420,19 +448,24 @@ void iOSAscoGraph::setupTimeline(){
 	timeline.setBPM(bpm);
 	timeline.setLockWidthToWindow(false);
     timeline.getColors().load("GUI/Ascograph.xml");
+    ofxAntescofoNote->fontsize = fontsize;
 
 	// use custom zoomer :
 	timeline.addTrack("zoom", ofxAntescofoZoom);
 	timeline.setZoomer(ofxAntescofoZoom);
 	timeline.addTrack("Beats", ofxAntescofoBeatTicker);
 	timeline.addTrack("Notes", ofxAntescofoNote);
-	ofxAntescofoNote->setDrawRect(ofRectangle(0, 0, score_w, 400));
+    if (is_retina)
+        timeline.zoomHeight = 100;
+    else
+        timeline.zoomHeight = 100;
+    ofxAntescofoZoom->setDrawRect(ofRectangle(0, 0, score_w, timeline.zoomHeight));
+	ofxAntescofoNote->setDrawRect(ofRectangle(0, 0, score_w, score_h));
     ofxAntescofoNote->color_note.set(255, 0, 0, 255);
     ofxAntescofoNote->color_note_chord.set(0, 255, 0, 255);
     ofxAntescofoNote->color_note_trill.set(0, 0, 255, 255);
     ofxAntescofoNote->color_note_multi.set(255, 255, 0, 255);
 
-    
 	ofxAntescofoBeatTicker->setup();
 	timeline.setShowTicker(true);
 	timeline.setBPM(bpm);
@@ -584,14 +617,17 @@ void iOSAscoGraph::draw(){
 
     struct timeval now;
 	gettimeofday(&now, 0);
+    /*
 #define DRAW_MAX_DELTA_USEC	10000
 	if ((now.tv_sec*1000000L + now.tv_usec) - (last_draw_time.tv_sec*1000000L + last_draw_time.tv_usec) < DRAW_MAX_DELTA_USEC) {
 		return;
 	}
 	gettimeofday(&last_draw_time, 0);
-	if (!bShouldRedraw) {
+	*/
+     if (!bShouldRedraw) {
         drawCache.draw(0, 0);
-    }else {
+    }else
+ {
         ofSetColor(255, 255, 255, 255);
         drawCache.begin();
         ofClear(255,255,255, 0);
@@ -612,6 +648,10 @@ void iOSAscoGraph::draw(){
 void iOSAscoGraph::exit(){
 }
 
+void iOSAscoGraph::cues_add_menu(string& str) {
+    antescofo_cuepoints.push_back(str);
+    mDdl_cues_list->addToggle(str);
+}
 
 void iOSAscoGraph::loadScore(string score)
 {
@@ -626,6 +666,14 @@ void iOSAscoGraph::loadScore(string score)
         showJumpTrack();
         
         bShouldRedraw = true;
+        
+        // add cues menu
+        mDdl_cues_list->clearToggles();
+        antescofo_cuepoints.clear();
+        for (vector<string>::iterator i = ofxAntescofoNote->cuepoints.begin(); i != ofxAntescofoNote->cuepoints.end(); i++) {
+			cues_add_menu(*i);
+		}
+
     }
 }
 
@@ -800,4 +848,8 @@ void iOSAscoGraph::setAutoscroll(bool newstate)
     ofxAntescofoNote->setAutoScroll(newstate);
 }
 
-
+void iOSAscoGraph::setFastForwardOnOff(bool newstate)
+{
+    cout << "FastForward changed to " << newstate << endl;
+    bFastForwardOnOff = newstate;
+}

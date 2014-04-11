@@ -129,7 +129,8 @@ void ofxTimeline::setup(){
 	
 	zoomer = new ofxTLZoomer();
 	zoomer->setTimeline(this);
-	zoomer->setDrawRect(ofRectangle(offset.y, ticker->getBottomEdge(), width, ZOOMER_HEIGHT));
+    zoomHeight = ZOOMER_HEIGHT;
+	zoomer->setDrawRect(ofRectangle(offset.y, ticker->getBottomEdge(), width, zoomHeight));
 	
 	colors.load();
     
@@ -1233,7 +1234,7 @@ void ofxTimeline::recalculateBoundingRects(){
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));
 	}
     
-	zoomer->setDrawRect(ofRectangle(offset.x, offset.y, width, showZoomer ? ZOOMER_HEIGHT : 0));
+	zoomer->setDrawRect(ofRectangle(offset.x, offset.y, width, showZoomer ? zoomHeight : 0));
 	ticker->setDrawRect( ofRectangle(offset.x, zoomer->getBottomEdge(), width, showTicker ? TICKER_HEIGHT : 0) );
 	inoutTrack->setDrawRect( ofRectangle(offset.x, ticker->getBottomEdge(), width, showInoutControl ? INOUT_HEIGHT : 0) );
 	updatePagePositions();

@@ -15,11 +15,17 @@ iOSAscoGraph *myApp;
 
 -(void)viewDidLoad {
 	myApp = (iOSAscoGraph*)ofGetAppPtr();
+    
 }
 
 -(IBAction)autoScrollSwitchHandler:(id)sender {
 	UISwitch *switchObj = sender;
 	myApp->setAutoscroll([switchObj isOn]);
+}
+
+-(IBAction)fastForwardOnOffSwitchHandler:(id)sender {
+	UISwitch *switchObj = sender;
+	myApp->setFastForwardOnOff([switchObj isOn]);
 }
 
 @end

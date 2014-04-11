@@ -1,6 +1,16 @@
 BPM 60
 
 NOTE C4 8.0
+group {
+	ozapej 3 3
+	zajeapj  0 3
+}
+
+group {
+azeopjaz 3
+}
+NOTE g4 4.0
+
 GFWD testgroup 
 {
 	action_one e

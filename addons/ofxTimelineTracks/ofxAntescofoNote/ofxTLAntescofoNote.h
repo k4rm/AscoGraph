@@ -213,6 +213,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	vector<string> cuepoints;
 	vector<ofxTLAntescofoNoteOn*>& getSwitches() {return switches;}
     ofTrueTypeFont mFont;
+    int fontsize;
 
 	protected:
 	virtual void update(ofEventArgs& args);
@@ -299,6 +300,9 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	string getGuidoString(int fromx, int fromi, int tox, int toi);
 	string getGuidoStringNote(int switchnb);
 	string getGuidoStringNoteName(int pitch);
+	int has_next_event_tied_pitch(int curEvent, int curPitch);
+	void add_string_staff(string &str1, string &str2, int staff, string str);
+	
 	ofxGuido *oguido;
 	string guido_string;
 	int guido_x, guido_y, guido_w, guido_h;

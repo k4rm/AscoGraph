@@ -16,6 +16,7 @@
 
 //@property(retain, nonatomic) IBOutlet UISlider *radiusSl;
 @property(retain, nonatomic) IBOutlet UISwitch *autoScrollSwitch;
+@property(retain, nonatomic) IBOutlet UISwitch *fastForwardOnOffSwitch;
 
 @end
 

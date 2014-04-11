@@ -439,7 +439,8 @@ class ofxTimeline : ofThread {
 	bool curvesUseBinary;
 	void setTicker(ofxTLTicker* t) { ticker = t; }
 	ofxTLTicker* getTicker() { return ticker; }
-	
+    int zoomHeight;
+
   protected:
 
     ofxTimecode timecode;
