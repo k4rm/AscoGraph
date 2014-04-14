@@ -19,7 +19,7 @@
 #include "ofxTLBeatTicker.h"
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
-//#include "ofxTLBeatJump.h"
+#include "ofxTLBeatJump.h"
 #include "ofxBonjourIp.h"
 #include "ofxOSC.h"
 #include "iOSAscoGraphMenu.h"
@@ -27,6 +27,7 @@
 
 class ofxTLAntescofoNote;
 class ofxTLBeatTicker;
+class ofxTLBeatJump;
 
 class AntescofoTimeline : public ofxTimeline
 {
@@ -82,7 +83,7 @@ public:
     ofxTLAntescofoNote* ofxAntescofoNote;
     ofxTLBeatTicker* ofxAntescofoBeatTicker;
     ofxTLAntescofoAction* ofxAntescofoAction;
-    //ofxTLBeatJump* ofxJumpTrack;
+    ofxTLBeatJump* ofxJumpTrack;
     bool bHide;
     string current_score;
     
@@ -110,6 +111,9 @@ public:
     unsigned long long mLastOSCmsgDate;
     float fAntescofoTimeSeconds;
     struct timeval last_draw_time;
+    int current_score_chunks;
+    map<int, string> tmp_score;
+    void check_score_vector_status();
 
     // buttons...
     ofxUICanvas *guiBottom;

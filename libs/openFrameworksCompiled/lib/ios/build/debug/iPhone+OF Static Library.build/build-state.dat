@@ -3126,7 +3126,7 @@ r0
 
 CCheck dependencies
 r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies8b894d404af8b841^dae74d404af8b841^---0#1#1#--18"Check dependencies36"FC614410-94D7-4FC2-AC42-C0644C107C13-
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies71c7c3ad27fcb841^1426c4ad27fcb841^---0#1#1#--18"Check dependencies36"0069CCE5-0D0F-4841-A4C6-C5BC0E295E8A-
 
 CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7/AVFoundationVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/video/AVFoundationVideoGrabber.mm normal armv7 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
 s418474041.488488
