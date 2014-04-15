@@ -718,8 +718,8 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		// get Guido string for current note
 		add_string_staff(ret1, ret2, curStaff, getGuidoStringNote(i));
 
-		if (curStaff == 1) staffbeat1 = switches[i]->beat.max;
-		else staffbeat2 = switches[i]->beat.max;
+		if (curStaff == 1) { staffbeat1 = rational(10000*switches[i]->beat.max, 10000); staffbeat1.rationalise(); }
+		else { staffbeat2 = rational(10000*switches[i]->beat.max, 10000); staffbeat2.rationalise(); }
 		
 		if (!istied && switches[i]->is_tied) {
 			add_string_staff(ret1, ret2, curStaff, " \\tieEnd ");
@@ -747,11 +747,23 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		//if (backtostaff1 && curStaff != 1) { add_string_staff(ret1, ret2, curStaff, "\\staff<1> "); backtostaff1 = false; curStaff = 1;}
 
 		// advance the other staffbeat position
-		rational bmax = switches[i]->beat.max;
-		if (i+1 < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min
-		    && ((curStaff == 1 && bmax != staffbeat2) || (curStaff == 2 && bmax != staffbeat1))) {
-			rational dif = bmax - (curStaff == 1 ? staffbeat2 : staffbeat1);
-			double dur = dif.toDouble();
+		if (i+1 == switches.size()) continue; // last elm, we're done
+
+		int nextnotestaf;
+		if (switches[i+1]->pitch && abs(switches[i+1]->pitch) < 59)
+			nextnotestaf = 2;
+		else nextnotestaf = 1;
+
+		rational bmax = rational(switches[i]->beat.max*10000, 10000); bmax.rationalise();
+		rational bmin = rational(switches[i]->beat.min*10000, 10000); bmin.rationalise();
+		cout << "DEBUG DE LA MUERTA: pitch=" << switches[i]->pitch << " i=" << i << " switchessize=" << switches.size() <<" bmax=" << bmax.toFloat() << 
+			" 1st=" << ((i+1 < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min) || i+1 == switches.size()) // next event beat is another beat or last event
+			<< " 2nd=" << ((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2)) << endl; 
+		if (!((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2))) cout << "---> nextnotestaff=" << nextnotestaf << " staffbeat1=" << staffbeat1.toFloat() << " staffbeat2=" << staffbeat2.toFloat() << endl; 
+		if (((i < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min) || i+2 == switches.size()) // next event beat is another beat or last event
+			&& ((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2))) {
+			double dur = bmin.toDouble() - (nextnotestaf == 1 ? staffbeat1.toDouble() : staffbeat2.toDouble());//switches[i]->duration;
+			cout << "------> bmax=" << bmax.toFloat() << " bmin=" << bmin.toFloat() << " curStaff=" << curStaff << " staffbeat1=" << staffbeat1.toFloat() << " staffbeat2=" << staffbeat2.toFloat() << " dif=" << dur << endl;
 			rational rdur(0, 1);
 			for (int j = 1; j < 64; j++)
 			{
@@ -767,8 +779,12 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			rdur.rationalise();
 			string sdur = rdur.toString();
 			cout << "------> Adding rest: " << rdur.toString() << endl;
-			int staf = (curStaff == 1 ? 2 : 1);
-			add_string_staff(ret1, ret2, staf, "_*" + rdur.toString());
+			if (staffbeat2.toFloat() == 0.)
+			if (!twostaves) {
+				add_string_staff(ret1, ret2, nextnotestaf, "\\staff<2>\\clef<\"f\">\n");
+				twostaves = true;
+			}
+			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString());
 			staffbeat1 = staffbeat2 = bmax;
 		}
 	}

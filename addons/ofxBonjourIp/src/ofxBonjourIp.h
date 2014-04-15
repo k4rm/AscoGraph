@@ -19,7 +19,7 @@
 
 
 // defaults for making device discoverable
-#define BONJOUR_TYPE "_ofxBonjourIp._tcp."
+#define BONJOUR_TYPE "_antescofo._tcp."
 #define BONJOUR_NAME "" // becomes device name
 #define BONJOUR_PORT 7777
 #define BONJOUR_DOMAIN "local"

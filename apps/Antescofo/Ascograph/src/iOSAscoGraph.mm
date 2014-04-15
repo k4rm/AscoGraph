@@ -595,14 +595,7 @@ void iOSAscoGraph::update(){
                     tmp_score[cur] = m.getArgAsString(1);
                     check_score_vector_status();
                 }
-            } /*else if(m.getAddress() == "/antescofo/current_score") {
-                if(m.getArgType(0) == OFXOSC_TYPE_STRING){
-                    current_score += m.getArgAsString(0);
-                    loadScore(current_score);
-                    bLoadingScore = true;
-                    mOsc_host = m.getRemoteIp();
-                }
-            } */else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
+            } else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {
 				mOsc_tempo = m.getArgAsFloat(0);
 				if (_debug) cout << "OSC received: tempo: "<< mOsc_tempo << endl;
 				bpm = mOsc_tempo;
