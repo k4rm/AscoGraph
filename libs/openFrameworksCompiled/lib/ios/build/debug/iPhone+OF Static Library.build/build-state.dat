@@ -1925,8 +1925,8 @@ t1397569266
 s13073
 
 N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/libofxiOS_iphoneos_Debug.a
-t2
-s0
+t1397569303
+s79620456
 
 N/Users/coffy/Documents/ircam/git/AscoGraph/libs/openssl/include/openssl/asn1.h
 c000000005284C71C000000000000CB94
@@ -3126,7 +3126,7 @@ r0
 
 CCheck dependencies
 r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies282b9a916efdb841^6b609b916efdb841^---0#1#1#--18"Check dependencies36"931CBA1B-A6E6-4238-8F86-CC870BA8A41F-
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies19abedf985fdb841^46d2eef985fdb841^---0#1#1#--18"Check dependencies36"93A5C8BA-30A2-4CC9-B115-D144CFDD07B8-
 
 CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7/AVFoundationVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/video/AVFoundationVideoGrabber.mm normal armv7 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
 s419262076.542907

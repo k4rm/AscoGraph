@@ -1126,6 +1126,8 @@ void ofxAntescofog::update() {
 					patch_receivers.push_back(s);
 				}
 				[ editor set_action_keywords: patch_receivers ];
+			} else if(m.getAddress() == "/antescofo/quit"  && m.getArgType(0) == OFXOSC_TYPE_STRING){
+				_Exit(0);
 			} else { 
 				mHasReadMessages = false;
 				// unrecognized message: display on the bottom of the screen
@@ -1799,7 +1801,7 @@ void ofxAntescofog::windowResized(ofResizeEventArgs& resizeEventArgs) { // (int 
 
 	cocoaWindow->setWindowShape(ofGetWidth(), ofGetHeight());
 
-	score_w = resizeEventArgs.width - score_x - 10;
+	score_w = resizeEventArgs.width - score_x - 5; 
 	guiBottom->getRect()->width = score_w + score_x - 300;
 
 	drawCache.allocate(resizeEventArgs.width, ofGetHeight(), GL_RGBA);
@@ -2523,7 +2525,7 @@ void ofxAntescofog::elevatorEnable()
 	cout << "ofxAntescofog::elevatorEnable: valueHigh : " << valueHigh << endl;
 	//elevator->setValueLow(valueHigh);
 	//elevator->setValueHigh(valueHigh*100);
-	//elevator->setColorBack(ofColor(0, 0, 0, 255));
+	elevator->setColorBack(ofColor(0, 0, 0, 0));
 
 	//elevator->setMin(valueHigh);
 	//elevator->setMax(valueHigh*25);
