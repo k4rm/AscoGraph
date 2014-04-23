@@ -292,7 +292,7 @@ void BeatCurve::mouseDragged(ofMouseEventArgs& args, long millis){
 	for (int i = 0; i < selectedKeyframes.size(); i++) {
 		int newbeat = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(args.x, zoomBounds));
 		if (selectedKeyframes[i]->beat < newbeat) {
-			cout << "--------------------------------------------> growing from: "<< bounds.width << " to " << args.x - bounds.x + 160  << endl;
+			if (curve_debug_) cout << "--------------------------------------------> growing from: "<< bounds.width << " to " << args.x - bounds.x + 160  << endl;
 			bounds.width += args.x - bounds.x + 160;
 			//timeline->normalizedXtoScreenX( timeline->beatToNormalizedX()) 
 			break;
@@ -523,7 +523,7 @@ void BeatCurve::changeKeyframeEasing(float beat, string type) {
 			roottype = type.substr(0, type.size()-3);
 		}
 	}
-	cout << "BeatCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << " easingType:"<< easeType << endl;
+	if (curve_debug_) cout << "BeatCurve::changeKeyframeEasing: beat:"<< beat << " type:"<< type << " easingType:"<< easeType << endl;
 
 	//if (type.size() && type[0] == '\"') type = type.substr(1, type.size() - 2);
 

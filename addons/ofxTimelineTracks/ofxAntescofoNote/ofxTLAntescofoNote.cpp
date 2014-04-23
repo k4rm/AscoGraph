@@ -82,7 +82,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-bool debug_guido = true;
+bool debug_guido = false;
 
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -440,8 +440,8 @@ void ofxTLAntescofoNote::guido_store_notes() {
 
 
 		for (int i = 0; i < switches.size(); i++) {
-			if (v == switches[i]->guido_nb) {
-				//cout << "GuidoGetSystemMap: v=" << v << " i=" << i << " x=" << x << " y=" << yy << " w=" << w << " h=" << h << endl;
+			if (v == switches[i]->notenum - 1) {
+				cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << yy << " w=" << w << " h=" << h << endl;
 				switches[v]->guidoCoords.x = x;
 				switches[v]->guidoCoords.y = yy;
 				switches[v]->guidoCoords.width = w;;
@@ -449,18 +449,6 @@ void ofxTLAntescofoNote::guido_store_notes() {
 				break;
 			}
 		}
-#if 0 // draw rects
-		ofFill();
-		if (v % 2)
-			ofSetColor(100+j, 0, 0, 55);
-		else if (v % 3)
-			ofSetColor(100+j, 100+j, 0, 55);
-		else 
-			ofSetColor(0, 100+j, 0, 55);
-		ofRect(x + bounds.x, yy + bounds.y, w, h);
-		j += 60;
-		if (j > 255) j=10;
-#endif
 	}
 }
 
@@ -657,7 +645,8 @@ void ofxTLAntescofoNote::add_string_staff(string &str1, string &str2, int staff,
 string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi) {
 	if (debug_guido) cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
 	string ret1 = "[ ", ret2 = ret1;
-	int pageFormat_w = switches.size() / 2; // TODO utiliser le maxbeat dur ?
+	int pageFormat_w = MIN(switches.size() / 8, 20); // TODO utiliser le maxbeat dur ?
+	if (!pageFormat_w) pageFormat_w = 20;
 	ret1 +=	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 1cm, 1cm, 1cm, 1cm>";
 	if (fromi == 0) {
 		ret1 += "\\clef<\"g\">\n";
@@ -673,25 +662,20 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	bool was_tied = false;
 	bool was_trill = false;
 	int curStaff = 1;
-	int guido_nb = 0;
-	for (int i = fromi; i <= toi; i++, guido_nb++) {
-		//int x = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
-		//if (x > maxx) break;
-
+	for (int i = fromi; i <= toi; i++) {
 		if (switches[i]->pitch && abs(switches[i]->pitch) < 59) {
 			curStaff = 2;
 			if (!twostaves) {
-				add_string_staff(ret1, ret2, curStaff, "\\staff<2>\\clef<\"f\">\n");
+				add_string_staff(ret1, ret2, curStaff, "\\staff<2>\\clef<\"f\">\\stemsDown\n");
 				twostaves = true;
 			}
 		} else curStaff = 1;
-
 
 		if (switches[i]->type == ANTESCOFO_CHORD/* && !switches[i]->isLast*/) {
 			if (curStaff == 1) {
 				if (!isChord1) {
 					add_string_staff(ret1, ret2, 1, " {");
-					isChord1 = true;
+					isChord1 = true; 
 				} else add_string_staff(ret1, ret2, curStaff, ", ");
 			} else if (twostaves && curStaff == 2) {
 				if (!isChord2) {
@@ -699,8 +683,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 					isChord2 = true;
 				} else add_string_staff(ret1, ret2, curStaff, ", ");
 			}
-		}
-		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
+		} else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
 			if (!was_trill) {
 				add_string_staff(ret1, ret2, curStaff, "\\trill({");
 				was_trill = true;
@@ -724,21 +707,21 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		if (!istied && switches[i]->is_tied) {
 			add_string_staff(ret1, ret2, curStaff, " \\tieEnd ");
 		}
-
-		// store Guido note number in current switch ?
-		switches[i]->guido_nb = guido_nb;
-
-		//cout << "this switch: i = " << i << " : " << switches[i]->isLast << endl;
 		if (switches[i]->pitch >= 59)
 			backtostaff1 = true;
-		if (!istied && !switches[i]->is_tied) {
-			if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min))
-				add_string_staff(ret1, ret2, curStaff, "}");
-			else {
-				if ((isChord1 || isChord2) && switches[i]->isLast) {
-					if (isChord1) add_string_staff(ret1, ret2, curStaff, " }");
-					if (twostaves && isChord2) add_string_staff(ret1, ret2, 2, " }");
+
+		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min))
+			add_string_staff(ret1, ret2, curStaff, "}");
+		else {
+			if (i+1 == switches.size() || (switches[i]->type == ANTESCOFO_CHORD && switches[i+1]->beat.min != switches[i]->beat.min)) { // last note of a CHORD
+				if (isChord1) {
+					add_string_staff(ret1, ret2, 1, " }");
+					//cout << "--------------> closing CHORD 1: " << ret1 << endl;
 					isChord1 = false;
+				}
+				if (twostaves && isChord2) {
+					add_string_staff(ret1, ret2, 2, " }");
+					//cout << "--------------> closing CHORD 2: " << ret2 << endl;
 					isChord2 = false;
 				}
 			}
@@ -756,14 +739,17 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 
 		rational bmax = rational(switches[i]->beat.max*10000, 10000); bmax.rationalise();
 		rational bmin = rational(switches[i]->beat.min*10000, 10000); bmin.rationalise();
-		cout << "DEBUG DE LA MUERTA: pitch=" << switches[i]->pitch << " i=" << i << " switchessize=" << switches.size() <<" bmax=" << bmax.toFloat() << 
-			" 1st=" << ((i+1 < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min) || i+1 == switches.size()) // next event beat is another beat or last event
-			<< " 2nd=" << ((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2)) << endl; 
-		if (!((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2))) cout << "---> nextnotestaff=" << nextnotestaf << " staffbeat1=" << staffbeat1.toFloat() << " staffbeat2=" << staffbeat2.toFloat() << endl; 
-		if (((i < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min) || i+2 == switches.size()) // next event beat is another beat or last event
+		/* if (debug_guido) cout << "DEBUG DE LA MUERTA: pitch=" << switches[i]->pitch << "---> nextnotestaff=" << nextnotestaf << " i=" << i << " switchessize=" 
+		   << switches.size() <<" bmax=" << bmax.toFloat() << " 1st=" << ((i < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min))
+		   << " 2nd=" << ((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2)) << endl; 
+		   if (debug_guido)
+		   if (!((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2))) cout  << " staffbeat1=" << staffbeat1.toFloat() << " staffbeat2="
+		   << staffbeat2.toFloat() << endl << endl; */
+		if (((i < switches.size() && switches[i+1]->beat.min > switches[i]->beat.min) /*|| i+2 == switches.size()*/) // next event beat is another beat or last event
 			&& ((nextnotestaf == 1 && bmax != staffbeat1) || (nextnotestaf == 2 && bmax != staffbeat2))) {
-			double dur = bmin.toDouble() - (nextnotestaf == 1 ? staffbeat1.toDouble() : staffbeat2.toDouble());//switches[i]->duration;
-			cout << "------> bmax=" << bmax.toFloat() << " bmin=" << bmin.toFloat() << " curStaff=" << curStaff << " staffbeat1=" << staffbeat1.toFloat() << " staffbeat2=" << staffbeat2.toFloat() << " dif=" << dur << endl;
+			double dur = bmax.toDouble() - (nextnotestaf == 1 ? staffbeat1.toDouble() : staffbeat2.toDouble());//switches[i]->duration;
+			/*if (debug_guido) cout << "------> bmax=" << bmax.toFloat() << " bmin=" << bmin.toFloat() << " curStaff=" << curStaff << " staffbeat1=" 
+			  << staffbeat1.toFloat() << " staffbeat2=" << staffbeat2.toFloat() << " dif=" << dur << endl;*/
 			rational rdur(0, 1);
 			for (int j = 1; j < 64; j++)
 			{
@@ -778,13 +764,13 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			rdur /= 4; // because of guido...
 			rdur.rationalise();
 			string sdur = rdur.toString();
-			cout << "------> Adding rest: " << rdur.toString() << endl;
+			if (debug_guido) cout << "------> Adding rest: " << rdur.toString() << endl;
 			if (staffbeat2.toFloat() == 0.)
 			if (!twostaves) {
 				add_string_staff(ret1, ret2, nextnotestaf, "\\staff<2>\\clef<\"f\">\n");
 				twostaves = true;
 			}
-			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString());
+			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString() + " ");
 			staffbeat1 = staffbeat2 = bmax;
 		}
 	}
@@ -1065,33 +1051,34 @@ void ofxTLAntescofoNote::autoscroll() {
 		ofRange oldz = z;
 		//cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
 		// continuous scrolling : keep playhead on center
-		if (pos) {
-			float c = z.center(); 
-			float d = pos - c;
+		float c = z.center(); 
+		float d = pos - c;
 
-			z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
-			if (z.min == .0 && z.span() < oldz.span())
-				z.max = oldz.max - oldz.min;
-			if (z.max == 1. && z.span() < oldz.span())
-				z.min = z.max - oldz.max + oldz.min;
+		z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+		if (z.min == .0 && z.span() < oldz.span())
+			z.max = oldz.max - oldz.min;
+		if (z.max == 1. && z.span() < oldz.span())
+			z.min = z.max - oldz.max + oldz.min;
 
 
-			//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
-			zoom->setViewRange(z);
-			//zoom->setSelectedRange(z);
-			//zoom->setViewRange(z);
+		//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+		zoom->setViewRange(z);
+		//zoom->setSelectedRange(z);
+		//zoom->setViewRange(z);
 
-			lastpos = pos;
-		}
+		lastpos = pos;
+		mAntescofog->shouldRedraw();
 
 		// TODO page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
 	}
 }
 
+
 void ofxTLAntescofoNote::draw_playhead() {
 	if (bShowPianoRoll) { // pianoroll playhead
 		float x = normalizedXtoScreenX( mCurSecs/mDur_in_secs, zoomBounds);
-		if (x < bounds.x) return;
+		if (x < bounds.x && mCurBeat && mCurSecs) return;
+		if (!mCurBeat) autoscroll();
 		ofPushStyle();
 		ofSetColor(0, 0, 0, 255);
 		ofLine(x, bounds.y, x, bounds.y + bounds.height);
@@ -1107,7 +1094,7 @@ void ofxTLAntescofoNote::draw_playhead() {
 		cout << endl << "draw_playhead: mCurBeat=" << mCurBeat << endl;
 		// use map : beat2switchId
 		for (map<float, int>::iterator i = beat2switchId.begin(); i != beat2switchId.end(); i++) {
-			//cout << "i first=" << i->first << " mCurBeat="<< mCurBeat<< endl;
+			cout << "i first=" << i->first << " mCurBeat="<< mCurBeat<< endl;
 			if (i->first == mCurBeat) {
 				int gotit = i->second;
 				ofPushStyle();
@@ -1581,8 +1568,8 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		return 0;
 	}
 #endif
-    score = mAntescofo->Parse(filename);
-    if (score == NULL) {
+	score = mAntescofo->Parse(filename);
+	if (score == NULL) {
 		//::Error("%s\n", filename.c_str());
         cerr << "PARSING ERROR: " << filename.c_str() << endl;
 		return 0;
@@ -1663,6 +1650,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->lineNum_end = e->scloc->end.line;
 					newSwitch->colNum_end = e->scloc->end.column;
 					newSwitch->isLast = false;
+					newSwitch->notenum = e->notenum;
 					newSwitch->label = e->cuename;
 					/*if (m == e->multi_source.begin()) { 
 						if (bGot_Action)  {
@@ -1687,6 +1675,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;
 					newSwitch->isLast = true;
+					newSwitch->notenum = e->notenum;
 					// get location in text score
 					assert(e->scloc);
 					newSwitch->lineNum_begin = e->scloc->begin.line;
@@ -1714,6 +1703,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->velocity = 127;
 			newSwitch->channel = 1;
 			newSwitch->isLast = false;
+			newSwitch->notenum = e->notenum;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
 				add_action(e->beatcum, actstr, e);
@@ -1728,6 +1718,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				newSwitch->colNum_end = e->scloc->end.column;
 				newSwitch->label = e->cuename;
 				newSwitch->isLast = false;
+				newSwitch->notenum = e->notenum;
 				switches.push_back(newSwitch);
 				line2note[e->scloc->begin.line] = switches.size() - 1;
 			}
@@ -1755,6 +1746,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				newSwitch->velocity = 127;
 				newSwitch->channel = 1;
 				newSwitch->isLast = false;
+				newSwitch->notenum = e->notenum;
 				newSwitch->lineNum_begin = e->scloc->begin.line;
 				newSwitch->colNum_begin = e->scloc->begin.column;
 				newSwitch->lineNum_end = e->scloc->end.line;
@@ -1792,6 +1784,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 						newSwitch->action = actstr;
 						add_action(e->beatcum, actstr, e);
 					}
+					newSwitch->notenum = e->notenum;
 					// get location in text score
 					assert(e->scloc);
 					newSwitch->lineNum_begin = e->scloc->begin.line;
@@ -1820,6 +1813,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->velocity = 127;
 			newSwitch->channel = 1;
 			newSwitch->isLast = false;
+			newSwitch->notenum = e->notenum;
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
 				add_action(e->beatcum, actstr, e);

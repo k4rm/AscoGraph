@@ -278,7 +278,7 @@ void ofxTLZoomer2D::setViewRange(ofRange newRange){
 
 	currentViewRange = newRange;
 	zoomEvent.currentZoom = getViewRange();
-	ofNotifyEvent(events().zoomEnded, zoomEvent); 
+    ofNotifyEvent(events().zoomDragged, zoomEvent);
 }
 
 ofRange ofxTLZoomer2D::getSelectedRange(){

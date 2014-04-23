@@ -216,6 +216,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void createCodeTemplate(int which);
 		void showJumpTrack();
 		void display_error();
+		void shouldRedraw();
 		
 		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker, *ofxAntescofoBeatTickerSim;

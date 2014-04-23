@@ -78,6 +78,7 @@ public:
     void display_error() { cerr << "iOSAscoGraph::display_error() TODO" << endl; }
     void showJumpTrack();
     void push_tempo_value();
+    void shouldRedraw();
     float score_x, score_y, score_w, score_h, mUIbottom_y, bpm;
     ofxTLZoomer2D* ofxAntescofoZoom;
     ofxTLAntescofoNote* ofxAntescofoNote;

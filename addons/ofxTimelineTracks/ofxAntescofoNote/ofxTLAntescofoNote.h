@@ -107,7 +107,7 @@ typedef struct {
 	bool is_tied;
 	int type;
 	ofRectangle guidoCoords;
-	int guido_nb;
+	int notenum;
 
 	string label;
 	string action;

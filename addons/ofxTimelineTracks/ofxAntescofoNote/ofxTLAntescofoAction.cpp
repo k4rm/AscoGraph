@@ -462,11 +462,11 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 
 
 // avoid x overlapping
-void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w)
+void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w, int h)
 {
-
 	if (g->rect.width + g->rect.x > w) {
-		g->rect.width = w - g->rect.x;
+		//XXX if (g->rect.y + g->rect.height < h) 
+			g->rect.width = w - g->rect.x;
 		
 		ActionMultiCurves* c = 0;
 		if ((c = dynamic_cast<ActionMultiCurves*>(g))) {
@@ -474,7 +474,9 @@ void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w)
 		}
 	}
 	for (list<ActionGroup*>::const_iterator i = g->sons.begin(); i != g->sons.end(); i++) {
-		update_avoid_overlap_rec(*i, w);
+		ActionMessage *m;
+		
+		update_avoid_overlap_rec(*i, w, h);
 	}
 }
 
@@ -483,11 +485,11 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 {
 	//bounds.height = 0;
 	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		list<ActionGroup*>::const_iterator j = i;
 
+		list<ActionGroup*>::const_iterator j = i;
 		if (++j != mActionGroups.end() && (*i)->is_in_bounds(this) ) {
 			if ( ((*i)->rect.x + (*i)->rect.width) > (*j)->rect.x) {
-				update_avoid_overlap_rec((*i), (*j)->rect.x /*- (*i)->rect.x*/ - 1);
+				update_avoid_overlap_rec((*i), (*j)->rect.x - 1, (*j)->rect.height + (*j)->rect.y);
 			}
 		}
 		//cout << "Action hearder height:"  << (*i)->rect.height <<" x:" << bounds.x << endl;

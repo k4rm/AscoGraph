@@ -76,11 +76,12 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 	void setSelectedRange(ofRange newRange);
 	void zoomin();
 	void zoomout();
-  private:
-
+    
 	void notifyZoomStarted();
 	void notifyZoomDragged(ofRange oldZoom);
 	void notifyZoomEnded();
+  private:
+
 
 	ofRange currentViewRange;
 

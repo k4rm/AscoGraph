@@ -497,49 +497,58 @@ using namespace std;
 		    float delay_i;
                     NSString *delay, *duration, *s;
 		    bool debug_ = false;
+		    bool already_read_params = false;
+
                     switch (eventType)
                     {
                         case CHANNEL_NOTE_ON:
                             p1 = [self readByte];
                             p2 = [self readByte];
-                            [self readNoteOn:channel parameter1:p1 parameter2:p2];
+			    if (p2 == 0) { // if velocity is null force note type to NOTE OFF
+				    eventType = CHANNEL_NOTE_OFF;
+				    already_read_params = true;
+			    } else {
+				    [self readNoteOn:channel parameter1:p1 parameter2:p2];
 
-			    curPitch = p1;
-                            delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
-                            delay_i = deltaTime; //timestamp - noteson[curPitch];
-			    if (delay_i > 0.) { // handle rests
-				    if (noteson.empty()) {
-					    pitchList.push_back(0);
-					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding REST note dur=%f\n", delay_i];
-					    antescofo_notes.push_back(new Notes(pitchList, delay_i));
-					    if (debug_) [ self print_notes:antescofo_notes];
-					    pitchList.clear();
-				    } else { // if we were already in a note/chord, add current chord
-					    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
-						    int p = it->first;
-						    if (curPitch != it->first && it->second < 0) { p = (-1) * p; }
-						    if (it->first != curPitch) 
-							    it->second = - timestamp;
-						    else
-							    it->second = timestamp;
+				    curPitch = p1;
+				    delay = [self getBeatDuration:deltaTime resolution:ticksPerBeat];
+				    delay_i = deltaTime; //timestamp - noteson[curPitch];
+				    if (delay_i > 0.) { // handle rests
+					    if (noteson.empty()) {
+						    pitchList.push_back(0);
+						    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding REST note dur=%f\n", delay_i];
+						    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+						    if (debug_) [ self print_notes:antescofo_notes];
+						    pitchList.clear();
+					    } else { // if we were already in a note/chord, add current chord
+						    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++) {
+							    int p = it->first;
+							    if (curPitch != it->first && it->second < 0) { p = (-1) * p; }
+							    if (it->first != curPitch) 
+								    it->second = - timestamp;
+							    else
+								    it->second = timestamp;
 
-						    pitchList.push_back(p);
+							    pitchList.push_back(p);
+						    }
+						    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n", delay_i];
+						    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+						    if (debug_) [ self print_notes:antescofo_notes];
+						    pitchList.clear();
 					    }
-					    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n", delay_i];
-					    antescofo_notes.push_back(new Notes(pitchList, delay_i));
-					    if (debug_) [ self print_notes:antescofo_notes];
-					    pitchList.clear();
 				    }
-			    }
 
-			    noteson[curPitch] = timestamp;
-			    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++)
-				    if(deltaTime && it->first != curPitch) it->second = - abs(it->second);
-			    deltaTime = 0;
-                            break;
+				    noteson[curPitch] = timestamp;
+				    for (map<int, long>::iterator it = noteson.begin(); it != noteson.end(); it++)
+					    if(deltaTime && it->first != curPitch) it->second = - abs(it->second);
+				    deltaTime = 0;
+				    break;
+			    }
                         case CHANNEL_NOTE_OFF:
-                            p1 = [self readByte];
-                            p2 = [self readByte];
+			    if (!already_read_params) {
+				    p1 = [self readByte];
+				    p2 = [self readByte];
+			    }
                             [self readNoteOff: channel parameter1: p1 parameter2: p2];
 
 			    curPitch = p1;

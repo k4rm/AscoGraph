@@ -18,6 +18,8 @@
 
 bool _debug = true;
 
+string ascograph_version = "1.03";
+
 extern ofxConsole* console;
 
 iOSAscoGraphMenu* guiMenu;
@@ -78,7 +80,8 @@ void iOSAscoGraph::setup(){
 #define INVERSE_W_H 1
 #if INVERSE_W_H
 	score_w = ofGetHeight() - score_x - 5;
-    score_h = ofGetWidth()/2;
+    if (is_retina) score_h = ofGetWidth()/2;
+    else score_h = ofGetWidth()/2 + 5;
 #else
     score_w = ofGetWidth() - score_x - 5;
     score_h = ofGetHeight()/2;
@@ -169,7 +172,7 @@ void iOSAscoGraph::setupOSC(){
     gettimeofday(&last_draw_time, 0);
 }
 
-void iOSAscoGraph::setupUI(){
+void iOSAscoGraph::setupUI() {
     guiBottom = new ofxUICanvas(64, 0, score_x+score_w+500, score_y - 10);
     guiBottom->setFont("GUI/NewMedia Fett.ttf");
     guiBottom->setFontSize(OFX_UI_FONT_LARGE, fontsize+1);
@@ -181,66 +184,51 @@ void iOSAscoGraph::setupUI(){
     guiBottom->setColorBack(col);
 	mBPMbuffer = new float[256];
 	for (int i = 0; i < 256; i++) mBPMbuffer[i] = 0.;
-    
-    int hspace = 1; if (is_retina) hspace *= 6;
-	ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), hspace);
-	space->setVisible(false);
-	guiBottom->addWidgetDown(space);
-	mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
-    mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	//guiBottom->addWidgetSouthOf(mLabelBPM, TEXT_CONSTANT_BUTTON_START);
-	guiBottom->addWidgetDown(mLabelBPM);
-	mLabelBPM = new ofxUILabel("120", fontsize);
-    mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	guiBottom->addWidgetEastOf(mLabelBPM, TEXT_CONSTANT_BUTTON_BPM);
-    
-	mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, fontsize);
-    mLabelBeat->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	guiBottom->addWidgetSouthOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BPM);
-	mLabelBeat = new ofxUILabel("0", fontsize);
-    mLabelBeat->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	guiBottom->addWidgetEastOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BEAT);
-    
-	mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, fontsize);
-    mLabelPitch->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	guiBottom->addWidgetSouthOf(mLabelPitch, TEXT_CONSTANT_BUTTON_BEAT);
-	mLabelPitch = new ofxUILabel("0", fontsize);
-    mLabelPitch->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	guiBottom->addWidgetEastOf(mLabelPitch, TEXT_CONSTANT_BUTTON_PITCH);
-    
-	int wi = 32; if (is_retina) wi *= 3;
-    int spectrumw = 313; if (is_retina) spectrumw += 180;
-	// tempo curve
-	ofxUISpectrum* tempoCurve = new ofxUISpectrum(spectrumw, wi*2, mBPMbuffer, 256, 0., 290.0, "bpm");
-    tempoCurve->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	//tempoCurve->setDrawOutline(true);
-	guiBottom->addWidgetDown(tempoCurve);
-	tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
-	tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
-	ofxUIRectangle* r = tempoCurve->getRect();
-	r->x = 3; r->y = 3;
-    
+    int wi = 32; if (is_retina) wi *= 3;
+    ofxUIRectangle* r;
 	string path_prefix_img = ofFilePath::getCurrentExeDir() + "../Resources/";
     
 	// transport btns
 
-	int xi = 358, yi = 28, dxi = 12;
-    if (is_retina) { xi = 500; yi *= 2; dxi *= 2; };
+	int xi = 125, yi = 36, dxi = 12;
+    if (is_retina) { xi = 2*145; yi *= 2; dxi *= 2; };
 	string img_path("GUI/prev_.png");
-	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_PREV_EVENT);
+	ofxUIMultiImageToggle* prevToggle = new ofxUIMultiImageToggle(wi*2, wi*2, false, img_path, TEXT_CONSTANT_BUTTON_PREV_EVENT);
     prevToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	prevToggle->setLabelVisible(false);
 	prevToggle->setDrawOutline(true);
-	guiBottom->addWidgetEastOf(prevToggle, "bpm");
-	r = prevToggle->getRect(); r->x = xi; r->y = yi;
+	//guiBottom->addWidgetEastOf(prevToggle, "bpm");
+	guiBottom->addWidget(prevToggle);
+	r = prevToggle->getRect(); r->x = 5; r->y = 5;
+    
+	img_path = "GUI/settings_.png";
+	ofxUIMultiImageToggle* settingsToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_SETTINGS);
+    settingsToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+	settingsToggle->setLabelVisible(false);
+	settingsToggle->setDrawOutline(true);
+	//guiBottom->addWidgetEastOf(settingsToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
+	//guiBottom->addWidgetSouthOf(settingsToggle, "chord");
+	guiBottom->addWidget(settingsToggle);
+    r = settingsToggle->getRect(); r->x = xi + dxi; r->y = yi;
+    //r->x = ofGetWidth() - 96 * (is_retina ? 2 : 1);//xi + 4*(wi+dxi);
+    //r->y = 4;
+    
+    img_path = "GUI/note_.png";
+	ofxUIMultiImageToggle* viewToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_TOGGLEVIEW);
+    viewToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    viewToggle->setLabelVisible(false);
+	viewToggle->setDrawOutline(true);
+	//guiBottom->addWidgetSouthOf(viewToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
+	guiBottom->addWidgetEastOf(viewToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
+	r = viewToggle->getRect(); r->x = xi + wi + dxi; r->y = yi;
     
 	img_path = "GUI/stop_.png";
 	ofxUIMultiImageToggle* stopToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_STOP);
     stopToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	stopToggle->setLabelVisible(false);
 	stopToggle->setDrawOutline(true);
-	guiBottom->addWidgetEastOf(stopToggle, TEXT_CONSTANT_BUTTON_PREV_EVENT);
-	r = stopToggle->getRect(); r->x = xi + wi + dxi; r->y = yi;
+	guiBottom->addWidgetEastOf(stopToggle, TEXT_CONSTANT_BUTTON_TOGGLEVIEW);
+	r = stopToggle->getRect(); r->x = xi + 2*wi + dxi; r->y = yi;
     
 	img_path = "GUI/play_.png";
 	ofxUIMultiImageToggle* playToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_PLAY);
@@ -248,7 +236,7 @@ void iOSAscoGraph::setupUI(){
 	playToggle->setLabelVisible(false);
 	playToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(playToggle, TEXT_CONSTANT_BUTTON_STOP);
-	r = playToggle->getRect(); r->x = xi + 2*(wi+dxi); r->y = yi;
+	r = playToggle->getRect(); r->x = xi + 3*(wi+dxi); r->y = yi;
     
 	img_path = "GUI/start_.png";
 	ofxUIMultiImageToggle* startToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_START);
@@ -256,36 +244,81 @@ void iOSAscoGraph::setupUI(){
     startToggle->setLabelVisible(false);
 	startToggle->setDrawOutline(true);
 	guiBottom->addWidgetEastOf(startToggle, TEXT_CONSTANT_BUTTON_PLAY);
-	r = startToggle->getRect(); r->x = xi + 3*(wi+dxi); r->y = yi;
+	r = startToggle->getRect(); r->x = xi + 4*(wi+dxi); r->y = yi;
+    
+    
+    int hspace = 1; if (is_retina) hspace *= 6;
+    ofxUISpacer *space = new ofxUISpacer(ofGetWidth(), hspace);
+    space->setVisible(false);
+    guiBottom->addWidgetDown(space);
+    mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
+    mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    guiBottom->addWidgetEastOf(mLabelBPM, TEXT_CONSTANT_BUTTON_START);
+    if (is_retina) mLabelBPM->getRect()->y = 100;
+    else mLabelBPM->getRect()->y = 40;
+    mLabelBPM->getRect()->x += 100;
+    //guiBottom->addWidgetDown(mLabelBPM);
+    mLabelBPM = new ofxUILabel("120", fontsize);
+    mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    guiBottom->addWidgetEastOf(mLabelBPM, TEXT_CONSTANT_BUTTON_BPM);
+    
+    mLabelBeat = new ofxUILabel(TEXT_CONSTANT_BUTTON_BEAT, fontsize);
+    mLabelBeat->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    guiBottom->addWidgetSouthOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BPM);
+    mLabelBeat = new ofxUILabel("0", fontsize);
+    mLabelBeat->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    guiBottom->addWidgetEastOf(mLabelBeat, TEXT_CONSTANT_BUTTON_BEAT);
+    
+    mLabelPitch = new ofxUILabel(TEXT_CONSTANT_BUTTON_PITCH, fontsize);
+    mLabelPitch->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    guiBottom->addWidgetSouthOf(mLabelPitch, TEXT_CONSTANT_BUTTON_BEAT);
+    mLabelPitch = new ofxUILabel("0", fontsize);
+    mLabelPitch->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    guiBottom->addWidgetEastOf(mLabelPitch, TEXT_CONSTANT_BUTTON_PITCH);
+    
     
 	img_path = "GUI/next_.png";
-	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_NEXT_EVENT);
+	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi*2, wi*2, false, img_path, TEXT_CONSTANT_BUTTON_NEXT_EVENT);
     nextToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
     nextToggle->setLabelVisible(false);
 	nextToggle->setDrawOutline(true);
-	guiBottom->addWidgetEastOf(nextToggle, TEXT_CONSTANT_BUTTON_START);
-	r = nextToggle->getRect(); r->x = xi + 4*(wi+dxi); r->y = yi;
-    
+	//guiBottom->addWidgetEastOf(nextToggle, TEXT_CONSTANT_BUTTON_START);
+	guiBottom->addWidget(nextToggle);
+	r = nextToggle->getRect(); //r->x = xi + 4*(wi+dxi); r->y = yi;
+    if (is_retina)
+        r->x = ofGetWidth() - (wi) * (is_retina ? 3 : 1);
+    else
+#if INVERSE_W_H
+        r->x = ofGetHeight() + wi;
+#else
+    r->x = ofGetWidth() + wi;
+#endif
+    r->y = 5;
+
 
     int wn = 30, hn = 15;
     if (is_retina) { wn *= 2; hn *= 2; }
 	//guiBottom->addWidgetDown(new ofxUISpacer(ofGetWidth()-5, 1));
 	ofxUIButton *bu = new ofxUIButton("note  ", false, wn, hn);
     bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	guiBottom->addWidgetEastOf(bu, "bpm");
+	//guiBottom->addWidgetEastOf(bu, "bpm");
+	guiBottom->addWidgetEastOf(bu, TEXT_CONSTANT_BUTTON_PREV_EVENT);
 	bu->setColorBack(ofxAntescofoNote->color_note);
+    r = bu->getRect();
+    if (is_retina) r->x += 100;
+    else r->x += 40;
     
-	bu = new ofxUIButton("chord ", false, wn, hn);
+	bu = new ofxUIButton("chord", false, wn, hn);
     bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_chord);
     
-	bu = new ofxUIButton("multi ", false, wn, hn);
+	bu = new ofxUIButton("multi", false, wn, hn);
     bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_multi);
     
-	bu = new ofxUIButton("trill ", false, wn, hn);
+	bu = new ofxUIButton("trill", false, wn, hn);
     bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_trill);
@@ -297,7 +330,7 @@ void iOSAscoGraph::setupUI(){
     mDdl_host_lists->setAutoClose(true);
     mDdl_host_lists->setDrawOutline(true);
     if (is_retina)
-        mDdl_host_lists->getRect()->x += 100;
+        mDdl_host_lists->getRect()->x += 150;
     else
         mDdl_host_lists->getRect()->x += 10;
     
@@ -311,30 +344,36 @@ void iOSAscoGraph::setupUI(){
         mDdl_cues_list->getRect()->x = mDdl_host_lists->getRect()->x + mDdl_host_lists->getRect()->width +100;
     else mDdl_cues_list->getRect()->x = mDdl_host_lists->getRect()->x + mDdl_host_lists->getRect()->width +10;
 
-	img_path = "GUI/settings_.png";
-	ofxUIMultiImageToggle* settingsToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_SETTINGS);
-    settingsToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-	settingsToggle->setLabelVisible(false);
-	settingsToggle->setDrawOutline(true);
-	guiBottom->addWidgetEastOf(settingsToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
-	r = settingsToggle->getRect();
-    //r->x = 00;
-    r->x = ofGetWidth() - 96 * (is_retina ? 2 : 1);//xi + 4*(wi+dxi);
-    r->y = 4;
+    int spectrumw = 313, spectrumh = 55;
+    if (is_retina) { spectrumw = 313+180; spectrumh = 110; }
+    /*
+    // tempo curve
+    ofxUISpectrum* tempoCurve = new ofxUISpectrum(spectrumw, spectrumh, mBPMbuffer, 256, 0., 290.0, "bpm");
+    tempoCurve->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    tempoCurve->setDrawOutline(true);
+    tempoCurve->setModal(true);
+    guiBottom->addWidgetDown(tempoCurve);
+    tempoCurve->setColorFill(ofColor(ofxAntescofoNote->color_key));
+    tempoCurve->setColorFillHighlight(ofColor(ofxAntescofoNote->color_key));
+    r = tempoCurve->getRect();
+    r->x = startToggle->getRect()->x + wi + dxi; if (is_retina) r->y = 85; else r->y = 5;
+    */
     
-    img_path = "GUI/note_.png";
-	ofxUIMultiImageToggle* viewToggle = new ofxUIMultiImageToggle(wi, wi, false, img_path, TEXT_CONSTANT_BUTTON_TOGGLEVIEW);
-    viewToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
-    viewToggle->setLabelVisible(false);
-	viewToggle->setDrawOutline(true);
-	guiBottom->addWidgetSouthOf(viewToggle, TEXT_CONSTANT_BUTTON_SETTINGS);
-	//r = viewToggle->getRect(); r->x = xi + 4*(wi+dxi); r->y = yi;
-    
+    ofxUILabel* l = new ofxUILabel(ascograph_version, fontsize);
+    guiBottom->addWidget(l);
+    l->getRect()->x = mDdl_cues_list->getRect()->x + mDdl_cues_list->getRect()->width + 40;
+    l->getRect()->y = 40;
+    l->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
     ofAddListener(guiBottom->newGUIEvent, this, &iOSAscoGraph::guiEvent);
 
     cout << "Screen size: " << ofGetWidth() << " x " <<  ofGetHeight() << endl;
 
 }
+
+void iOSAscoGraph::shouldRedraw() {
+    bShouldRedraw = true;
+}
+
 
 void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
 {
@@ -481,6 +520,7 @@ void iOSAscoGraph::setupTimeline(){
 #ifdef INVERSE_W_H
     score_h = ofGetWidth() - ofxAntescofoNote->getBounds().y - 330;
     if (is_retina) score_h -= 320;
+    else score_h += 10;
 #else
     score_h = ofGetHeight() - ofxAntescofoNote->getBounds().y - 20;
 #endif
@@ -778,6 +818,8 @@ void iOSAscoGraph::showJumpTrack() {
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchDown(ofTouchEventArgs & touch){
+    if (!guiMenu.view.hidden)
+        guiMenu.view.hidden = true;
     bShouldRedraw = true;
 }
 

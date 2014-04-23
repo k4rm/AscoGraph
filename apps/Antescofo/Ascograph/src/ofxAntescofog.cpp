@@ -1183,6 +1183,11 @@ void ofxAntescofog::update() {
 #endif
 }
 
+void ofxAntescofog::shouldRedraw()
+{
+	bShouldRedraw = true;
+}
+
 //--------------------------------------------------------------
 void ofxAntescofog::draw() {
 	// since update to openFrameworks 8, it is needed to translate down Y of 20 pixel, I don't know why...
