@@ -18,6 +18,7 @@
 #include "Score.h"
 #include "Values.h"
 #include "Action.h"
+#include "Track.h"
 #include <location.hh>
 #include <position.hh>
 #include "ofxHotKeys.h"
@@ -27,6 +28,8 @@
 #include "BeatCurve.h"
 
 ofxTimeline *_timeline;
+
+bool enable_tracks = false;
 
 bool debug_edit_curve = false;
 bool debug_actiongroup = false;
@@ -55,7 +58,14 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	movingAction = false;
 	movingActionRect = ofRectangle(0, 0, 40, 20);
 	shouldDrawModalContent = false;
-	
+	mTrackStates.clear();
+	mFilterActions = false;
+
+	// store Antescofo tracks names
+	if (enable_tracks && TrackDefinition::idx2track.size()) {
+		for (TrackDefinition::idx2t_t::iterator i = TrackDefinition::idx2track.begin(); i != TrackDefinition::idx2track.end(); i++)
+			mTrackStates[i->second->_name.substr(7)] = new TrackState();
+	}
 }
 
 
@@ -86,6 +96,9 @@ void ofxTLAntescofoAction::draw()
 		ofRect(mRectCross);
 		ofLine(mRectCross.x, mRectCross.y, mRectCross.x+mRectCross.width, mRectCross.y+mRectCross.height);
 		ofLine(mRectCross.x+mRectCross.width, mRectCross.y, mRectCross.x, mRectCross.y+mRectCross.height);
+
+		// draw antescofo header tracks
+		if (enable_tracks) draw_antescofo_tracks_header();
 
 		update_groups();
 		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
@@ -133,6 +146,35 @@ void ofxTLAntescofoAction::draw()
 #endif
 	}
 
+}
+
+void ofxTLAntescofoAction::draw_antescofo_tracks_header() {
+	static int sizec = mFont.stringWidth(string("_"));
+	bool selected = false;
+	int x = bounds.x + 80;
+	int y = bounds.y - 4;
+
+	mFont.drawString("Tracks: ", x, y);
+
+	x += 100;
+	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
+		ofPushStyle();
+		int len = (i->first.size() + 1) * sizec;
+		if (i->second->selected) { ofFill(); ofSetColor(0, 0, 0, 100); }
+		else { ofNoFill(); ofSetColor(0, 0, 0, 255); }
+
+		i->second->rect.x = x - 1;
+		i->second->rect.y = y - 12;
+		i->second->rect.width = len + 2;
+		i->second->rect.height = 14;
+
+		ofRect(i->second->rect);
+		ofSetColor(0, 0, 0, 255);
+		mFont.drawString(i->first, i->second->rect.x + 3, y - 2);
+		ofPopStyle();
+
+		x += len + 100;
+	}
 }
 
 //--------------------------------------------------
@@ -412,6 +454,26 @@ float ofxTLAntescofoAction::update_sub_duration(ActionGroup *ag)
 	return maxw;
 }
 
+void ofxTLAntescofoAction::tracks_rec_mark_groups_as_not_displayed(ActionGroup *ag) {
+	ag->in_selected_track = false;
+	for (list<ActionGroup*>::iterator g = ag->sons.begin(); g != ag->sons.end(); g++)
+		tracks_rec_mark_groups_as_not_displayed(*g);
+}
+
+
+void ofxTLAntescofoAction::tracks_mark_group_as_displayed(ActionGroup *ag) {
+	ag->in_selected_track = true;
+
+	// go up and mark each parent true
+#if 0
+	ActionGroup* g = ag->header->parent;
+	while (g) {
+		g->in_selected_track = true;
+		g = g->parent;
+	}
+#endif
+}
+
 // for updating subgroups width
 // return width in px
 int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
@@ -424,6 +486,8 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	if (debugsub) cout << "update_width: " << ag->title << endl;
 	ActionMessage *m;
 	ActionMultiCurves *c;
+
+
 	if ((m = dynamic_cast<ActionMessage*>(ag))) {
 		int sizec = mFont.stringWidth(string("_"));
 		int len = sizec * (m->action.size() - 1);
@@ -457,6 +521,17 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	if (debugsub) cout << "\tupdate_width: maxw:" << maxw << endl;
 	ag->rect.width = maxw;
 	//maxw = del + maxw;
+
+	if (enable_tracks && mFilterActions) {
+		for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++)
+			if (i->second->selected) {
+				string trackname = "track::" + i->first;
+				cout << "Calling is_in_track(" << trackname << ") for action: "<< ag->realtitle << endl;
+				if (ag->action && ag->action->is_in_track(trackname)) // don't display when not in track
+					tracks_mark_group_as_displayed(ag);
+			}
+	}
+
 	return maxw;
 }
 
@@ -500,6 +575,8 @@ void ofxTLAntescofoAction::update_groups()
 {
 	// update actions' rect
 	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		if (enable_tracks && mFilterActions)
+			tracks_rec_mark_groups_as_not_displayed(*i);
 		if (debug_actiongroup) cout << "--------------------------------------------------------------" << endl;
 		//if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
 		(*i)->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
@@ -783,8 +860,27 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 	}
 }
 
+bool ofxTLAntescofoAction::mouseReleased_tracks_header(ofMouseEventArgs& args, long millis)
+{
+
+	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
+		if (i->second->rect.inside(args.x, args.y)) {
+			i->second->selected = !i->second->selected;
+			mFilterActions = true;
+			return true;
+		}
+	}
+	mFilterActions = false;
+	return false;
+}
+
+
+
 void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 {
+	if (enable_tracks && mouseReleased_tracks_header(args, millis)) {
+		return;
+	}
 	if (mRectCross.inside(args.x, args.y)) {
 		cout << "ofxTLAntescofoAction::mouseReleased: should close track" << endl;
 		disable();

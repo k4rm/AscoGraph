@@ -293,7 +293,9 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	void draw_showPianoRoll();
 	void draw_showStaves();
+	
 #ifdef USE_GUIDO
+	void update_guido();
 	void draw_guido();
 	bool render_guido(float xfactor);
 	void guido_store_notes();
@@ -305,9 +307,10 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	
 	ofxGuido *oguido;
 	string guido_string;
-	int guido_x, guido_y, guido_w, guido_h;
+	int guido_x, guido_y, guido_w, guido_h; // abs coord
+	int scrolled_guido_x, scrolled_guido_y, scrolled_guido_w; // in bounds coord
 	float guido_span;
-	ofRectangle guido_bounds;
+	int mCurGuidoId;
 	map<float, int> beat2switchId;
 #endif
 

@@ -74,6 +74,7 @@
 #include "Action.h"
 #include "ActionCompound.h"
 #include "ActionAtomic.h"
+#include "Track.h"
 #include <Antescofo_AscoGraph.h>
 #include <Score.h>
 #include <location.hh>
@@ -144,6 +145,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
 	layoutSettings.optimalPageFill = 0;
 	oguido = new ofxGuido(layoutSettings);
 	oguido->guido->setResizePageToMusic(true);
+	mCurGuidoId = -1;
 #endif
 }
 
@@ -184,6 +186,22 @@ void ofxTLAntescofoNote::setAutoScroll(bool active)
 
 void ofxTLAntescofoNote::toggleView(){
 	bShowPianoRoll = !bShowPianoRoll;
+
+	if (!bShowPianoRoll) {
+		mDur_in_beats = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(guido_w, ofRange(0., 1.)));
+		mDur_in_secs = 60 / timeline->getBPM() * mDur_in_beats;
+		cout << "Toggle view Guido duration ------------------ " << mDur_in_beats << " beats."<< endl;
+		cout << "Toggle view Guido duration ------------------ " << mDur_in_secs << " seconds.";
+		mDur_in_secs++; // add one beat for better display
+		timeline->setDurationInSeconds(mDur_in_secs);
+
+		// set zoom:
+		float r = bounds.width / guido_w;
+		ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
+		cout << "Toggle View: setting new zoom range: 0 - " << r << endl;
+		ofRange z(0., r);
+		zoom->setViewRange(z);
+	}
 	trimRange();
 }
 
@@ -417,6 +435,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 
 #ifdef USE_GUIDO
 void ofxTLAntescofoNote::guido_store_notes() {
+	ofRectangle guido_bounds;
 	guido_bounds.x = guido_bounds.y = 800;
 	guido_bounds.width = guido_bounds.height = 0;
 	// retrieve graphic2time mapping
@@ -425,31 +444,33 @@ void ofxTLAntescofoNote::guido_store_notes() {
 	int err = GuidoGetSystemMap(oguido->guido->getGRHandler(), 1, oguido->getWidth(), oguido->getHeight(), outmap);
 
 	cout << "GuidoGetSystemMap: size=" << outmap.size() << endl;
-	int j = 50;
-	for (int v = 0; v < outmap.size(); v++) {
+
+	int v = 0;
+	for (int i = 0; i < switches.size(); i++) {
+		while (v != outmap.size() && v != switches[i]->notenum - 1)
+			v++;
+
 		float x = outmap[v].second.left;
-		float yy = outmap[v].second.top;
+		float y = outmap[v].second.top;
 		float w = outmap[v].second.right - x;
-		float h = outmap[v].second.bottom - yy;
+		float h = outmap[v].second.bottom - y;
 
 		// store guido_bounds
 		if (x < guido_bounds.x) guido_bounds.x = x;
-		if (yy< guido_bounds.y) guido_bounds.y = yy;
+		if (y < guido_bounds.y) guido_bounds.y = y;
 		if (w > guido_bounds.width) guido_bounds.width = w;
 		if (h > guido_bounds.height) guido_bounds.height = h;
 
+		if (debug_guido) cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+		switches[i]->guidoCoords.x = x;
+		switches[i]->guidoCoords.y = y;
+		switches[i]->guidoCoords.width = w;;
+		switches[i]->guidoCoords.height = h;
 
-		for (int i = 0; i < switches.size(); i++) {
-			if (v == switches[i]->notenum - 1) {
-				cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << yy << " w=" << w << " h=" << h << endl;
-				switches[v]->guidoCoords.x = x;
-				switches[v]->guidoCoords.y = yy;
-				switches[v]->guidoCoords.width = w;;
-				switches[v]->guidoCoords.height = h;
-				break;
-			}
-		}
+		if (v == outmap.size())
+			v = 0;
 	}
+
 }
 
 
@@ -502,6 +523,10 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	oguido->draw(render_x, render_y, render_w, render_h);
 	ofPopStyle();
 
+	guido_w = render_w;
+	guido_h = render_h;
+
+
 	// once drawn to FBO, build a map of beat to switchId: beat2switchId
 	beat2switchId.clear();
 	for (int i = 0; i < switches.size(); i++)
@@ -535,10 +560,9 @@ void ofxTLAntescofoNote::draw_guido() {
 		ofSetColor(255, 255, 255, 255);
 		ofFill();
 		ofRect(bounds);
-		guido_x = bounds.x/*+10*/ +(0. - zoomBounds.min) * bounds.width;
-		guido_y = bounds.y;//+10;
 
-		//if (debug_guido) cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
+		guido_x = bounds.x - (zoomBounds.min * guido_w);
+		if (debug_guido) cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
 		ofSetColor(0,0,0, 255);
 		oguido->draw_cache(guido_x, guido_y);
 
@@ -645,7 +669,7 @@ void ofxTLAntescofoNote::add_string_staff(string &str1, string &str2, int staff,
 string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi) {
 	if (debug_guido) cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
 	string ret1 = "[ ", ret2 = ret1;
-	int pageFormat_w = MIN(switches.size() / 8, 20); // TODO utiliser le maxbeat dur ?
+	int pageFormat_w = mDur_in_beats*1.2;// MIN(switches.size() / 8, 20); // TODO utiliser le maxbeat dur ?
 	if (!pageFormat_w) pageFormat_w = 20;
 	ret1 +=	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 1cm, 1cm, 1cm, 1cm>";
 	if (fromi == 0) {
@@ -685,13 +709,13 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			}
 		} else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
 			if (!was_trill) {
-				add_string_staff(ret1, ret2, curStaff, "\\trill({");
+				add_string_staff(ret1, ret2, curStaff, "\\trill{");
 				was_trill = true;
 			} else if (switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
 				add_string_staff(ret1, ret2, curStaff, ",");
 			else add_string_staff(ret1, ret2, curStaff, "{");
 		} else if (was_trill) {
-			add_string_staff(ret1, ret2, curStaff, ")");
+			//add_string_staff(ret1, ret2, curStaff, ")");
 			was_trill = false;
 		}
 		int istied = 0;
@@ -1044,32 +1068,104 @@ void ofxTLAntescofoNote::autoscroll() {
 	static float lastpos = 0;
 	// was : float pos = timeline->getPercentComplete();
 	float pos = mCurSecs / mDur_in_secs;
-	if (bAutoScroll && mDur_in_secs && lastpos != pos) {
-		ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
 
-		ofRange z = zoom->getViewRange();
-		ofRange oldz = z;
-		//cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
-		// continuous scrolling : keep playhead on center
-		float c = z.center(); 
-		float d = pos - c;
+	if (bShowPianoRoll) { // piano roll autoscroll
+		if (bAutoScroll && mDur_in_secs && lastpos != pos) {
+			ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
 
-		z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
-		if (z.min == .0 && z.span() < oldz.span())
-			z.max = oldz.max - oldz.min;
-		if (z.max == 1. && z.span() < oldz.span())
-			z.min = z.max - oldz.max + oldz.min;
+			ofRange z = zoom->getViewRange();
+			ofRange oldz = z;
+			//cout << endl << "pos:"<< pos <<" got zoomrange: "<< z.min << "->"<< z.max;
+			// continuous scrolling : keep playhead on center
+			float c = z.center(); 
+			float d = pos - c;
+
+			z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+			if (z.min == .0 && z.span() < oldz.span())
+				z.max = oldz.max - oldz.min;
+			if (z.max == 1. && z.span() < oldz.span())
+				z.min = z.max - oldz.max + oldz.min;
 
 
-		//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
-		zoom->setViewRange(z);
-		//zoom->setSelectedRange(z);
-		//zoom->setViewRange(z);
+			//cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			zoom->setViewRange(z);
+			//zoom->setSelectedRange(z);
+			//zoom->setViewRange(z);
 
-		lastpos = pos;
-		mAntescofog->shouldRedraw();
+			lastpos = pos;
+			mAntescofog->shouldRedraw();
 
-		// TODO page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
+			// TODO page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
+		}
+	} else { // guido autoscroll
+		if (mCurGuidoId == -1) {
+			guido_x = bounds.x;
+			guido_y = bounds.y;
+			return;
+		}
+		pos = (switches[mCurGuidoId]->guidoCoords.x + bounds.x) / guido_w;
+
+		if (bAutoScroll && mDur_in_secs && lastpos != pos) {
+			ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
+
+			ofRange z = zoom->getViewRange();
+			ofRange oldz = z;
+			z.max = z.min + bounds.width / guido_w;
+			if (debug_guido) cout << endl << "pos:"<< pos << " mCurBeat=" << mCurBeat << " mDur_in_beats=" << mDur_in_beats <<" got zoomrange: "<< z.min << "->"<< z.max;
+			// continuous scrolling : keep playhead on center
+			float c = z.center(); 
+			float d = pos - c;
+
+			z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+			if (z.min == .0 && z.span() < oldz.span())
+				z.max = oldz.max - oldz.min;
+			if (z.max == 1. && z.span() < oldz.span())
+				z.min = z.max - oldz.max + oldz.min;
+
+			if (debug_guido) cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			zoom->setViewRange(z);
+
+			lastpos = pos;
+
+			//guido_x = guido_w * z.center();
+			if (switches[mCurGuidoId]->guidoCoords.x < bounds.width/2) { // before scrolling
+				guido_x = bounds.x;
+				scrolled_guido_x = switches[mCurGuidoId]->guidoCoords.x;
+			} else if (switches[mCurGuidoId]->guidoCoords.x > guido_w - bounds.width/2) { // stop scrolling at the end
+				//scrolled_guido_x = bounds.x + bounds.width/2;
+				scrolled_guido_x = bounds.width/2 + ((int)switches[mCurGuidoId]->guidoCoords.x % (int)bounds.width);
+				//guido_x = guido_w - bounds.width/2;
+			} else { // normal scrolling
+				//guido_x = - (switches[mCurGuidoId]->guidoCoords.x + bounds.x) + bounds.width/2;
+				//guido_x = guido_w - z.center();
+				scrolled_guido_x = bounds.width / 2; //(int)floor(guido_x) % (int)floor(bounds.width);
+			}
+			scrolled_guido_w = switches[mCurGuidoId]->guidoCoords.width;
+
+
+			mAntescofog->shouldRedraw();
+
+			// TODO page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
+		}
+	}
+}
+
+
+// refresh mCurGuidoId
+void ofxTLAntescofoNote::update_guido() {
+	for (map<float, int>::iterator i = beat2switchId.begin(); i != beat2switchId.end(); i++) {
+		//cout << "i first=" << i->first << " mCurBeat="<< mCurBeat<< endl;
+		if (i->first == mCurBeat) {
+			mCurGuidoId = i->second;
+
+			// draw at scrolled_guido_x
+			//guido_x = bounds.x +(0. - zoomBounds.min) * guido_w;
+			//guido_x = bounds.x + scrolled_guido_x - bounds.width / 2;
+			//guido_y = bounds.y;
+			guido_x = bounds.x - (zoomBounds.min * guido_w);
+
+			break;
+		}
 	}
 }
 
@@ -1088,48 +1184,27 @@ void ofxTLAntescofoNote::draw_playhead() {
 #ifdef USE_GUIDO
 		if (mCurBeat == -1) return;
 
-		//float x = normalizedXtoScreenX( mCurSecs/mDur_in_secs, zoomBounds);
-		//if (x < bounds.x) return;
-
-		cout << endl << "draw_playhead: mCurBeat=" << mCurBeat << endl;
+		//cout << endl << "draw_playhead: mCurBeat=" << mCurBeat << endl;
 		// use map : beat2switchId
-		for (map<float, int>::iterator i = beat2switchId.begin(); i != beat2switchId.end(); i++) {
-			cout << "i first=" << i->first << " mCurBeat="<< mCurBeat<< endl;
-			if (i->first == mCurBeat) {
-				int gotit = i->second;
-				ofPushStyle();
-				ofFill();
-				ofSetColor(51, 51, 255, 75);
-				ofSetLineWidth(1);
-				int x = switches[gotit]->guidoCoords.x + bounds.x;// + (guido_x-bounds.x);
-				int y = switches[gotit]->guidoCoords.y + bounds.y;
-				int w = switches[gotit]->guidoCoords.width;
-				int h = switches[gotit]->guidoCoords.height; //bounds.height - 20;
-				cout << "ofxTLAntescofoNote::draw_playhead: gotit: " << mCurBeat << "= switch #" << gotit <<" drawing rect: " << x << ", " << y << " : " << w << " x " << h<< endl;
-				ofRect(x, y, w, h);
-				ofSetColor(51, 51, 255, 175);
-				ofNoFill();
-				ofRect(x, y, w, h);
-				ofPopStyle();
-				break;
+		if (mCurGuidoId != -1) {
+			ofPushStyle();
+			ofFill();
+			ofSetColor(51, 51, 255, 75);
+			ofSetLineWidth(1);
 
-
-			}
+			int x = scrolled_guido_x - scrolled_guido_w/2;
+			int y = guido_y + 6;
+			int w = scrolled_guido_w;
+			int h = bounds.height - 6*2;
+			cout << "ofxTLAntescofoNote::draw_playhead: " << mCurBeat << "= switch #" << mCurGuidoId <<" drawing rect: " << x << ", " << y << " : " << w << " x " << h<< endl;
+			//ofRect(x, y, w, h);
+			roundedRect(x, y, w, h, 5);
+			ofSetColor(51, 51, 255, 175);
+			ofNoFill();
+			//ofRect(x, y, w, h);
+			roundedRect(x, y, w, h, 5);
+			ofPopStyle();
 		}
-
-		/*
-		for(int i = 0; i < switches.size(); i++){
-			if (switches[i]->beat.contains(screenXtoNormalizedX(timeline->normalizedXToBeat(x)))) {
-				ofPushStyle();
-				ofFill();
-				ofSetColor(51, 51, 255, 105);
-				ofSetLineWidth(1);
-				ofRect(switches[i]->guidoCoords.x + (guido_x-bounds.x), guido_y, switches[i]->guidoCoords.width, bounds.height - (guido_y-bounds.y));
-				ofPopStyle();
-				break;
-			}
-		}
-		*/
 #endif
 	}
 }
@@ -1147,6 +1222,9 @@ void ofxTLAntescofoNote::draw() {
 		ofSetColor(timeline->getColors().outlineColor);
 	}	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+#ifdef USE_GUIDO
+	update_guido();
+#endif
 
 	if (bAutoScroll) autoscroll();
 	if (bShowPianoRoll) {
@@ -1902,7 +1980,8 @@ void ofxTLAntescofoNote::getcues() {
 void ofxTLAntescofoNote::update_duration() {
 	if (!ofxAntescofoAction)
 		createActionTrack();
-    int maxdur = ofxAntescofoAction->get_max_note_beat();
+
+	int maxdur = ofxAntescofoAction->get_max_note_beat();
 	if (maxdur) cout << "Maximum note beat calculated from actions: " << maxdur << " beats." << endl;
 	float dur_in_beats = mDur_in_secs * timeline->getBPM() / 60;
 	if (maxdur > dur_in_beats) {
@@ -2275,6 +2354,7 @@ void ofxTLAntescofoNote::clear(){
 	if (mNetscore) {
 #ifdef USE_GUIDO
 		guido_string.clear();
+		mCurGuidoId = -1;
 #endif
 		deleteActionTrack();
 		//mAntescofo // TODO rajouter l'appel au ~Score() !!!

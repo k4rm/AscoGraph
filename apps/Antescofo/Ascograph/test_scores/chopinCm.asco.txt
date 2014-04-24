@@ -1,7 +1,7 @@
 ; Transferred from NoteAbilityPro score: chopinCm.na
 ; Date: 2012 12 31 16:07:51 GMT+01:00
 ;
-BPM 46.00
+BPM 136.00
 	; Initialize Antescofo - These variables are automatically set upon "start"
 	;	These values might change within different performances but not between same performance.
 	;antescofo-mess gamma -1.0, tune 440.0, pedal 1, pedaltime 500.0, nofharm 5, suivi 1 

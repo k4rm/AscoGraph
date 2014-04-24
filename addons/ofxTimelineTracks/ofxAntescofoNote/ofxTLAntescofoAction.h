@@ -40,6 +40,7 @@ class ActionGroup;
 class ActionMessage;
 class ActionCurve;
 class ActionMultiCurves;
+class TrackState;
 
 class ofxTLAntescofoAction : public ofxTLTrack
 {
@@ -104,6 +105,14 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void show(string label);
 		void show_rec(ActionGroup* a, string label);
 		void replaceEditorScore(ActionCurve* actioncurve);
+
+		// antescofo tracks
+		void draw_antescofo_tracks_header();
+		map<string, TrackState*> mTrackStates;
+		bool mFilterActions;
+		bool mouseReleased_tracks_header(ofMouseEventArgs& args, long millis);
+		void tracks_rec_mark_groups_as_not_displayed(ActionGroup *ag);
+		void tracks_mark_group_as_displayed(ActionGroup *ag);
 
 		ofTrueTypeFont mFont;
 		Score *mScore;
@@ -171,6 +180,7 @@ class ActionGroup {
 		int ARROW_LEN, LINE_HEIGHT, LINE_SPACE;
 		int HEADER_HEIGHT;
 		bool top_level_group;
+		bool in_selected_track;
 		// TODO float bpm tempo local a un groupe
 
 		// antescofo score objects
@@ -257,3 +267,11 @@ class ActionCurve {
 };
 
 
+class TrackState {
+	public:
+		TrackState() : selected(false) {}
+		~TrackState() {}
+
+		bool selected;
+		ofRectangle rect;
+};
