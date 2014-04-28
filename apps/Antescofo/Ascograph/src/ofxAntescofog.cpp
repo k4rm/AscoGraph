@@ -143,9 +143,11 @@ void ofxAntescofog::menu_item_hit(int n)
 			ofLogVerbose("Create Menu hit");
 			createCodeTemplate(n);
 			break;
+#ifdef USE_GUIDO
 		case INT_CONSTANT_BUTTON_TOGGLEVIEW:
 			ofxAntescofoNote->toggleView();
 			break;
+#endif
 		case INT_CONSTANT_BUTTON_TOGGLEEDIT:
 			setEditorMode(!bEditorShow, 0);
 			break;
@@ -602,10 +604,12 @@ void ofxAntescofog::setupUI() {
 	// View
 	id viewMenu = [[[NSMenu new] autorelease] initWithTitle:@"View"];
 	id viewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+#ifdef USE_GUIDO
 	// . toggle view
 	id toggleViewMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle View" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[toggleViewMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEVIEW];
 	[viewMenu addItem:toggleViewMenuItem];
+#endif
 	// . toggle editor
 	id toggleEditorMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Editor" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[toggleEditorMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLEEDIT];
@@ -1726,9 +1730,11 @@ void ofxAntescofog::keyPressed(int key){
 		    timeline.togglePlay();
 	    }
     }
+#ifdef USE_GUIDO
     if(key == OF_KEY_TAB /*&& !bEditorShow*/) {
         ofxAntescofoNote->toggleView();
     }
+#endif
     //if(key == 'e'){ setEditorMode(!bEditorShow, 0); } 
     //if(key == 'c'){ console->toggleShow(); }
     else {
@@ -2223,11 +2229,13 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
             guiSetup_OSC->setVisible(false);
             save();
         }
+#ifdef USE_GUIDO
     } else if(e.widget->getName() == TEXT_CONSTANT_BUTTON_TOGGLE_VIEW)
 	{
         ofxAntescofoNote->toggleView();
         ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
         b->setValue(false);
+#endif
     } else if(e.widget->getName() == TEXT_CONSTANT_BUTTON_TOGGLE_EDITOR)
 	{
         setEditorMode(!bEditorShow, 0);

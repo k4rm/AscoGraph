@@ -29,7 +29,7 @@
 
 ofxTimeline *_timeline;
 
-bool enable_tracks = false;
+bool enable_tracks = true;
 
 bool debug_edit_curve = false;
 bool debug_actiongroup = false;
@@ -151,26 +151,27 @@ void ofxTLAntescofoAction::draw()
 void ofxTLAntescofoAction::draw_antescofo_tracks_header() {
 	static int sizec = mFont.stringWidth(string("_"));
 	bool selected = false;
-	int x = bounds.x + 80;
-	int y = bounds.y - 4;
+	int x = bounds.x + 100;
+	int y = bounds.y;
 
-	mFont.drawString("Tracks: ", x, y);
+	mFont.drawString("Tracks: ", x, y - 6);
 
 	x += 100;
 	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
+
 		ofPushStyle();
 		int len = (i->first.size() + 1) * sizec;
 		if (i->second->selected) { ofFill(); ofSetColor(0, 0, 0, 100); }
 		else { ofNoFill(); ofSetColor(0, 0, 0, 255); }
 
 		i->second->rect.x = x - 1;
-		i->second->rect.y = y - 12;
+		i->second->rect.y = y - 15;
 		i->second->rect.width = len + 2;
-		i->second->rect.height = 14;
+		i->second->rect.height = 13;
 
 		ofRect(i->second->rect);
 		ofSetColor(0, 0, 0, 255);
-		mFont.drawString(i->first, i->second->rect.x + 3, y - 2);
+		mFont.drawString(i->first, i->second->rect.x + 3, y - 5);
 		ofPopStyle();
 
 		x += len + 100;
@@ -281,8 +282,9 @@ void ofxTLAntescofoAction::save()
 
 void ofxTLAntescofoAction::load()
 {
-	string fontfile = "DroidSansMono.ttf";
-	mFont.loadFont (fontfile, 10);
+	//string fontfile = "DroidSansMono.ttf";
+	string fontfile = "GUI/NewMedia Fett.ttf";
+	mFont.loadFont (fontfile, 9);
 	//mFont.loadFont ("menlo.ttf", 10);
 }
 
@@ -360,6 +362,11 @@ int ofxTLAntescofoAction::update_sub_height_curve(ActionMultiCurves* c, int& cur
 
 int ofxTLAntescofoAction::update_sub_height_message(ActionMessage* m, int& cury, int& curh)
 {
+	if ((enable_tracks && mFilterActions && !m->in_selected_track)) {
+		curh = 0;
+		m->rect.height = 0;
+		return 0;
+	}
 	m->rect.x = get_x(m->beatnum + m->delay);
 	m->rect.y = cury;
 	m->rect.height = m->HEADER_HEIGHT;
@@ -377,6 +384,8 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 	if (debugsub) cout << endl << "<<<< update_sub_height : " << ag->realtitle << endl;
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->rect.y;
+
+	//if ((enable_tracks && mFilterActions && !ag->in_selected_track)) return 0;
 
 	if (ag->hidden) {
 		return ag->HEADER_HEIGHT;
@@ -462,6 +471,7 @@ void ofxTLAntescofoAction::tracks_rec_mark_groups_as_not_displayed(ActionGroup *
 
 
 void ofxTLAntescofoAction::tracks_mark_group_as_displayed(ActionGroup *ag) {
+	cout << "Marking group " << ag->realtitle << " as displayed." << endl;
 	ag->in_selected_track = true;
 
 	// go up and mark each parent true
@@ -473,6 +483,23 @@ void ofxTLAntescofoAction::tracks_mark_group_as_displayed(ActionGroup *ag) {
 	}
 #endif
 }
+
+
+void ofxTLAntescofoAction::tracks_rec_test_if_groups_are_displayed(ActionGroup *ag) {
+
+	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++)
+		if (i->second->selected) {
+			string trackname = "track::" + i->first;
+			if (ag->action && ag->action->is_in_track(trackname)) // don't display when not in track
+				tracks_mark_group_as_displayed(ag);
+		}
+
+	// rec
+	list<ActionGroup*>::const_iterator g;
+	for (g = ag->sons.begin(); g != ag->sons.end(); g++)
+		tracks_rec_test_if_groups_are_displayed(*g);
+}
+
 
 // for updating subgroups width
 // return width in px
@@ -488,25 +515,27 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	ActionMultiCurves *c;
 
 
-	if ((m = dynamic_cast<ActionMessage*>(ag))) {
-		int sizec = mFont.stringWidth(string("_"));
-		int len = sizec * (m->action.size() - 1);
-		if (m->delay)
-			//len += get_x(m->beatnum + m->delay) - get_x(m->beatnum);
-			;
-		maxw = len;
-		m->rect.width = len;
-		if (debugsub) cout << "\tupdate_width: msg maxw:" << maxw << endl;
+	if (!(enable_tracks && mFilterActions && !ag->in_selected_track)) {
+		if ((m = dynamic_cast<ActionMessage*>(ag))) {
+			int sizec = mFont.stringWidth(string("_"));
+			int len = sizec * (m->actionstr.size() - 1);
+			if (m->delay)
+				//len += get_x(m->beatnum + m->delay) - get_x(m->beatnum);
+				;
+			maxw = len;
+			m->rect.width = len;
+			if (debugsub) cout << "\tupdate_width: msg maxw:" << maxw << endl;
 
-	} else if ((c = dynamic_cast<ActionMultiCurves*>(ag))) {
-		int sizec = mFont.stringWidth(string("_"));
-		int len = sizec * (ag->title.size());
-		if (c->delay)
-			len += get_x(c->beatnum + c->delay) - get_x(c->beatnum);
-		maxw = len;
-		if (c->isValid)
-			maxw = c->getWidth();
-		if (debugsub) cout << "\tupdate_width: curves msg maxw:" << maxw << endl;
+		} else if ((c = dynamic_cast<ActionMultiCurves*>(ag))) {
+			int sizec = mFont.stringWidth(string("_"));
+			int len = sizec * (ag->title.size());
+			if (c->delay)
+				len += get_x(c->beatnum + c->delay) - get_x(c->beatnum);
+			maxw = len;
+			if (c->isValid)
+				maxw = c->getWidth();
+			if (debugsub) cout << "\tupdate_width: curves msg maxw:" << maxw << endl;
+		}
 	}
 	list<ActionGroup*>::const_iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
@@ -521,16 +550,6 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	if (debugsub) cout << "\tupdate_width: maxw:" << maxw << endl;
 	ag->rect.width = maxw;
 	//maxw = del + maxw;
-
-	if (enable_tracks && mFilterActions) {
-		for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++)
-			if (i->second->selected) {
-				string trackname = "track::" + i->first;
-				cout << "Calling is_in_track(" << trackname << ") for action: "<< ag->realtitle << endl;
-				if (ag->action && ag->action->is_in_track(trackname)) // don't display when not in track
-					tracks_mark_group_as_displayed(ag);
-			}
-	}
 
 	return maxw;
 }
@@ -573,10 +592,15 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 
 void ofxTLAntescofoAction::update_groups()
 {
+	if (enable_tracks && mFilterActions) {
+		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
+			tracks_rec_mark_groups_as_not_displayed(*i);
+		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
+			tracks_rec_test_if_groups_are_displayed(*i);
+	}
+
 	// update actions' rect
 	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		if (enable_tracks && mFilterActions)
-			tracks_rec_mark_groups_as_not_displayed(*i);
 		if (debug_actiongroup) cout << "--------------------------------------------------------------" << endl;
 		//if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
 		(*i)->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
@@ -862,15 +886,19 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 
 bool ofxTLAntescofoAction::mouseReleased_tracks_header(ofMouseEventArgs& args, long millis)
 {
-
 	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
 		if (i->second->rect.inside(args.x, args.y)) {
 			i->second->selected = !i->second->selected;
+			break;
+		}
+	}
+	mFilterActions = false;
+	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
+		if (i->second->selected) {
 			mFilterActions = true;
 			return true;
 		}
 	}
-	mFilterActions = false;
 	return false;
 }
 
@@ -1537,6 +1565,7 @@ ActionMultiCurves::~ActionMultiCurves()
 }
 
 void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
+	if ((enable_tracks && tlAction->mFilterActions && !in_selected_track)) return;
 	//cout << "ActionMultiCurves::draw: x:"<< rect.x << " y:" << rect.y << endl;
 	if (!hidden && is_in_bounds(tlAction)) {
 		vector<ActionCurve*>::iterator j;
@@ -2176,7 +2205,8 @@ ActionMessage::ActionMessage(float beatnum_, float delay_, Action* a, Event *e)
 
 	ostringstream oss;
 	oss << *a;
-	action = oss.str();
+	actionstr = oss.str();
+	action = a;
 	hidden = false;
 
 
@@ -2187,7 +2217,7 @@ ActionMessage::ActionMessage(float beatnum_, float delay_, Action* a, Event *e)
 		is_proc = true;
 
 	delay = delay_;
-	if (debug_actiongroup) 	cout << "Action: adding message with delay: " << delay << " : " << action << endl;
+	if (debug_actiongroup) 	cout << "Action: adding message with delay: " << delay << " : " << actionstr << endl;
 }
 
 void ActionMessage::print() {
@@ -2200,6 +2230,8 @@ int ActionMessage::getHeight() {
 }
 
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
+	if ((enable_tracks && tlAction->mFilterActions && !in_selected_track)) return;
+
 	ofFill();
 	ofSetColor(200, 200, 200, 255);
 	ofRect(tlAction->getBoundedRect(rect));
@@ -2214,7 +2246,7 @@ void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	else
 		ofSetColor(0, 0, 0, 255);
 
-	tlAction->mFont.drawString(tlAction->cut_str(strw, action), rect.x + 1, rect.y + HEADER_HEIGHT - 3);
+	tlAction->mFont.drawString(tlAction->cut_str(strw, actionstr), rect.x + 1, rect.y + HEADER_HEIGHT - 3);
 
 	if (is_kill )
 		ofSetColor(255, 0, 0, 80);

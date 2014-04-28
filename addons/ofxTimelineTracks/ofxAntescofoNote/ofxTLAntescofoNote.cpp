@@ -83,7 +83,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-bool debug_guido = false;
+bool debug_guido = true;
 
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -163,7 +163,8 @@ void ofxTLAntescofoNote::setup(){
 
 #ifndef ASCOGRAPH_IOS
 	string fontfile = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
-    fontsize = 13;
+    //fontsize = 13;
+    fontsize = 10;
 #else
 	string fontfile = "DroidSansMono.ttf";
 #endif
@@ -187,6 +188,7 @@ void ofxTLAntescofoNote::setAutoScroll(bool active)
 void ofxTLAntescofoNote::toggleView(){
 	bShowPianoRoll = !bShowPianoRoll;
 
+#ifdef USE_GUIDO
 	if (!bShowPianoRoll) {
 		mDur_in_beats = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(guido_w, ofRange(0., 1.)));
 		mDur_in_secs = 60 / timeline->getBPM() * mDur_in_beats;
@@ -202,6 +204,7 @@ void ofxTLAntescofoNote::toggleView(){
 		ofRange z(0., r);
 		zoom->setViewRange(z);
 	}
+#endif
 	trimRange();
 }
 
@@ -681,7 +684,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	int curx = fromx;
 	bool twostaves = false;
 	bool backtostaff1 = false;
-	bool isChord1 = false, isChord2 = false;
+	bool isChord1 = false, isChord2 = false, isGrace = false;
 	rational staffbeat1(0, 1), staffbeat2(0, 1);
 	bool was_tied = false;
 	bool was_trill = false;
@@ -695,7 +698,10 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			}
 		} else curStaff = 1;
 
-		if (switches[i]->type == ANTESCOFO_CHORD/* && !switches[i]->isLast*/) {
+		if (switches[i]->type == ANTESCOFO_NOTE && switches[i]->duration == 0.) { // grace notes
+			isGrace = true;
+			add_string_staff(ret1, ret2, curStaff, "\\grace(");
+		} else if (switches[i]->type == ANTESCOFO_CHORD) {
 			if (curStaff == 1) {
 				if (!isChord1) {
 					add_string_staff(ret1, ret2, 1, " {");
@@ -707,23 +713,30 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 					isChord2 = true;
 				} else add_string_staff(ret1, ret2, curStaff, ", ");
 			}
-		} else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
+		}
+#if ENABLE_GUIDO_TRILLS
+		else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
 			if (!was_trill) {
-				add_string_staff(ret1, ret2, curStaff, "\\trill{");
+				add_string_staff(ret1, ret2, curStaff, "\\trill({");
 				was_trill = true;
 			} else if (switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
 				add_string_staff(ret1, ret2, curStaff, ",");
 			else add_string_staff(ret1, ret2, curStaff, "{");
 		} else if (was_trill) {
 			//add_string_staff(ret1, ret2, curStaff, ")");
-			was_trill = false;
+			//was_trill = false;
 		}
+#endif
 		int istied = 0;
 		if ((istied = has_next_event_tied_pitch(i, switches[i]->pitch)))
 			add_string_staff(ret1, ret2, curStaff, " \\tieBegin ");
 
 		// get Guido string for current note
-		add_string_staff(ret1, ret2, curStaff, getGuidoStringNote(i));
+		if (isGrace)
+			add_string_staff(ret1, ret2, curStaff, getGuidoStringNoteName(switches[i]->pitch));
+		else add_string_staff(ret1, ret2, curStaff, getGuidoStringNote(i));
+
+		if (isGrace) { add_string_staff(ret1, ret2, curStaff, ")"); isGrace = false; }
 
 		if (curStaff == 1) { staffbeat1 = rational(10000*switches[i]->beat.max, 10000); staffbeat1.rationalise(); }
 		else { staffbeat2 = rational(10000*switches[i]->beat.max, 10000); staffbeat2.rationalise(); }
@@ -733,10 +746,12 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		}
 		if (switches[i]->pitch >= 59)
 			backtostaff1 = true;
-
+#if ENABLE_GUIDO_TRILLS
 		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min))
 			add_string_staff(ret1, ret2, curStaff, "}");
-		else {
+		else 
+#endif
+		{
 			if (i+1 == switches.size() || (switches[i]->type == ANTESCOFO_CHORD && switches[i+1]->beat.min != switches[i]->beat.min)) { // last note of a CHORD
 				if (isChord1) {
 					add_string_staff(ret1, ret2, 1, " }");
@@ -797,11 +812,14 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString() + " ");
 			staffbeat1 = staffbeat2 = bmax;
 		}
-	}
-
-	if (was_trill) {
-		add_string_staff(ret1, ret2, curStaff, ")}");
-		was_trill = false;
+#if ENABLE_GUIDO_TRILLS
+		if (was_trill) {
+			if (switches.size() == i+1 || (switches[i+1]->type != ANTESCOFO_TRILL || switches[i+1]->beat.min != switches[i]->beat.min)) {
+				add_string_staff(ret1, ret2, curStaff, ")");
+				was_trill = false;
+			}
+		}
+#endif
 	}
 
 	curStaff = 1;
@@ -1097,7 +1115,9 @@ void ofxTLAntescofoNote::autoscroll() {
 
 			// TODO page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
 		}
-	} else { // guido autoscroll
+	}
+#ifdef USE_GUIDO
+	else { // guido autoscroll
 		if (mCurGuidoId == -1) {
 			guido_x = bounds.x;
 			guido_y = bounds.y;
@@ -1148,9 +1168,11 @@ void ofxTLAntescofoNote::autoscroll() {
 			// TODO page by page scrolling : when the playhead gets close to the end of the page, move zoom to next page and playhead to beginning
 		}
 	}
+#endif
 }
 
 
+#ifdef USE_GUIDO
 // refresh mCurGuidoId
 void ofxTLAntescofoNote::update_guido() {
 	for (map<float, int>::iterator i = beat2switchId.begin(); i != beat2switchId.end(); i++) {
@@ -1168,7 +1190,7 @@ void ofxTLAntescofoNote::update_guido() {
 		}
 	}
 }
-
+#endif
 
 void ofxTLAntescofoNote::draw_playhead() {
 	if (bShowPianoRoll) { // pianoroll playhead

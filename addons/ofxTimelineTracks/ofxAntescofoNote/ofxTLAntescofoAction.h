@@ -113,6 +113,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		bool mouseReleased_tracks_header(ofMouseEventArgs& args, long millis);
 		void tracks_rec_mark_groups_as_not_displayed(ActionGroup *ag);
 		void tracks_mark_group_as_displayed(ActionGroup *ag);
+		void tracks_rec_test_if_groups_are_displayed(ActionGroup *ag);
 
 		ofTrueTypeFont mFont;
 		Score *mScore;
@@ -201,7 +202,7 @@ class ActionMessage : public ActionGroup {
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual int getHeight();
 		virtual void print();
-		string action;
+		string actionstr;
 		bool is_kill;
 		bool is_proc;
 };
