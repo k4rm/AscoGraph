@@ -190,6 +190,9 @@ void ofxTLAntescofoNote::toggleView(){
 
 #ifdef USE_GUIDO
 	if (!bShowPianoRoll) {
+
+		render_guido(1.);
+
 		mDur_in_beats = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(guido_w, ofRange(0., 1.)));
 		mDur_in_secs = 60 / timeline->getBPM() * mDur_in_beats;
 		cout << "Toggle view Guido duration ------------------ " << mDur_in_beats << " beats."<< endl;
@@ -1959,11 +1962,6 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	missedAll();
 	unselectAll();
 	sort(switches.begin(), switches.end(), switchsort);
-
-#ifdef USE_GUIDO
-	//float xfactor =  mDur_in_beats/5 + 1;
-	render_guido(1.);//xfactor);
-#endif
 
 	update_duration();
 	getcues();

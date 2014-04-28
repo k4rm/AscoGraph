@@ -108,14 +108,21 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		// antescofo tracks
 		void draw_antescofo_tracks_header();
+		void draw_antescofo_tracks_header(int x, int y, int sens);
 		map<string, TrackState*> mTrackStates;
 		bool mFilterActions;
 		bool mouseReleased_tracks_header(ofMouseEventArgs& args, long millis);
 		void tracks_rec_mark_groups_as_not_displayed(ActionGroup *ag);
 		void tracks_mark_group_as_displayed(ActionGroup *ag);
 		void tracks_rec_test_if_groups_are_displayed(ActionGroup *ag);
+		int mFirstTrackBtn;
+		ofRectangle mNextTrackBtn, mPrevTrackBtn;
+		int mTrackBtnWidth;
+		int mTrackBtnHeight;
+		int mTrackBtnSpace;
 
 		ofTrueTypeFont mFont;
+		int sizec;
 		Score *mScore;
 #ifdef ASCOGRAPH_IOS
         iOSAscoGraph *mAntescofog;

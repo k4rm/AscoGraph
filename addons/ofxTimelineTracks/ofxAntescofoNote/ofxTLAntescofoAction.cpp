@@ -61,6 +61,11 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mTrackStates.clear();
 	mFilterActions = false;
 
+	mTrackBtnHeight = 13;
+	mTrackBtnWidth = 20;
+	mTrackBtnSpace = 20;
+	mFirstTrackBtn = 0;
+
 	// store Antescofo tracks names
 	if (enable_tracks && TrackDefinition::idx2track.size()) {
 		for (TrackDefinition::idx2t_t::iterator i = TrackDefinition::idx2track.begin(); i != TrackDefinition::idx2track.end(); i++)
@@ -148,16 +153,30 @@ void ofxTLAntescofoAction::draw()
 
 }
 
+void ofxTLAntescofoAction::draw_antescofo_tracks_header(int x, int y, int sens) {
+		ofPushStyle();
+		if (sens > 0) { // next
+		} else { // prev
+		}
+		ofPopStyle();
+}
+
 void ofxTLAntescofoAction::draw_antescofo_tracks_header() {
-	static int sizec = mFont.stringWidth(string("_"));
 	bool selected = false;
-	int x = bounds.x + 100;
+	int x = bounds.x + 200;
 	int y = bounds.y;
+
+	int x_prevbtn = x;
+	int x_nextbtn = bounds.x + bounds.width - mTrackBtnWidth;
 
 	mFont.drawString("Tracks: ", x, y - 6);
 
-	x += 100;
 	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
+
+		if (x > bounds.x + bounds.width) {
+			draw_antescofo_tracks_header(x_prevbtn, y, -1); 
+			draw_antescofo_tracks_header(x_nextbtn, y, 1);
+		}
 
 		ofPushStyle();
 		int len = (i->first.size() + 1) * sizec;
@@ -167,14 +186,14 @@ void ofxTLAntescofoAction::draw_antescofo_tracks_header() {
 		i->second->rect.x = x - 1;
 		i->second->rect.y = y - 15;
 		i->second->rect.width = len + 2;
-		i->second->rect.height = 13;
+		i->second->rect.height = mTrackBtnHeight;
 
 		ofRect(i->second->rect);
 		ofSetColor(0, 0, 0, 255);
 		mFont.drawString(i->first, i->second->rect.x + 3, y - 5);
 		ofPopStyle();
 
-		x += len + 100;
+		x += len + mTrackBtnSpace;
 	}
 }
 
@@ -285,6 +304,8 @@ void ofxTLAntescofoAction::load()
 	//string fontfile = "DroidSansMono.ttf";
 	string fontfile = "GUI/NewMedia Fett.ttf";
 	mFont.loadFont (fontfile, 9);
+
+	sizec = mFont.stringWidth(string("_"));
 	//mFont.loadFont ("menlo.ttf", 10);
 }
 
@@ -312,6 +333,21 @@ void ofxTLAntescofoAction::update()
 		ofRectangle r(bounds.x, bounds.y - 18, bounds.width, 18);
 		th->setDrawRect(r);
 		th->recalculateFooter();		
+	}
+
+	if (enable_tracks) {
+		int fromx = bounds.x + 200;
+		int w = 0;
+		for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++, w += mTrackBtnSpace) {
+			w += i->first.size() * sizec;
+			if (w > bounds.width - 200) {
+				mPrevTrackBtn.x = bounds.x + 150;
+				mNextTrackBtn.x = bounds.x + bounds.width - 40;
+				mPrevTrackBtn.y = mNextTrackBtn.y = bounds.y;
+				mPrevTrackBtn.width = mNextTrackBtn.width = mTrackBtnWidth;
+				break;
+			}
+		}
 	}
 	//cout << "track bounds: x:" << bounds.x << " y:" << bounds.y << " w:" << bounds.width << " h:" << bounds.height << endl;
 }
@@ -517,7 +553,6 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 
 	if (!(enable_tracks && mFilterActions && !ag->in_selected_track)) {
 		if ((m = dynamic_cast<ActionMessage*>(ag))) {
-			int sizec = mFont.stringWidth(string("_"));
 			int len = sizec * (m->actionstr.size() - 1);
 			if (m->delay)
 				//len += get_x(m->beatnum + m->delay) - get_x(m->beatnum);
@@ -527,7 +562,6 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 			if (debugsub) cout << "\tupdate_width: msg maxw:" << maxw << endl;
 
 		} else if ((c = dynamic_cast<ActionMultiCurves*>(ag))) {
-			int sizec = mFont.stringWidth(string("_"));
 			int len = sizec * (ag->title.size());
 			if (c->delay)
 				len += get_x(c->beatnum + c->delay) - get_x(c->beatnum);
@@ -1098,7 +1132,6 @@ void ofxTLAntescofoAction::show(string label) {
 
 string ofxTLAntescofoAction::cut_str(int w, string in)
 {
-	int sizec = mFont.stringWidth(string("_"));
 	//cout << "ActionGroup: cur_str: w:"<< w << " in:" << in << " nc=" << in.size() * sizec  << endl;
 	if (w < sizec)
 		return string("");

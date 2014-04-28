@@ -594,6 +594,7 @@ using namespace std;
 						it->second = - abs(it->second);
 				    }
 			    } else { // simple note
+				    if (noteson.find(curPitch) == noteson.end()) { [self.log appendFormat:@"---> Skipping Note OFF without previous Note ON... Midi Shit." ]; break; }
 				    delay_i = timestamp - abs(noteson[curPitch]);// [self getBeatDuration_float:deltaTime resolution:ticksPerBeat];
 				    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding NOTE(%d) dur=%.4f :noteson:%ld\n", curPitch, delay_i, noteson[curPitch]];
 				    if (noteson[curPitch] < 0.) { pitchList.clear(); pitchList.push_back(- curPitch); }
