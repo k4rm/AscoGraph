@@ -496,7 +496,7 @@ using namespace std;
 		    int curPitch;
 		    float delay_i;
                     NSString *delay, *duration, *s;
-		    bool debug_ = false;
+		    bool debug_ = true;
 		    bool already_read_params = false;
 
                     switch (eventType)

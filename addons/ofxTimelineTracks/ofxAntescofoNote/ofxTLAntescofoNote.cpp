@@ -717,7 +717,8 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 				} else add_string_staff(ret1, ret2, curStaff, ", ");
 			}
 		}
-#if ENABLE_GUIDO_TRILLS
+#define ENABLE_GUIDO_TRILLS 1
+#ifdef ENABLE_GUIDO_TRILLS
 		else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
 			if (!was_trill) {
 				add_string_staff(ret1, ret2, curStaff, "\\trill({");
@@ -749,10 +750,11 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		}
 		if (switches[i]->pitch >= 59)
 			backtostaff1 = true;
-#if ENABLE_GUIDO_TRILLS
-		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min))
-			add_string_staff(ret1, ret2, curStaff, "}");
-		else 
+#ifdef ENABLE_GUIDO_TRILLS
+		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min)) {
+			add_string_staff(ret1, ret2, curStaff, "})");
+			was_trill = false;
+		} else 
 #endif
 		{
 			if (i+1 == switches.size() || (switches[i]->type == ANTESCOFO_CHORD && switches[i+1]->beat.min != switches[i]->beat.min)) { // last note of a CHORD
@@ -815,7 +817,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString() + " ");
 			staffbeat1 = staffbeat2 = bmax;
 		}
-#if ENABLE_GUIDO_TRILLS
+#if 0 //ifdef ENABLE_GUIDO_TRILLS
 		if (was_trill) {
 			if (switches.size() == i+1 || (switches[i+1]->type != ANTESCOFO_TRILL || switches[i+1]->beat.min != switches[i]->beat.min)) {
 				add_string_staff(ret1, ret2, curStaff, ")");
