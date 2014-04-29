@@ -56,7 +56,6 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 	fHeight = height_;
 
 	cout << "openFrameworksDevice: allocating FBO: " << fWidth << "x" << fHeight << endl;
-
 	ofClear(255,255,255, 0);
 	glClearColor( 0.0, 0.0, 0.0, 0.0 );
 #ifndef ASCOGRAPH_IOS
@@ -64,7 +63,7 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable( GL_DEPTH_TEST );
-    glEnable(GL_MULTISAMPLE_ARB);
+	glEnable(GL_MULTISAMPLE_ARB);
 	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
 #else	
     ofFbo::Settings settings;
@@ -77,10 +76,11 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
     //drawCache = new ofFbo();
     drawCache.allocate(settings);
     //drawCache.allocate(fWidth, fHeight, GL_RGBA);
+    glGenFramebuffersEXT(1, &fbo); // 1==numbers of fbo to create 
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 #endif
 	drawCache.begin();
 	ofClear(255,255,255, 0);
-
 	drawCache.end();
 }
 
@@ -93,11 +93,15 @@ openFrameworksDevice::~openFrameworksDevice()
 // --------------------------------------------------------------
 bool openFrameworksDevice::BeginDraw()	{ 
 	ofPushStyle();
+	//ofClear(255,255,255, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 	drawCache.begin();
 	return true;
 }
 void openFrameworksDevice::EndDraw()		{ 
 	drawCache.end();
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	
 	ofPopStyle(); 
 }
 void openFrameworksDevice::InvalidateRect( float /*left*/, float /*top*/, float /*right*/, float /*bottom*/ ) {}
@@ -281,7 +285,6 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
     settings.numSamples = 0;
     settings.useDepth = false;
     settings.useStencil = false;
-    //drawCache = new ofFbo();
     drawCache.allocate(settings);
     //drawCache.allocate(fWidth, fHeight, GL_RGB);
 #endif

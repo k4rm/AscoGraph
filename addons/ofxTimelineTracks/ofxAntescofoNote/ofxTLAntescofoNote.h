@@ -57,6 +57,7 @@
 #define ANTESCOFO_TRILL             3
 #define ANTESCOFO_MULTI             4
 #define ANTESCOFO_MULTI_STOP        5
+#define ANTESCOFO_MULTI_DUMMY       6
 
 
 class Score;
@@ -298,6 +299,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void update_guido();
 	void draw_guido();
 	bool render_guido(float xfactor);
+	void update_guido_render();
 	void guido_store_notes();
 	string getGuidoString(int fromx, int fromi, int tox, int toi);
 	string getGuidoStringNote(int switchnb);

@@ -165,7 +165,8 @@ class openFrameworksDevice : public VGDevice
 		virtual	void			PushPenWidth( float width);
 		virtual	void			PopPenWidth();
 
-		ofFbo drawCache;
+		ofFbo	drawCache;
+		GLuint fbo; 
 };
 
 #endif

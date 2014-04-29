@@ -82,7 +82,7 @@
 
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
-bool debug_loadscore = false;
+bool debug_loadscore = true;
 bool debug_guido = true;
 
 int bitmapFontSize = 8;
@@ -129,7 +129,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
 	bShowPianoRoll = true;
 	bLockNotes = true;
 	
-    mAntescofo = new antescofo_ascograph_offline();
+	mAntescofo = new antescofo_ascograph_offline();
 	//cout << "================= This Name : " << mAntescofo->thisName()<< endl;
 	mNetscore = 0;
 
@@ -190,22 +190,7 @@ void ofxTLAntescofoNote::toggleView(){
 
 #ifdef USE_GUIDO
 	if (!bShowPianoRoll) {
-
-		render_guido(1.);
-
-		mDur_in_beats = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(guido_w, ofRange(0., 1.)));
-		mDur_in_secs = 60 / timeline->getBPM() * mDur_in_beats;
-		cout << "Toggle view Guido duration ------------------ " << mDur_in_beats << " beats."<< endl;
-		cout << "Toggle view Guido duration ------------------ " << mDur_in_secs << " seconds.";
-		mDur_in_secs++; // add one beat for better display
-		timeline->setDurationInSeconds(mDur_in_secs);
-
-		// set zoom:
-		float r = bounds.width / guido_w;
-		ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
-		cout << "Toggle View: setting new zoom range: 0 - " << r << endl;
-		ofRange z(0., r);
-		zoom->setViewRange(z);
+		update_guido_render();
 	}
 #endif
 	trimRange();
@@ -219,6 +204,9 @@ void ofxTLAntescofoNote::setNoteColor(int n) {
 		case ANTESCOFO_MULTI:
 		case ANTESCOFO_MULTI_STOP:
 			ofSetColor(color_note_multi);
+			return;
+		case ANTESCOFO_MULTI_DUMMY:
+			ofSetColor(color_note_multi, 67);
 			return;
 		case ANTESCOFO_TRILL:
 			ofSetColor(color_note_trill);
@@ -449,11 +437,13 @@ void ofxTLAntescofoNote::guido_store_notes() {
 	Time2GraphicMap outmap;
 	int err = GuidoGetSystemMap(oguido->guido->getGRHandler(), 1, oguido->getWidth(), oguido->getHeight(), outmap);
 
+	if (outmap.empty())
+		return;
 	cout << "GuidoGetSystemMap: size=" << outmap.size() << endl;
 
 	int v = 0;
 	for (int i = 0; i < switches.size(); i++) {
-		while (v != outmap.size() && v != switches[i]->notenum - 1)
+		while (v != outmap.size()-1 && v != switches[i]->notenum - 1)
 			v++;
 
 		float x = outmap[v].second.left;
@@ -467,7 +457,7 @@ void ofxTLAntescofoNote::guido_store_notes() {
 		if (w > guido_bounds.width) guido_bounds.width = w;
 		if (h > guido_bounds.height) guido_bounds.height = h;
 
-		if (debug_guido) cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+		//if (debug_guido) cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
 		switches[i]->guidoCoords.x = x;
 		switches[i]->guidoCoords.y = y;
 		switches[i]->guidoCoords.width = w;;
@@ -480,10 +470,33 @@ void ofxTLAntescofoNote::guido_store_notes() {
 }
 
 
+void ofxTLAntescofoNote::update_guido_render() {
+	render_guido(1.);
+
+	//mDur_in_beats = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX(guido_w, ofRange(0., 1.)));
+	mDur_in_secs = 60 / timeline->getBPM() * mDur_in_beats;
+	cout << "Update guido duration ------------------ " << mDur_in_beats << " beats."<< endl;
+	cout << "Update guido duration ------------------ " << mDur_in_secs << " seconds.";
+	mDur_in_secs++; // add one beat for better display
+	timeline->setDurationInSeconds(mDur_in_secs);
+
+	// set zoom:
+	float r = bounds.width / guido_w;
+	ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
+	cout << "Update guido : setting new zoom range: 0 - " << r << endl;
+	ofRange z(0., r);
+	zoom->setViewRange(z);
+}
+
 bool ofxTLAntescofoNote::render_guido(float xfactor)
 {
 	if (debug_guido) cout << "render_guido : [[[[ " << xfactor << " ]]]]" << endl;
 
+	
+	int backingWidth, backingHeight;
+	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &backingWidth);
+	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &backingHeight);
+	cout << endl << "==================================> RENDER BUFFER dimension: " << backingWidth << " x "<< backingHeight << endl<<endl;
 
 	float startX = 0.;
 	float endX = bounds.x + bounds.width;
@@ -613,7 +626,8 @@ string ofxTLAntescofoNote::getGuidoStringNote(int switchnb) {
 	static bool bInChord = false;
 	string ret;
 	if (switches[switchnb]->type == ANTESCOFO_NOTE || switches[switchnb]->type == ANTESCOFO_CHORD
-	    || switches[switchnb]->type == ANTESCOFO_REST
+	    || switches[switchnb]->type == ANTESCOFO_REST || switches[switchnb]->type == ANTESCOFO_MULTI
+	    || switches[switchnb]->type == ANTESCOFO_MULTI_STOP || switches[switchnb]->type == ANTESCOFO_MULTI_DUMMY
 	    || (switches[switchnb]->type == ANTESCOFO_TRILL && switches[switchnb]->pitch)) {
 		double dur = switches[switchnb]->duration;
 		rational rdur(0, 1);
@@ -637,7 +651,7 @@ string ofxTLAntescofoNote::getGuidoStringNote(int switchnb) {
 		string sdur = rdur.toString();
 
 		ret += getGuidoStringNoteName(switches[switchnb]->pitch) + "*" + rdur.toString();
-		//cout << "getGuidoStringNoteName( " << switches[switchnb]->pitch << ", dur=" << switches[switchnb]->duration << ") = '" << ret <<"'"<<endl; 
+		cout << "getGuidoStringNoteName( " << switches[switchnb]->pitch << ", dur=" << switches[switchnb]->duration << ") = '" << ret <<"'"<<endl; 
 	}
 	return ret;
 }
@@ -690,7 +704,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	bool isChord1 = false, isChord2 = false, isGrace = false;
 	rational staffbeat1(0, 1), staffbeat2(0, 1);
 	bool was_tied = false;
-	bool was_trill = false;
+	bool was_trill1 = false, was_trill2 = false, was_multi = false;
 	int curStaff = 1;
 	for (int i = fromi; i <= toi; i++) {
 		if (switches[i]->pitch && abs(switches[i]->pitch) < 59) {
@@ -717,20 +731,23 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 				} else add_string_staff(ret1, ret2, curStaff, ", ");
 			}
 		}
-#define ENABLE_GUIDO_TRILLS 1
-#ifdef ENABLE_GUIDO_TRILLS
 		else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
-			if (!was_trill) {
-				add_string_staff(ret1, ret2, curStaff, "\\trill({");
-				was_trill = true;
-			} else if (switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
+			if (curStaff == 1 && !was_trill1) { add_string_staff(ret1, ret2, curStaff, "\\trill({"); was_trill1 = true;}
+			else if (curStaff == 2 && !was_trill2) { add_string_staff(ret1, ret2, curStaff, "\\trill({"); was_trill2 = true;}
+			else if (switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
 				add_string_staff(ret1, ret2, curStaff, ",");
 			else add_string_staff(ret1, ret2, curStaff, "{");
-		} else if (was_trill) {
-			//add_string_staff(ret1, ret2, curStaff, ")");
-			//was_trill = false;
+		} else if (switches[i]->type == ANTESCOFO_MULTI && switches[i]->pitch) {
+			if (!was_multi) {
+				add_string_staff(ret1, ret2, curStaff, "\\glissando<fill=\"true\">(");
+				was_multi = true;
+			} 
+			if (switches[i-1]->type == ANTESCOFO_MULTI && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
+				add_string_staff(ret1, ret2, curStaff, ",");
+		} else if (switches[i]->type == ANTESCOFO_MULTI_DUMMY) {
+			if (was_multi)
+				i++; while (switches[i]->type == ANTESCOFO_MULTI_DUMMY) {i++;} // skip dummies 
 		}
-#endif
 		int istied = 0;
 		if ((istied = has_next_event_tied_pitch(i, switches[i]->pitch)))
 			add_string_staff(ret1, ret2, curStaff, " \\tieBegin ");
@@ -750,13 +767,15 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		}
 		if (switches[i]->pitch >= 59)
 			backtostaff1 = true;
-#ifdef ENABLE_GUIDO_TRILLS
-		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->pitch && switches[i+1]->beat.min == switches[i]->beat.min)) {
-			add_string_staff(ret1, ret2, curStaff, "})");
-			was_trill = false;
-		} else 
-#endif
-		{
+
+		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->beat.min == switches[i]->beat.min)) {
+			if (was_trill1) { add_string_staff(ret1, ret2, 1, "})"); was_trill1 = false; }
+			if (was_trill2) { add_string_staff(ret1, ret2, 2, "})"); was_trill2 = false; }
+		} else if (switches[i]->type == ANTESCOFO_MULTI_STOP && switches[i]->pitch && !((switches[i+1]->type == ANTESCOFO_MULTI || switches[i+1]->type == ANTESCOFO_MULTI_STOP) && switches[i+1]->beat.min == switches[i]->beat.min)) {
+			add_string_staff(ret1, ret2, curStaff, ")");
+			was_multi = false;
+		} else {
+
 			if (i+1 == switches.size() || (switches[i]->type == ANTESCOFO_CHORD && switches[i+1]->beat.min != switches[i]->beat.min)) { // last note of a CHORD
 				if (isChord1) {
 					add_string_staff(ret1, ret2, 1, " }");
@@ -817,14 +836,6 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString() + " ");
 			staffbeat1 = staffbeat2 = bmax;
 		}
-#if 0 //ifdef ENABLE_GUIDO_TRILLS
-		if (was_trill) {
-			if (switches.size() == i+1 || (switches[i+1]->type != ANTESCOFO_TRILL || switches[i+1]->beat.min != switches[i]->beat.min)) {
-				add_string_staff(ret1, ret2, curStaff, ")");
-				was_trill = false;
-			}
-		}
-#endif
 	}
 
 	curStaff = 1;
@@ -1557,7 +1568,7 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 							if(e->multi_event > 0)
 							{
 								return ANTESCOFO_MULTI;
-							} else return ANTESCOFO_MULTI;//TRILL;
+							} else return ANTESCOFO_MULTI_DUMMY;
 						} else {
 							if (1 == e->pitch_list.size())
 								return ANTESCOFO_NOTE;
@@ -1967,7 +1978,12 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 	update_duration();
 	getcues();
-	//getjumps()
+
+#ifdef USE_GUIDO
+	if (!bShowPianoRoll)
+		update_guido_render();
+#endif
+
 	return switches.size();
 }
 

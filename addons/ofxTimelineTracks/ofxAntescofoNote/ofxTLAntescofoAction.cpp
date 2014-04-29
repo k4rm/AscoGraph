@@ -62,14 +62,15 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mFilterActions = false;
 
 	mTrackBtnHeight = 13;
-	mTrackBtnWidth = 20;
+	mTrackBtnWidth = 10;
 	mTrackBtnSpace = 20;
 	mFirstTrackBtn = 0;
+	mPrevTrackBtn.height = mNextTrackBtn.height = mTrackBtnHeight;
 
 	// store Antescofo tracks names
 	if (enable_tracks && TrackDefinition::idx2track.size()) {
 		for (TrackDefinition::idx2t_t::iterator i = TrackDefinition::idx2track.begin(); i != TrackDefinition::idx2track.end(); i++)
-			mTrackStates[i->second->_name.substr(7)] = new TrackState();
+			mTrackStates[i->second->_name.substr(7)] = new TrackState(); // 7 because "track::"
 	}
 }
 
@@ -135,65 +136,67 @@ void ofxTLAntescofoAction::draw()
 					(*i)->drawModalContent(this);
 			}
 		}
-
-#if 0
-				// draw selection
-		ofSetLineWidth(2.0);
-		if(draggingSelectionRange){
-			ofFill();
-			ofSetColor(timeline->getColors().keyColor);
-			ofLine(dragSelection.min, bounds.y, dragSelection.min, bounds.y+bounds.height);
-			ofLine(dragSelection.max, bounds.y, dragSelection.max, bounds.y+bounds.height);
-			ofSetColor(timeline->getColors().keyColor, 30);
-			ofFill();
-			ofRect(dragSelection.min, bounds.y, dragSelection.span(), bounds.height);
-		}
-#endif
 	}
 
 }
 
 void ofxTLAntescofoAction::draw_antescofo_tracks_header(int x, int y, int sens) {
 		ofPushStyle();
+		ofFill();
+		ofSetColor(0, 0, 0, 255);
 		if (sens > 0) { // next
+			ofTriangle(mNextTrackBtn.x, mNextTrackBtn.y, 
+				   mNextTrackBtn.x, mNextTrackBtn.y + mNextTrackBtn.height, 
+				   mNextTrackBtn.x + mNextTrackBtn.width, mNextTrackBtn.y + mNextTrackBtn.height/2); 
+
 		} else { // prev
+			ofTriangle(mPrevTrackBtn.x, mPrevTrackBtn.y + mPrevTrackBtn.height/2,
+				   mPrevTrackBtn.x + mPrevTrackBtn.width, mPrevTrackBtn.y, 
+				   mPrevTrackBtn.x + mPrevTrackBtn.width, mPrevTrackBtn.y + mPrevTrackBtn.height); 
+
 		}
 		ofPopStyle();
 }
 
 void ofxTLAntescofoAction::draw_antescofo_tracks_header() {
 	bool selected = false;
-	int x = bounds.x + 200;
+	int x = bounds.x + 100;
 	int y = bounds.y;
 
 	int x_prevbtn = x;
 	int x_nextbtn = bounds.x + bounds.width - mTrackBtnWidth;
 
-	mFont.drawString("Tracks: ", x, y - 6);
+	mFont.drawString("Filter :", x, y - 6);
 
-	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
+	x += 50 + mTrackBtnSpace;
+	int curTrackN = 0;
 
-		if (x > bounds.x + bounds.width) {
-			draw_antescofo_tracks_header(x_prevbtn, y, -1); 
-			draw_antescofo_tracks_header(x_nextbtn, y, 1);
+	if (mFirstTrackBtn > 0)
+		draw_antescofo_tracks_header(x_prevbtn, y, -1); 
+
+	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++, curTrackN++) {
+		if (curTrackN >= mFirstTrackBtn) {
+			if (x + i->first.size()*sizec > bounds.x + bounds.width - 20) {
+				draw_antescofo_tracks_header(x_nextbtn, y, 1);
+				break;
+			}
+
+			ofPushStyle();
+			int len = (i->first.size() + 1) * sizec;
+			if (i->second->selected) { ofFill(); ofSetColor(0, 0, 0, 100); }
+			else { ofNoFill(); ofSetColor(0, 0, 0, 255); }
+
+			i->second->rect.x = x - 1;
+			i->second->rect.y = y - 15;
+			i->second->rect.width = len + 2;
+			i->second->rect.height = mTrackBtnHeight;
+
+			ofRect(i->second->rect);
+			ofSetColor(0, 0, 0, 255);
+			mFont.drawString(i->first, i->second->rect.x + 3, y - 5);
+			ofPopStyle();
+			x += len + mTrackBtnSpace;
 		}
-
-		ofPushStyle();
-		int len = (i->first.size() + 1) * sizec;
-		if (i->second->selected) { ofFill(); ofSetColor(0, 0, 0, 100); }
-		else { ofNoFill(); ofSetColor(0, 0, 0, 255); }
-
-		i->second->rect.x = x - 1;
-		i->second->rect.y = y - 15;
-		i->second->rect.width = len + 2;
-		i->second->rect.height = mTrackBtnHeight;
-
-		ofRect(i->second->rect);
-		ofSetColor(0, 0, 0, 255);
-		mFont.drawString(i->first, i->second->rect.x + 3, y - 5);
-		ofPopStyle();
-
-		x += len + mTrackBtnSpace;
 	}
 }
 
@@ -343,7 +346,7 @@ void ofxTLAntescofoAction::update()
 			if (w > bounds.width - 200) {
 				mPrevTrackBtn.x = bounds.x + 150;
 				mNextTrackBtn.x = bounds.x + bounds.width - 40;
-				mPrevTrackBtn.y = mNextTrackBtn.y = bounds.y;
+				mPrevTrackBtn.y = mNextTrackBtn.y = bounds.y - 15;
 				mPrevTrackBtn.width = mNextTrackBtn.width = mTrackBtnWidth;
 				break;
 			}
@@ -920,6 +923,16 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 
 bool ofxTLAntescofoAction::mouseReleased_tracks_header(ofMouseEventArgs& args, long millis)
 {
+	// antescofo track arrows
+	if (mNextTrackBtn.inside(args.x, args.y)) {
+		if (mFirstTrackBtn < mTrackStates.size())
+			mFirstTrackBtn++;
+		return true;
+	} else if (mPrevTrackBtn.inside(args.x, args.y)) {
+		if (mFirstTrackBtn > 0)
+			mFirstTrackBtn--;
+		return true;
+	}
 	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++) {
 		if (i->second->rect.inside(args.x, args.y)) {
 			i->second->selected = !i->second->selected;
