@@ -176,12 +176,14 @@ void GuidoComponent::draw (int x, int y, int w, int h)
 {
 	if (!fGRHandler) return;
 
+    cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
+    
 	ofSetColor(fScoreColor);
 	GuidoOnDrawDesc desc;
 	desc.handle = fGRHandler;
 	desc.hdc = &gDevice;
 	desc.page = fPage;
-	desc.scrollx = 0;
+	desc.scrollx = x;
 	desc.scrolly = 0;
 	desc.isprint = false;
 	desc.updateRegion.left = x;

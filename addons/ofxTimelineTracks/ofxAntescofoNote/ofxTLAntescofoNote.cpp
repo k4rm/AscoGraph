@@ -82,8 +82,8 @@
 
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
-bool debug_loadscore = true;
-bool debug_guido = true;
+bool debug_loadscore = false;
+bool debug_guido = false;
 
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -580,10 +580,24 @@ void ofxTLAntescofoNote::draw_guido() {
 		ofFill();
 		ofRect(bounds);
 
-		guido_x = bounds.x - (zoomBounds.min * guido_w);
-		if (debug_guido) cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
+		//WAS guido_x = bounds.x - (zoomBounds.min * guido_w);
+		guido_x = bounds.x + (zoomBounds.min * guido_w);
+		guido_y = bounds.y;
+		//if (debug_guido) 
+			cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
 		ofSetColor(0,0,0, 255);
-		oguido->draw_cache(guido_x, guido_y);
+
+		GuidoPageFormat format;
+		oguido->getPageFormat(format);
+		float ratio = (format.width / format.height);
+		float render_h = bounds.height;
+		float render_w = render_h * ratio; 
+		//oguido->setSize(render_w, render_h);
+		//oguido->draw(render_x, render_y, render_w, render_h);
+
+		oguido->draw(guido_x, guido_y, render_w, render_h);
+		oguido->draw_cache(bounds.x, bounds.y);
+		//oguido->draw_cache(guido_x, guido_y);
 
 		ofPopStyle();
 	}
@@ -651,7 +665,7 @@ string ofxTLAntescofoNote::getGuidoStringNote(int switchnb) {
 		string sdur = rdur.toString();
 
 		ret += getGuidoStringNoteName(switches[switchnb]->pitch) + "*" + rdur.toString();
-		cout << "getGuidoStringNoteName( " << switches[switchnb]->pitch << ", dur=" << switches[switchnb]->duration << ") = '" << ret <<"'"<<endl; 
+		if (debug_guido) cout << "getGuidoStringNoteName( " << switches[switchnb]->pitch << ", dur=" << switches[switchnb]->duration << ") = '" << ret <<"'"<<endl;
 	}
 	return ret;
 }
@@ -668,7 +682,7 @@ int ofxTLAntescofoNote::has_next_event_tied_pitch(int curEvent, int curPitch) {
 		if (curEvent + i >= switches.size()) return 0;
 		if (switches[curEvent+i]->beat.min <= nextBeat) { // while on next event
 			if (switches[curEvent+i]->pitch == curPitch && switches[curEvent+i]->is_tied) {
-				cout << "has_next_event_tied_pitch: " << curEvent+i << endl;
+				//cout << "has_next_event_tied_pitch: " << curEvent+i << endl;
 				return curEvent+i;
 			} else {
 				i++;
@@ -734,7 +748,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		else if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch) {
 			if (curStaff == 1 && !was_trill1) { add_string_staff(ret1, ret2, curStaff, "\\trill({"); was_trill1 = true;}
 			else if (curStaff == 2 && !was_trill2) { add_string_staff(ret1, ret2, curStaff, "\\trill({"); was_trill2 = true;}
-			else if (switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
+			else if (i && switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
 				add_string_staff(ret1, ret2, curStaff, ",");
 			else add_string_staff(ret1, ret2, curStaff, "{");
 		} else if (switches[i]->type == ANTESCOFO_MULTI && switches[i]->pitch) {
@@ -742,20 +756,22 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 				add_string_staff(ret1, ret2, curStaff, "\\glissando<fill=\"true\">(");
 				was_multi = true;
 			} 
-			if (switches[i-1]->type == ANTESCOFO_MULTI && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
+			if (i && switches[i-1]->type == ANTESCOFO_MULTI && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
 				add_string_staff(ret1, ret2, curStaff, ",");
-		} else if (switches[i]->type == ANTESCOFO_MULTI_DUMMY) {
-			if (was_multi)
-				i++; while (switches[i]->type == ANTESCOFO_MULTI_DUMMY) {i++;} // skip dummies 
+		} else if (switches[i]->type == ANTESCOFO_MULTI_STOP) {
+			if (was_multi) { i++; while (i < toi && switches[i]->type == ANTESCOFO_MULTI_DUMMY) i++; } // skip dummies 
 		}
 		int istied = 0;
 		if ((istied = has_next_event_tied_pitch(i, switches[i]->pitch)))
 			add_string_staff(ret1, ret2, curStaff, " \\tieBegin ");
 
+		//XXX cout << "i= " << i  << " type= " << switches[i]->type << endl;
 		// get Guido string for current note
-		if (isGrace)
-			add_string_staff(ret1, ret2, curStaff, getGuidoStringNoteName(switches[i]->pitch));
-		else add_string_staff(ret1, ret2, curStaff, getGuidoStringNote(i));
+		if (switches[i]->type != ANTESCOFO_MULTI_DUMMY) {
+			if (isGrace)
+				add_string_staff(ret1, ret2, curStaff, getGuidoStringNoteName(switches[i]->pitch));
+			else add_string_staff(ret1, ret2, curStaff, getGuidoStringNote(i));
+		}
 
 		if (isGrace) { add_string_staff(ret1, ret2, curStaff, ")"); isGrace = false; }
 
@@ -768,10 +784,16 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		if (switches[i]->pitch >= 59)
 			backtostaff1 = true;
 
-		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && switches[i+1]->beat.min == switches[i]->beat.min)) {
+		/*XX cout << "FUUUUUUUCK: " << endl;
+		XXX cout << "\twas_multi = " << was_multi << endl;
+		if (was_multi && i != switches.size()-1) {
+			cout << "\tswitches[i+1]->beat.min = " << switches[i+1]->beat.min << "  switches[i]->beat.min = " << switches[i]->beat.min << endl;
+			cout << "\tswitches[i+1]->type = " << switches[i+1]->type << endl;
+		}*/
+		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && (i == switches.size()-1 || switches[i+1]->beat.min == switches[i]->beat.min))) {
 			if (was_trill1) { add_string_staff(ret1, ret2, 1, "})"); was_trill1 = false; }
 			if (was_trill2) { add_string_staff(ret1, ret2, 2, "})"); was_trill2 = false; }
-		} else if (switches[i]->type == ANTESCOFO_MULTI_STOP && switches[i]->pitch && !((switches[i+1]->type == ANTESCOFO_MULTI || switches[i+1]->type == ANTESCOFO_MULTI_STOP) && switches[i+1]->beat.min == switches[i]->beat.min)) {
+		} else if (was_multi && (i == switches.size()-1 || (switches[i+1]->beat.min != switches[i]->beat.min && switches[i+1]->type != ANTESCOFO_MULTI_STOP && switches[i+1]->type != ANTESCOFO_MULTI_DUMMY))) {
 			add_string_staff(ret1, ret2, curStaff, ")");
 			was_multi = false;
 		} else {
@@ -1200,7 +1222,8 @@ void ofxTLAntescofoNote::update_guido() {
 			//guido_x = bounds.x +(0. - zoomBounds.min) * guido_w;
 			//guido_x = bounds.x + scrolled_guido_x - bounds.width / 2;
 			//guido_y = bounds.y;
-			guido_x = bounds.x - (zoomBounds.min * guido_w);
+			// WAS guido_x = bounds.x - (zoomBounds.min * guido_w);
+			guido_x = bounds.x + (zoomBounds.min * guido_w);
 
 			break;
 		}
@@ -1533,10 +1556,9 @@ void ofxTLAntescofoNote::set_error(string e) {
 
 int ofxTLAntescofoNote::getNoteType(Event *e)
 {
+	int ret = -1;
 	if (e) {
 		ostringstream str;
-		if (debug_loadscore) { str << "getNoteType: isMArkov:"<< e->isMarkov << " multi_event:"<< e->multi_event 
-			<< " pitches:" << e->pitch_list.size() << endl; console->addln(str.str()); str.str(""); }
 
 		switch (e->isMarkov)
 		{
@@ -1546,20 +1568,23 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 					{
 						if(e->multi_event>0)
 						{
-							return ANTESCOFO_TRILL; // MULTI TRILL XXX
+							ret = ANTESCOFO_TRILL; // MULTI TRILL XXX
 						}
-						return ANTESCOFO_TRILL;
-					} else return ANTESCOFO_TRILL; // MULTI wtf?;
+						ret = ANTESCOFO_TRILL;
+					} else ret = ANTESCOFO_TRILL; // MULTI wtf?;
+					break;
 				}
 			case 4: // CHORD
-				return ANTESCOFO_CHORD;
+				ret = ANTESCOFO_CHORD;
+				break;
 
 			case 0:  // NOTE
 			case 1:
 			default:
 				{
 					if (1 == e->pitch_list.size() && 0.0 == e->pitch_list[0] && e->isSilence()) {
-						return ANTESCOFO_REST;
+						ret = ANTESCOFO_REST;
+						break;
 					}
 					else
 					{
@@ -1567,13 +1592,18 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 						{
 							if(e->multi_event > 0)
 							{
-								return ANTESCOFO_MULTI;
-							} else return ANTESCOFO_MULTI_DUMMY;
+								ret = ANTESCOFO_MULTI;
+								break;
+							} else {
+								ret = ANTESCOFO_MULTI_DUMMY;
+								break;
+							}
 						} else {
 							if (1 == e->pitch_list.size())
-								return ANTESCOFO_NOTE;
+								ret = ANTESCOFO_NOTE;
 							else
-								return ANTESCOFO_MULTI;
+								ret = ANTESCOFO_MULTI;
+							break;
 						}
 					}
 				}
@@ -1581,9 +1611,41 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 			//case 1:  // DummySilence
 			//	return -1;
 		}
-		cerr << "ofxTLAntescofoNote::getNoteType: unknown type: multi_event:"<< e->multi_event << " pitches:" << e->pitch_list.size()<< endl;
+		if (ret == -1) cerr << "ofxTLAntescofoNote::getNoteType: unknown type: multi_event:"<< e->multi_event << " pitches:" << e->pitch_list.size()<< endl;
+		if (debug_loadscore) {
+			cout << "ofxTLAntescofoNote::getNoteType: returning ";
+			switch (ret) {
+				case 0:
+					cout << "ANTESCOFO_REST";
+					break;
+				case 1:
+					cout << "ANTESCOFO_CHORD";
+					break;
+				case 2:
+					cout << "ANTESCOFO_NOTE";
+					break;
+				case 3:
+					cout << "ANTESCOFO_TRILL";
+					break;
+				case 4:
+					cout << "ANTESCOFO_MULTI";
+					break;
+				case 5:
+					cout << "ANTESCOFO_MULTI_STOP";
+					break;
+				case 6:
+					cout << "ANTESCOFO_MULTI_DUMMY";
+					break;
+				default:
+					break;
+			}
+			cout << endl;
+		}
 	}
-	return -1;
+
+	//if (debug_loadscore) { str << "getNoteType: isMArkov:"<< e->isMarkov << " multi_event:"<< e->multi_event 
+		//<< " pitches:" << e->pitch_list.size() << endl; console->addln(str.str()); str.str(""); }
+	return ret;
 }
 
 
@@ -1800,7 +1862,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->colNum_end = e->scloc->end.column;
 					switches.push_back(newSwitch);
 					line2note[e->scloc->begin.line] = switches.size() - 1;
-					if (debug_loadscore) { str << "added new switch for MULTI target: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
+					if (debug_loadscore) { str << "added new switch for MULTI_STOP target: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 					bGot_Action = false;
 				}
 				if (e->multi_source.size() && e->multi_target.size())
@@ -1949,7 +2011,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			if (debug_loadscore) { str << "added new switch: REST beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max; console->addln(str.str()); str.str(""); }
 			bGot_Action = false;
 		} else {
-			if (debug_loadscore) { cerr << "ERROR: unhandled event!!!!"<< endl; }
+			if (debug_loadscore) { cerr << endl << "ERROR: unhandled event!!!!"<< endl; }
 		}
 
 	}

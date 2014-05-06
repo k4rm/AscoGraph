@@ -66,9 +66,16 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 	glEnable(GL_MULTISAMPLE_ARB);
 	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
 #else	
+    int w, h;
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &w);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &h);
+    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
+    
+    //fWidth = w;
+    //fHeight = h;
     ofFbo::Settings settings;
-    settings.width = fWidth;
-    settings.height = fHeight;
+    settings.width = h; //w;
+    settings.height = w; //h;
     settings.internalformat = GL_RGBA;
     settings.numSamples = 0;
     settings.useDepth = false;
@@ -76,8 +83,12 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
     //drawCache = new ofFbo();
     drawCache.allocate(settings);
     //drawCache.allocate(fWidth, fHeight, GL_RGBA);
-    glGenFramebuffersEXT(1, &fbo); // 1==numbers of fbo to create 
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+    //glGenFramebuffersEXT(1, &fbo); // 1==numbers of fbo to create
+    //glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+   /* glGenFramebuffersOES(1, &fbo); // 1==numbers of fbo to create
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
+    */
+
 #endif
 	drawCache.begin();
 	ofClear(255,255,255, 0);
@@ -87,22 +98,24 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 // --------------------------------------------------------------
 openFrameworksDevice::~openFrameworksDevice()
 {
+#ifdef ASCOGRAPH_IOS
+    if (drawCache.isAllocated())
+        glDeleteFramebuffersOES(1, &fbo);
+#endif
 }
 
 // - Drawing services ------------------------------------------------
 // --------------------------------------------------------------
 bool openFrameworksDevice::BeginDraw()	{ 
 	ofPushStyle();
-	//ofClear(255,255,255, 0);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 	drawCache.begin();
+	ofClear(255,255,255, 0);
 	return true;
 }
 void openFrameworksDevice::EndDraw()		{ 
 	drawCache.end();
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-	
-	ofPopStyle(); 
+
+	ofPopStyle();
 }
 void openFrameworksDevice::InvalidateRect( float /*left*/, float /*top*/, float /*right*/, float /*bottom*/ ) {}
 
@@ -234,14 +247,14 @@ bool openFrameworksDevice::CopyPixels( int /*xDest*/, int /*yDest*/, int /*dstWi
 // - Coordinate services ------------------------------------------------
 void openFrameworksDevice::SetOrigin( float x, float y )	
 { 
-	//cout << "openFrameworksDevice::SetOrigin:" << x << " " << y << endl;
+	cout << "openFrameworksDevice::SetOrigin:" << x << " " << y << endl;
 	ofTranslate(x-fXOrigin, y-fYOrigin);
 	ofTranslate(x, y);
 	fXOrigin = x; fYOrigin = y; 
 }
 void openFrameworksDevice::OffsetOrigin( float x, float y )
 { 
-	//cout << "openFrameworksDevice::OffsetOrigin" << x << " " << y <<  endl;
+	cout << "openFrameworksDevice::OffsetOrigin" << x << " " << y <<  endl;
 	ofTranslate(x, y);
 	fXOrigin += x; fYOrigin += y; 
 }
@@ -263,7 +276,7 @@ void openFrameworksDevice::DeviceToLogical( float * x, float * y ) const
 
 void openFrameworksDevice::SetScale( float x, float y )	
 { 
-	//cout << "openFrameworksDevice::SetScale " << x << " " << y << endl;
+	cout << "openFrameworksDevice::SetScale " << x << " " << y << endl;
 	ofScale(x, y);
 	fXScale = x;
 	fYScale = y;
@@ -278,15 +291,20 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
 #ifndef ASCOGRAPH_IOS
 	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
 #else
+    int w, h;
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &w);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &h);
+    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
+    //fWidth = w;
+    //fHeight = h;
     ofFbo::Settings settings;
-    settings.width = fWidth;
-    settings.height = fHeight;
+    settings.width = h; //w;
+    settings.height = w; //h;
     settings.internalformat = GL_RGBA;
     settings.numSamples = 0;
     settings.useDepth = false;
     settings.useStencil = false;
     drawCache.allocate(settings);
-    //drawCache.allocate(fWidth, fHeight, GL_RGB);
 #endif
     
 	drawCache.begin();

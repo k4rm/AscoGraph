@@ -24,11 +24,9 @@ void ofxGuido::getPageFormat(GuidoPageFormat& format)
 
 void ofxGuido::draw_cache(int x, int y) {
 	if (guido) {
-		//glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 1);
 
 		guido->getDevice()->drawCache.draw(x, y);
 
-		//glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
 }
 

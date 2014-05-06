@@ -22,7 +22,7 @@ endif(UNIX)
 
 #######################################
 # Options disabled by default
-option ( IOS 	"Generates project for iOS" off )
+option ( IOS 	"Generates project for iOS" on )
 option ( DIST 	"Compiles universal binaries (x86_64 i386) on MacOSX" off )
 option ( MIDIEXPORT "MIDI export support (requires MidiShareLight)" off)
 option ( STATICLIB  "Generates a static library (default for iOS)" on)

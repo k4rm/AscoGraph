@@ -235,19 +235,7 @@
 		D433C5B018ECB15400B41CFC /* ofxBonjourIp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D433C59F18ECB15400B41CFC /* ofxBonjourIp.cpp */; };
 		D4A985C018F14B3A00D5603B /* iOSAscoGraphMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4A985BE18F14B3A00D5603B /* iOSAscoGraphMenu.mm */; };
 		D4A985C218F14F4700D5603B /* iOSAscoGraphMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4A985C118F14F4700D5603B /* iOSAscoGraphMenu.xib */; };
-		D4C6938C18F430D9000060BC /* .ofxGuido.cpp.swo in Resources */ = {isa = PBXBuildFile; fileRef = D4C68D9818F430D8000060BC /* .ofxGuido.cpp.swo */; };
-		D4C6938D18F430D9000060BC /* .ofxGuido.cpp.swp in Resources */ = {isa = PBXBuildFile; fileRef = D4C68D9918F430D8000060BC /* .ofxGuido.cpp.swp */; };
-		D4C6938E18F430D9000060BC /* .ofxGuido.h.swp in Resources */ = {isa = PBXBuildFile; fileRef = D4C68D9A18F430D8000060BC /* .ofxGuido.h.swp */; };
 		D4C6938F18F430D9000060BC /* ofxGuido.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4C68D9B18F430D8000060BC /* ofxGuido.cpp */; };
-		D4C693AE18F43235000060BC /* .GuidoComponent.cpp.swn in Resources */ = {isa = PBXBuildFile; fileRef = D4C6939D18F43235000060BC /* .GuidoComponent.cpp.swn */; };
-		D4C693AF18F43235000060BC /* .GuidoComponent.cpp.swo in Resources */ = {isa = PBXBuildFile; fileRef = D4C6939E18F43235000060BC /* .GuidoComponent.cpp.swo */; };
-		D4C693B018F43235000060BC /* .GuidoComponent.cpp.swp in Resources */ = {isa = PBXBuildFile; fileRef = D4C6939F18F43235000060BC /* .GuidoComponent.cpp.swp */; };
-		D4C693B118F43235000060BC /* .GuidoComponent.h.swo in Resources */ = {isa = PBXBuildFile; fileRef = D4C693A018F43235000060BC /* .GuidoComponent.h.swo */; };
-		D4C693B218F43235000060BC /* .GuidoComponent.h.swp in Resources */ = {isa = PBXBuildFile; fileRef = D4C693A118F43235000060BC /* .GuidoComponent.h.swp */; };
-		D4C693B318F43235000060BC /* .JuceDevice.h.swp in Resources */ = {isa = PBXBuildFile; fileRef = D4C693A218F43235000060BC /* .JuceDevice.h.swp */; };
-		D4C693B418F43235000060BC /* .openFrameworksDevice.cpp.swo in Resources */ = {isa = PBXBuildFile; fileRef = D4C693A318F43235000060BC /* .openFrameworksDevice.cpp.swo */; };
-		D4C693B518F43235000060BC /* .openFrameworksDevice.cpp.swp in Resources */ = {isa = PBXBuildFile; fileRef = D4C693A418F43235000060BC /* .openFrameworksDevice.cpp.swp */; };
-		D4C693B618F43235000060BC /* .openFrameworksDevice.h.swp in Resources */ = {isa = PBXBuildFile; fileRef = D4C693A518F43235000060BC /* .openFrameworksDevice.h.swp */; };
 		D4C693B718F43235000060BC /* GuidoComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4C693A618F43235000060BC /* GuidoComponent.cpp */; };
 		D4C693B818F43235000060BC /* openFrameworksDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4C693A818F43235000060BC /* openFrameworksDevice.cpp */; };
 		D4C693B918F43235000060BC /* openFrameworksFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4C693AA18F43235000060BC /* openFrameworksFont.cpp */; };
@@ -710,20 +698,8 @@
 		D4A985BE18F14B3A00D5603B /* iOSAscoGraphMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iOSAscoGraphMenu.mm; sourceTree = "<group>"; };
 		D4A985BF18F14B3A00D5603B /* iOSAscoGraphMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSAscoGraphMenu.h; sourceTree = "<group>"; };
 		D4A985C118F14F4700D5603B /* iOSAscoGraphMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iOSAscoGraphMenu.xib; sourceTree = "<group>"; };
-		D4C68D9818F430D8000060BC /* .ofxGuido.cpp.swo */ = {isa = PBXFileReference; lastKnownFileType = file; path = .ofxGuido.cpp.swo; sourceTree = "<group>"; };
-		D4C68D9918F430D8000060BC /* .ofxGuido.cpp.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .ofxGuido.cpp.swp; sourceTree = "<group>"; };
-		D4C68D9A18F430D8000060BC /* .ofxGuido.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .ofxGuido.h.swp; sourceTree = "<group>"; };
 		D4C68D9B18F430D8000060BC /* ofxGuido.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGuido.cpp; sourceTree = "<group>"; };
 		D4C68D9C18F430D8000060BC /* ofxGuido.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGuido.h; sourceTree = "<group>"; };
-		D4C6939D18F43235000060BC /* .GuidoComponent.cpp.swn */ = {isa = PBXFileReference; lastKnownFileType = file; path = .GuidoComponent.cpp.swn; sourceTree = "<group>"; };
-		D4C6939E18F43235000060BC /* .GuidoComponent.cpp.swo */ = {isa = PBXFileReference; lastKnownFileType = file; path = .GuidoComponent.cpp.swo; sourceTree = "<group>"; };
-		D4C6939F18F43235000060BC /* .GuidoComponent.cpp.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .GuidoComponent.cpp.swp; sourceTree = "<group>"; };
-		D4C693A018F43235000060BC /* .GuidoComponent.h.swo */ = {isa = PBXFileReference; lastKnownFileType = file; path = .GuidoComponent.h.swo; sourceTree = "<group>"; };
-		D4C693A118F43235000060BC /* .GuidoComponent.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .GuidoComponent.h.swp; sourceTree = "<group>"; };
-		D4C693A218F43235000060BC /* .JuceDevice.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .JuceDevice.h.swp; sourceTree = "<group>"; };
-		D4C693A318F43235000060BC /* .openFrameworksDevice.cpp.swo */ = {isa = PBXFileReference; lastKnownFileType = file; path = .openFrameworksDevice.cpp.swo; sourceTree = "<group>"; };
-		D4C693A418F43235000060BC /* .openFrameworksDevice.cpp.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .openFrameworksDevice.cpp.swp; sourceTree = "<group>"; };
-		D4C693A518F43235000060BC /* .openFrameworksDevice.h.swp */ = {isa = PBXFileReference; lastKnownFileType = file; path = .openFrameworksDevice.h.swp; sourceTree = "<group>"; };
 		D4C693A618F43235000060BC /* GuidoComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuidoComponent.cpp; sourceTree = "<group>"; };
 		D4C693A718F43235000060BC /* GuidoComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuidoComponent.h; sourceTree = "<group>"; };
 		D4C693A818F43235000060BC /* openFrameworksDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = openFrameworksDevice.cpp; sourceTree = "<group>"; };
@@ -1905,9 +1881,6 @@
 		D4C68D9718F430D8000060BC /* src */ = {
 			isa = PBXGroup;
 			children = (
-				D4C68D9818F430D8000060BC /* .ofxGuido.cpp.swo */,
-				D4C68D9918F430D8000060BC /* .ofxGuido.cpp.swp */,
-				D4C68D9A18F430D8000060BC /* .ofxGuido.h.swp */,
 				D4C68D9B18F430D8000060BC /* ofxGuido.cpp */,
 				D4C68D9C18F430D8000060BC /* ofxGuido.h */,
 			);
@@ -1917,15 +1890,6 @@
 		D4C6939C18F43235000060BC /* Device */ = {
 			isa = PBXGroup;
 			children = (
-				D4C6939D18F43235000060BC /* .GuidoComponent.cpp.swn */,
-				D4C6939E18F43235000060BC /* .GuidoComponent.cpp.swo */,
-				D4C6939F18F43235000060BC /* .GuidoComponent.cpp.swp */,
-				D4C693A018F43235000060BC /* .GuidoComponent.h.swo */,
-				D4C693A118F43235000060BC /* .GuidoComponent.h.swp */,
-				D4C693A218F43235000060BC /* .JuceDevice.h.swp */,
-				D4C693A318F43235000060BC /* .openFrameworksDevice.cpp.swo */,
-				D4C693A418F43235000060BC /* .openFrameworksDevice.cpp.swp */,
-				D4C693A518F43235000060BC /* .openFrameworksDevice.h.swp */,
 				D4C693A618F43235000060BC /* GuidoComponent.cpp */,
 				D4C693A718F43235000060BC /* GuidoComponent.h */,
 				D4C693A818F43235000060BC /* openFrameworksDevice.cpp */,
@@ -2087,15 +2051,11 @@
 				D42CF7B718E97FB100E3FBFB /* readme in Resources */,
 				D402F07218E6B8FC00F757DC /* LICENSE.txt in Resources */,
 				D402F73C18E6BDF200F757DC /* README.md in Resources */,
-				D4C693B518F43235000060BC /* .openFrameworksDevice.cpp.swp in Resources */,
-				D4C6938C18F430D9000060BC /* .ofxGuido.cpp.swo in Resources */,
 				D42CF7B318E97FB100E3FBFB /* update_pgmidi.sh in Resources */,
 				D402F07118E6B8FC00F757DC /* changelog.txt in Resources */,
-				D4C693B418F43235000060BC /* .openFrameworksDevice.cpp.swo in Resources */,
 				D402F69518E6BD6D00F757DC /* install.xml in Resources */,
 				D402F2BE18E6BD5000F757DC /* README.md in Resources */,
 				D402F29F18E6BD3400F757DC /* README.md in Resources */,
-				D4C693B018F43235000060BC /* .GuidoComponent.cpp.swp in Resources */,
 				D402F1B318E6BD2800F757DC /* NewMedia Fett.ttf in Resources */,
 				D402F77118E6BE0C00F757DC /* README.md in Resources */,
 				D402F6F618E6BDCA00F757DC /* .project in Resources */,
@@ -2103,15 +2063,11 @@
 				D4A985C218F14F4700D5603B /* iOSAscoGraphMenu.xib in Resources */,
 				D402F60818E6BD6800F757DC /* README.md in Resources */,
 				D42CF7B118E97FB100E3FBFB /* README.markdown in Resources */,
-				D4C6938E18F430D9000060BC /* .ofxGuido.h.swp in Resources */,
 				D402F70518E6BDCA00F757DC /* LICENSE in Resources */,
-				D4C693AF18F43235000060BC /* .GuidoComponent.cpp.swo in Resources */,
-				D4C693B618F43235000060BC /* .openFrameworksDevice.h.swp in Resources */,
 				D402F1B118E6BD2800F757DC /* defaultColorPalette.png in Resources */,
 				D402F07D18E6B92700F757DC /* changelog.txt in Resources */,
 				D402F1B218E6BD2800F757DC /* defaultColors.xml in Resources */,
 				D402F70718E6BDCA00F757DC /* easing_terms_of_use.html in Resources */,
-				D4C693B218F43235000060BC /* .GuidoComponent.h.swp in Resources */,
 				D402F21318E6BD2800F757DC /* .ofxTLTrackHeader.h.swp in Resources */,
 				D402F21018E6BD2800F757DC /* .ofxTimeline.h.swp in Resources */,
 				D42CF7EE18E98B7700E3FBFB /* .gitignore in Resources */,
@@ -2126,18 +2082,14 @@
 				D402F70618E6BDCA00F757DC /* README in Resources */,
 				D4E1230618ECB68C00BCDB0E /* Icon.png in Resources */,
 				D402F6F518E6BDCA00F757DC /* .gitignore in Resources */,
-				D4C693B318F43235000060BC /* .JuceDevice.h.swp in Resources */,
-				D4C693B118F43235000060BC /* .GuidoComponent.h.swo in Resources */,
 				D42CF79018E97FB100E3FBFB /* .gitignore in Resources */,
 				D402F20F18E6BD2800F757DC /* .ofxTimeline.cpp.swp in Resources */,
 				D402F4E718E6BD6800F757DC /* .gitignore in Resources */,
 				D433C5AF18ECB15400B41CFC /* README.md in Resources */,
 				D402F21218E6BD2800F757DC /* .ofxTLTrack.h.swp in Resources */,
-				D4C693AE18F43235000060BC /* .GuidoComponent.cpp.swn in Resources */,
 				D42CF7C118E97FB100E3FBFB /* README.md in Resources */,
 				D402F20E18E6BD2800F757DC /* README.md in Resources */,
 				D402F78C18E6BE2300F757DC /* README in Resources */,
-				D4C6938D18F430D9000060BC /* .ofxGuido.cpp.swp in Resources */,
 				D402F6F418E6BDCA00F757DC /* .cproject in Resources */,
 				D402F04F18E6B1C200F757DC /* ofxiOS-Info.plist in Resources */,
 				D42CF7B218E97FB100E3FBFB /* miditest.pd in Resources */,
@@ -2503,7 +2455,7 @@
 				);
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "55EB5F41-4451-4C91-82B4-7251134E54B9";
+				PROVISIONING_PROFILE = "";
 				STRIP_INSTALLED_PRODUCT = YES;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
@@ -2577,7 +2529,7 @@
 				);
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "55EB5F41-4451-4C91-82B4-7251134E54B9";
+				PROVISIONING_PROFILE = "";
 				STRIP_INSTALLED_PRODUCT = YES;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;

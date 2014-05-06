@@ -18,7 +18,7 @@
 
 bool _debug = true;
 
-string ascograph_version = "1.03";
+string ascograph_version = "1.04";
 
 extern ofxConsole* console;
 
@@ -584,7 +584,8 @@ void iOSAscoGraph::drawBonjour(){
 // check if tmp_score is complete (all chunk received)
 void iOSAscoGraph::check_score_vector_status()
 {
-    bool done = true;
+    cout << "iOSAscoGraph::check_score_vector_status() : ";
+    bool done = false;
     
     for (int i = 0; i < current_score_chunks; i++) {
         if (tmp_score[i].empty()) {
@@ -592,6 +593,13 @@ void iOSAscoGraph::check_score_vector_status()
             break;
         }
     }
+    if (tmp_score.size() == current_score_chunks)
+        done = true;
+    
+    if (done)
+        cout << " going to load score." << endl;
+    else cout << " waiting more chunks of score."<<endl;
+    
     if (done) {
         for (int i = 0; i < current_score_chunks; i++) {
             current_score += tmp_score[i];
@@ -631,7 +639,7 @@ void iOSAscoGraph::update(){
                     cur = atoi(m.getArgAsString(0).c_str());
                 } else { cerr << "ERROR: receiving OSC current_score_append, missing nb chunk" << endl; break; }
                 if(m.getArgType(1) == OFXOSC_TYPE_STRING){
-                    ofLog() << "Filling " << cur << " slot partial score." << endl;
+                    ofLog() << "Filling slot " << cur << " of score." << endl;
                     tmp_score[cur] = m.getArgAsString(1);
                     check_score_vector_status();
                 }
