@@ -457,7 +457,8 @@ void ofxTLAntescofoNote::guido_store_notes() {
 		if (w > guido_bounds.width) guido_bounds.width = w;
 		if (h > guido_bounds.height) guido_bounds.height = h;
 
-		//if (debug_guido) cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+		//if (debug_guido) 
+		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
 		switches[i]->guidoCoords.x = x;
 		switches[i]->guidoCoords.y = y;
 		switches[i]->guidoCoords.width = w;;
@@ -521,9 +522,6 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	ofPushStyle();
 	ofSetColor(0,0,0, 255);
 
-	int margin_x = 20;
-	int margin_y = 20;
-
 	GuidoPageFormat format;
 	oguido->getPageFormat(format);
 
@@ -581,10 +579,8 @@ void ofxTLAntescofoNote::draw_guido() {
 		ofRect(bounds);
 
 		//WAS guido_x = bounds.x - (zoomBounds.min * guido_w);
-		guido_x = bounds.x + (zoomBounds.min * guido_w);
 		guido_y = bounds.y;
-		//if (debug_guido) 
-			cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
+		if (debug_guido) cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
 		ofSetColor(0,0,0, 255);
 
 		GuidoPageFormat format;
@@ -790,7 +786,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			cout << "\tswitches[i+1]->beat.min = " << switches[i+1]->beat.min << "  switches[i]->beat.min = " << switches[i]->beat.min << endl;
 			cout << "\tswitches[i+1]->type = " << switches[i+1]->type << endl;
 		}*/
-		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && !(switches[i+1]->type == ANTESCOFO_TRILL && (i == switches.size()-1 || switches[i+1]->beat.min == switches[i]->beat.min))) {
+		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && (i == switches.size()-1 || (switches[i+1]->type != ANTESCOFO_TRILL || (switches[i+1]->beat.min != switches[i]->beat.min)))) {
 			if (was_trill1) { add_string_staff(ret1, ret2, 1, "})"); was_trill1 = false; }
 			if (was_trill2) { add_string_staff(ret1, ret2, 2, "})"); was_trill2 = false; }
 		} else if (was_multi && (i == switches.size()-1 || (switches[i+1]->beat.min != switches[i]->beat.min && switches[i+1]->type != ANTESCOFO_MULTI_STOP && switches[i+1]->type != ANTESCOFO_MULTI_DUMMY))) {
@@ -1159,9 +1155,12 @@ void ofxTLAntescofoNote::autoscroll() {
 		if (mCurGuidoId == -1) {
 			guido_x = bounds.x;
 			guido_y = bounds.y;
+			scrolled_guido_x = bounds.x;
+			scrolled_guido_w = 0;
 			return;
 		}
-		pos = (switches[mCurGuidoId]->guidoCoords.x + bounds.x) / guido_w;
+		//pos = (switches[mCurGuidoId]->guidoCoords.x + bounds.x) / guido_w;
+		pos = switches[mCurGuidoId]->guidoCoords.x / guido_w;
 
 		if (bAutoScroll && mDur_in_secs && lastpos != pos) {
 			ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
@@ -1169,7 +1168,8 @@ void ofxTLAntescofoNote::autoscroll() {
 			ofRange z = zoom->getViewRange();
 			ofRange oldz = z;
 			z.max = z.min + bounds.width / guido_w;
-			if (debug_guido) cout << endl << "pos:"<< pos << " mCurBeat=" << mCurBeat << " mDur_in_beats=" << mDur_in_beats <<" got zoomrange: "<< z.min << "->"<< z.max;
+			//if (debug_guido)
+				cout << endl << "pos:"<< pos << " mCurBeat=" << mCurBeat << " mDur_in_beats=" << mDur_in_beats <<" got zoomrange: "<< z.min << "->"<< z.max;
 			// continuous scrolling : keep playhead on center
 			float c = z.center(); 
 			float d = pos - c;
@@ -1180,25 +1180,31 @@ void ofxTLAntescofoNote::autoscroll() {
 			if (z.max == 1. && z.span() < oldz.span())
 				z.min = z.max - oldz.max + oldz.min;
 
-			if (debug_guido) cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+			//if (debug_guido) 
+				cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
 			zoom->setViewRange(z);
 
 			lastpos = pos;
 
 			//guido_x = guido_w * z.center();
-			if (switches[mCurGuidoId]->guidoCoords.x < bounds.width/2) { // before scrolling
-				guido_x = bounds.x;
-				scrolled_guido_x = switches[mCurGuidoId]->guidoCoords.x;
-			} else if (switches[mCurGuidoId]->guidoCoords.x > guido_w - bounds.width/2) { // stop scrolling at the end
-				//scrolled_guido_x = bounds.x + bounds.width/2;
-				scrolled_guido_x = bounds.width/2 + ((int)switches[mCurGuidoId]->guidoCoords.x % (int)bounds.width);
-				//guido_x = guido_w - bounds.width/2;
-			} else { // normal scrolling
-				//guido_x = - (switches[mCurGuidoId]->guidoCoords.x + bounds.x) + bounds.width/2;
-				//guido_x = guido_w - z.center();
-				scrolled_guido_x = bounds.width / 2; //(int)floor(guido_x) % (int)floor(bounds.width);
-			}
+			//WAS guido_x = bounds.x + (zoomBounds.min * guido_w);
 			scrolled_guido_w = switches[mCurGuidoId]->guidoCoords.width;
+			if (switches[mCurGuidoId]->guidoCoords.x < bounds.width/2) { // before scrolling
+				scrolled_guido_x = switches[mCurGuidoId]->guidoCoords.x;
+				guido_x = bounds.x;
+			} else if (switches[mCurGuidoId]->guidoCoords.x > guido_w - bounds.width/2) { // stop scrolling at the end
+				scrolled_guido_x = bounds.width/2 + ((int)switches[mCurGuidoId]->guidoCoords.x % (int)bounds.width);
+				guido_x = guido_w - bounds.width/2;
+			} else { // normal scrolling
+				scrolled_guido_x = bounds.width / 2;
+				guido_x = bounds.width/2 + switches[mCurGuidoId]->guidoCoords.x + bounds.x - scrolled_guido_w;
+			}
+			cout << "mCurGuidoId = " << mCurGuidoId << "  scrolled_guido_x = " << scrolled_guido_x << "  scrolled_guido_w = " << scrolled_guido_w <<  endl ;
+			if (scrolled_guido_w < 0) {
+				cout << "!!!!!!!!!!!!!!!!!!!!!!!" << "!!!!!!!!!!!!!!!!!!!!!!!!" << "!!!!!!!!!!!!!!!!!!!!!!!  ====================> " << endl; 
+				cout << "scrolled_guido_w = " << scrolled_guido_w << " mCurGuidoId = " << mCurGuidoId << endl ;
+				cout << "!!!!!!!!!!!!!!!!!!!!!!!" << "!!!!!!!!!!!!!!!!!!!!!!!!" << "!!!!!!!!!!!!!!!!!!!!!!!  ====================> " << endl; 
+			}
 
 
 			mAntescofog->shouldRedraw();
@@ -1223,7 +1229,7 @@ void ofxTLAntescofoNote::update_guido() {
 			//guido_x = bounds.x + scrolled_guido_x - bounds.width / 2;
 			//guido_y = bounds.y;
 			// WAS guido_x = bounds.x - (zoomBounds.min * guido_w);
-			guido_x = bounds.x + (zoomBounds.min * guido_w);
+			//guido_x = bounds.x + (zoomBounds.min * guido_w);
 
 			break;
 		}
@@ -1253,7 +1259,7 @@ void ofxTLAntescofoNote::draw_playhead() {
 			ofSetColor(51, 51, 255, 75);
 			ofSetLineWidth(1);
 
-			int x = scrolled_guido_x - scrolled_guido_w/2;
+			int x = scrolled_guido_x - scrolled_guido_w/2 + bounds.x;
 			int y = guido_y + 6;
 			int w = scrolled_guido_w;
 			int h = bounds.height - 6*2;
@@ -1948,6 +1954,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 			for (vector< vector<float> >::iterator t = e->TrillMap.begin(); t != e->TrillMap.end(); t++) {
 				for (vector<float>::iterator r = t->begin(); r != t->end(); r++) {
+					if (!*r) continue;
 					ofxTLAntescofoNoteOn *newSwitch = new ofxTLAntescofoNoteOn();
 					newSwitch->type = ANTESCOFO_TRILL;
 					newSwitch->startSelected = newSwitch->endSelected = false;

@@ -176,7 +176,7 @@ void GuidoComponent::draw (int x, int y, int w, int h)
 {
 	if (!fGRHandler) return;
 
-    cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
+    //cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
     
 	ofSetColor(fScoreColor);
 	GuidoOnDrawDesc desc;

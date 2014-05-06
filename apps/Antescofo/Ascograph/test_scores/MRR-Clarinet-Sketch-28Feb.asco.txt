@@ -23,6 +23,7 @@ NOTE A3 1/2
 NOTE 0 1/4
 NOTE F#3 1/4
 
+
 ; ----------- measure 3 --- beat 6
 NOTE 0 2/3 measure3
 NOTE F3 0
@@ -51,6 +52,7 @@ NOTE 0 1/2
 NOTE 0 1/2
 NOTE A4 0
 TRILL ( A#3 ) 1/2
+
 
 ; ----------- measure 6 --- beat 14
 NOTE 0 1/2 measure6
@@ -81,6 +83,7 @@ TRILL ( D#6 ) 1/4
 TRILL ( D6 ) 1/4
 TRILL ( E6 ) 1/4
 
+/*
 ; ----------- measure 8 --- beat 20
 NOTE D6 1/7 measure8
 NOTE E6 1/7
@@ -180,7 +183,7 @@ TRILL ( G#5 ) 1/6
 TRILL ( F5 ) 1/2
 TRILL ( G#5 ) 1/2
 
-/*
+
 ; ----------- measure 18 --- beat 45
 NOTE 0 1/4 measure18
 NOTE E5 1/4

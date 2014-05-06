@@ -247,14 +247,14 @@ bool openFrameworksDevice::CopyPixels( int /*xDest*/, int /*yDest*/, int /*dstWi
 // - Coordinate services ------------------------------------------------
 void openFrameworksDevice::SetOrigin( float x, float y )	
 { 
-	cout << "openFrameworksDevice::SetOrigin:" << x << " " << y << endl;
+	//cout << "openFrameworksDevice::SetOrigin:" << x << " " << y << endl;
 	ofTranslate(x-fXOrigin, y-fYOrigin);
 	ofTranslate(x, y);
 	fXOrigin = x; fYOrigin = y; 
 }
 void openFrameworksDevice::OffsetOrigin( float x, float y )
 { 
-	cout << "openFrameworksDevice::OffsetOrigin" << x << " " << y <<  endl;
+	//cout << "openFrameworksDevice::OffsetOrigin" << x << " " << y <<  endl;
 	ofTranslate(x, y);
 	fXOrigin += x; fYOrigin += y; 
 }
@@ -276,7 +276,7 @@ void openFrameworksDevice::DeviceToLogical( float * x, float * y ) const
 
 void openFrameworksDevice::SetScale( float x, float y )	
 { 
-	cout << "openFrameworksDevice::SetScale " << x << " " << y << endl;
+	//cout << "openFrameworksDevice::SetScale " << x << " " << y << endl;
 	ofScale(x, y);
 	fXScale = x;
 	fYScale = y;
