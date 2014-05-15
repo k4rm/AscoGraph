@@ -104,7 +104,7 @@ void ofxTLAntescofoAction::draw()
 		ofLine(mRectCross.x+mRectCross.width, mRectCross.y, mRectCross.x, mRectCross.y+mRectCross.height);
 
 		// draw antescofo header tracks
-		if (enable_tracks) draw_antescofo_tracks_header();
+		if (enable_tracks && TrackDefinition::idx2track.size()) draw_antescofo_tracks_header();
 
 		update_groups();
 		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {

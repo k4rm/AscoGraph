@@ -178,18 +178,24 @@ void GuidoComponent::draw (int x, int y, int w, int h)
 
     //cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
     
+	setWidth(w);
+	setHeight(h);
+
+
+	int xx = x / getDevice()->GetXScale();
+	//cout << ">>>>>>>>>>>>>>>>>>>>> x="<< x << " SCALE=" << getDevice()->GetXScale() << " xx=" << xx << endl;
 	ofSetColor(fScoreColor);
 	GuidoOnDrawDesc desc;
 	desc.handle = fGRHandler;
 	desc.hdc = &gDevice;
 	desc.page = fPage;
-	desc.scrollx = x;
+	desc.scrollx = xx;
 	desc.scrolly = 0;
 	desc.isprint = false;
-	desc.updateRegion.left = x;
+	desc.updateRegion.left = xx;
 	desc.updateRegion.top = y;
-	desc.updateRegion.right = w;
-	desc.updateRegion.bottom = h;
+	desc.updateRegion.right = w+xx;
+	desc.updateRegion.bottom = h+y;
 	desc.updateRegion.erase = true;
 	desc.sizex = w;
 	desc.sizey = h;

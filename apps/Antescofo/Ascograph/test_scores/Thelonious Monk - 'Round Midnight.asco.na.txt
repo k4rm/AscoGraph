@@ -25,11 +25,11 @@
 ; Transferred from NoteAbilityPro score: Untitled-3
 ; Date: 2012 11 19 12:24:24 GMT+01:00
 ;
-BPM 120.00
+BPM 80.00
 
 ; ---------- measure 1 beat 0.00 ---------
 
-NOTE 0 1/1
+;NOTE 0 1/1
 NOTE 5800 1/4
 NOTE 6300 1/4
 NOTE 6500 1/4

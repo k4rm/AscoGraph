@@ -41,8 +41,10 @@ openFrameworksFont::openFrameworksFont(const char * faceName, int size, int prop
 	if (font == "Times New Roman") // for an obscure reason, the text facename lack file extension
 		font += ".ttf";
 	cout << "Guido::openFrameworksFont loading " << font << endl;
-	if (!fNativeFont->loadFont(font, float(size * scale)))
+
+	if (!fNativeFont->loadFont(font, float(size * scale), true, true, true))
 		cerr << "Error: can not load font : " << font << endl;
+	fNativeFont->setEncoding(OF_ENCODING_ISO_8859_15);
 	fName = font;
 }
 

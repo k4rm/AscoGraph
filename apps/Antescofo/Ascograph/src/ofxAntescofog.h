@@ -233,7 +233,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		int score_line_space;
 
 		int bpm;
-		bool bSnapToGrid, bAutoScroll, bSetupDone, bLineWrapMode, bScoreFromCommandLine;
+		bool bSnapToGrid, bAutoScroll, bSetupDone, bLineWrapMode, bScoreFromCommandLine, bShowActions;
 		string tmpfilename; // file to store converted MusicXML file to Antescofo score
 		string mScore_filename;
 
@@ -245,7 +245,7 @@ class ofxAntescofog : public ofxNSWindowApp
 #endif
 
 		// UI
-		id mCuesMenuItem, mCuesMenu;
+		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem;
 		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC, *guiElevator;
 		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;

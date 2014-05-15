@@ -142,6 +142,12 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);//bool snapped);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 
+#if 0
+	virtual void zoomStarted(ofxTLZoomEventArgs& zoomEvent);
+	virtual void zoomDragged(ofxTLZoomEventArgs& zoomEvent);
+	virtual void zoomEnded(ofxTLZoomEventArgs& zoomEvent);
+#endif
+
 	virtual void keyPressed(ofKeyEventArgs& args);
 
 	virtual void nudgeBy(ofVec2f nudgePercent);
@@ -268,6 +274,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	void trimRange();
 	bool activeNotes[127];
 	int pitchForScreenY(int y);
+	bool bMousePressed;
 
 	string getXMLStringForSwitches(bool selectedOnly);
 	vector<ofxTLAntescofoNoteOn*> switchesFromXML(ofxXmlSettings xml);
@@ -312,8 +319,10 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	int guido_x, guido_y, guido_w, guido_h; // abs coord
 	int scrolled_guido_x, scrolled_guido_y, scrolled_guido_w; // in bounds coord
 	float guido_span;
-	int mCurGuidoId;
+	int mCurGuidoId, mCurSwitchId;
+	float mRatioGuido;
 	map<float, int> beat2switchId;
+	map<int, int> switchId2guidoId;
 #endif
 
 	bool bShowPianoRoll;

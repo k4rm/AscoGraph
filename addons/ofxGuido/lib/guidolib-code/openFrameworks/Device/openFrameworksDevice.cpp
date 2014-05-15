@@ -336,12 +336,14 @@ const VGFont *	openFrameworksDevice::GetTextFont() const			{ return fTextFont; }
 // - Text and music symbols services -------------------------------------
 void openFrameworksDevice::DrawMusicSymbol(float x, float y, unsigned int inSymbolID ) 
 {
+	//cout << "openFrameworksDevice::DrawMusicSymbol: " << x << ", " << y << " id=" << inSymbolID << endl;
 	string text;
 	text += wchar_t(inSymbolID);
 
 	ofSetColor(Color2ofColor(fFontColor));
 	ofTrueTypeFont* f = (ofTrueTypeFont*)(&static_cast<const openFrameworksFont*>(fCurrentFont)->NativeFont());
-	f->drawString (text, int(x), int(y));
+	f->drawStringAsShapes (text, int(x), int(y));
+	//f->drawString (text, int(x), int(y));
 	ofSetColor( Color2ofColor(fFillColor));
 }
 

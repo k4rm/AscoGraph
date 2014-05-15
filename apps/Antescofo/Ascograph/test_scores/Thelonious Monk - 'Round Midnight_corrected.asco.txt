@@ -3,7 +3,8 @@
 BPM 120
 
 ; ----------- measure 1 --- beat 1 ------
-NOTE 0 1 measure1
+;NOTE 0 1 measure1
+
 NOTE 5800 1/4
 NOTE 6300 1/4
 NOTE 6500 1/4

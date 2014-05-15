@@ -55,6 +55,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bShouldRedraw = true;
 	bLineWrapMode = true;
 	bIsSimulating = false;
+	bShowActions = true;
 	bScoreFromCommandLine = false;
 	ofxJumpTrack = 0;
 	audioTrack = NULL;
@@ -168,8 +169,10 @@ void ofxAntescofog::menu_item_hit(int n)
 		case INT_CONSTANT_BUTTON_SHOWHIDE_ACTION:
 			if (ofxAntescofoNote->getActionTrack()) {
 				ofxAntescofoNote->deleteActionTrack();
+				[mShowhideActiontrackMenuItem setState:NSOffState];
 			} else {
 				ofxAntescofoNote->createActionTrack();
+				[mShowhideActiontrackMenuItem setState:NSOnState];
 				loadScore(mScore_filename, false);
 			}
 			break;
@@ -178,16 +181,19 @@ void ofxAntescofog::menu_item_hit(int n)
 			cout << "Setting SnapToGrid to : " << bSnapToGrid << endl;
 			timeline.setShowBPMGrid(bSnapToGrid);
 			timeline.enableSnapToBPM(bSnapToGrid);
+			[mSnapMenuItem setState:(bSnapToGrid ? NSOnState : NSOffState)];
 			break;
 		case INT_CONSTANT_BUTTON_AUTOSCROLL:
 			bAutoScroll = !bAutoScroll;
 			cout << "Setting autoscroll mode:" << bAutoScroll << endl; 
 			ofxAntescofoNote->setAutoScroll(bAutoScroll);
+			[mAutoscrollMenuItem setState:(bAutoScroll ? NSOnState : NSOffState)];
 			break;
 		case INT_CONSTANT_BUTTON_LINEWRAP:
 			bLineWrapMode = !bLineWrapMode;
 			cout << "Setting line wrapping mode:" << bLineWrapMode << endl; 
 			[ editor setWrapMode:bLineWrapMode ];
+			[mLineWrapModeMenuItem setState:(bLineWrapMode ? NSOnState : NSOffState)];
 			break;
 		case INT_CONSTANT_BUTTON_AUTOCOMPLETE:
 			cout << "Autocompletion key pressed." << endl;
@@ -619,28 +625,35 @@ void ofxAntescofog::setupUI() {
 	[toggleFullEditorMenuItem setTag:INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR];
 	[viewMenu addItem:toggleFullEditorMenuItem];
 	// . show/hide action track
-	id showhideActiontrackMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle actions track display" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-	[showhideActiontrackMenuItem setTag:INT_CONSTANT_BUTTON_SHOWHIDE_ACTION];
-	[viewMenu addItem:showhideActiontrackMenuItem];
+	mShowhideActiontrackMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle actions track display" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[mShowhideActiontrackMenuItem setTag:INT_CONSTANT_BUTTON_SHOWHIDE_ACTION];
+	[mShowhideActiontrackMenuItem setState:NSOnState];
+
+	[viewMenu addItem:mShowhideActiontrackMenuItem];
 	// . snap grid
-	id snapMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Snap to grid" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-	[snapMenuItem setTag:INT_CONSTANT_BUTTON_SNAP];
-	[viewMenu addItem:snapMenuItem];
+	mSnapMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Snap to grid" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[mSnapMenuItem setTag:INT_CONSTANT_BUTTON_SNAP];
+	[mSnapMenuItem setState:NSOnState];
+	[viewMenu addItem:mSnapMenuItem];
 	// . autoscroll
-	id autoscrollMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Automatic Scroll" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-	[autoscrollMenuItem setTag:INT_CONSTANT_BUTTON_AUTOSCROLL];
-	[viewMenu addItem:autoscrollMenuItem];
+	mAutoscrollMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Automatic Scroll" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[mAutoscrollMenuItem setTag:INT_CONSTANT_BUTTON_AUTOSCROLL];
+	[mAutoscrollMenuItem setState:NSOnState];
+	[viewMenu addItem:mAutoscrollMenuItem];
 	// line wrap mode
-	id lineWrapModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Line Wrapping" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
-	[lineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
-	[viewMenu addItem:lineWrapModeMenuItem];
+	mLineWrapModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Toggle Line Wrapping" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[mLineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
+	[mLineWrapModeMenuItem setState:NSOnState];
+	[viewMenu addItem:mLineWrapModeMenuItem];
 	// open all curves
 	id openAllCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Open all curves" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[openAllCurvesMenuItem setTag:INT_CONSTANT_BUTTON_OPEN_ALL_CURVES];
+	[openAllCurvesMenuItem setState:NSOffState];
 	[viewMenu addItem:openAllCurvesMenuItem];
 	// open all groups
 	id openAllGroupsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Open all groups" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[openAllGroupsMenuItem setTag:INT_CONSTANT_BUTTON_OPEN_ALL_GROUPS];
+	[openAllGroupsMenuItem setState:NSOffState];
 	[viewMenu addItem:openAllGroupsMenuItem];
 	// close all curves
 	id closeAllCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Close all curves" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
@@ -1230,6 +1243,7 @@ void ofxAntescofog::draw() {
 		if (bMayUseCache && !timeline.getIsPlaying() && !bShouldRedraw) {
 			drawCache.draw(0, 0);
 		} else {
+			//cout << "-------------------- ofxAntescofog::draw() redrawing!" << endl;
 			ofSetColor(255, 255, 255, 255);
 			drawCache.begin();
 			ofClear(255,255,255, 0);
@@ -1761,7 +1775,7 @@ void ofxAntescofog::mouseMoved( int x, int y){
 void ofxAntescofog::mousePressed( int x, int y, int button ) {
 	cout << "mouse: " << x << " : " << y << endl;
 	//if (args.button == 3) { }
-	bShouldRedraw = true;
+	//bShouldRedraw = true;
     //cout << "Fog : mousePressed r:"<< mEditorRect.x << ","<< mEditorRect.y << ","<< mEditorRect.width << "," << mEditorRect.height <<" inside:"<< mEditorRect.inside(x, y) << endl;
 }
 
@@ -1790,13 +1804,13 @@ void ofxAntescofog::mouseDragged( int x, int y, int button ){
 		score_y = ny;
 	}
 
-	bShouldRedraw = true;
+	//bShouldRedraw = true;
 }
 
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseReleased( int x, int y, int button ){
-	bShouldRedraw = true;
+	//bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------
