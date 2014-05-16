@@ -44,7 +44,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bAutoScroll = true;
 	bColorSetupInitDone = false;
 	bFindTextInitDone = false;
-	bOSCSetupInitDone = false;
+	bOSCSetupInitDone = bLockAscoGraph = false;
 	bShowError = false;
 	bShowFind = false;
 	bErrorInitDone = false;
@@ -198,6 +198,12 @@ void ofxAntescofog::menu_item_hit(int n)
 		case INT_CONSTANT_BUTTON_AUTOCOMPLETE:
 			cout << "Autocompletion key pressed." << endl;
 			[ editor autocomplete];
+			break;
+		case INT_CONSTANT_BUTTON_LOCK:
+			cout << "Locking AscoGraph." << endl;
+			bLockAscoGraph = !bLockAscoGraph;
+			[editor setEditable:!bLockAscoGraph];
+			[mLockMenuItem setState:(bLockAscoGraph ? NSOnState : NSOffState)];
 			break;
 		case INT_CONSTANT_BUTTON_FIND:
 			cout << "Setting find text mode" << endl; 
@@ -513,9 +519,14 @@ void ofxAntescofog::setupUI() {
 	[autocompleteMenuItem setTag:INT_CONSTANT_BUTTON_AUTOCOMPLETE];
 	autocompleteMenuItem.keyEquivalentModifierMask = NSControlKeyMask;
 	[editMenu addItem:autocompleteMenuItem];
+
+	// . lock
+	mLockMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Lock AscoGraph" action:@selector(menu_item_hit:) keyEquivalent:@"K"] autorelease];
+	[mLockMenuItem setTag:INT_CONSTANT_BUTTON_LOCK];
+	[mLockMenuItem setState:NSOffState];
+	[editMenu addItem:mLockMenuItem];
 	[editMenuItem setSubmenu:editMenu];
 	[menubar addItem:editMenuItem];
-
 
 	//////////////////
 	// Create
@@ -1732,7 +1743,8 @@ void ofxAntescofog::draw_FindText() {
 
 //--------------------------------------------------------------
 void ofxAntescofog::keyPressed(int key){
-    // space key is cancel on error window
+    if (bLockAscoGraph)
+	    return;
 
     if(0 && key == ' ') {
 	    if (bShowError) {
@@ -1775,7 +1787,7 @@ void ofxAntescofog::mouseMoved( int x, int y){
 void ofxAntescofog::mousePressed( int x, int y, int button ) {
 	cout << "mouse: " << x << " : " << y << endl;
 	//if (args.button == 3) { }
-	//bShouldRedraw = true;
+	bShouldRedraw = true;
     //cout << "Fog : mousePressed r:"<< mEditorRect.x << ","<< mEditorRect.y << ","<< mEditorRect.width << "," << mEditorRect.height <<" inside:"<< mEditorRect.inside(x, y) << endl;
 }
 
@@ -1804,13 +1816,13 @@ void ofxAntescofog::mouseDragged( int x, int y, int button ){
 		score_y = ny;
 	}
 
-	//bShouldRedraw = true;
+	bShouldRedraw = true;
 }
 
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseReleased( int x, int y, int button ){
-	//bShouldRedraw = true;
+	bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------

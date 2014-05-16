@@ -50,6 +50,7 @@
 - (void) clear;
 - (void) undo;
 - (void) redo;
+- (void) setEditable: (bool) ed; 
 - (int) getNbLines;
 - (int) getLenght;
 - (string) getSelection;

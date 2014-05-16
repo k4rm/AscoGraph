@@ -63,6 +63,7 @@
 #define INT_CONSTANT_BUTTON_GET_PATCH_RECEIVERS 40
 #define INT_CONSTANT_BUTTON_AUTOCOMPLETE	41
 #define INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR	42
+#define INT_CONSTANT_BUTTON_LOCK		43
 #define INT_CONSTANT_BUTTON_CUES_INDEX  	300
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
@@ -245,7 +246,7 @@ class ofxAntescofog : public ofxNSWindowApp
 #endif
 
 		// UI
-		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem;
+		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem, mLockMenuItem;
 		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC, *guiElevator;
 		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;
@@ -257,7 +258,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void guiEvent(ofxUIEventArgs &e);
 		ofxUIDropDownList *mUImenu;
 		ofFbo	drawCache;
-		bool bShouldRedraw;
+		bool bShouldRedraw, bLockAscoGraph;
 		//ofRectangle logoInria;
 		ofImage mLogoInria, mLogoIrcam;
 		vector<string> cuepoints;

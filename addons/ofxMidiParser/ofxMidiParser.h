@@ -11,8 +11,10 @@ typedef enum tagMidiTimeFormat
 
 class Notes {
 	public:
-		Notes(vector<int>& pitchList_, float dur_) : pitchList(pitchList_), dur(dur_) {}
-		Notes(vector<int>& pitchList_, vector<int>& linkedPitchList_, float dur_) : pitchList(pitchList_), linkedPitchList(linkedPitchList_), dur(dur_) {}
+		Notes(vector<int>& pitchList_, float dur_, float bpm, float timestamp) 
+			: pitchList(pitchList_), dur(dur_), tempo(bpm), offset(timestamp) {}
+		Notes(vector<int>& pitchList_, vector<int>& linkedPitchList_, float dur_, float bpm, float timestamp)
+			: pitchList(pitchList_), linkedPitchList(linkedPitchList_), dur(dur_), tempo(bpm), offset(timestamp) {}
 		vector<int> pitchList;
 		vector<int> linkedPitchList;
 		float dur;

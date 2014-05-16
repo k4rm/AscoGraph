@@ -360,6 +360,8 @@ using namespace std;
         // Try to parse tracks
 	map<int, long> noteson;
 	vector<Notes*> antescofo_notes;
+	vector< pair<float, float> > tempi; // (timestamp, bpm)
+	bool debug_ = false;
 
         UInt32 expectedTrackOffset = offset;
         for(UInt16 track = 0; track < trackCount; track++)
@@ -451,8 +453,11 @@ using namespace std;
                         case META_SET_TEMPO:
 			{
                             [self readMetaSetTempo];
-			    NSString *s = [NSString stringWithFormat:@"BPM %u\n\n", (unsigned int)bpm];
-			    [out appendString:s];
+			    [self.log appendFormat:@"-------------- Adding BPM: %04d : %04d\n", (unsigned int)timestamp, (unsigned int) bpm];
+			    tempi.push_back(make_pair(timestamp, bpm));
+			    //if (antescofo_notes.size()) (antescofo_notes.back())->tempo = (unsigned int)bpm;
+			    //NSString *s = [NSString stringWithFormat:@"BPM %u\n\n", (unsigned int)bpm];
+			    //[out appendString:s];
                             break;
 			}
                         case META_SMPTE_OFFSET:
@@ -496,7 +501,6 @@ using namespace std;
 		    int curPitch;
 		    float delay_i;
                     NSString *delay, *duration, *s;
-		    bool debug_ = true;
 		    bool already_read_params = false;
 
                     switch (eventType)
@@ -517,7 +521,7 @@ using namespace std;
 					    if (noteson.empty()) {
 						    pitchList.push_back(0);
 						    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding REST note dur=%f\n", delay_i];
-						    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+						    antescofo_notes.push_back(new Notes(pitchList, delay_i, bpm, timestamp));
 						    if (debug_) [ self print_notes:antescofo_notes];
 						    pitchList.clear();
 					    } else { // if we were already in a note/chord, add current chord
@@ -531,8 +535,8 @@ using namespace std;
 
 							    pitchList.push_back(p);
 						    }
-						    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n", delay_i];
-						    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+						    if (debug_) [self.log appendFormat:@"---> NOTE ON : adding CHORD(or NOTE) dur=%.4f\n bpm=%.4u ts=%.4u", delay_i, (unsigned int)bpm, (unsigned int)timestamp];
+						    antescofo_notes.push_back(new Notes(pitchList, delay_i, bpm, timestamp));
 						    if (debug_) [ self print_notes:antescofo_notes];
 						    pitchList.clear();
 					    }
@@ -580,7 +584,7 @@ using namespace std;
 						    if(it->first != curPitch) it->second = - abs(it->second);
 					    }
 					    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding CHORD dur=%d\n", (unsigned int)deltaTime];
-					    if (pitchList.size()) antescofo_notes.push_back(new Notes(pitchList, deltaTime)); //chordDur));
+					    if (pitchList.size()) antescofo_notes.push_back(new Notes(pitchList, deltaTime, bpm, timestamp)); //chordDur));
 					    if (debug_) [ self print_notes:antescofo_notes];
 	//				    }
 				    } else { // get last antescofo_notes, and add to pitchList
@@ -598,7 +602,7 @@ using namespace std;
 				    delay_i = timestamp - abs(noteson[curPitch]);// [self getBeatDuration_float:deltaTime resolution:ticksPerBeat];
 				    if (debug_) [self.log appendFormat:@"---> NOTE OFF : adding NOTE(%d) dur=%.4f :noteson:%ld\n", curPitch, delay_i, noteson[curPitch]];
 				    if (noteson[curPitch] < 0.) { pitchList.clear(); pitchList.push_back(- curPitch); }
-				    antescofo_notes.push_back(new Notes(pitchList, delay_i));
+				    antescofo_notes.push_back(new Notes(pitchList, delay_i, bpm, timestamp));
 				    if (debug_) [ self print_notes:antescofo_notes];
 			    }
 
@@ -667,10 +671,19 @@ using namespace std;
 		}
 	}*/
 
+
+	if (debug_)
+		for (int j = 0; j < tempi.size(); j++)
+			[self.log appendFormat:@"tempi : %f -> %f\n", tempi[j].first, tempi[j].second];
 	// dump antescofo notes
 	stringstream ret;
-	float d = 0.;
+	float d = 0., bpm_ = 0., lastbpm = 0.;
 	vector<int> curPitches;
+	// handle 1st BPM
+	if (tempi.size() && tempi[0].first == 0 && tempi[0].second) {
+		lastbpm = bpm_ = tempi[0].second;
+		ret << "BPM " << bpm_ << endl;
+	}
 	for (int i = 0; i < antescofo_notes.size(); i++) {
 		Notes* n = antescofo_notes[i];
 		// sort
@@ -679,6 +692,22 @@ using namespace std;
 		vector<int>::iterator u = std::unique(n->pitchList.begin(), n->pitchList.end(), myequal);
 		n->pitchList.resize(u - n->pitchList.begin());
 
+		// find bpm if any
+		float curtim = 0.;
+		for (int j = 1; j < tempi.size(); j++) {
+			if (debug_) [self.log appendFormat:@"comparing[%d:%d] %d and %f\n", i, j, (unsigned int)n->offset, tempi[j].first];
+			if (n->offset <= tempi[j].first && tempi[j].second) {
+				if (j) {
+					if (n->offset == tempi[j].first) bpm_ = tempi[j].second;
+					if (j+1 != tempi.size() && n->offset < tempi[j+1].first) bpm_ = tempi[j+1].second;
+					else bpm_ = 0;
+				} bpm_ = tempi[j].second;
+				if (debug_) [self.log appendFormat:@"GOT IT: %f\n", bpm_];
+				break;
+			}
+		}
+		if (bpm_ != lastbpm)
+			ret << "BPM " << bpm_ << endl;
 		if (n->pitchList.size() == 1) { // NOTE
 			d = [self getBeatDuration_float:n->dur resolution:ticksPerBeat];
 			if (d) {
@@ -698,6 +727,7 @@ using namespace std;
 			d = [self getBeatDuration_float:n->dur resolution:ticksPerBeat];
 			ret << d << endl;
 		}
+		lastbpm = bpm_;
 	}
 	[out appendString: [NSString stringWithCString:ret.str().c_str()
                                    encoding:[NSString defaultCStringEncoding]]];

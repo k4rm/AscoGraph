@@ -776,6 +776,10 @@ static const char * box_xpm[] = {
 	return [mEditor getGeneralProperty: SCI_GETLENGTH];
 }
 
+- (void) setEditable: (bool) ed
+{
+	[mEditor setEditable:ed];
+}
 
 - (void) getEditorContent: (string&) content
 {
