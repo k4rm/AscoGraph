@@ -738,7 +738,7 @@ static const char * box_xpm[] = {
 {
 	//[mEditor mBackend]->ScrollText(-1000); [mEditor mBackend]->ScrollText(linea);
 
-	cout << "ofxCodeEditor: showLine: " << linea << ":"<< cola << " -> " << lineb << ":"<< colb << endl;
+	//cout << "ofxCodeEditor: showLine: " << linea << ":"<< cola << " -> " << lineb << ":"<< colb << endl;
 	// line scroll ok
 	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:0];
 	[mEditor setGeneralProperty: SCI_LINESCROLL parameter:0 value:linea];

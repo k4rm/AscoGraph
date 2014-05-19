@@ -83,7 +83,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-bool debug_guido = true;
+//#define DEBUG_GUIDO_ASCOGRAPH 1
 
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -438,7 +438,9 @@ void ofxTLAntescofoNote::guido_store_notes() {
 
 	if (outmap.empty())
 		return;
-	if (debug_guido) cout << "GuidoGetSystemMap: size=" << outmap.size() << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "GuidoGetSystemMap: size=" << outmap.size() << endl;
+#endif
 
 	int v = 0;
 	for (int i = 0; i < switches.size(); i++) {
@@ -453,7 +455,9 @@ void ofxTLAntescofoNote::guido_store_notes() {
 		float w = outmap[v].second.right - x;
 		float h = outmap[v].second.bottom - y;
 
-		if (debug_guido) cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+#endif
 		switches[i]->guidoCoords.x = x;
 		switches[i]->guidoCoords.y = y;
 		switches[i]->guidoCoords.width = w;
@@ -487,9 +491,9 @@ void ofxTLAntescofoNote::update_guido_render() {
 
 bool ofxTLAntescofoNote::render_guido(float xfactor)
 {
-	if (debug_guido) cout << "render_guido : [[[[ " << xfactor << " ]]]]" << endl;
-
-	
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "render_guido : [[[[ " << xfactor << " ]]]]" << endl;
+#endif
 	int backingWidth, backingHeight;
 	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &backingWidth);
 	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &backingHeight);
@@ -500,9 +504,13 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	int starti = 0, endi = switches.size() - 1;
 
 	guido_string = getGuidoString(startX, starti, endX, endi);
-	if (debug_guido) cout << "Converted score to Guido code: \"" << guido_string<< "\"" << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "Converted score to Guido code: \"" << guido_string<< "\"" << endl;
+#endif
 	int err = oguido->compile_string(guido_string.c_str());
-	if (debug_guido) cout << "Guido returned err:" << err << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "Guido returned err:" << err << endl;
+#endif
 	if (!err) {
 		cerr << "Guido returned err:" << err << endl;
 		return false;
@@ -513,17 +521,21 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	oguido->setWidth(bounds.width);
 	oguido->setHeight(bounds.height);
 
-	if (debug_guido) cout << "bounds rect: " << bounds.width << " x "<< bounds.height << endl;
-	if (debug_guido) cout << "guido rect: " << oguido->getWidth() << " x "<< oguido->getHeight() << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "bounds rect: " << bounds.width << " x "<< bounds.height << endl;
+	cout << "guido rect: " << oguido->getWidth() << " x "<< oguido->getHeight() << endl;
+#endif
 	ofPushStyle();
 	ofSetColor(0,0,0, 255);
 
 	GuidoPageFormat format;
 	oguido->getPageFormat(format);
 
-	if (debug_guido) cout << "guido page rect: " << format.width << " x "<< format.height << endl;
 	mRatioGuido = (format.width / format.height);
-	if (debug_guido) cout << "page ratio: " << mRatioGuido << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "guido page rect: " << format.width << " x "<< format.height << endl;
+	cout << "page ratio: " << mRatioGuido << endl;
+#endif
 
 	float render_x = 0., render_y = 0.;
 	float render_h = bounds.height;
@@ -532,7 +544,9 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 
 	oguido->setSize(render_w, render_h);
 
-	if (debug_guido) cout << "Rendering Guido: " << render_x << ", " << render_y << " : " << render_w << " x " << render_h << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "Rendering Guido: " << render_x << ", " << render_y << " : " << render_w << " x " << render_h << endl;
+#endif
 	oguido->draw(render_x, render_y, render_w, render_h);
 	ofPopStyle();
 
@@ -577,7 +591,9 @@ void ofxTLAntescofoNote::draw_guido() {
 
 		//WAS guido_x = bounds.x - (zoomBounds.min * guido_w);
 		guido_y = bounds.y;
-		if (debug_guido) cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+		cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
+#endif
 		ofSetColor(0,0,0, 255);
 
 		GuidoPageFormat format;
@@ -710,7 +726,9 @@ void ofxTLAntescofoNote::add_string_staff(string &str1, string &str2, int staff,
 }
 
 string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi) {
-	if (debug_guido) cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
+#endif
 	string ret1 = "[ ", ret2 = ret1;
 	int pageFormat_w = mDur_in_beats * 1.3;// MIN(switches.size() / 8, 20); // TODO utiliser le maxbeat dur ?
 	if (!pageFormat_w) pageFormat_w = 20;
@@ -832,7 +850,9 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		//if (backtostaff1 && curStaff != 1) { add_string_staff(ret1, ret2, curStaff, "\\staff<1> "); backtostaff1 = false; curStaff = 1;}
 
 		switchId2guidoId[i] = guidoId-1;
-		if (debug_guido) cout << "################ Set switchId2guido["<<i<<"] = " << guidoId-1 << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+		cout << "################ Set switchId2guido["<<i<<"] = " << guidoId-1 << endl;
+#endif
 
 		// advance the other staffbeat position
 		if (i+1 == switches.size()) continue; // last elm, we're done
@@ -861,12 +881,18 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		bool shouldAddMissingForNextBeat = (switches[i+1]->beat.min > switches[i]->beat.min && ((nextnotestaf == 1 && bmax != staffbeat1.max) || (nextnotestaf == 2 && bmax != staffbeat2.max)));
 		// next note is on same beat, but silence is needed to be added on nextnotestaff
 		bool shouldAddMissingForSameBeat = (switches[i+1]->beat.min == switches[i]->beat.min && ((nextnotestaf == 1 && bmin > staffbeat1.min) || (nextnotestaf == 2 && bmin > staffbeat2.min)));
-		if (debug_guido) { if (shouldAddMissingForNextBeat) cout << "---------> shouldAddMissingForNextBeat" << endl;
-			if (shouldAddMissingForSameBeat) cout << "-------> shouldAddMissingForSameBeat" << endl; }
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+		if (shouldAddMissingForNextBeat) cout << "---------> shouldAddMissingForNextBeat" << endl;
+		if (shouldAddMissingForSameBeat) cout << "-------> shouldAddMissingForSameBeat" << endl;
+#endif
 
 		if (i < switches.size() && (shouldAddMissingForNextBeat || shouldAddMissingForSameBeat)) {
 
-			double dur = bmax - (nextnotestaf == 1 ? staffbeat1.max : staffbeat2.max);
+			double dur;
+			if (shouldAddMissingForNextBeat)
+				dur = bmax - (nextnotestaf == 1 ? staffbeat1.max : staffbeat2.max);
+			else if (shouldAddMissingForSameBeat)
+				dur = bmin - (nextnotestaf == 1 ? staffbeat1.min : staffbeat2.min);
 			rational rdur(0, 1);
 			for (int j = 1; j < 64; j++)
 			{
@@ -878,15 +904,16 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 					rdur = rational((int)(dnear), j);
 				}
 			}
-			rdur /= 4; // because of guido...
 			rdur.rationalise();
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+			cout << "------> Adding rest: " << rdur.toString() << endl;
+#endif
+			rdur /= 4; // because of guido...
 			string sdur = rdur.toString();
-			if (debug_guido) cout << "------> Adding rest: " << rdur.toString() << endl;
 			if (staffbeat2.max == 0.)
 			if (!twostaves) {
 				add_string_staff(ret1, ret2, nextnotestaf, "\\staff<2>\\clef<\"f\">\n");
 				twostaves = true;
-				//guidoId++;
 			}
 			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString() + " ");
 			//guidoId++;
@@ -1226,7 +1253,9 @@ void ofxTLAntescofoNote::autoscroll() {
 			ofRange z = zoom->getViewRange();
 			ofRange oldz = z;
 			z.max = z.min + bounds.width / guido_w;
-			if (debug_guido) cout << endl << "pos:"<< pos << " mCurBeat=" << mCurBeat << " mDur_in_beats=" << mDur_in_beats <<" got zoomrange: "<< z.min << "->"<< z.max;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+			cout << endl << "pos:"<< pos << " mCurBeat=" << mCurBeat << " mDur_in_beats=" << mDur_in_beats <<" got zoomrange: "<< z.min << "->"<< z.max;
+#endif
 			// continuous scrolling : keep playhead on center
 			float c = z.center(); 
 			float d = pos - c;
@@ -1237,24 +1266,30 @@ void ofxTLAntescofoNote::autoscroll() {
 			if (z.max == 1. && z.span() < oldz.span())
 				z.min = z.max - oldz.max + oldz.min;
 
-			if (debug_guido) cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+			cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
+#endif
+			zoom->setViewRange(z);
 #if 0
 			zoom->notifyZoomStarted();
-			zoom->setViewRange(z);
 			zoom->notifyZoomEnded();
 #endif
 
 			lastpos = pos;
+#if 0
 			cout << "switches[" << mCurSwitchId << "]->guidoCoords.x = " << switches[mCurSwitchId]->guidoCoords.x << endl;
 			cout << "switches[" << mCurSwitchId << "]->guidoCoords.y = " << switches[mCurSwitchId]->guidoCoords.y << endl;
 			cout << "switches[" << mCurSwitchId << "]->guidoCoords.w = " << switches[mCurSwitchId]->guidoCoords.width << endl;
 			cout << "switches[" << mCurSwitchId << "]->guidoCoords.h = " << switches[mCurSwitchId]->guidoCoords.height << endl;
+#endif
 
 			//guido_x = guido_w * z.center();
 			//WAS guido_x = bounds.x + (zoomBounds.min * guido_w);
 			scrolled_guido_w = switches[mCurSwitchId]->guidoCoords.width;
 			if (guido_w <= bounds.width || switches[mCurSwitchId]->guidoCoords.x <= bounds.width*2/3) { // before scrolling
+#ifdef DEBUG_GUIDO_ASCOGRAPH
 				cout << "BEGIN SCROLL" << endl;
+#endif
 				scrolled_guido_x = switches[mCurSwitchId]->guidoCoords.x + bounds.x - scrolled_guido_w/2;
 				guido_x = 0;
 			} /*else if (switches[mCurSwitchId]->guidoCoords.x > guido_w - bounds.width/3) { // stop scrolling at the end
@@ -1263,11 +1298,15 @@ void ofxTLAntescofoNote::autoscroll() {
 				scrolled_guido_x = bounds.width - guido_w + switches[mCurSwitchId]->guidoCoords.x - scrolled_guido_w - bounds.x;
 				guido_x = guido_w - bounds.width;
 			} */else { // normal scrolling
+#ifdef DEBUG_GUIDO_ASCOGRAPH
 				cout << "MID SCROLL" << endl;
+#endif
 				scrolled_guido_x = bounds.width / 2 - scrolled_guido_w/2 + bounds.x;
 				guido_x = switches[mCurSwitchId]->guidoCoords.x - bounds.width/2 - scrolled_guido_w;
 			}
-			if (debug_guido) cout << "mCurGuidoId = " << mCurGuidoId << "  scrolled_guido_x = " << scrolled_guido_x << "  scrolled_guido_w = " << scrolled_guido_w << " guido_x=" << guido_x <<  endl ;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+			 cout << "mCurGuidoId = " << mCurGuidoId << "  scrolled_guido_x = " << scrolled_guido_x << "  scrolled_guido_w = " << scrolled_guido_w << " guido_x=" << guido_x <<  endl ;
+#endif
 			if (scrolled_guido_w < 0) {
 				cout << "!!!!!!!!!!!!!!!!!!!!!!!" << "!!!!!!!!!!!!!!!!!!!!!!!!" << "!!!!!!!!!!!!!!!!!!!!!!!  ====================> " << endl; 
 				cout << "scrolled_guido_w = " << scrolled_guido_w << " mCurGuidoId = " << mCurGuidoId << endl ;
@@ -1297,7 +1336,7 @@ void ofxTLAntescofoNote::update_guido() {
 			//mCurGuidoId = i->second;
 			mCurSwitchId = i->second;
 			mCurGuidoId = switchId2guidoId[i->second];
-			cout << "Setting mCurGuidoId=" << mCurGuidoId << " with switchId = " << i->second << endl;
+			//cout << "Setting mCurGuidoId=" << mCurGuidoId << " with switchId = " << i->second << endl;
 
 			// draw at scrolled_guido_x
 
@@ -1339,7 +1378,7 @@ void ofxTLAntescofoNote::draw_playhead() {
 			int y = guido_y + 6;
 			int w = scrolled_guido_w;
 			int h = bounds.height - 6*2;
-			cout << "ofxTLAntescofoNote::draw_playhead: " << mCurBeat << "= switch #" << mCurGuidoId <<" drawing rect: " << x << ", " << y << " : " << w << " x " << h<< endl;
+			//cout << "ofxTLAntescofoNote::draw_playhead: " << mCurBeat << "= switch #" << mCurGuidoId <<" drawing rect: " << x << ", " << y << " : " << w << " x " << h<< endl;
 			roundedRect(x, y, w, h, 5);
 			ofSetColor(51, 51, 255, 175);
 			ofNoFill();

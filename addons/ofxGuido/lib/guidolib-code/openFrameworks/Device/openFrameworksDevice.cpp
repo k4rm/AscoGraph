@@ -58,41 +58,52 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 	cout << "openFrameworksDevice: allocating FBO: " << fWidth << "x" << fHeight << endl;
 	ofClear(255,255,255, 0);
 	glClearColor( 0.0, 0.0, 0.0, 0.0 );
-#ifndef ASCOGRAPH_IOS
+#if 0
 	glClear (GL_COLOR_BUFFER_BIT);
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable( GL_DEPTH_TEST );
 	glEnable(GL_MULTISAMPLE_ARB);
 	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
-#else	
+#endif
+
     int w, h;
+    ofFbo::Settings settings;
+#ifdef ASCOGRAPH_IOS
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &w);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &h);
-    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
-    
-    //fWidth = w;
-    //fHeight = h;
-    ofFbo::Settings settings;
-    settings.width = h; //w;
-    settings.height = w; //h;
-    settings.internalformat = GL_RGBA;
+
+    fWidth = h;
+    fHeight = w;
+    settings.width = h;
+    settings.height = w;
     settings.numSamples = 0;
+#else
+    glClear (GL_COLOR_BUFFER_BIT);
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable( GL_DEPTH_TEST );
+    glEnable(GL_MULTISAMPLE_ARB);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &w);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &h);
+
+    fWidth = w;
+    fHeight = h;
+    settings.width = w;
+    settings.height = h;
+    settings.numSamples = 8;
+#endif
+    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
+
+    settings.internalformat = GL_RGBA;
     settings.useDepth = false;
     settings.useStencil = false;
-    //drawCache = new ofFbo();
+ 
     drawCache.allocate(settings);
-    //drawCache.allocate(fWidth, fHeight, GL_RGBA);
-    //glGenFramebuffersEXT(1, &fbo); // 1==numbers of fbo to create
-    //glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-   /* glGenFramebuffersOES(1, &fbo); // 1==numbers of fbo to create
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
-    */
 
-#endif
-	drawCache.begin();
-	ofClear(255,255,255, 0);
-	drawCache.end();
+    drawCache.begin();
+    ofClear(255,255,255, 0);
+    drawCache.end();
 }
 
 // --------------------------------------------------------------
@@ -288,28 +299,40 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
 	fWidth = width; fHeight = height;
 
 	cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
-#ifndef ASCOGRAPH_IOS
-	drawCache.allocate(fWidth, fHeight, GL_RGBA, 8);
-#else
     int w, h;
+    ofFbo::Settings settings;
+#ifdef ASCOGRAPH_IOS
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &w);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &h);
-    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
-    //fWidth = w;
-    //fHeight = h;
-    ofFbo::Settings settings;
-    settings.width = h; //w;
-    settings.height = w; //h;
-    settings.internalformat = GL_RGBA;
+    fWidth = h;
+    fHeight = w;
+    settings.width = h;
+    settings.height = w;
     settings.numSamples = 0;
+#else
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &w);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &h);
+    fWidth = w;
+    fHeight = h;
+    settings.width = w;
+    settings.height = h;
+    glClear (GL_COLOR_BUFFER_BIT);
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable( GL_DEPTH_TEST );
+    glEnable(GL_MULTISAMPLE_ARB);
+    settings.numSamples = 8;
+#endif
+    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
+    settings.internalformat = GL_RGBA;
     settings.useDepth = false;
     settings.useStencil = false;
+
     drawCache.allocate(settings);
-#endif
-    
-	drawCache.begin();
-	ofClear(255,255,255, 0);
-	drawCache.end();
+
+    drawCache.begin();
+    ofClear(255,255,255, 0);
+    drawCache.end();
 }
 int openFrameworksDevice::GetWidth() const				{ return fWidth; }
 int openFrameworksDevice::GetHeight() const				{ return fHeight; }
