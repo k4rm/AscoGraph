@@ -55,7 +55,6 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
 	fWidth = width_;
 	fHeight = height_;
 
-	cout << "openFrameworksDevice: allocating FBO: " << fWidth << "x" << fHeight << endl;
 	ofClear(255,255,255, 0);
 	glClearColor( 0.0, 0.0, 0.0, 0.0 );
 #if 0
@@ -93,7 +92,9 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
     settings.height = h;
     settings.numSamples = 8;
 #endif
+
     cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
+    cout << "openFrameworksDevice: allocating FBO: " << fWidth << "x" << fHeight << endl;
 
     settings.internalformat = GL_RGBA;
     settings.useDepth = false;
@@ -298,7 +299,6 @@ float openFrameworksDevice::GetYScale() const				{ return fYScale; }
 void openFrameworksDevice::NotifySize( int width, int height ) { 
 	fWidth = width; fHeight = height;
 
-	cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
     int w, h;
     ofFbo::Settings settings;
 #ifdef ASCOGRAPH_IOS
@@ -324,6 +324,7 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
     settings.numSamples = 8;
 #endif
     cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
+    cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
     settings.internalformat = GL_RGBA;
     settings.useDepth = false;
     settings.useStencil = false;

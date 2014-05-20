@@ -1205,7 +1205,7 @@ void ofxTLAntescofoAction::show_all_groups_rec(bool bJustCurves, ActionGroup* gf
 		ActionGroup* g = *i;
 		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g)) {
 			g->hidden = false;
-			continue;
+			//continue;
 		}
 		show_all_groups_rec(bJustCurves, g);
 	}
@@ -1234,7 +1234,7 @@ void ofxTLAntescofoAction::hide_all_groups_rec(bool bJustCurves, ActionGroup* gf
 		ActionGroup* g = *i;
 		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g)) {
 			g->hidden = true;
-			continue;
+			//continue;
 		}
 		hide_all_groups_rec(bJustCurves, g);
 	}

@@ -83,7 +83,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-//#define DEBUG_GUIDO_ASCOGRAPH 1
+#define DEBUG_GUIDO_ASCOGRAPH 1
 
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -456,7 +456,7 @@ void ofxTLAntescofoNote::guido_store_notes() {
 		float h = outmap[v].second.bottom - y;
 
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+		//cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
 #endif
 		switches[i]->guidoCoords.x = x;
 		switches[i]->guidoCoords.y = y;
@@ -546,13 +546,45 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 	cout << "Rendering Guido: " << render_x << ", " << render_y << " : " << render_w << " x " << render_h << endl;
+	int fbow = oguido->guido->getDevice()->drawCache.getWidth();
+	int fboh = oguido->guido->getDevice()->drawCache.getHeight();
+	cout << "Guido surface dimension: " << fbow << " x " << fboh << endl;
 #endif
-	oguido->draw(render_x, render_y, render_w, render_h);
+	//oguido->draw(render_x, render_y, render_w, render_h);
 	ofPopStyle();
 
 	guido_w = render_w;
 	guido_h = render_h;
 
+	// copy into an ofImage
+	guido_image.allocate(render_w, fboh, OF_IMAGE_COLOR_ALPHA);
+	ofPixels p;
+	p.allocate(render_w, fboh, OF_PIXELS_RGBA);
+	
+	guido_image.setUseTexture(false);
+	for (int i = 0; i < render_w; i += fbow) {
+		oguido->draw(i, render_y, fbow, render_h); //fbow, fboh);
+		//oguido->draw_cache(bounds.x, bounds.y);
+#if 0
+		oguido->guido->getDevice()->drawCache.readToPixels( p );
+		for (int j = i; j < fbow*fboh; j++) guido_image.getPixelsRef()[j] = p[j-i];
+#else
+		oguido->guido->getDevice()->drawCache.readToPixels( p );
+		//for (int j = 0; j < p.size(); j+=4) guido_image.getPixelsRef()[j+i] = p[j];
+		//int len = p.size() / render_h;
+		for (int line = 0; line < fboh; line++) {
+			for (int j = 0; j < fbow; j+=4) {
+				int y = line*fbow + j;
+				int x = y + i * fbow;
+				//cout << "====-> " << x << " _ " << y << endl;
+				guido_image.getPixelsRef()[x] = p[y];
+			}
+		}
+#endif
+		cout << "COPIED I=" << i << " fbow= " << fbow << endl;
+	}
+	guido_image.setUseTexture(true);
+	guido_image.reloadTexture();
 
 	// once drawn to FBO, build a map of beat to switchId: beat2switchId
 	beat2switchId.clear();
@@ -604,8 +636,13 @@ void ofxTLAntescofoNote::draw_guido() {
 		//oguido->setSize(render_w, render_h);
 		//oguido->draw(render_x, render_y, render_w, render_h);
 
+		/*
 		oguido->draw(guido_x, guido_y, render_w, render_h);
 		oguido->draw_cache(bounds.x, bounds.y);
+		*/
+		//ofTranslate(guido_x, guido_y);
+		guido_image.drawSubsection(bounds.x, bounds.y, render_w, render_h, guido_x, guido_y);
+		//guido_image.draw(bounds.x, bounds.y, render_w, render_h);
 
 #if 0
 		ofFill();
