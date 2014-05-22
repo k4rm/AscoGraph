@@ -119,6 +119,7 @@ public:
 		int getHeight();
 		int getWidth();
 		void setSize(int w, int h) { width = w; height = h; }
+		void setScale(float x, float y) { getDevice()->SetScale(x, y); }
 
 		void draw(int x, int y, int w, int h);
 //		void resized();

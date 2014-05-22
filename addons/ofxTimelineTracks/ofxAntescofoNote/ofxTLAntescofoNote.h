@@ -323,7 +323,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	float mRatioGuido;
 	map<float, int> beat2switchId;
 	map<int, int> switchId2guidoId;
-	ofImage guido_image;
+	vector<ofImage> guido_images;
 	//ofTexture guido_image;
 #endif
 

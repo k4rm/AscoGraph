@@ -208,6 +208,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void gotMessage(ofMessage msg);
 		void addTrackCurve(string trackname);
 
+		string mScore_filename;
 		void parse_AntescofoScore(const string filename);
 		void setEditorMode(bool state, float beatn, bool fullTextEditor=false);
 		ofxCodeEditor* editor;
@@ -236,7 +237,6 @@ class ofxAntescofog : public ofxNSWindowApp
 		int bpm;
 		bool bSnapToGrid, bAutoScroll, bSetupDone, bLineWrapMode, bScoreFromCommandLine, bShowActions;
 		string tmpfilename; // file to store converted MusicXML file to Antescofo score
-		string mScore_filename;
 
 		vector<float> accomp_map_index, accomp_map_markers;
 		vector<string> patch_receivers;

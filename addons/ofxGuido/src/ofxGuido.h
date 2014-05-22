@@ -23,5 +23,6 @@ public:
 	int getHeight() { if (guido) return guido->getHeight(); else return 0; }
 	openFrameworksDevice* getDevice() { return guido->getDevice(); }
 	void setSize(int w, int h);
+	void setScale(float x, float y) { guido->setScale(x, y); }
 	GuidoComponent* guido;
 };

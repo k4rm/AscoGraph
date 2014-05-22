@@ -1598,8 +1598,9 @@ void ActionCurve::split()
 		actionTrack->replaceEditorScore(this);
 		string newscore;
 		[actionTrack->mAntescofog->editor getEditorContent:newscore];
+		cout << "split: newscore = " << newscore << endl;
 		ofxAntescofog* fog = actionTrack->mAntescofog;
-		if (((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore))
+		if (((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore, fog->mScore_filename))
 			actionTrack->show(label);
 	}
 #endif
