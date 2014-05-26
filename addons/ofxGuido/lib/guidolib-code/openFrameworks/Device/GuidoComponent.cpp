@@ -177,14 +177,20 @@ void GuidoComponent::draw (int x, int y, int w, int h)
 	if (!fGRHandler) return;
 
     
-	//setWidth(w); setHeight(h);
 
-#if 1
-	int xx = x;// / getDevice()->GetXScale();
-	int yy = y;// / getDevice()->GetYScale();
+#if 0
+	int xx = x;
+	int yy = y;
+	int ww = w;
+	int hh = h;
+#else
+	int xx = x / getDevice()->GetXScale();
+	int yy = y / getDevice()->GetYScale();
 	int ww = w / getDevice()->GetXScale();
 	int hh = h / getDevice()->GetYScale();
-	//cout << ">>>>>>>>>>>>>>>>>>>>> x="<< x << " SCALE=" << getDevice()->GetXScale() << " xx=" << xx << endl;
+#endif
+	setWidth(ww); setHeight(hh);
+	cout << ">>>>>>>>>>>>>>>>>>>>> x="<< x << " SCALE=" << getDevice()->GetXScale() << ", " << getDevice()->GetYScale() << " xx=" << xx << endl;
 	ofSetColor(fScoreColor);
 	GuidoOnDrawDesc desc;
 	desc.handle = fGRHandler;
@@ -193,34 +199,17 @@ void GuidoComponent::draw (int x, int y, int w, int h)
 	desc.scrollx = xx;
 	desc.scrolly = 0;
 	desc.isprint = false;
+	/*
 	desc.updateRegion.left = xx;
 	desc.updateRegion.top = yy;
-	desc.updateRegion.right = w + x;//w + xx;
-	desc.updateRegion.bottom = h + y; //h + yy;
+	desc.updateRegion.right = ww + xx;
+	desc.updateRegion.bottom = hh + yy;
+	*/
 	desc.updateRegion.erase = true;
-	desc.sizex = w;
-	desc.sizey = h;
-    cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
-    //cout << "GuidoComponent::drawdraw( "<< xx<<" ," <<yy << ", " << ww << " x " << hh << " )"<<endl;
-#else
-	ofSetColor(fScoreColor);
-	GuidoOnDrawDesc desc;
-	desc.handle = fGRHandler;
-	desc.hdc = &gDevice;
-	desc.page = fPage;
-	desc.scrollx = x;
-	desc.scrolly = 0;
-	desc.isprint = false;
-	desc.updateRegion.left = x;
-	desc.updateRegion.top = y;
-	desc.updateRegion.right = w + x;
-	desc.updateRegion.bottom = h + y;
-	desc.updateRegion.erase = true;
-	desc.sizex = w;
-	desc.sizey = h;
-    cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
-
-#endif
+	desc.sizex = ww;
+	desc.sizey = hh;
+    //cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
+    cout << "GuidoComponent::drawdraw( "<< xx<<" ," <<yy << ", " << ww << " x " << hh << " )"<<endl;
 
 	//GuidoUpdateGR(fGRHandler, &fSettings);
 	GuidoErrCode err = GuidoOnDraw (&desc);

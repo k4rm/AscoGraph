@@ -1,6 +1,23 @@
 
 BPM 60
+
 NOTE C2 5
+NOTE C2 5
+
+				curve freqg7s  @Grain := 0.05s, @Action := CS_solo_lignes c g7.freq (@midi2hz($freqg7s))
+					{ $freqg7s
+						{
+								{ 87. } 
+							3/3 { 87. } @type "quad"
+							2/3	{ 92 } 
+							1/6	{ 92 } @type "exp"
+							1/6	{ 98 } @type "exp"
+							3/4	{ 91 } @type "exp"
+							1/4	{ 97 } @type "exp"
+							1/4	{ 101 }
+						}
+					}
+
 NOTE C4 4.0
 
 curve @action := plot $NOW $x $y $z {

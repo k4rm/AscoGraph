@@ -23,6 +23,7 @@
 #include "Action.h"
 #include "Values.h"
 
+#define GROUP_COLOR_ALPHA 80
 
 using namespace std;
 
@@ -105,6 +106,8 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void show(string label);
 		void show_rec(ActionGroup* a, string label);
 		void replaceEditorScore(ActionCurve* actioncurve);
+
+		vector<ActionGroup*> foreground_groups;
 
 		// antescofo tracks
 		void draw_antescofo_tracks_header();
@@ -189,6 +192,12 @@ class ActionGroup {
 		int HEADER_HEIGHT;
 		bool top_level_group;
 		bool in_selected_track;
+
+		// deep levels
+		float deep_level;
+		void bringFront() { deep_level = 1.; }
+		void bringBack() { deep_level = 0.3; }
+
 		// TODO float bpm tempo local a un groupe
 
 		// antescofo score objects
@@ -233,6 +242,7 @@ class ActionMultiCurves : public ActionGroup {
 		vector<ActionCurve* > curves;
 		int howmany, nbvects;
 		bool isValid;
+		float deep_level;
 };
 
 class ActionCurve {

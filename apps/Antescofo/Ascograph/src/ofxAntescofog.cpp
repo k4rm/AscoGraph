@@ -10,6 +10,7 @@
 #include "Function.h"
 #include "Environment.h"
 #include "AntescofoCore.h"
+#include <AppKit/NSCursor.h>
 
 bool enable_simulate = true;
 bool disable_httpd = true;
@@ -62,6 +63,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	ofxAntescofoSim = 0;
 	subWindow = NULL;
 	mOsc_beat = -1;
+	mGotoPos = 0.;
 
 	if (argc > 1 && argv[1][0] != '-') {
 		bScoreFromCommandLine = true;
@@ -251,6 +253,7 @@ void ofxAntescofog::menu_item_hit(int n)
 			}
 		case INT_CONSTANT_BUTTON_STOP:
 			{
+				mGotoPos = 0.;
 				ofxOscMessage m;
 				m.setAddress("/antescofo/cmd");
 				m.addStringArg("stop");
@@ -385,6 +388,34 @@ void ofxAntescofog::menu_item_hit(int n)
 		}
 	}
 	bShouldRedraw = true;
+}
+
+void ofxAntescofog::setMouseCursorGoto(bool bState) {
+	NSView *v = [cocoaWindow->delegate getNSView];
+
+	if (!ofxAntescofoBeatTicker)
+		return;
+	if (bState) {
+		//if (mCursor) { mCursor }
+		//[v addCursorRect:ofxAntescofoBeatTicker->bounds cursor:resizeRightCursor];
+		//[aCursor setOnMouseEntered:YES];
+		[[NSCursor resizeRightCursor] set];
+	} else {
+		[[NSCursor arrowCursor] set];
+	}
+
+}
+
+void ofxAntescofog::setGotoPos(float pos) {
+	cout << "Storing mGotopos " << pos << endl; 
+	mGotoPos = pos;
+	/*
+	ofxOscMessage m;
+	m.setAddress("/antescofo/cmd");
+	m.addStringArg("gotobeat");
+	m.addFloatArg(pos);
+	mOSCsender.sendMessage(m);
+	*/
 }
 
 static ofxAntescofog *fog;
@@ -2326,8 +2357,11 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
-		    cout << "mPlayLabel: " << mPlayLabel << endl;
-		    if (mPlayLabel.size()) {
+		    if (mGotoPos) {
+			    m.addStringArg("playfrombeat");
+			    m.addFloatArg(mGotoPos);
+		    } else if (mPlayLabel.size()) {
+			    cout << "mPlayLabel: " << mPlayLabel << endl;
 			    m.addStringArg("playfrom");
 			    m.addStringArg(mPlayLabel);
 		    } else
@@ -2343,8 +2377,13 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
-		    m.addStringArg("start");
-		    m.addStringArg("");
+		    if (!mGotoPos) {
+			    m.addStringArg("start");
+			    m.addStringArg("");
+		    } else {
+			    m.addStringArg("gotobeat");
+			    m.addFloatArg(mGotoPos);
+		    }
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
 	    }
@@ -2366,6 +2405,8 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_STOP)
 	{
+
+		mGotoPos = 0.;
 		ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
 		cout << "Stop button change: " << b->getValue() << endl;
         if (b->getValue() == 1) {

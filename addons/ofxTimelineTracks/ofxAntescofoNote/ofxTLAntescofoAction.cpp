@@ -12,6 +12,7 @@
 # include "iOSAscoGraph.h"
 #else
 # include <ofxAntescofog.h>
+# include "ofxModifierKeys.h"
 #endif
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
@@ -129,6 +130,12 @@ void ofxTLAntescofoAction::draw()
 			}
 		}
 
+		if (foreground_groups.size()) {
+			for (int i = 0; i < foreground_groups.size(); i++) {
+				foreground_groups[i]->draw(this);
+			}
+		}
+
 		// draw modal windows for every curves
 		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum) || zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration)) {
@@ -220,7 +227,7 @@ ofColor ofxTLAntescofoAction::get_random_color() {
 	color.r = (color.r + 10) % 255;
 	color.g = (color.g + 210) % 255;
 	color.b = (color.b + 155) % 255;
-	color.a = 100;
+	color.a = GROUP_COLOR_ALPHA;
 	return color;
 }
 
@@ -804,6 +811,15 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			     << "\tcolNum_begin:" << clickedGroup->colNum_begin << " colNum_end:" << clickedGroup->colNum_end << endl;
 			mAntescofog->editorShowLine(clickedGroup->lineNum_begin, clickedGroup->lineNum_end, clickedGroup->colNum_begin, clickedGroup->colNum_end);
 		}
+		// bring it to foreground level : if CMD pressed : bring background
+		if (ofGetModifierPressed(OF_KEY_SPECIAL)) {
+			clickedGroup->bringFront();
+			foreground_groups.push_back(clickedGroup);
+			return true;
+		} else { 
+			clickedGroup->bringBack();
+			foreground_groups.clear();
+		}
 	}
 	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 
@@ -1326,7 +1342,7 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 ActionGroup::ActionGroup(float beatnum_, float delay_, Action* a, Event *e) 
 			: beatnum(beatnum_), delay(delay_), action(a), event(e),
 			  period(0.), duration(0.), hidden(true), top_level_group(false),
-			  HEADER_HEIGHT(16), ARROW_LEN(15), LINE_SPACE(12)
+			  HEADER_HEIGHT(16), ARROW_LEN(15), LINE_SPACE(12), deep_level(0.5)
 {
 	if (debug_actiongroup) cout << "ActionGroup::ActionGroup("<<action->label()<<")" << endl;
 	createActionGroup_fill(action);
@@ -1458,7 +1474,8 @@ void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 	if (!hidden) {
 		if (is_in_bounds(tlAction)) {
 			ofFill();
-			ofSetColor(200, 200, 200, 255);
+			if (debug_actiongroup) cout << "deep level=" << deep_level << endl;
+			ofSetColor(200, 200, 200, deep_level*255);
 			ofRectangle inrect = rect;
 			inrect.y += HEADER_HEIGHT; inrect.height -= HEADER_HEIGHT;
 			ofRect(tlAction->getBoundedRect(inrect)); // draw background
@@ -1483,7 +1500,7 @@ void ActionGroup::drawModalContent(ofxTLAntescofoAction *tlAction)
    Curve
  */
 ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Event* e)
-	: resize_factor(0.6)
+	: resize_factor(0.6), deep_level(0.5)
 {
 	HEADER_HEIGHT = 16;
 	ARROW_LEN = 12;
@@ -2187,7 +2204,7 @@ void ActionCurve::draw(ofxTLAntescofoAction* tlAction) {
 	if (beatcurves.empty()) return;
 
 	ofColor col = _timeline->getColors().backgroundColor;
-	ofSetColor(col.r + 30, col.g + 30, col.b + 20);
+	ofSetColor(col.r + 30, col.g + 30, col.b + 20, parentCurve->deep_level*255);
 
 	ofFill();
 	ofRect(beatcurves[0]->bounds);

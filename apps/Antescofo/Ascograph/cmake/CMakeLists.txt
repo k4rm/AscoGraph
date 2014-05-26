@@ -66,6 +66,8 @@ if (GUIDO)
 			${LIB_GUIDO_PATH}/src/include/
 			${LIB_GUIDO_PATH}/src/maps/
 			${LIB_GUIDO_PATH}/../../src/
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/src/
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/
 	)
 endif(GUIDO)
 include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_INCL_PATH} 
@@ -215,13 +217,13 @@ set (app_sources_files ${app_sources_files}
 	${LIB_MUSICXML_PATH}/visitors/unrolled_clonevisitor.cpp
 	${LIB_MUSICXML_PATH}/visitors/xmlvisitor.cpp
 	# oscpack is commented here because it is compiled in libantescofo which uses it as well.
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/IpEndpointName.cpp
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/NetworkingUtils.cpp
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/UdpSocket.cpp
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscOutboundPacketStream.cpp
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscPrintReceivedElements.cpp
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscReceivedElements.cpp
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscTypes.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/IpEndpointName.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/NetworkingUtils.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/ip/posix/UdpSocket.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscOutboundPacketStream.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscPrintReceivedElements.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscReceivedElements.cpp
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//libs/oscpack/src/osc/OscTypes.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//src/ofxOscBundle.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//src/ofxOscMessage.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc//src/ofxOscReceiver.cpp
@@ -360,6 +362,11 @@ set (app_sources_files ${app_sources_files}
 )
 if (GUIDO)
 	set (app_sources_files ${app_sources_files}
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/src/ofxSVGTiny.cpp
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/src_colors.cpp
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/svgtiny.cpp
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/svgtiny_gradient.cpp
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/svgtiny_list.cpp
 			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxGuido/src/ofxGuido.cpp
 			${LIB_GUIDO_PATH}/openFrameworks/Device/GuidoComponent.cpp
 			${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksDevice.cpp
@@ -394,13 +401,13 @@ file ( GLOB_RECURSE SCINTILLA_SOURCES
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.mm
 )
 
-get_filename_component(OSCPACK_DIR ${ANTESCOFO_DIR_ROOT}/${MUTANT_LIBS}/oscpack_1_1_0_RC2/ ABSOLUTE)
+#get_filename_component(OSCPACK_DIR ${MUTANT_LIBS_PATH}/oscpack_1_1_0_RC2/ ABSOLUTE)
 
 set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS 
 	../src/
-	${OSCPACK_DIR}/
-	${OSCPACK_DIR}/ip
-	${OSCPACK_DIR}/osc
+#${OSCPACK_DIR}/
+#	${OSCPACK_DIR}/ip
+#	${OSCPACK_DIR}/osc
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxRange/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMSATimer/src
@@ -420,9 +427,9 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMSAInteractiveObject/
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/osc/
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/ip
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/osc/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/ip
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/
@@ -622,6 +629,7 @@ if ( APPLE )
     of_find_library("coremidi")
     of_find_library("opengl")
     of_find_library("carbon")
+    of_find_library("AppKit")
     of_find_library("quartzcore")
     of_find_library("cocoa")
     of_find_library("PocoFoundation")
@@ -711,10 +719,11 @@ set( MACOSX_RESOURCE_FILES_FONTS
 )
 
 if (GUIDO)
-	set( MACOSX_RESOURCE_FILES ${MACOSX_RESOURCE_FILES} ${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf)
-	set( MACOSX_RESOURCE_FILES_FONTS ${MACOSX_RESOURCE_FILES_FONTS} ${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf)
+	set( MACOSX_RESOURCE_FILES ${MACOSX_RESOURCE_FILES} ${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf ${CMAKE_SOURCE_DIR}/../bin/data/GUI/guido2.svg)
+	set( MACOSX_RESOURCE_FILES_FONTS ${MACOSX_RESOURCE_FILES_FONTS} ${CMAKE_SOURCE_DIR}/../bin/data/guido2.ttf ${CMAKE_SOURCE_DIR}/../bin/data/GUI/guido2.svg)
 endif(GUIDO)
 
+#set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OPENFRAMEWORKS_INCLUDES})
 
 
 # create an executable with all source files

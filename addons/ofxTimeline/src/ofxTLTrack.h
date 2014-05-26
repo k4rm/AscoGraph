@@ -171,6 +171,7 @@ class ofxTLTrack
 	bool getCreatedByTimeline();
 	void setCreatedByTimeline(bool created);
 	ofxTLEvents& events(); //convenience wrapper for timeline events;
+	ofRectangle& getBounds() { return bounds; }
     
   protected:
 	

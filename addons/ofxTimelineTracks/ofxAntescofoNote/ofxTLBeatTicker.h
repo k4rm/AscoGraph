@@ -54,5 +54,6 @@ class ofxTLBeatTicker : public ofxTLTicker {
 	ofxAntescofog* mAntescofog;
 #endif
 	bool isSetup;
+	bool bMouseCursorInside;
 
 };

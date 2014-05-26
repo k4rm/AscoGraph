@@ -83,17 +83,21 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable( GL_DEPTH_TEST );
     glEnable(GL_MULTISAMPLE_ARB);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &w);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &h);
+    //glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &w);
+    //glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &h);
+    /*
+    GLint dims[2];
+    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &dims[0]);
+    w = dims[0]; h = dims[1];
+    */
 
-    fWidth = w;
-    fHeight = h;
-    settings.width = w;
-    settings.height = h;
+    fWidth = 1024;
+    fHeight = 1024;
+    settings.width = fWidth;
+    settings.height = fHeight;
     settings.numSamples = 8;
 #endif
 
-    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
     cout << "openFrameworksDevice: allocating FBO: " << fWidth << "x" << fHeight << endl;
 
     settings.internalformat = GL_RGBA;
@@ -310,12 +314,13 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
     settings.height = w;
     settings.numSamples = 0;
 #else
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &w);
-    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &h);
-    fWidth = w;
-    fHeight = h;
-    settings.width = w;
-    settings.height = h;
+    /*GLint dims[2];
+    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &dims[0]);
+    w = dims[0]; h = dims[1];*/
+    fWidth = 1024;
+    fHeight = 1024;
+    settings.width = fWidth;
+    settings.height = fHeight;
     glClear (GL_COLOR_BUFFER_BIT);
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -323,7 +328,6 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
     glEnable(GL_MULTISAMPLE_ARB);
     settings.numSamples = 8;
 #endif
-    cout << "=====> fbo: W x H = " << w << " x " << h << " <===========" << endl;
     cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
     settings.internalformat = GL_RGBA;
     settings.useDepth = false;

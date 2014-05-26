@@ -39,6 +39,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <sys/stat.h>
 
@@ -83,8 +84,9 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-//#define DEBUG_GUIDO_ASCOGRAPH 1
-//#define USE_GUIDO_IMAGE_STORAGE 1
+#define DEBUG_GUIDO_ASCOGRAPH 1
+#define USE_GUIDO_IMAGE_STORAGE 1
+//#define USE_GUIDO_SVG 1
 int bitmapFontSize = 8;
 int guiXPadding = 15;
 
@@ -458,8 +460,8 @@ void ofxTLAntescofoNote::guido_store_notes() {
 		float h = outmap[v].second.bottom - y;
 
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
-		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << " r=" << outmap[v].second.right << " b=" << outmap[v].second.bottom << endl;
+		//cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+		//cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << " r=" << outmap[v].second.right << " b=" << outmap[v].second.bottom << endl;
 #endif
 		if (w < 0 || outmap[v].second.right < 0) w = 70;
 		switches[i]->guidoCoords.x = x;
@@ -524,6 +526,16 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 	cout << "Converted score to Guido code: \"" << guido_string<< "\"" << endl;
 #endif
+	GuidoPageFormat format;
+	oguido->getPageFormat(format);
+	cout << "Margin : " << format.marginleft << " <-> " << format.marginright << endl;
+	format.marginleft = 0.;
+	format.marginright = 0.;
+	format.margintop = 0.;
+	format.marginbottom = 0.;
+
+	GuidoSetDefaultPageFormat(&format);
+
 	int err = oguido->compile_string(guido_string.c_str());
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 	cout << "Guido returned err:" << err << endl;
@@ -541,16 +553,16 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	cout << "bounds rect: " << bounds.width << " x "<< bounds.height << endl;
 	//cout << "guido rect: " << oguido->getWidth() << " x "<< oguido->getHeight() << endl;
 #endif
+
+	oguido->getPageFormat(format);
+	mRatioGuido = (format.width / format.height);
+
+	cout << "Margin : " << format.marginleft << " <-> " << format.marginright << endl;
 	ofPushStyle();
 	ofSetColor(0,0,0, 255);
 
-	GuidoPageFormat format;
-	oguido->getPageFormat(format);
-
-	mRatioGuido = (format.width / format.height);
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 	cout << "guido page rect: " << format.width << " x "<< format.height << " ratio=" << mRatioGuido << endl;
-	cout << "page ratio: " << mRatioGuido << endl;
 #endif
 	float render_x = 0., render_y = 0.;
 	float render_h = bounds.height;
@@ -558,12 +570,10 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	cout << "Setting Guido Size: " << render_w << " x " << render_h << endl;
 
 	oguido->setSize(render_w, render_h);
-	//oguido->setSize(render_w, render_h);
-	//oguido->setScale(bounds.width/render_w, bounds.height/render_h);
 
 	int fbow = oguido->guido->getDevice()->drawCache.getWidth();
 	int fboh = oguido->guido->getDevice()->drawCache.getHeight();
-	oguido->setWidth(fbow); oguido->setHeight(fboh);
+	//oguido->setWidth(fbow); oguido->setHeight(fboh);
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 	cout << "Rendering Guido: " << render_x << ", " << render_y << " : " << render_w << " x " << render_h << endl;
 	cout << "Guido surface dimension: " << fbow << " x " << fboh << endl;
@@ -577,29 +587,49 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	guido_h = render_h;
 
 #ifdef USE_GUIDO_IMAGE_STORAGE
+	oguido->setScale(1., 1.);
 	for (int i = 0; i < guido_images.size(); i++) {
 		if (guido_images[i].isAllocated())
 			guido_images[i].clear();
 	}
 	guido_images.clear();
+	//oguido->setSize(1024, 1024);
 	// copy into an ofImage
-	ofPixels p;
-	p.allocate(render_w, fboh, OF_PIXELS_RGBA);
-	
-	for (int i = 0; i < render_w; i += fbow) {
+	//   Internal vs screen
+	//   format.width -> render_w
+	//   x -> 1024
+	//int stepx = (1024*format.width)/render_w;
+	//int stepy = (1024*format.height)/render_h;
+	float stepx = fbow, stepy = fboh;
+	for (int i = 0; i*stepx < render_w+stepx; i++) {
 		ofImage img;
 		img.allocate(fbow, fboh, OF_IMAGE_COLOR_ALPHA);
 
-		oguido->draw(i, render_y, render_w, render_h);
-		//oguido->draw(i, render_y, fbow, fboh);
+		oguido->setScale(1., 1.);
+		oguido->guido->getDevice()->SetOrigin(i*stepx, 0);
+		oguido->draw(i*stepx, render_y, render_w, render_h);
 
 		oguido->guido->getDevice()->drawCache.getTextureReference().readToPixels( img.getPixelsRef() );
 		img.update();
 		img.saveImage(string("/tmp/img") + ofToString(i) + ".png");
 		guido_images.push_back(img);
 
-		cout << "COPIED I=" << i << " fbow= " << fbow << endl;
+		cout << "COPIED I=" << i << " fbow= " << fbow << " imgw=" << img.getWidth() << endl;
 	}
+#else
+#ifdef USE_GUIDO_SVG
+	string guidosvgfile("/tmp/guido_out.svg");
+	fstream out(guidosvgfile.c_str(), fstream::out | fstream::trunc);
+	string guidoFont(ofFilePath::getCurrentExeDir() + "../Resources/GUI/guido2.svg");
+        err = GuidoSVGExport (oguido->guido->getGRHandler(), 1, out, guidoFont.c_str());
+        if (err != guidoNoErr) {
+		cerr << "ERROR exporting Guido to SVG" <<endl;
+		return false;
+	}
+	guido_svg = new ofxSVGTiny();
+	guido_svg->load(guidosvgfile);
+	cout << "GUIDO SVG : " << guido_svg->getWidth() << " x " << guido_svg->getHeight() << endl;
+#endif
 #endif
 
 	// once drawn to FBO, build a map of beat to switchId: beat2switchId
@@ -652,10 +682,11 @@ void ofxTLAntescofoNote::draw_guido() {
 		//oguido->setSize(render_w, render_h);
 		//oguido->draw(render_x, render_y, render_w, render_h);
 
-#ifndef USE_GUIDO_IMAGE_STORAGE
+#if 0
 		oguido->draw(guido_x, guido_y, render_w, render_h);
 		oguido->draw_cache(bounds.x, bounds.y);
-#else
+#endif
+#ifdef USE_GUIDO_IMAGE_STORAGE
 		if (guido_images.empty()) return;
 		//WAS guido_image.drawSubsection(bounds.x, bounds.y, render_w, render_h, guido_x, 0);
 		int fbow = guido_images[0].getWidth();
@@ -670,12 +701,14 @@ void ofxTLAntescofoNote::draw_guido() {
 			int firstx = guido_x % fbow;
 			int firstw = fbow - firstx;
 			int secondx = bounds.x + firstw;
-			int secondw = bounds.width - firstw;
+			int secondw = fbow - firstw;
 
 			cout << "Draw guido_images: firstn=" << firstn << " 1stx="<< firstx << " firstw=" << firstw << endl;
 			guido_images[firstn ].drawSubsection(bounds.x, bounds.y, firstw, render_h, firstx, 0);
 
 			if (1 && (firstx > 0 || firstw <= bounds.width)) {
+				if (secondn == nbimages)
+					secondw = fbow;
 				cout << "-- 2ndn=" << secondn << " 2ndx="<< secondx << " 2ndw=" << secondw << endl;
 				//guido_images[secondn].drawSubsection(bounds.x+secondx, bounds.y, secondw, render_h, 0, 0);
 				guido_images[secondn].drawSubsection(secondx, bounds.y, secondw, bounds.height, 0, 0);
@@ -688,6 +721,13 @@ void ofxTLAntescofoNote::draw_guido() {
 
 
 		//guido_image.draw(bounds.x, bounds.y, render_w, render_h);
+#endif
+#ifdef USE_GUIDO_SVG
+		ofPushMatrix();
+		ofTranslate(-bounds.x, -bounds.y);
+		ofFill();
+		guido_svg->draw();
+		ofPopMatrix();
 #endif
 
 #if 0
@@ -816,7 +856,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	string ret1 = "[ ", ret2 = ret1;
 	int pageFormat_w = mDur_in_beats * 1.3;// MIN(switches.size() / 8, 20); // TODO utiliser le maxbeat dur ?
 	if (!pageFormat_w) pageFormat_w = 20;
-	ret1 +=	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 1cm, 1cm, 1cm, 1cm>";
+	ret1 +=	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 0cm, 1cm, 0cm, 1cm>";
 	if (fromi == 0) {
 		ret1 += "\\clef<\"g\">\n";
 	} else 

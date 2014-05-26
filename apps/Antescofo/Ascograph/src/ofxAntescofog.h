@@ -219,6 +219,8 @@ class ofxAntescofog : public ofxNSWindowApp
 		void showJumpTrack();
 		void display_error();
 		void shouldRedraw();
+		void setMouseCursorGoto(bool bState);
+		void setGotoPos(float pos);
 		
 		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker, *ofxAntescofoBeatTickerSim;
@@ -272,6 +274,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void cues_add_menu(string s);
 		void newWindow();
 		ofxCocoaWindow* subWindow;
+		float mGotoPos;
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;

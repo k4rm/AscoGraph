@@ -35,6 +35,7 @@ void ofxTLBeatTicker::setup() {
 	setBPM(getTimeline()->getBPM());
 	isSetup = true;
 	refreshTickMarks();
+	bMouseCursorInside = false;
 }
 
 void ofxTLBeatTicker::draw(){
@@ -171,12 +172,29 @@ void ofxTLBeatTicker::updateBPMPoints(){
 
 
 void ofxTLBeatTicker::mousePressed(ofMouseEventArgs& args){
+	if (bounds.inside(args.x, args.y) || timeline->getTrackHeader(this)->getBounds().inside(args.x, args.y)) {
+		float beat = timeline->normalizedXToBeat( timeline->screenXtoNormalizedX( args.x, zoomBounds ));
+		mAntescofog->setGotoPos(beat);
+	}
 }
 
 void ofxTLBeatTicker::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ofxTLBeatTicker::mouseMoved(ofMouseEventArgs& args){
+	if (bounds.inside(args.x, args.y) || timeline->getTrackHeader(this)->getBounds().inside(args.x, args.y)) {
+		if (!bMouseCursorInside) {
+			//cout << "BeatTicker: mouse entering zone" << endl;
+			mAntescofog->setMouseCursorGoto(true);
+		}
+		bMouseCursorInside = true;
+	} else {
+		if (bMouseCursorInside) {
+			//cout << "BeatTicker: mouse leaving zone" << endl;
+			mAntescofog->setMouseCursorGoto(false);
+		}
+		bMouseCursorInside = false;
+	}
 }
 
 void ofxTLBeatTicker::mouseReleased(ofMouseEventArgs& args){
