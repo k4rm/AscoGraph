@@ -2155,7 +2155,10 @@ int ofxAntescofog::loadScore(string filename, bool reloadEditor, bool sendOsc) {
 		//if (ofxAntescofoNote->get_error().empty()) ofxAntescofoNote->set_error("Zero event found in score.");
 		display_error();
 	}
-
+#ifndef IOS_ASCOGRAPH
+	NSString *fileNS = [NSString stringWithCString:filename.c_str() encoding:[NSString defaultCStringEncoding]];
+	[[cocoaWindow->delegate getNSWindow] setTitleWithRepresentedFilename:fileNS];
+#endif
 	// update editor if opened
 	if (bEditorShow && reloadEditor) {
 		[ editor loadFile:mScore_filename ];
