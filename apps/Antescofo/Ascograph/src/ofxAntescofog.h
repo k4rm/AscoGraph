@@ -64,11 +64,13 @@
 #define INT_CONSTANT_BUTTON_AUTOCOMPLETE	41
 #define INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR	42
 #define INT_CONSTANT_BUTTON_LOCK		43
+#define INT_CONSTANT_BUTTON_OPENRECENT		200
 #define INT_CONSTANT_BUTTON_CUES_INDEX  	300
 
 #define TEXT_CONSTANT_TITLE                     "Ascograph: score editor"
-#define TEXT_CONSTANT_BUTTON_LOAD               "Load score"
-#define TEXT_CONSTANT_BUTTON_RELOAD             "Reload score"
+#define TEXT_CONSTANT_BUTTON_LOAD               "Open score"
+#define TEXT_CONSTANT_BUTTON_RELOAD             "Re-open score"
+#define TEXT_CONSTANT_BUTTON_OPENRECENT         "Open Recent"
 #define TEXT_CONSTANT_BUTTON_SAVE               "Save score"
 #define TEXT_CONSTANT_BUTTON_SAVE_AS            "Save score as"
 #define TEXT_CONSTANT_BUTTON_COLOR_SETUP        "Color preferences"
@@ -107,6 +109,7 @@
 #define TEXT_CONSTANT_TITLE_LOAD_SCORE          "Select a score : MusicXML2 or Antescofo format"
 #define TEXT_CONSTANT_TITLE_SAVE_AS_SCORE       "Save score in Antescofo format"
 #define TEXT_CONSTANT_TEMP_ACTION_FILENAME      "/tmp/ascograph_tmp.asco.txt"
+#define TEXT_CONSTANT_LOCAL_SETTINGS		"Ascograph_settings.xml"
 
 
 @class ofxCodeEditor;
@@ -195,6 +198,8 @@ class ofxAntescofog : public ofxNSWindowApp
 		void draw();
 		void load();
 		void save();
+		void load_appsupport(string filename);
+		void save_appsupport(string filename);
 		void menu_item_hit(int n);
 
 		void keyPressed(int key);
@@ -248,7 +253,7 @@ class ofxAntescofog : public ofxNSWindowApp
 #endif
 
 		// UI
-		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem, mLockMenuItem;
+		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem, mLockMenuItem, mFileMenu;
 		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC, *guiElevator;
 		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;
@@ -275,6 +280,9 @@ class ofxAntescofog : public ofxNSWindowApp
 		void newWindow();
 		ofxCocoaWindow* subWindow;
 		float mGotoPos;
+		string getApplicationSupportSettingFile();
+		vector<string> mRecentFiles;
+		void populateOpenRecentMenu();
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;

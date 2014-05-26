@@ -374,6 +374,13 @@ void ofxAntescofog::menu_item_hit(int n)
 			}
 	}
 	
+	if (n >= INT_CONSTANT_BUTTON_OPENRECENT) {
+		int m = n - INT_CONSTANT_BUTTON_OPENRECENT;
+		string f = mRecentFiles[mRecentFiles.size() - 1 - m];
+		cout << "mRecentFiles size: " << mRecentFiles.size() << " m = " << m << endl ;
+		cout << "Open Recent Drop down list hit : " << f << endl;
+		loadScore(f, true);
+	}
 	if (n >= INT_CONSTANT_BUTTON_CUES_INDEX) {
 		cout << "Cuepoints Drop Down List hit: " << endl; 
 		map<int, string>::iterator li = mCuesIndexToString.find(n - INT_CONSTANT_BUTTON_CUES_INDEX);
@@ -448,11 +455,76 @@ static ofxAntescofog *fog;
 }
 @end
 
+string ofxAntescofog::getApplicationSupportSettingFile() {
+	//NSString *path = [[NSFileManager defaultManager] applicationSupportDirectory];
+	NSString *executableName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleExecutable"];
+
+	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	if ([paths count] == 0)
+	{
+		cerr << "ERROR: can not get application directory" << endl;
+		return "";
+	}
+	NSString *resolvedPath = [paths objectAtIndex:0];
+	resolvedPath = [resolvedPath stringByAppendingPathComponent:executableName];
+
+	string dir([resolvedPath UTF8String]);
+	if (ofDirectory::createDirectory(dir, false, true))
+		cout << "getApplicationSupports: directory " << dir << " created." << endl;
+
+	string settingsfile(dir + "/" + TEXT_CONSTANT_LOCAL_SETTINGS);
+
+	cout << "getApplicationSupports: settings file = " << settingsfile << endl;
+	return settingsfile;
+}
+
+void ofxAntescofog::populateOpenRecentMenu() {
+	static bool created = false;
+	if (mRecentFiles.size()) {
+		for (int i = 0; i < mRecentFiles.size(); i++) {
+			cout << "Recent File : " << mRecentFiles[i] << endl;
+		}
+		NSMenuItem* openRecent = [mFileMenu itemWithTag:INT_CONSTANT_BUTTON_OPENRECENT];
+		NSMenu *mysubmenu;
+		if (openRecent) {
+			mysubmenu = [openRecent submenu];
+			[mysubmenu removeAllItems];
+		} else {
+			openRecent = [[[NSMenuItem alloc] initWithTitle:@"Open Recent" action:@selector(menu_item_hit:) keyEquivalent:@"" ] autorelease];
+			mysubmenu = [[NSMenu alloc] init];
+		}
+		for (int i = mRecentFiles.size()-1, j = 0; j < 10 && i > 0; i--, j++)
+		{
+			NSString* name = [NSString stringWithUTF8String: mRecentFiles[i].c_str()];
+			if (name) {
+				cout << "Recent File : adding to menu: " << [name UTF8String] << endl;
+
+				NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle:name action:@selector(menu_item_hit:) keyEquivalent:@""];
+				[newItem setTag:INT_CONSTANT_BUTTON_OPENRECENT+j];
+				[newItem setRepresentedObject:[NSString stringWithFormat:@"%d",j]];
+				//[newItem setKeyEquivalentModifierMask: NSCommandKeyMask];
+				//[newItem setKeyEquivalent:[NSString stringWithFormat:@"%d", j + 1]];
+
+				//[openRecent addItem:newItem];
+				[mysubmenu addItem:newItem];
+				[newItem release];
+			}
+		}
+		[openRecent setTag:INT_CONSTANT_BUTTON_OPENRECENT];
+		[openRecent setSubmenu:mysubmenu];
+		//[fileMenu setSubmenu:openRecent];
+		if (!created)
+			[mFileMenu addItem:openRecent];
+		created = true;
+	}
+}
+
 void ofxAntescofog::setupUI() {
 	id menubar = [[NSMenu new] autorelease];
 	id appMenu = [[NSMenu new] autorelease];
 	id appName = [[NSProcessInfo processInfo] processName];
 	[NSApp setMainMenu:menubar];
+
 
 	cout << "Creating OSX Menus..." << endl;
 	//////////////////
@@ -487,38 +559,40 @@ void ofxAntescofog::setupUI() {
 
 	//////////////////
 	// File
-	id fileMenu = [[[NSMenu new] autorelease] initWithTitle:@"File"];
+	mFileMenu = [[[NSMenu new] autorelease] initWithTitle:@"File"];
 	id fileMenuItem = [[[NSMenuItem alloc] initWithTitle:@"File" action:NULL keyEquivalent:@""] autorelease];
 	// . new
 	NSString* txt = [@"" stringByAppendingString:@"New score"];
 	id newMenuItem = [[[NSMenuItem alloc] initWithTitle:txt action:@selector(menu_item_hit:) keyEquivalent:@"n"] autorelease];
 	[newMenuItem setTag:INT_CONSTANT_BUTTON_NEW];
-	[fileMenu addItem:newMenuItem];
+	[mFileMenu addItem:newMenuItem];
 
 	// . load
-	txt = [@"" stringByAppendingString:@"Load score"];
+	txt = [@"" stringByAppendingString:@"Open score"];
 	id loadMenuItem = [[[NSMenuItem alloc] initWithTitle:txt action:@selector(menu_item_hit:) keyEquivalent:@"o"] autorelease];
 	[loadMenuItem setTag:INT_CONSTANT_BUTTON_LOAD];
-	[fileMenu addItem:loadMenuItem];
+	[mFileMenu addItem:loadMenuItem];
 
+	// . open recent items
+	populateOpenRecentMenu();
 
 	// . reload
 	id reloadMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Reload current score" action:@selector(menu_item_hit:) keyEquivalent:@"r"] autorelease];
 	[reloadMenuItem setTag:INT_CONSTANT_BUTTON_RELOAD];
-	[fileMenu addItem:reloadMenuItem];
+	[mFileMenu addItem:reloadMenuItem];
 
 	// . save 
 	id saveMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score" action:@selector(menu_item_hit:) keyEquivalent:@"s"] autorelease];
 	[saveMenuItem setTag:INT_CONSTANT_BUTTON_SAVE];
-	[fileMenu addItem:saveMenuItem];
+	[mFileMenu addItem:saveMenuItem];
 
 	// . save as
 	id saveAsMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Save Score As" action:@selector(menu_item_hit:) keyEquivalent:@"S"] autorelease];
 	[saveAsMenuItem setTag:INT_CONSTANT_BUTTON_SAVE_AS];
-	[fileMenu addItem:saveAsMenuItem];
+	[mFileMenu addItem:saveAsMenuItem];
 
 
-	[fileMenuItem setSubmenu:fileMenu];
+	[fileMenuItem setSubmenu:mFileMenu];
 	[menubar addItem:fileMenuItem];
 
 	//////////////////
@@ -1072,6 +1146,9 @@ void ofxAntescofog::setup(){
 	ofxAntescofoNote = new ofxTLAntescofoNote(this);
 	ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
 
+#ifndef IOS_ASCOGRAPH
+	load_appsupport(getApplicationSupportSettingFile());
+#endif
 	load(); // xml settings
 
 	setupTimeline();
@@ -1321,6 +1398,46 @@ void ofxAntescofog::draw() {
 	if (!disable_httpd)
 		draw_http_image();
 #endif
+}
+
+void ofxAntescofog::save_appsupport(string filename) {
+	ofxXmlSettings settings;
+
+	settings.addTag("settings");
+	settings.pushTag("settings");
+	if (mRecentFiles.size()) {
+		settings.addTag("recentFiles");
+		settings.pushTag("recentFiles");
+		// recent files
+		for (int i = 0; i < mRecentFiles.size(); i++) {
+			settings.addTag("recentFile");
+			settings.pushTag("recentFile", i);
+			settings.addValue("file", mRecentFiles[i]);
+			settings.popTag();
+		}
+	}
+	settings.popTag();
+	if(!settings.saveFile(filename)){
+		cerr <<  "ERROR: ofxAntescofog: Error saving to xml file " + filename << endl;
+	} else 
+		cout << "ofxAntescofog::save_appsupport saved " << filename << endl;
+}
+
+void ofxAntescofog::load_appsupport(string filename) {
+	ofxXmlSettings settings;
+	mRecentFiles.clear();
+	if(settings.loadFile(filename)){
+		settings.pushTag("settings");
+		settings.pushTag("recentFiles");
+		int getNb = settings.getNumTags("recentFile");
+		for (int i = 0; i < getNb; i++) {
+			settings.pushTag("recentFile", i);
+			string f = settings.getValue("file", "");
+			settings.popTag();
+			mRecentFiles.push_back(f);
+		}
+		settings.popTag();
+	}
 }
 
 void ofxAntescofog::load()
@@ -2158,6 +2275,13 @@ int ofxAntescofog::loadScore(string filename, bool reloadEditor, bool sendOsc) {
 #ifndef IOS_ASCOGRAPH
 	NSString *fileNS = [NSString stringWithCString:filename.c_str() encoding:[NSString defaultCStringEncoding]];
 	[[cocoaWindow->delegate getNSWindow] setTitleWithRepresentedFilename:fileNS];
+
+	// add to recent files:
+	if (mScore_filename.size() && (mRecentFiles.empty() || mRecentFiles.back() != mScore_filename)) {
+		mRecentFiles.push_back(filename);
+		save_appsupport(getApplicationSupportSettingFile());
+		populateOpenRecentMenu();
+	}
 #endif
 	// update editor if opened
 	if (bEditorShow && reloadEditor) {
