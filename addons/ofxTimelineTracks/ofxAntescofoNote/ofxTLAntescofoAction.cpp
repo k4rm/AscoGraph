@@ -227,7 +227,7 @@ ofColor ofxTLAntescofoAction::get_random_color() {
 	color.r = (color.r + 10) % 255;
 	color.g = (color.g + 210) % 255;
 	color.b = (color.b + 155) % 255;
-	color.a = GROUP_COLOR_ALPHA;
+	color.a = 200; //GROUP_COLOR_ALPHA;
 	return color;
 }
 
@@ -602,6 +602,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 // avoid x overlapping
 void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w, int h)
 {
+	return;
 	if (g->rect.width + g->rect.x > w) {
 		//XXX if (g->rect.y + g->rect.height < h) 
 			g->rect.width = w - g->rect.x;
@@ -1161,12 +1162,12 @@ void ofxTLAntescofoAction::show(string label) {
 
 string ofxTLAntescofoAction::cut_str(int w, string in)
 {
-	//cout << "ActionGroup: cur_str: w:"<< w << " in:" << in << " nc=" << in.size() * sizec  << endl;
+	//cout << "ActionGroup: cut_str: w:"<< w << " in:" << in << " nc=" << in.size() * sizec  << endl;
 	if (w < sizec)
 		return string("");
 	if (w < in.size() * sizec) {
 		int nc = w / sizec - 1;
-		//cout << "ActionGroup: cur_str: cutting action msg :nc = " << nc << endl;
+		//cout << "ActionGroup: cut_str: cutting action msg :nc = " << nc << endl;
 		return in.substr(0, nc);
 	}
 	return in;
@@ -1342,7 +1343,7 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 ActionGroup::ActionGroup(float beatnum_, float delay_, Action* a, Event *e) 
 			: beatnum(beatnum_), delay(delay_), action(a), event(e),
 			  period(0.), duration(0.), hidden(true), top_level_group(false),
-			  HEADER_HEIGHT(16), ARROW_LEN(15), LINE_SPACE(12), deep_level(0.5)
+			  HEADER_HEIGHT(16), ARROW_LEN(15), LINE_SPACE(12), deep_level(0.15)
 {
 	if (debug_actiongroup) cout << "ActionGroup::ActionGroup("<<action->label()<<")" << endl;
 	createActionGroup_fill(action);
@@ -1460,9 +1461,8 @@ void ActionGroup::draw_header(ofxTLAntescofoAction* tlAction, bool draw_rect)
 	if (period > 0.) {name = "Loop " + realtitle; name += " period:"; name += get_period(); }
 	tlAction->mFont.drawString(tlAction->cut_str(rect.width, name), rect.x + 1, rect.y + HEADER_HEIGHT - 5);
 	ofNoFill();
-	ofRect(tlAction->getBoundedRect(r)); // black border rect
-	if (draw_rect)
-		ofRect(tlAction->getBoundedRect(rect)); // black border rect
+	//ofRect(tlAction->getBoundedRect(r)); // black border rect
+	//if (draw_rect) ofRect(tlAction->getBoundedRect(rect)); // black border rect
 }
 
 void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
@@ -1500,7 +1500,7 @@ void ActionGroup::drawModalContent(ofxTLAntescofoAction *tlAction)
    Curve
  */
 ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Event* e)
-	: resize_factor(0.6), deep_level(0.5)
+	: resize_factor(0.6), deep_level(0.15)
 {
 	HEADER_HEIGHT = 16;
 	ARROW_LEN = 12;
@@ -2297,19 +2297,20 @@ void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	if ((enable_tracks && tlAction->mFilterActions && !in_selected_track)) return;
 
 	ofFill();
-	ofSetColor(200, 200, 200, 255);
+	ofSetColor(200, 200, 200, 255); //deep_level*255);
 	ofRect(tlAction->getBoundedRect(rect));
 
 	ofNoFill();
-	ofSetColor(0, 0, 0, 255);
+	ofSetColor(0, 0, 0, deep_level*255);
 	int strw = rect.width + rect.x - MAX(rect.x, 0);
+	//cout << "==========(((((((((((((((((============== strw=" << strw << " rw=" << rect.width << " rx=" << rect.x << endl;
 	if (is_kill )
 		ofSetColor(255, 0, 0, 255);
 	else if (is_proc)
 		ofSetColor(0, 168, 0, 255);
 	else
 		ofSetColor(0, 0, 0, 255);
-
+	//cout << "Draw msg:" << tlAction->cut_str(strw, actionstr) << " x=" << rect.x+1 << " y=" << rect.y + HEADER_HEIGHT - 3 << endl;
 	tlAction->mFont.drawString(tlAction->cut_str(strw, actionstr), rect.x + 1, rect.y + HEADER_HEIGHT - 3);
 
 	if (is_kill )

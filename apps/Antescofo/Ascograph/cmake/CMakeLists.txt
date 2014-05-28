@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.107")
+set(ASCOGRAPH_VERSION_NUMBER "0.108")
 
 set(ANTESCOFO_FAUST 0)
 set(ANTESCOFO_CSOUND 0)
@@ -685,6 +685,8 @@ set( MACOSX_RESOURCE_FILES
 	${CMAKE_SOURCE_DIR}/../bin/data/Icon.icns
 	${CMAKE_SOURCE_DIR}/../bin/data/DroidSansMono.ttf
 	${CMAKE_SOURCE_DIR}/../bin/data/menlo.ttf
+	${CMAKE_SOURCE_DIR}/../bin/data/speaker_cursor.png
+	${CMAKE_SOURCE_DIR}/../bin/data/zoom_cursor.png
 	"${CMAKE_SOURCE_DIR}/../bin/data/Times New Roman.ttf"
 )
 

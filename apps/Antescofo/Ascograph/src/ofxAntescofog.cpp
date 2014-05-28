@@ -57,7 +57,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	bLineWrapMode = true;
 	bIsSimulating = false;
 	bShowActions = true;
-	bScoreFromCommandLine = false;
+	bMouseCursorSet = bScoreFromCommandLine = false;
 	ofxJumpTrack = 0;
 	audioTrack = NULL;
 	ofxAntescofoSim = 0;
@@ -398,6 +398,10 @@ void ofxAntescofog::menu_item_hit(int n)
 }
 
 void ofxAntescofog::setMouseCursorGoto(bool bState) {
+	string speaker_icon_path(ofFilePath::getCurrentExeDir() + "../Resources/speaker_cursor.png");
+	static NSImage* speaker_img = [[NSImage alloc] initWithContentsOfFile: [NSString stringWithUTF8String:speaker_icon_path.c_str()]];
+	static NSCursor* cur = [[NSCursor alloc] initWithImage:speaker_img hotSpot:[[NSCursor currentCursor] hotSpot]];
+
 	NSView *v = [cocoaWindow->delegate getNSView];
 
 	if (!ofxAntescofoBeatTicker)
@@ -406,7 +410,14 @@ void ofxAntescofog::setMouseCursorGoto(bool bState) {
 		//if (mCursor) { mCursor }
 		//[v addCursorRect:ofxAntescofoBeatTicker->bounds cursor:resizeRightCursor];
 		//[aCursor setOnMouseEntered:YES];
-		[[NSCursor resizeRightCursor] set];
+		//[[NSCursor resizeRightCursor] set];
+		cout << "setting cursor" << endl;
+
+		NSRect rect = NSMakeRect( timeline.getTrackHeader(ofxAntescofoBeatTicker)->getBounds().x, timeline.getTrackHeader(ofxAntescofoBeatTicker)->getBounds().y,
+					ofxAntescofoBeatTicker->getBounds().width, timeline.getTrackHeader(ofxAntescofoBeatTicker)->getBounds().height + ofxAntescofoBeatTicker->getBounds().height);
+		[v resetCursorRects];
+		[v addCursorRect:rect cursor:cur];
+		[cur set];
 	} else {
 		[[NSCursor arrowCursor] set];
 	}
@@ -1928,6 +1939,24 @@ void ofxAntescofog::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofxAntescofog::mouseMoved( int x, int y){
+	// zoom cursor:
+	if (!ofxAntescofoZoom) return;
+	string zoom_icon_path(ofFilePath::getCurrentExeDir() + "../Resources/zoom_cursor.png");
+	static NSImage* zoom_img = [[NSImage alloc] initWithContentsOfFile: [NSString stringWithUTF8String:zoom_icon_path.c_str()]];
+	static NSCursor* cur = [[NSCursor alloc] initWithImage:zoom_img hotSpot:[[NSCursor currentCursor] hotSpot]];
+
+	NSView *v = [cocoaWindow->delegate getNSView];
+	if (timeline.getTrackHeader(ofxAntescofoZoom)->getBounds().inside(x, y) || ofxAntescofoZoom->getBounds().inside(x, y)) {
+		NSRect rect = NSMakeRect( timeline.getTrackHeader(ofxAntescofoZoom)->getBounds().x, timeline.getTrackHeader(ofxAntescofoZoom)->getBounds().y,
+				ofxAntescofoZoom->getBounds().width, timeline.getTrackHeader(ofxAntescofoZoom)->getBounds().height + ofxAntescofoZoom->getBounds().height);
+		[v resetCursorRects];
+		[v addCursorRect:rect cursor:cur];
+		[cur set];
+		bMouseCursorSet = true;
+	} else if (bMouseCursorSet) {
+		bMouseCursorSet = false;
+		[[NSCursor arrowCursor] set];
+	}
 	//bShouldRedraw = true;
 }
 
@@ -1962,6 +1991,9 @@ void ofxAntescofog::mouseDragged( int x, int y, int button ){
 
 		//cout << "Elevator scrolled: score_y: " << score_y << " ny:" << ny << " barvalues: [ "<< nvl << " - "<< nvh<<" ]"<< endl;
 		score_y = ny;
+	}
+	if (timeline.getTrackHeader(ofxAntescofoZoom)->getBounds().inside(x, y) || ofxAntescofoZoom->getBounds().inside(x, y)) {
+
 	}
 
 	bShouldRedraw = true;

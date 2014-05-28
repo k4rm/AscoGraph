@@ -283,6 +283,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		string getApplicationSupportSettingFile();
 		vector<string> mRecentFiles;
 		void populateOpenRecentMenu();
+		bool bMouseCursorSet;
 
 		// OpenSoundControl communication with MAX/MSP or PureData
 		ofxOscReceiver  mOSCreceiver;

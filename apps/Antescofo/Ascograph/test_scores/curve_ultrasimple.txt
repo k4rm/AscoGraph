@@ -2,6 +2,41 @@
 BPM 60
 
 NOTE C2 5
+NOTE C2 2
+GROUP Solo
+		{
+			pouet tpoeut
+				
+			1/2 solo_num_ech 13  ; <----- porte
+			solo_PlayEch start
+			solo_lvl_ech 0.5 50
+
+			solo_num_ech2 18  ; <----- cuve
+			solo_PlayEch2 start
+			solo_lvl_ech2 0.5 50
+
+			2 solo_num_ech3 16  ; <----- cuve
+			solo_PlayEch3 start
+			solo_lvl_ech3 0.5 50
+			1/2 ::CS_solo_points("i1",3,0.06,0.5,72)
+			::CS_solo_points("i3",3,0.08,0.5,97)
+
+			3/2 solo_num_ech 7  ; <----- radio
+			solo_PlayEch start
+
+			curve echRadio @grain := 0.05s, @action := solo_lvl_ech $ampEchS 10
+				{$ampEchS
+						{		{ 0. } @type "quad_out"
+							1/2	{ 0.4 } @type "quad"
+							1/2 { 0.01 } @type "quad_out"
+							1/2	{ 0.5 } @type "quad"
+							1/2 { 0.01 } @type "quad_out"
+							1/2	{ 0.2 } @type "quad_out"
+							2 	{ 0. } 
+						}
+				}
+		}
+
 NOTE C2 5
 
 				curve freqg7s  @Grain := 0.05s, @Action := CS_solo_lignes c g7.freq (@midi2hz($freqg7s))

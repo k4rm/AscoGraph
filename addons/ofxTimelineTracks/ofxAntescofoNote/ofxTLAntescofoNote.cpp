@@ -460,8 +460,8 @@ void ofxTLAntescofoNote::guido_store_notes() {
 		float h = outmap[v].second.bottom - y;
 
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-		//cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
-		//cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << " r=" << outmap[v].second.right << " b=" << outmap[v].second.bottom << endl;
+		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << " r=" << outmap[v].second.right << " b=" << outmap[v].second.bottom << endl;
 #endif
 		if (w < 0 || outmap[v].second.right < 0) w = 70;
 		switches[i]->guidoCoords.x = x;
@@ -496,9 +496,6 @@ void ofxTLAntescofoNote::update_guido_render() {
 }
 bool ofxTLAntescofoNote::render_guido(float xfactor)
 {
-#ifdef DEBUG_GUIDO_ASCOGRAPH
-	cout << "render_guido : [[[[ " << xfactor << " ]]]]" << endl;
-#endif
 	if (oguido) {
 		delete oguido;
 		GuidoLayoutSettings layoutSettings;
@@ -549,20 +546,17 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 
 	//oguido->setWidth(bounds.width); oguido->setHeight(bounds.height);
 
-#ifdef DEBUG_GUIDO_ASCOGRAPH
-	cout << "bounds rect: " << bounds.width << " x "<< bounds.height << endl;
-	//cout << "guido rect: " << oguido->getWidth() << " x "<< oguido->getHeight() << endl;
-#endif
 
 	oguido->getPageFormat(format);
 	mRatioGuido = (format.width / format.height);
 
-	cout << "Margin : " << format.marginleft << " <-> " << format.marginright << endl;
 	ofPushStyle();
 	ofSetColor(0,0,0, 255);
 
 #ifdef DEBUG_GUIDO_ASCOGRAPH
+	cout << "Margin : " << format.marginleft << " <-> " << format.marginright << endl;
 	cout << "guido page rect: " << format.width << " x "<< format.height << " ratio=" << mRatioGuido << endl;
+	cout << "bounds rect: " << bounds.width << " x "<< bounds.height << endl;
 #endif
 	float render_x = 0., render_y = 0.;
 	float render_h = bounds.height;
@@ -593,43 +587,25 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 			guido_images[i].clear();
 	}
 	guido_images.clear();
-	//oguido->setSize(1024, 1024);
-	// copy into an ofImage
-	//   Internal vs screen
-	//   format.width -> render_w
-	//   x -> 1024
-	//int stepx = (1024*format.width)/render_w;
-	//int stepy = (1024*format.height)/render_h;
-	float stepx = fbow, stepy = fboh;
-	for (int i = 0; i*stepx < render_w+stepx; i++) {
+	// copy into an ofImage:   Internal vs screen
+	//   				format.width -> render_w
+	// 				x -> 1024
+	int stepx = (fbow*format.width)/render_w;
+	int stepy = (fboh*format.height)/render_h;
+	for (int i = 0; i*stepx < format.width; i++) {
 		ofImage img;
 		img.allocate(fbow, fboh, OF_IMAGE_COLOR_ALPHA);
 
 		oguido->setScale(1., 1.);
 		oguido->guido->getDevice()->SetOrigin(i*stepx, 0);
-		oguido->draw(i*stepx, render_y, render_w, render_h);
+		oguido->draw(0, render_y, render_w, render_h);
 
 		oguido->guido->getDevice()->drawCache.getTextureReference().readToPixels( img.getPixelsRef() );
 		img.update();
-		img.saveImage(string("/tmp/img") + ofToString(i) + ".png");
+		//img.saveImage(string("/tmp/img") + ofToString(i) + ".png");
 		guido_images.push_back(img);
-
-		cout << "COPIED I=" << i << " fbow= " << fbow << " imgw=" << img.getWidth() << endl;
+		//if (debug_guido) cout << "COPIED I=" << i << " fbow= " << fbow << " imgw=" << img.getWidth() << endl;
 	}
-#else
-#ifdef USE_GUIDO_SVG
-	string guidosvgfile("/tmp/guido_out.svg");
-	fstream out(guidosvgfile.c_str(), fstream::out | fstream::trunc);
-	string guidoFont(ofFilePath::getCurrentExeDir() + "../Resources/GUI/guido2.svg");
-        err = GuidoSVGExport (oguido->guido->getGRHandler(), 1, out, guidoFont.c_str());
-        if (err != guidoNoErr) {
-		cerr << "ERROR exporting Guido to SVG" <<endl;
-		return false;
-	}
-	guido_svg = new ofxSVGTiny();
-	guido_svg->load(guidosvgfile);
-	cout << "GUIDO SVG : " << guido_svg->getWidth() << " x " << guido_svg->getHeight() << endl;
-#endif
 #endif
 
 	// once drawn to FBO, build a map of beat to switchId: beat2switchId
@@ -637,21 +613,7 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	for (int i = 0; i < switches.size(); i++)
 		beat2switchId[switches[i]->beat.min] = i;
 
-	/* if (guido->getWidth() > bounds.width) { // zoom in if rendered score is bigger than track width
-		float fact =  bounds.width / guido->getWidth();
-		ofxTLZoomer2D *zoom = (ofxTLZoomer2D*)timeline->getZoomer();
-		ofRange z = zoom->getViewRange();
-		ofRange oldz = z;
-		float c = z.center(); 
-		float pos = fact;
-		float d = pos - c;
-		z.min = 0; //ofClamp(z.min + d, 0, 1);
-		z.max = ofClamp(z.max * fact, 0, 1);
-		cout <<" to zoomrange: "<< z.min << "->"<< z.max<<endl;
-		zoom->setViewRange(z);
-	}*/
 	// store note mapping
-
 	guido_store_notes();
 	return true;
 }
@@ -673,15 +635,11 @@ void ofxTLAntescofoNote::draw_guido() {
 		cout << "draw_guido: guido_x = " << guido_x << " guido_y = " << guido_y << endl;
 #endif
 		ofSetColor(0,0,0, 255);
-
 		GuidoPageFormat format;
 		oguido->getPageFormat(format);
 		mRatioGuido = (format.width / format.height);
 		float render_h = bounds.height;
 		float render_w = render_h * mRatioGuido;
-		//oguido->setSize(render_w, render_h);
-		//oguido->draw(render_x, render_y, render_w, render_h);
-
 #if 0
 		oguido->draw(guido_x, guido_y, render_w, render_h);
 		oguido->draw_cache(bounds.x, bounds.y);
@@ -694,7 +652,9 @@ void ofxTLAntescofoNote::draw_guido() {
 		int nbimages = guido_images.size();
 		int totalw = fbow * nbimages;
 		// find right guido images to display:
+#ifdef DEBUG_GUIDO_ASCOGRAPH
 		cout << "nbimages=" << nbimages << " totalw=" << totalw << " fbow=" << fbow << endl;
+#endif
 		if (guido_x > 0) {
 			int firstn = guido_x * nbimages / totalw;
 			int secondn = firstn+1;
@@ -702,32 +662,21 @@ void ofxTLAntescofoNote::draw_guido() {
 			int firstw = fbow - firstx;
 			int secondx = bounds.x + firstw;
 			int secondw = fbow - firstw;
-
+#ifdef DEBUG_GUIDO_ASCOGRAPH
 			cout << "Draw guido_images: firstn=" << firstn << " 1stx="<< firstx << " firstw=" << firstw << endl;
-			guido_images[firstn ].drawSubsection(bounds.x, bounds.y, firstw, render_h, firstx, 0);
-
-			if (1 && (firstx > 0 || firstw <= bounds.width)) {
-				if (secondn == nbimages)
-					secondw = fbow;
-				cout << "-- 2ndn=" << secondn << " 2ndx="<< secondx << " 2ndw=" << secondw << endl;
-				//guido_images[secondn].drawSubsection(bounds.x+secondx, bounds.y, secondw, render_h, 0, 0);
-				guido_images[secondn].drawSubsection(secondx, bounds.y, secondw, bounds.height, 0, 0);
-				//guido_images[secondn].draw(secondx, bounds.y, secondw, bounds.height);
+#endif
+			guido_images[firstn].drawSubsection(bounds.x, bounds.y, firstw, render_h, firstx, 0);
+			if (firstx > 0 || firstw <= bounds.width) {
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+				cout << "-- 2ndn=" << secondn << " 2ndx="<< secondx << " 2ndw=" << secondw << " switches.size=" <<switches.size()<< endl;
+#endif
+				if (secondn < nbimages) {
+					guido_images[secondn].drawSubsection(secondx, bounds.y, secondw, bounds.height, 0, 0);
+				} else cout << "!!!!!!!!!!!!! draw_guido: secondn=" << secondn << " >= nbimages=" << nbimages << endl;
 			}
 		} else {
 			guido_images[0].drawSubsection(bounds.x, bounds.y, render_w, render_h, 0, 0);
-			//guido_images[0].draw(bounds.x, bounds.y, render_w, render_h);
 		}
-
-
-		//guido_image.draw(bounds.x, bounds.y, render_w, render_h);
-#endif
-#ifdef USE_GUIDO_SVG
-		ofPushMatrix();
-		ofTranslate(-bounds.x, -bounds.y);
-		ofFill();
-		guido_svg->draw();
-		ofPopMatrix();
 #endif
 
 #if 0
@@ -1364,7 +1313,6 @@ void ofxTLAntescofoNote::autoscroll() {
 			scrolled_guido_w = 0;
 			return;
 		}
-		//pos = (switches[mCurGuidoId]->guidoCoords.x + bounds.x) / guido_w;
 		pos = switches[mCurSwitchId]->guidoCoords.x / guido_w;
 		//cout << "==============autoscroll==============> mCurGuidoId = " << mCurGuidoId << " pos= " << pos << " lastpos= " << lastpos << endl;
 
@@ -1424,7 +1372,9 @@ void ofxTLAntescofoNote::autoscroll() {
 				cout << "MID SCROLL" << endl;
 #endif
 				scrolled_guido_x = bounds.width / 2 - scrolled_guido_w/2 + bounds.x;
-				guido_x = switches[mCurSwitchId]->guidoCoords.x - bounds.width/2 - scrolled_guido_w;
+				int switchid = mCurSwitchId;// >= switches.size()-1 ? switches.size()-1 : mCurSwitchId+1;
+				guido_x = switches[switchid]->guidoCoords.x - bounds.width/2;// - scrolled_guido_w;
+				cout << "mCurSwitchId=" << mCurSwitchId << " switches.size()=" << switches.size() << endl;
 			}
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 			 cout << "mCurGuidoId = " << mCurGuidoId << "  scrolled_guido_x = " << scrolled_guido_x << "  scrolled_guido_w = " << scrolled_guido_w << " guido_x=" << guido_x <<  endl ;
@@ -1459,7 +1409,7 @@ void ofxTLAntescofoNote::update_guido() {
 			//mCurGuidoId = i->second;
 			mCurSwitchId = i->second;
 			mCurGuidoId = switchId2guidoId[i->second];
-			//cout << "Setting mCurGuidoId=" << mCurGuidoId << " with switchId = " << i->second << endl;
+			cout << "Setting mCurGuidoId=" << mCurGuidoId << " with switchId = " << i->second << endl;
 
 			// draw at scrolled_guido_x
 
