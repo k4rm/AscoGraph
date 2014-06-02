@@ -176,21 +176,12 @@ void GuidoComponent::draw (int x, int y, int w, int h)
 {
 	if (!fGRHandler) return;
 
-    
-
-#if 0
-	int xx = x;
-	int yy = y;
-	int ww = w;
-	int hh = h;
-#else
 	int xx = x / getDevice()->GetXScale();
 	int yy = y / getDevice()->GetYScale();
 	int ww = w / getDevice()->GetXScale();
 	int hh = h / getDevice()->GetYScale();
-#endif
+
 	setWidth(ww); setHeight(hh);
-	cout << ">>>>>>>>>>>>>>>>>>>>> x="<< x << " SCALE=" << getDevice()->GetXScale() << ", " << getDevice()->GetYScale() << " xx=" << xx << endl;
 	ofSetColor(fScoreColor);
 	GuidoOnDrawDesc desc;
 	desc.handle = fGRHandler;
@@ -199,19 +190,10 @@ void GuidoComponent::draw (int x, int y, int w, int h)
 	desc.scrollx = xx;
 	desc.scrolly = 0;
 	desc.isprint = false;
-	/*
-	desc.updateRegion.left = xx;
-	desc.updateRegion.top = yy;
-	desc.updateRegion.right = ww + xx;
-	desc.updateRegion.bottom = hh + yy;
-	*/
 	desc.updateRegion.erase = true;
 	desc.sizex = ww;
 	desc.sizey = hh;
-    //cout << "GuidoComponent::draw( "<< x <<" ," <<y << ", " << w << " x " << h << " )"<<endl;
-    cout << "GuidoComponent::drawdraw( "<< xx<<" ," <<yy << ", " << ww << " x " << hh << " )"<<endl;
 
-	//GuidoUpdateGR(fGRHandler, &fSettings);
 	GuidoErrCode err = GuidoOnDraw (&desc);
 	if (err != guidoNoErr)
 		cerr << "error while painting: " << GuidoGetErrorString(err) << endl;

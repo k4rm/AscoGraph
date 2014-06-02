@@ -30,8 +30,6 @@
 
 ofxTimeline *_timeline;
 
-bool enable_tracks = true;
-
 bool debug_edit_curve = false;
 bool debug_actiongroup = false;
 template<class T>
@@ -69,7 +67,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mPrevTrackBtn.height = mNextTrackBtn.height = mTrackBtnHeight;
 
 	// store Antescofo tracks names
-	if (enable_tracks && TrackDefinition::idx2track.size()) {
+	if (TrackDefinition::idx2track.size()) {
 		for (TrackDefinition::idx2t_t::iterator i = TrackDefinition::idx2track.begin(); i != TrackDefinition::idx2track.end(); i++)
 			mTrackStates[i->second->_name.substr(7)] = new TrackState(); // 7 because "track::"
 	}
@@ -105,10 +103,10 @@ void ofxTLAntescofoAction::draw()
 		ofLine(mRectCross.x+mRectCross.width, mRectCross.y, mRectCross.x, mRectCross.y+mRectCross.height);
 
 		// draw antescofo header tracks
-		if (enable_tracks && TrackDefinition::idx2track.size()) draw_antescofo_tracks_header();
+		if (TrackDefinition::idx2track.size()) draw_antescofo_tracks_header();
 
 		update_groups();
-		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
 					|| zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration)) {
 				ofSetColor(0, 0, 0, 125);
@@ -137,7 +135,7 @@ void ofxTLAntescofoAction::draw()
 		}
 
 		// draw modal windows for every curves
-		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum) || zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration)) {
 				if (*i && !(*i)->hidden)
 					(*i)->drawModalContent(this);
@@ -231,8 +229,8 @@ ofColor ofxTLAntescofoAction::get_random_color() {
 	return color;
 }
 
-void ofxTLAntescofoAction::attribute_header_colors(list<ActionGroup*> groups) {
-	for (list<ActionGroup*>::const_iterator i = groups.begin(); i != groups.end(); i++)
+void ofxTLAntescofoAction::attribute_header_colors(vector<ActionGroup*> groups) {
+	for (vector<ActionGroup*>::const_iterator i = groups.begin(); i != groups.end(); i++)
 	{
 		if (!*i) abort();
 		(*i)->headerColor = get_random_color();
@@ -301,7 +299,7 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 
 void ofxTLAntescofoAction::clear_actions()
 {
-	while(!mActionGroups.empty()) delete mActionGroups.front(), mActionGroups.pop_front();
+	while(!mActionGroups.empty()) delete mActionGroups.back(), mActionGroups.pop_back();
 }
 
 
@@ -345,18 +343,17 @@ void ofxTLAntescofoAction::update()
 		th->recalculateFooter();		
 	}
 
-	if (enable_tracks) {
-		int fromx = bounds.x + 200;
-		int w = 0;
-		for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++, w += mTrackBtnSpace) {
-			w += i->first.size() * sizec;
-			if (w > bounds.width - 200) {
-				mPrevTrackBtn.x = bounds.x + 150;
-				mNextTrackBtn.x = bounds.x + bounds.width - 40;
-				mPrevTrackBtn.y = mNextTrackBtn.y = bounds.y - 15;
-				mPrevTrackBtn.width = mNextTrackBtn.width = mTrackBtnWidth;
-				break;
-			}
+	// tracks
+	int fromx = bounds.x + 200;
+	int w = 0;
+	for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++, w += mTrackBtnSpace) {
+		w += i->first.size() * sizec;
+		if (w > bounds.width - 200) {
+			mPrevTrackBtn.x = bounds.x + 150;
+			mNextTrackBtn.x = bounds.x + bounds.width - 40;
+			mPrevTrackBtn.y = mNextTrackBtn.y = bounds.y - 15;
+			mPrevTrackBtn.width = mNextTrackBtn.width = mTrackBtnWidth;
+			break;
 		}
 	}
 	//cout << "track bounds: x:" << bounds.x << " y:" << bounds.y << " w:" << bounds.width << " h:" << bounds.height << endl;
@@ -369,7 +366,7 @@ int ofxTLAntescofoAction::get_max_note_beat()
 
 	int maxbeat = 0;
 	if (!mActionGroups.empty()) {
-		list<ActionGroup*>::const_iterator i = mActionGroups.end();
+		vector<ActionGroup*>::const_iterator i = mActionGroups.end();
 		i--;
 		maxbeat = (*i)->beatnum + (*i)->delay;
 	}
@@ -408,7 +405,7 @@ int ofxTLAntescofoAction::update_sub_height_curve(ActionMultiCurves* c, int& cur
 
 int ofxTLAntescofoAction::update_sub_height_message(ActionMessage* m, int& cury, int& curh)
 {
-	if ((enable_tracks && mFilterActions && !m->in_selected_track)) {
+	if (mFilterActions && !m->in_selected_track) {
 		curh = 0;
 		m->rect.height = 0;
 		return 0;
@@ -431,7 +428,7 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 	int toth = 0, curh = 0; // find max h
 	int cury = ag->rect.y;
 
-	//if ((enable_tracks && mFilterActions && !ag->in_selected_track)) return 0;
+	//if ((mFilterActions && !ag->in_selected_track)) return 0;
 
 	if (ag->hidden) {
 		return ag->HEADER_HEIGHT;
@@ -456,7 +453,7 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 	}
 
 	// go deep
-	list<ActionGroup*>::iterator g;
+	vector<ActionGroup*>::iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		if ((m = dynamic_cast<ActionMessage*>(*g)))
 			update_sub_height_message(m, cury, curh);
@@ -497,7 +494,7 @@ float ofxTLAntescofoAction::update_sub_duration(ActionGroup *ag)
 		if (m->delay) 
 			return m->delay;
 	} else {
-		list<ActionGroup*>::const_iterator g;
+		vector<ActionGroup*>::const_iterator g;
 		for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 			if ((*g)->delay)
 				ag->duration += (*g)->delay;
@@ -511,7 +508,7 @@ float ofxTLAntescofoAction::update_sub_duration(ActionGroup *ag)
 
 void ofxTLAntescofoAction::tracks_rec_mark_groups_as_not_displayed(ActionGroup *ag) {
 	ag->in_selected_track = false;
-	for (list<ActionGroup*>::iterator g = ag->sons.begin(); g != ag->sons.end(); g++)
+	for (vector<ActionGroup*>::iterator g = ag->sons.begin(); g != ag->sons.end(); g++)
 		tracks_rec_mark_groups_as_not_displayed(*g);
 }
 
@@ -541,7 +538,7 @@ void ofxTLAntescofoAction::tracks_rec_test_if_groups_are_displayed(ActionGroup *
 		}
 
 	// rec
-	list<ActionGroup*>::const_iterator g;
+	vector<ActionGroup*>::const_iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++)
 		tracks_rec_test_if_groups_are_displayed(*g);
 }
@@ -555,13 +552,13 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	int del = 0; float beatdel = 0.;
 	ag->duration = 0;
 
-	int debugsub = 0;
+	int debugsub = 1;
 	if (debugsub) cout << "update_width: " << ag->title << endl;
 	ActionMessage *m;
 	ActionMultiCurves *c;
 
 
-	if (!(enable_tracks && mFilterActions && !ag->in_selected_track)) {
+	if (!(mFilterActions && !ag->in_selected_track)) {
 		if ((m = dynamic_cast<ActionMessage*>(ag))) {
 			int len = sizec * (m->actionstr.size() - 1);
 			if (m->delay)
@@ -576,12 +573,16 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 			if (c->delay)
 				len += get_x(c->beatnum + c->delay) - get_x(c->beatnum);
 			maxw = len;
-			if (c->isValid)
-				maxw = c->getWidth();
+			if (c->isValid) {
+				if (c->rect.x < 0)
+					maxw = c->getWidth() - abs(get_x(c->beatnum));
+				else maxw = c->getWidth();
+			}
+			cout << "c->delay=" << c->delay << " isValid=" << c->isValid << " len="<< len <<" getWidth= " << c->getWidth() << endl;
 			if (debugsub) cout << "\tupdate_width: curves msg maxw:" << maxw << endl;
 		}
 	}
-	list<ActionGroup*>::const_iterator g;
+	vector<ActionGroup*>::const_iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
 		curw = update_sub_width(*g);
 		if ((*g)->delay) {
@@ -612,7 +613,7 @@ void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w, int h
 			//c->setWidth(g->rect.width);
 		}
 	}
-	for (list<ActionGroup*>::const_iterator i = g->sons.begin(); i != g->sons.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = g->sons.begin(); i != g->sons.end(); i++) {
 		ActionMessage *m;
 		
 		update_avoid_overlap_rec(*i, w, h);
@@ -623,9 +624,9 @@ void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w, int h
 void ofxTLAntescofoAction::update_avoid_overlap()
 {
 	//bounds.height = 0;
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 
-		list<ActionGroup*>::const_iterator j = i;
+		vector<ActionGroup*>::const_iterator j = i;
 		if (++j != mActionGroups.end() && (*i)->is_in_bounds(this) ) {
 			if ( ((*i)->rect.x + (*i)->rect.width) > (*j)->rect.x) {
 				update_avoid_overlap_rec((*i), (*j)->rect.x - 1, (*j)->rect.height + (*j)->rect.y);
@@ -637,15 +638,15 @@ void ofxTLAntescofoAction::update_avoid_overlap()
 
 void ofxTLAntescofoAction::update_groups()
 {
-	if (enable_tracks && mFilterActions) {
-		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
+	if (mFilterActions) {
+		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
 			tracks_rec_mark_groups_as_not_displayed(*i);
-		for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
+		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++)
 			tracks_rec_test_if_groups_are_displayed(*i);
 	}
 
 	// update actions' rect
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		if (debug_actiongroup) cout << "--------------------------------------------------------------" << endl;
 		//if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
 		(*i)->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
@@ -672,7 +673,8 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 	//cout << "mousePressed: rect:"<< header->realtitle<< " x:" << header->rect.x << " y:" << header->rect.y << " w:"<< header->rect.width << " h:" << header->rect.height << endl; 
 	if (group->rect.inside(args.x, args.y)) {
 		if (group->hidden) {
-			group->hidden = false;
+			if (!ofGetModifierSelection())
+				group->hidden = false;
 			cout << "mousePressed: setting action '"<< group->title <<"' hidden:"<< group->hidden << endl;
 			if (group) {
 				Event *e = group->event;
@@ -680,13 +682,13 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 				res = true;
 
 				ActionMultiCurves* c = 0;
-				if ((c = dynamic_cast<ActionMultiCurves*>(group)))
+				if ((c = dynamic_cast<ActionMultiCurves*>(group)) && !ofGetModifierSelection())
 					c->hidden = false;
-
 			}
 			return res;
 		} else if (group->is_in_header(args.x, args.y)) {
-			group->hidden = true;
+			if (!ofGetModifierSelection())
+				group->hidden = true;
 			res = true;
 
 			// hide curve tracks WHY WTF?
@@ -697,7 +699,7 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 			if (group) { // not hidden and click in group
 				if (group->sons.size()) { // rec in subgroups
 					ActionGroup *a = group;
-					for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+					for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 						if (*j && *j != group && mousePressed_in_header(args, *j)) {
 							return true;
 						}
@@ -711,7 +713,7 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 
 ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint_rec(ActionGroup* group, int x, int y) {
 	ActionGroup* rg = 0;
-	for (list<ActionGroup*>::const_iterator i = group->sons.begin(); i != group->sons.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = group->sons.begin(); i != group->sons.end(); i++) {
 		if ((*i)->rect.inside(x, y) && *i != group) {
 			if (!(rg = groupFromScreenPoint_rec(*i, x, y)))
 				return *i;
@@ -724,11 +726,18 @@ ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint_rec(ActionGroup* group, 
 	return 0;
 }
 
-ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint(int x, int y) {
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint(int x, int y, vector<ActionGroup*>& groups) {
+	for (vector<ActionGroup*>::const_iterator i = groups.begin(); i != groups.end(); i++) {
 		ActionGroup *gr = 0;
-		if ((*i)->rect.inside(x, y) && (gr = groupFromScreenPoint_rec(*i, x, y)))
-			return gr;
+		if ((*i)->rect.inside(x, y) && (gr = groupFromScreenPoint_rec(*i, x, y))) { 
+			// check if it was clicked recently
+			if (find(clickedGroups.begin(), clickedGroups.end(), gr) != clickedGroups.end()) { // already clicked
+				continue;
+			} else { // first time clicked
+				clickedGroups.push_back(gr);
+				return gr;
+			}
+		}
 	}
 	return 0;
 }
@@ -746,6 +755,7 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 	for (vector<ActionCurve*>::iterator i = ac->curves.begin(); !res && i != ac->curves.end(); i++) {
 		ActionCurve *c = (*i);
 		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
+#if 0
 			if (ofGetModifierSelection()) { // resize curve box
 				int xc = c->beatcurves[iac]->bounds.x;
 				int xw = c->beatcurves[iac]->bounds.width;
@@ -754,6 +764,7 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 					cout << "Resizing curve box !" << endl;
 				}
 			}
+#endif
 			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
 				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
 					ofRange zr = getZoomBounds();
@@ -769,7 +780,7 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 		}
 	}
 
-	for (list<ActionGroup*>::const_iterator j = a->sons.begin(); !res && j != a->sons.end(); j++) {
+	for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); !res && j != a->sons.end(); j++) {
 		res = mousePressed_curve_rec(*j, args, millis);
 	}
 	return res;
@@ -781,7 +792,7 @@ bool ofxTLAntescofoAction::mousePressed_search_curve_rec(ActionGroup* a, ofMouse
 	ActionMultiCurves* ac = 0;
 	if ((ac = dynamic_cast<ActionMultiCurves* >(a)))
 		res = mousePressed_curve_rec(a, args, millis);
-	for (list<ActionGroup*>::const_iterator j = a->sons.begin(); !res && j != a->sons.end(); j++) {
+	for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); !res && j != a->sons.end(); j++) {
 		if ((ac = dynamic_cast<ActionMultiCurves* >(*j)))
 			res = mousePressed_curve_rec(*j, args, millis);
 		if (!res)
@@ -798,32 +809,32 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	bool res = false;
 #ifndef ASCOGRAPH_IOS
 	// selection
-	ActionGroup* clickedGroup = groupFromScreenPoint(args.x, args.y);
+	ActionGroup* clickedGroup = 0;
+	if (foreground_groups.size()) clickedGroup = groupFromScreenPoint(args.x, args.y, foreground_groups);
+	if (!clickedGroup) clickedGroup = groupFromScreenPoint(args.x, args.y, mActionGroups);
+	if (!clickedGroup && clickedGroups.size()) { // cycle to first clickedgroup
+		clickedGroup = clickedGroups.front();
+		clickedGroups.clear();
+	}
 	if (clickedGroup) {
 		cout << "clickedGroup: " << clickedGroup->realtitle << endl;
-		/*
-		clickedGroup->selected = true;
-		movingAction = true;
-		movingActionRect.x = args.x;
-		movingActionRect.y = args.y;
-		*/
 		if (clickedGroup) {
 			cout << "show selection: lineNum_begin:" << clickedGroup->lineNum_begin << " lineNum_end:" << clickedGroup->lineNum_end << endl
 			     << "\tcolNum_begin:" << clickedGroup->colNum_begin << " colNum_end:" << clickedGroup->colNum_end << endl;
 			mAntescofog->editorShowLine(clickedGroup->lineNum_begin, clickedGroup->lineNum_end, clickedGroup->colNum_begin, clickedGroup->colNum_end);
 		}
 		// bring it to foreground level : if CMD pressed : bring background
-		if (ofGetModifierPressed(OF_KEY_SPECIAL)) {
+		if (clickedGroup->is_in_header(args.x, args.y) && ofGetModifierSelection()) {
+			cout << "Bringing to front group : " << clickedGroup->realtitle << endl;
 			clickedGroup->bringFront();
 			foreground_groups.push_back(clickedGroup);
 			return true;
 		} else { 
-			clickedGroup->bringBack();
+			//clickedGroup->bringBack();
 			foreground_groups.clear();
 		}
 	}
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-
+	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		if (mousePressed_in_header(args, *i)) {
 			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 			return true;
@@ -834,7 +845,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 				res = mousePressed_search_curve_rec(*i, args, millis);
 			}
 			if (a->sons.size()) {
-				for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+				for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					// handle arrow click
 					if (*j &&  mousePressed_in_header(args, *j)) {
 						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
@@ -970,7 +981,7 @@ bool ofxTLAntescofoAction::mouseReleased_tracks_header(ofMouseEventArgs& args, l
 
 void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 {
-	if (enable_tracks && mouseReleased_tracks_header(args, millis)) {
+	if (mouseReleased_tracks_header(args, millis)) {
 		return;
 	}
 	if (mRectCross.inside(args.x, args.y)) {
@@ -1034,7 +1045,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 // move action from action->selected beatnum 
 // to moveActionRect. x y
 void ofxTLAntescofoAction::move_action() {
-	list<ActionGroup*>::iterator from;
+	vector<ActionGroup*>::iterator from;
 	/*for (from = mActionGroups.begin(); from != mActionGroups.end(); from++) {
 		if (*from && (*from)->selected) {
 			(*from)->selected = false;
@@ -1044,7 +1055,7 @@ void ofxTLAntescofoAction::move_action() {
 	if (from == mActionGroups.end() || !(*from))
 		return;
 	bool doneMoving = false;
-	ActionGroup* dest = groupFromScreenPoint(movingActionRect.x, movingActionRect.y);
+	ActionGroup* dest = groupFromScreenPoint(movingActionRect.x, movingActionRect.y, mActionGroups);
 	// if dest ActionGroup exists : simply add it
 	if (dest) {
 		cout << "move_action: dest found" << endl;
@@ -1052,7 +1063,7 @@ void ofxTLAntescofoAction::move_action() {
 		doneMoving = true;
 	} else { // else find the event and plug it to it
 		cout << "move_action: dest not found" << endl;
-		for (list<ActionGroup*>::iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+		for (vector<ActionGroup*>::iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			if ((*i)->rect.x <= movingActionRect.x && (*i)->rect.x + (*i)->rect.width >= movingActionRect.x) {
 				cout << "move_action: dest finally found" << endl;
 				if (!(*i))
@@ -1068,7 +1079,7 @@ void ofxTLAntescofoAction::move_action() {
 
 	if (doneMoving) {// remove from from
 		// assign dest header to from subgroups
-		for (list<ActionGroup*>::iterator j = (*from)->sons.begin(); j != (*from)->sons.end(); j++) {
+		for (vector<ActionGroup*>::iterator j = (*from)->sons.begin(); j != (*from)->sons.end(); j++) {
 			*j = dest;
 		}
 		//(*from)->group->header = dest->header;
@@ -1076,7 +1087,7 @@ void ofxTLAntescofoAction::move_action() {
 		delete *from;
 		//update_groups();
 	}
-	for (list<ActionGroup*>::iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+	for (vector<ActionGroup*>::iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		//(*i)->print();
 	}
 }
@@ -1099,17 +1110,17 @@ void ofxTLAntescofoAction::keyPressed_curve_rec(ActionGroup* a, ofKeyEventArgs& 
 		}
 	}
 
-	for (list<ActionGroup*>::const_iterator j = a->sons.begin(); !res && j != a->sons.end(); j++) {
+	for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); !res && j != a->sons.end(); j++) {
 		keyPressed_curve_rec(*j, key);
 	}
 }
 
 void ofxTLAntescofoAction::keyPressed(ofKeyEventArgs& args) {
 	// transmit DEL key for deleting curve points
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		ActionGroup *a = *i;
 		if (a->sons.size()) {
-			for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+			for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 				// handle arrow click
 				if (!(*i)->hidden) { 
 					// handle curve click
@@ -1141,18 +1152,18 @@ void ofxTLAntescofoAction::show_rec(ActionGroup* a, string label) {
 			}
 		}
 	}
-	for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+	for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 		show_rec(*j, label);
 	}
 }
 
 void ofxTLAntescofoAction::show(string label) {
 	cout << "Show: label:" << label << endl;
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		 if (*i) {
 			ActionGroup* a = *i;
 			if (a->sons.size()) {
-				for (list<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
+				for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					show_rec(*j, label);
 				}
 			}
@@ -1217,7 +1228,7 @@ void ofxTLAntescofoAction::show_all_curves()
 
 void ofxTLAntescofoAction::show_all_groups_rec(bool bJustCurves, ActionGroup* gf)
 {
-	list<ActionGroup*>::const_iterator i;
+	vector<ActionGroup*>::const_iterator i;
 	for (i = gf->sons.begin(); i != gf->sons.end(); i++) {
 		ActionGroup* g = *i;
 		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g)) {
@@ -1231,7 +1242,7 @@ void ofxTLAntescofoAction::show_all_groups_rec(bool bJustCurves, ActionGroup* gf
 
 void ofxTLAntescofoAction::show_all_groups(bool bJustCurves)
 {
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		ActionGroup* g = *i;
 		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g))
 			(*i)->hidden = false;
@@ -1246,7 +1257,7 @@ void ofxTLAntescofoAction::hide_all_curves()
 
 void ofxTLAntescofoAction::hide_all_groups_rec(bool bJustCurves, ActionGroup* gf)
 {
-	list<ActionGroup*>::const_iterator i;
+	vector<ActionGroup*>::const_iterator i;
 	for (i = gf->sons.begin(); i != gf->sons.end(); i++) {
 		ActionGroup* g = *i;
 		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g)) {
@@ -1260,7 +1271,7 @@ void ofxTLAntescofoAction::hide_all_groups_rec(bool bJustCurves, ActionGroup* gf
 
 void ofxTLAntescofoAction::hide_all_groups(bool bJustCurves)
 {
-	for (list<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		ActionGroup* g = *i;
 		if (!bJustCurves || dynamic_cast<ActionMultiCurves* >(g))
 			(*i)->hidden = true;
@@ -1372,7 +1383,7 @@ ActionGroup::~ActionGroup()
 		_timeline->removeTrack(trackName);
 	}
 
-	while(!sons.empty()) delete sons.front(), sons.pop_front();
+	while(!sons.empty()) delete sons.back(), sons.pop_back();
 }
 
 int ActionGroup::getHeight()
@@ -1438,7 +1449,7 @@ void ActionGroup::print() {
 
 	if (period) cout << "ActionGroup loop period: " << period << endl;
 
-	for (list<ActionGroup*>::iterator i = sons.begin(); i != sons.end(); i++)
+	for (vector<ActionGroup*>::iterator i = sons.begin(); i != sons.end(); i++)
 		(*i)->print();
 }
 
@@ -1479,7 +1490,7 @@ void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 			ofRectangle inrect = rect;
 			inrect.y += HEADER_HEIGHT; inrect.height -= HEADER_HEIGHT;
 			ofRect(tlAction->getBoundedRect(inrect)); // draw background
-			for ( list<ActionGroup*>::const_iterator i = sons.begin(); i != sons.end(); i++) {
+			for ( vector<ActionGroup*>::const_iterator i = sons.begin(); i != sons.end(); i++) {
 				if ((*i)->is_in_bounds(tlAction))
 					(*i)->draw(tlAction);
 			}
@@ -1492,7 +1503,7 @@ void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 void ActionGroup::drawModalContent(ofxTLAntescofoAction *tlAction)
 {
 	if (is_in_bounds(tlAction))
-		for (list<ActionGroup*>::iterator i = sons.begin(); i != sons.end(); i++)
+		for (vector<ActionGroup*>::iterator i = sons.begin(); i != sons.end(); i++)
 			(*i)->drawModalContent(tlAction);
 }
 
@@ -1629,7 +1640,7 @@ ActionMultiCurves::~ActionMultiCurves()
 }
 
 void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
-	if ((enable_tracks && tlAction->mFilterActions && !in_selected_track)) return;
+	if (tlAction->mFilterActions && !in_selected_track) return;
 	//cout << "ActionMultiCurves::draw: x:"<< rect.x << " y:" << rect.y << endl;
 	if (!hidden && is_in_bounds(tlAction)) {
 		vector<ActionCurve*>::iterator j;
@@ -1750,35 +1761,15 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			values.push_back(hvalues);
 		}
 		// get delays
-		double groupDelay = parentCurve->delay;
+		double groupDelay = 0;//parentCurve->delay;
 		for (std::vector<AnteDuration*>::const_iterator j = dur_vect->begin(); j != dur_vect->end(); j++) {
 			if ((*j)->is_constant()) {
 				double dou = (*j)->eval();
 				if (j == dur_vect->begin())
-					dou +=  groupDelay;
+					dou += groupDelay;
 				if (debug_edit_curve) cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
 				delays.push_back(dou);
 			} else return false;
-			/*
-			FloatValue* f = dynamic_cast<FloatValue*>((*j)->value());
-			if (f) {
-				double dou = f->get_double() + groupDelay;
-				cout << "ofxTLAntescofoAction::add_action: got delay:" << dou << endl;
-				delays.push_back(dou);
-			} else {
-				IntValue* in = dynamic_cast<IntValue*>((*j)->value());
-				if (in) {
-					int ii = in->get_int() + groupDelay;
-					cout << "ofxTLAntescofoAction::add_action: got delay:" << ii << endl;
-					delays.push_back(ii + parentCurve->header->delay);
-				}
-				else if ((*j)->value()->is_constant()) {
-					double val = eval_double((*j)->value()) + groupDelay;
-					cout << "ofxTLAntescofoAction::add_action: got delay:" << val << endl;
-					delays.push_back(val + parentCurve->header->delay);
-				}
-			}
-			*/
 		}
 	}
 	//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
@@ -1801,8 +1792,7 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			int boxy = parentCurve->rect.y + parentCurve->HEADER_HEIGHT + i * boxh;
 			int boxw = getWidth();// + 30;
 			int boxx;
-			if (parentCurve->delay) 
-				boxx = curve->tlAction->get_x((parentCurve->beatnum + parentCurve->delay));
+			if (parentCurve->delay) boxx = curve->tlAction->get_x((parentCurve->beatnum + parentCurve->delay));
 			else boxx = parentCurve->rect.x;
 			ofRectangle bounds(boxx, boxy, boxw, boxh);
 			curve->setBounds(bounds);
@@ -2294,7 +2284,7 @@ int ActionMessage::getHeight() {
 }
 
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
-	if ((enable_tracks && tlAction->mFilterActions && !in_selected_track)) return;
+	if (tlAction->mFilterActions && !in_selected_track) return;
 
 	ofFill();
 	ofSetColor(200, 200, 200, 255); //deep_level*255);

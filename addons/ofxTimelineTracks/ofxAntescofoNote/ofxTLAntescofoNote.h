@@ -49,7 +49,8 @@
 #include <sndfile.h>    // Sound-file reader
 #ifdef USE_GUIDO
 # include "ofxGuido.h"
-# include <ofxSVGTiny.h>
+# include "GUIDOScoreMap.h"
+# include "GuidoMapCollector.h"
 #endif
 
 #define ANTESCOFO_REST              0
@@ -64,7 +65,7 @@
 class Score;
 class ParseDriver;
 class ofxTLAntescofoAction;
-class ofxSVGTiny;
+class MapGuidoObject;
 #ifdef ASCOGRAPH_IOS
 # include "iOSAscoGraph.h"
 class iOSAscoGraph;
@@ -326,8 +327,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	map<float, int> beat2switchId;
 	map<int, int> switchId2guidoId;
 	vector<ofImage> guido_images;
-	//ofTexture guido_image;
-	ofxSVGTiny* guido_svg;
+	void checkSwitchId2GuidoId(Time2GraphicMap& outmap);//, MapGuidoObject& mapobj);
 #endif
 
 	bool bShowPianoRoll;

@@ -97,8 +97,7 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
     settings.height = fHeight;
     settings.numSamples = 8;
 #endif
-
-    cout << "openFrameworksDevice: allocating FBO: " << fWidth << "x" << fHeight << endl;
+    //cout << "openFrameworksDevice: allocating FBO: " << fWidth << "x" << fHeight << endl;
 
     settings.internalformat = GL_RGBA;
     settings.useDepth = false;
@@ -328,7 +327,7 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
     glEnable(GL_MULTISAMPLE_ARB);
     settings.numSamples = 8;
 #endif
-    cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
+    //cout << "openFrameworksDevice::NotifySize: allocating FBO: " << fWidth << "x" << fHeight << endl;
     settings.internalformat = GL_RGBA;
     settings.useDepth = false;
     settings.useStencil = false;

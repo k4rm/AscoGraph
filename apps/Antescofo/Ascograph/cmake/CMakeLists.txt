@@ -66,8 +66,6 @@ if (GUIDO)
 			${LIB_GUIDO_PATH}/src/include/
 			${LIB_GUIDO_PATH}/src/maps/
 			${LIB_GUIDO_PATH}/../../src/
-			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/src/
-			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/
 	)
 endif(GUIDO)
 include_directories( ${OFX_MUSICXML_INCL_PATH} ${OFX_GLEW_INCL_PATH}  ${OFX_LIB_INCL_PATH} 
@@ -362,11 +360,6 @@ set (app_sources_files ${app_sources_files}
 )
 if (GUIDO)
 	set (app_sources_files ${app_sources_files}
-			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/src/ofxSVGTiny.cpp
-			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/src_colors.cpp
-			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/svgtiny.cpp
-			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/svgtiny_gradient.cpp
-			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxSVGTiny/lib/svgtiny_list.cpp
 			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxGuido/src/ofxGuido.cpp
 			${LIB_GUIDO_PATH}/openFrameworks/Device/GuidoComponent.cpp
 			${LIB_GUIDO_PATH}/openFrameworks/Device/openFrameworksDevice.cpp

@@ -75,6 +75,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		virtual void mouseDragged(ofMouseEventArgs& args, long millis);//bool snapped);
 		virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 		vector<ActionMultiCurves*> clickedCurves;
+		vector<ActionGroup*> clickedGroups;
 		bool shouldDrawModalContent;
 
 		virtual void keyPressed(ofKeyEventArgs& args);
@@ -97,7 +98,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		int get_max_note_beat();
 		void clear_actions();
 		void move_action();
-		void attribute_header_colors(list<ActionGroup*> actiongroups);
+		void attribute_header_colors(vector<ActionGroup*> actiongroups);
 		ofColor get_random_color();
 		void drawBitmapStringHighlight(string text, int x, int y, const ofColor& background, const ofColor& foreground);
 
@@ -132,14 +133,14 @@ class ofxTLAntescofoAction : public ofxTLTrack
 #else
 		ofxAntescofog *mAntescofog;
 #endif
-		list<ActionGroup*> mActionGroups;
+		vector<ActionGroup*> mActionGroups;
 		bool bEditorShow;
 		bool draggingSelectionRange, movingAction;
 		ofRectangle movingActionRect;
 		ofPoint selectionRangeAnchor;
 		ofRectangle dragSelection;
 		ofRectangle mRectCross;
-		ActionGroup* groupFromScreenPoint(int x, int y);
+		ActionGroup* groupFromScreenPoint(int x, int y, vector<ActionGroup*>& groups);
 		ActionGroup* groupFromScreenPoint_rec(ActionGroup* group, int x, int y);
 		void regionSelected(ofLongRange timeRange, ofRange valueRange);
 		void show_all_curves();
@@ -170,7 +171,7 @@ class ActionGroup {
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
 
 		// hierarchy related
-		list<ActionGroup*> sons;
+		vector<ActionGroup*> sons;
 		string trackName;
 		float period;
 		string group_type;

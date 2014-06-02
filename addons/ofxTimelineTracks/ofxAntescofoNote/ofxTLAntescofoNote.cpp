@@ -434,17 +434,125 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 }
 
 #ifdef USE_GUIDO
+class MapGuidoObject : public MapCollector {
+public:
+	virtual ~MapGuidoObject() {}
+	void Graph2TimeMap (const FloatRect& box, const TimeSegment& dates, const GuidoElementInfos& infos )
+	{
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+		//cout    << "map collection: " << box << " dates: " << dates << " type: " << infos.type << ", voice=" << infos.voiceNum << ", staff=" << infos.staffNum  << endl;
+#endif
+		Guido_notes n;
+		n.min = 4. * dates.first.num / dates.first.denom;
+		n.max = 4. * dates.second.num / dates.second.denom;
+		n.infos = infos;
+		notes.push_back(n);
+	}
+	typedef struct {
+		float min, max;
+		GuidoElementInfos infos;
+	} Guido_notes;
+	vector< Guido_notes > notes;
+
+};
+
+
+// fix switchId2guidoId
+void ofxTLAntescofoNote::checkSwitchId2GuidoId(Time2GraphicMap& outmap)/*, MapGuidoObject& mapobj)*/ {
+	// for every switch find its beat matching guidoId
+	//for (int switchid = 0; switchid < switches.size() && guidoid < mapobj.notes.size(); switchid++, guidoid++) {
+	//}
+	for (int i = 0; i < switchId2guidoId.size(); i++) {
+		int g = switchId2guidoId[i];
+	}
+
+	cout << "------------------------- Displaying switchId2GuidoId map:" << endl;
+	for (int switchid = 0; switchid < switches.size(); switchid++) {
+		int guidoid = switchId2guidoId[switchid];
+		cout << "switchId2guidoId[ " << switchid << " ]= " << guidoid << endl;
+		// if switch beat matches outmap[guidoid].first time segment that's fine,
+		float b_inf = 4. * float(outmap[guidoid].first.first.num)/float(outmap[guidoid].first.first.denom);
+		float b_sup = 4. * float(outmap[guidoid].first.second.num)/float(outmap[guidoid].first.second.denom);
+		if (switches[switchid]->beat.min == b_inf && switches[switchid]->beat.max == b_sup) {
+			cout << "OK beat corresponds to Time2GraphicMap" << endl;
+			continue;
+		} else {
+			cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: Error at note #"<< switchid << " and Guido: #" << guidoid << " while comparing "
+				<< switches[switchid]->beat.min << " with " << b_inf << "    and " << switches[switchid]->beat.max << " with " << b_sup << endl;
+		}
+	}
+#if 0
+	int guidoid = 0;
+	for (int switchid = 0; switchid < switches.size() && guidoid < mapobj.notes.size(); switchid++, guidoid++) {
+		bool doit = false;
+		if (switches[switchid]->beat.min == mapobj.notes[guidoid].min && switches[switchid]->beat.max == mapobj.notes[guidoid].max) {
+			doit = true;
+		} else {
+			if (switches[switchid]->beat.min < mapobj.notes[guidoid].min && switches[switchid]->beat.max <= mapobj.notes[guidoid].max) {
+				guidoid--;
+				switchId2guidoId[switchid] = -1;
+				continue;
+			} else if (switches[switchid]->beat.min > mapobj.notes[guidoid].min && switches[switchid]->beat.max > mapobj.notes[guidoid].max) {
+			}
+
+			if (switchid) switchid--;
+			cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: Error at note #"<< switchid << " and Guido: #" << guidoid << " while comparing "
+				<< switches[switchid]->beat.min << " with " << mapobj.notes[guidoid].min << "    and " << switches[switchid]->beat.max << " with " << mapobj.notes[guidoid].max << endl;
+		}
+
+		if (doit) {
+			cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: setting " << switchid << " <=> Guido: " << guidoid << endl;
+			switchId2guidoId[switchid] = guidoid;
+		}
+	}
+
+#endif
+#if 0
+	int deltai = 0, lastdeltai = 0;
+	int nberror = 0;
+	for (int i = 0; i < outmap.size() && i < switches.size(); i++) {
+		if (switches[i]->beat.min == mapobj.notes[i+deltai].min && switches[i]->beat.max == mapobj.notes[i+deltai].max) {
+			nberror = 0;
+			lastdeltai = deltai;
+			continue;
+		} else {
+			cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: Error at note #"<< i << " " << switches[i]->beat.min << " with " << mapobj.notes[i+deltai].min << "    and " << switches[i]->beat.max << " and " << mapobj.notes[i+deltai].max << endl;
+			i--;
+			deltai++;
+			cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: trying with deltai=" << deltai << endl;
+			nberror++;
+
+			if (nberror > 10) {
+				cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: Giving up finding mapping, deltai=" << deltai << endl;
+				nberror = 0;
+				i++; deltai = lastdeltai;
+				continue;
+			}
+		}
+	}
+#endif
+}
+
+
+
 void ofxTLAntescofoNote::guido_store_notes() {
+	// retrieve time2timemap
+	//guido::GuidoMapCollector mapcol(oguido->guido->getGRHandler(), kGuidoEvent);
+	MapGuidoObject mapobj;
+	GuidoGetMap(oguido->guido->getGRHandler(), 1, oguido->getWidth(), oguido->getHeight(), kGuidoEvent, mapobj);
+
 	// retrieve graphic2time mapping
-	guido::GuidoMapCollector mapcol(oguido->guido->getGRHandler(), kGuidoEvent);
 	Time2GraphicMap outmap;
 	int err = GuidoGetSystemMap(oguido->guido->getGRHandler(), 1, oguido->getWidth(), oguido->getHeight(), outmap);
 
 	if (outmap.empty())
 		return;
-#ifdef DEBUG_GUIDO_ASCOGRAPH
-	cout << "GuidoGetSystemMap: size=" << outmap.size() << endl;
-#endif
+
+	for (int i = 0; i < outmap.size(); i++) {
+		cout << "guido_store_notes i=" << i << " dates: " << outmap[i].first.first.num << "/" << outmap[i].first.first.denom << " - " << outmap[i].first.second.num << "/" << outmap[i].first.second.denom << endl;
+	}
+
+	checkSwitchId2GuidoId(outmap);
 
 	int v = 0;
 	for (int i = 0; i < switches.size(); i++) {
@@ -460,8 +568,8 @@ void ofxTLAntescofoNote::guido_store_notes() {
 		float h = outmap[v].second.bottom - y;
 
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
-		cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << " r=" << outmap[v].second.right << " b=" << outmap[v].second.bottom << endl;
+		//cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << i << " x=" << x << " y=" << y << " w=" << w << " h=" << h << endl;
+		//cout << "GuidoGetSystemMap: storing notenum=" << v << " i=" << " r=" << outmap[v].second.right << " b=" << outmap[v].second.bottom << endl;
 #endif
 		if (w < 0 || outmap[v].second.right < 0) w = 70;
 		switches[i]->guidoCoords.x = x;
@@ -471,7 +579,6 @@ void ofxTLAntescofoNote::guido_store_notes() {
 
 		//if (v == outmap.size()) v = 0;
 	}
-
 }
 
 
@@ -525,7 +632,6 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 #endif
 	GuidoPageFormat format;
 	oguido->getPageFormat(format);
-	cout << "Margin : " << format.marginleft << " <-> " << format.marginright << endl;
 	format.marginleft = 0.;
 	format.marginright = 0.;
 	format.margintop = 0.;
@@ -977,19 +1083,22 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 					rdur = rational((int)(dnear), j);
 				}
 			}
-			rdur.rationalise();
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 			cout << "------> Adding rest: " << rdur.toString() << endl;
 #endif
 			rdur /= 4; // because of guido...
-			string sdur = rdur.toString();
+			rdur.rationalise();
+
+			int n4beats = int(rdur.toFloat()); // nombre de silences guido ajoutés
+			guidoId += n4beats;
+			cout << "n4beats=" << n4beats << endl;
+
 			if (staffbeat2.max == 0.)
 			if (!twostaves) {
 				add_string_staff(ret1, ret2, nextnotestaf, "\\staff<2>\\clef<\"f\">\n");
 				twostaves = true;
 			}
 			add_string_staff(ret1, ret2, nextnotestaf, "_*" + rdur.toString() + " ");
-			//guidoId++;
 			staffbeat1 = staffbeat2 = bmax;
 		}
 	}
@@ -999,6 +1108,10 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	if (twostaves)
 		ret1 = "{" + ret1 + ",\n" + ret2 + "]}";
 
+	cout << "------------------------- After get_Guido_string: Displaying switchId2GuidoId map:" << endl;
+	for (int switchid = 0; switchid < switches.size(); switchid++) {
+		cout << "switchId2guidoId[ " << switchid << " ]= " << switchId2guidoId[switchid] << endl;
+	}
 	return ret1;
 }
 #endif
