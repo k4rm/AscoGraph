@@ -84,7 +84,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-#define DEBUG_GUIDO_ASCOGRAPH 1
+#define DEBUG_GUIDO_ASCOGRAPH 0
 #define USE_GUIDO_IMAGE_STORAGE 1
 //#define USE_GUIDO_SVG 1
 int bitmapFontSize = 8;
@@ -487,6 +487,11 @@ void ofxTLAntescofoNote::checkSwitchId2GuidoId(Time2GraphicMap& outmap)/*, MapGu
 					continue;
 				} else if (switches[switchid]->beat.min >= b_sup - BEAT_EPSILON)
 					guidoid++;
+				else {
+					cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: fainting OK." << endl;
+					switchId2guidoId[switchid] = guidoid;
+					continue;
+				}
 				switchid--;
 			}
 		}
@@ -1099,9 +1104,8 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			rdur /= 4; // because of guido...
 			rdur.rationalise();
 
-			int n4beats = int(rdur.toFloat()); // nombre de silences guido ajoutés
-			guidoId += n4beats;
-			cout << "n4beats=" << n4beats << endl;
+			if (rdur.toFloat() < 0) continue;
+			guidoId++;
 
 			if (staffbeat2.max == 0.)
 			if (!twostaves) {
