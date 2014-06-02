@@ -467,18 +467,28 @@ void ofxTLAntescofoNote::checkSwitchId2GuidoId(Time2GraphicMap& outmap)/*, MapGu
 	}
 
 	cout << "------------------------- Displaying switchId2GuidoId map:" << endl;
-	for (int switchid = 0; switchid < switches.size(); switchid++) {
-		int guidoid = switchId2guidoId[switchid];
+	for (int switchid = 0, guidoid = 0;  switchid < switches.size() && guidoid < outmap.size(); switchid++) {
 		cout << "switchId2guidoId[ " << switchid << " ]= " << guidoid << endl;
 		// if switch beat matches outmap[guidoid].first time segment that's fine,
 		float b_inf = 4. * float(outmap[guidoid].first.first.num)/float(outmap[guidoid].first.first.denom);
 		float b_sup = 4. * float(outmap[guidoid].first.second.num)/float(outmap[guidoid].first.second.denom);
-		if (switches[switchid]->beat.min == b_inf && switches[switchid]->beat.max == b_sup) {
-			cout << "OK beat corresponds to Time2GraphicMap" << endl;
+		if (switches[switchid]->beat.min <= b_inf + BEAT_EPSILON && switches[switchid]->beat.max >= b_sup - BEAT_EPSILON) {
+			cout << "OK beat corresponds to Time2GraphicMap: note #"<< switchid << " and Guido: #" << guidoid << " while comparing switch=[ "
+				<< switches[switchid]->beat.min << "-" << switches[switchid]->beat.max << " ] with Guido:[ " << b_inf << "-" << b_sup << " ]"<< endl;
+			switchId2guidoId[switchid] = guidoid;
 			continue;
 		} else {
-			cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: Error at note #"<< switchid << " and Guido: #" << guidoid << " while comparing "
-				<< switches[switchid]->beat.min << " with " << b_inf << "    and " << switches[switchid]->beat.max << " with " << b_sup << endl;
+			cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: Error at note #"<< switchid << " and Guido: #" << guidoid << " while comparing switch=[ "
+				<< switches[switchid]->beat.min << "-" << switches[switchid]->beat.max << " ] with Guido:[ " << b_inf << "-" << b_sup << " ]"<< endl;
+			if (switchid) { 
+				if (switches[switchid]->beat.max < b_inf + BEAT_EPSILON) {
+					cout << "ofxTLAntescofoNote::checkSwitchId2GuidoId: too late, skipping." << endl;
+					if (guidoid > 0) guidoid--;
+					continue;
+				} else if (switches[switchid]->beat.min >= b_sup - BEAT_EPSILON)
+					guidoid++;
+				switchid--;
+			}
 		}
 	}
 #if 0
@@ -759,7 +769,7 @@ void ofxTLAntescofoNote::draw_guido() {
 		int totalw = fbow * nbimages;
 		// find right guido images to display:
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-		cout << "nbimages=" << nbimages << " totalw=" << totalw << " fbow=" << fbow << endl;
+		//cout << "nbimages=" << nbimages << " totalw=" << totalw << " fbow=" << fbow << endl;
 #endif
 		if (guido_x > 0) {
 			int firstn = guido_x * nbimages / totalw;
@@ -769,12 +779,12 @@ void ofxTLAntescofoNote::draw_guido() {
 			int secondx = bounds.x + firstw;
 			int secondw = fbow - firstw;
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-			cout << "Draw guido_images: firstn=" << firstn << " 1stx="<< firstx << " firstw=" << firstw << endl;
+			//cout << "Draw guido_images: firstn=" << firstn << " 1stx="<< firstx << " firstw=" << firstw << endl;
 #endif
 			guido_images[firstn].drawSubsection(bounds.x, bounds.y, firstw, render_h, firstx, 0);
 			if (firstx > 0 || firstw <= bounds.width) {
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-				cout << "-- 2ndn=" << secondn << " 2ndx="<< secondx << " 2ndw=" << secondw << " switches.size=" <<switches.size()<< endl;
+				//cout << "-- 2ndn=" << secondn << " 2ndx="<< secondx << " 2ndw=" << secondw << " switches.size=" <<switches.size()<< endl;
 #endif
 				if (secondn < nbimages) {
 					guido_images[secondn].drawSubsection(secondx, bounds.y, secondw, bounds.height, 0, 0);

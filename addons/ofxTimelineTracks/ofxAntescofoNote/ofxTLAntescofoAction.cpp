@@ -552,7 +552,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	int del = 0; float beatdel = 0.;
 	ag->duration = 0;
 
-	int debugsub = 1;
+	bool debugsub = false;
 	if (debugsub) cout << "update_width: " << ag->title << endl;
 	ActionMessage *m;
 	ActionMultiCurves *c;
@@ -578,7 +578,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 					maxw = c->getWidth() - abs(get_x(c->beatnum));
 				else maxw = c->getWidth();
 			}
-			cout << "c->delay=" << c->delay << " isValid=" << c->isValid << " len="<< len <<" getWidth= " << c->getWidth() << endl;
+			//cout << "c->delay=" << c->delay << " isValid=" << c->isValid << " len="<< len <<" getWidth= " << c->getWidth() << endl;
 			if (debugsub) cout << "\tupdate_width: curves msg maxw:" << maxw << endl;
 		}
 	}
@@ -823,6 +823,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			     << "\tcolNum_begin:" << clickedGroup->colNum_begin << " colNum_end:" << clickedGroup->colNum_end << endl;
 			mAntescofog->editorShowLine(clickedGroup->lineNum_begin, clickedGroup->lineNum_end, clickedGroup->colNum_begin, clickedGroup->colNum_end);
 		}
+		mousePressed_in_header(args, clickedGroup);
 		// bring it to foreground level : if CMD pressed : bring background
 		if (clickedGroup->is_in_header(args.x, args.y) && ofGetModifierSelection()) {
 			cout << "Bringing to front group : " << clickedGroup->realtitle << endl;
