@@ -151,6 +151,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
 	mCurGuidoId = -1, mCurSwitchId = -1;
 	guido_y = bounds.y;
 	guido_x = scrolled_guido_x = 0;
+	mSelectedGuidoSwitchId = -1;
 #endif
 }
 
@@ -799,6 +800,28 @@ void ofxTLAntescofoNote::draw_guido() {
 			guido_images[0].drawSubsection(bounds.x, bounds.y, render_w, render_h, 0, 0);
 		}
 #endif
+		if (mSelectedGuidoSwitchId != -1) { // draw click selected note
+			cout << "draw_guido: drawing selected note: " << mSelectedGuidoSwitchId << endl;
+			ofFill();
+			//ofRectangle r(switches[mSelectedGuidoSwitchId]->guidoCoords.x+bounds.x - switches[mSelectedGuidoSwitchId]->guidoCoords.width/2, bounds.y + 16, 
+			//	      switches[mSelectedGuidoSwitchId]->guidoCoords.width, bounds.height - 32);
+			//ofRect(r);
+			ofPushStyle();
+			ofFill();
+			ofSetColor(color_note_selected, 20);
+			ofSetLineWidth(1);
+
+			int x = switches[mSelectedGuidoSwitchId]->guidoCoords.x+bounds.x-guido_x - switches[mSelectedGuidoSwitchId]->guidoCoords.width/2;
+			int y = bounds.y + 16;
+			int w = switches[mSelectedGuidoSwitchId]->guidoCoords.width;
+			int h = bounds.height - 32;
+			roundedRect(x, y, w, h, 5);
+			ofSetColor(0, 0, 0, 255);
+			ofNoFill();
+			//ofRect(x, y, w, h);
+			roundedRect(x, y, w, h, 5);
+			ofPopStyle();
+		}
 
 #if 0
 		ofFill();
@@ -1580,7 +1603,8 @@ void ofxTLAntescofoNote::draw_playhead() {
 			int h = bounds.height - 6*2;
 			//cout << "ofxTLAntescofoNote::draw_playhead: " << mCurBeat << "= switch #" << mCurGuidoId <<" drawing rect: " << x << ", " << y << " : " << w << " x " << h<< endl;
 			roundedRect(x, y, w, h, 5);
-			ofSetColor(51, 51, 255, 175);
+			ofSetColor(0, 0, 0, 255);
+			//ofSetColor(51, 51, 255, 175);
 			ofNoFill();
 			//ofRect(x, y, w, h);
 			roundedRect(x, y, w, h, 5);
@@ -2844,17 +2868,32 @@ void ofxTLAntescofoNote::unselectAll(){
 }
 
 ofxTLAntescofoNoteOn* ofxTLAntescofoNote::switchHandleForScreenPoint(ofPoint screenPos, bool& startTimeSelected){
-	for(int i = 0; i < switches.size(); i++){
-		float xPos = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
-		if(abs(xPos - screenPos.x) < 7 && (switches[i]->pitch == pitchForScreenY(screenPos.y) || switches[i]->pitch == 0)){
-			startTimeSelected = true;
-			return switches[i];
+	if (mode_pianoroll()) {
+		for(int i = 0; i < switches.size(); i++){
+			float xPos = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.min), zoomBounds);
+			if(abs(xPos - screenPos.x) < 7 && (switches[i]->pitch == pitchForScreenY(screenPos.y) || switches[i]->pitch == 0)){
+				startTimeSelected = true;
+				return switches[i];
+			}
+			xPos = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds);
+			if(abs(xPos - screenPos.x) < 7 && (switches[i]->pitch == pitchForScreenY(screenPos.y) || switches[i]->pitch == 0)){
+				startTimeSelected = false;
+				return switches[i];
+			}
 		}
-		xPos = normalizedXtoScreenX( timeline->beatToNormalizedX(switches[i]->beat.max), zoomBounds);
-		if(abs(xPos - screenPos.x) < 7 && (switches[i]->pitch == pitchForScreenY(screenPos.y) || switches[i]->pitch == 0)){
-			startTimeSelected = false;
-			return switches[i];
+	} else { // mode Guido:
+		for (int i = 0; i < switches.size(); i++) {
+			ofRectangle& r = switches[i]->guidoCoords;
+			
+			float x = guido_x+screenPos.x-bounds.x;
+			if (r.x <= x && x <= r.x+r.width) {
+			//if (xPos <= screenPos.x && screenPos.x <= xPosw) {
+				cout << "switchHandleForScreenPoint: found guido note: ("<< switches[i]->guidoCoords.x << ", " << switches[i]->guidoCoords.y << ", " << switches[i]->guidoCoords.width << " x " << switches[i]->guidoCoords.height << " click:"<< screenPos.x << ", " << screenPos.y << " i="  << i << endl;
+				mSelectedGuidoSwitchId = i;
+				return switches[i];
+			}
 		}
+		mSelectedGuidoSwitchId = -1;
 	}
 	return NULL;
 }

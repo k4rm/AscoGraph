@@ -304,6 +304,8 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	void draw_showPianoRoll();
 	void draw_showStaves();
+	bool mode_pianoroll() { return bShowPianoRoll; }
+	bool mode_guido() { return !bShowPianoRoll; }
 	
 #ifdef USE_GUIDO
 	void update_guido();
@@ -327,6 +329,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	map<float, int> beat2switchId;
 	map<int, int> switchId2guidoId;
 	vector<ofImage> guido_images;
+	int mSelectedGuidoSwitchId;
 	void checkSwitchId2GuidoId(Time2GraphicMap& outmap);//, MapGuidoObject& mapobj);
 #endif
 
