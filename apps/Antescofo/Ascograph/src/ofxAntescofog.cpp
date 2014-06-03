@@ -149,6 +149,7 @@ void ofxAntescofog::menu_item_hit(int n)
 #ifdef USE_GUIDO
 		case INT_CONSTANT_BUTTON_TOGGLEVIEW:
 			ofxAntescofoNote->toggleView();
+			ofxAntescofoBeatTicker->disabled = ofxAntescofoNote->mode_guido();
 			break;
 #endif
 		case INT_CONSTANT_BUTTON_TOGGLEEDIT:
@@ -1918,6 +1919,7 @@ void ofxAntescofog::keyPressed(int key){
 #ifdef USE_GUIDO
     if(key == OF_KEY_TAB /*&& !bEditorShow*/) {
         ofxAntescofoNote->toggleView();
+	ofxAntescofoBeatTicker->disabled = ofxAntescofoNote->mode_guido();
     }
 #endif
     //if(key == 'e'){ setEditorMode(!bEditorShow, 0); } 
@@ -2449,6 +2451,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
     } else if(e.widget->getName() == TEXT_CONSTANT_BUTTON_TOGGLE_VIEW)
 	{
         ofxAntescofoNote->toggleView();
+	ofxAntescofoBeatTicker->disabled = ofxAntescofoNote->mode_guido();
         ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
         b->setValue(false);
 #endif

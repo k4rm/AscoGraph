@@ -674,13 +674,15 @@ bool BeatKeyframes::isKeyframeSelected(BeatKeyframe* k){
 }
 
 bool BeatKeyframes::isKeyframeIsInBounds(BeatKeyframe* key){
-	float x =  timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( key->beat), zoomBounds);
+	//float x =  timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( key->beat), zoomBounds);
+	float x = ref->parentCurve->tlAction->get_x( key->beat );
 	//cout << "BeatKeyframes::isKeyframeIsInBounds(beat= " << key->beat << ") => is " << x << " between [ "<< tlBounds.x << " - " << tlBounds.x + tlBounds.width << " ]"<<endl;
 	return tlBounds.x <= x && ( tlBounds.x + tlBounds.width) >= x;
 }
 
 ofVec2f BeatKeyframes::screenPositionForKeyframe(BeatKeyframe* keyframe) {
-	return ofVec2f( timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframe->beat), zoomBounds), valueToScreenY(keyframe->value));
+	//return ofVec2f( timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframe->beat), zoomBounds), valueToScreenY(keyframe->value));
+	return ofVec2f(ref->parentCurve->tlAction->get_x( keyframe->beat), valueToScreenY(keyframe->value));
 }
 
 bool BeatKeyframes::screenpointIsInBounds(ofVec2f screenpoint){

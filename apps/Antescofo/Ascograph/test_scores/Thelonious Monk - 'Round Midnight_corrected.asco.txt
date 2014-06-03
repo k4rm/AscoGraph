@@ -22,6 +22,7 @@ NOTE 0 1
 
 ; ----------- measure 3 --- beat 9 ------
 NOTE 0 1 measure3
+action_measure3 yo
 NOTE 6300 1/4
 NOTE 6600 1/4
 NOTE 7000 1/4

@@ -222,9 +222,13 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	antescofo_ascograph_offline *mAntescofo;
 	vector<string> cuepoints;
 	vector<ofxTLAntescofoNoteOn*>& getSwitches() {return switches;}
-    ofTrueTypeFont mFont;
-    int fontsize;
-
+	ofTrueTypeFont mFont;
+	int fontsize;
+#ifdef USE_GUIDO
+	bool mode_pianoroll() { return bShowPianoRoll; }
+	bool mode_guido() { return !bShowPianoRoll; }
+#endif
+	
 	protected:
 	virtual void update(ofEventArgs& args);
 	bool isSwitchInBounds(ofxTLAntescofoNoteOn* s);
@@ -304,9 +308,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 
 	void draw_showPianoRoll();
 	void draw_showStaves();
-	bool mode_pianoroll() { return bShowPianoRoll; }
-	bool mode_guido() { return !bShowPianoRoll; }
-	
+
 #ifdef USE_GUIDO
 	void update_guido();
 	void draw_guido();
@@ -331,6 +333,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	vector<ofImage> guido_images;
 	int mSelectedGuidoSwitchId;
 	void checkSwitchId2GuidoId(Time2GraphicMap& outmap);//, MapGuidoObject& mapobj);
+	float beat2guidoX(float beat);
 #endif
 
 	bool bShowPianoRoll;

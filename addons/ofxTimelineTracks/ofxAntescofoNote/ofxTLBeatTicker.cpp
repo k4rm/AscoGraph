@@ -36,10 +36,11 @@ void ofxTLBeatTicker::setup() {
 	isSetup = true;
 	refreshTickMarks();
 	bMouseCursorInside = false;
+	disabled = false;
 }
 
 void ofxTLBeatTicker::draw(){
-	if (!isSetup)
+	if (!isSetup || disabled)
 		return;
 
 	ofPushStyle();

@@ -107,8 +107,10 @@ void ofxTLAntescofoAction::draw()
 
 		update_groups();
 		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
-					|| zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration)) {
+			bool inbounds = zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
+					|| zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration);
+			if (ofxAntescofoNote->mode_guido()) inbounds = true;
+			if (inbounds) {
 				ofSetColor(0, 0, 0, 125);
 
 				ActionGroup *act = *i;
@@ -136,7 +138,9 @@ void ofxTLAntescofoAction::draw()
 
 		// draw modal windows for every curves
 		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-			if (zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum) || zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration)) {
+			bool inbounds = zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum) || zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration);
+			if (ofxAntescofoNote->mode_guido()) inbounds = true;
+			if (inbounds) {
 				if (*i && !(*i)->hidden)
 					(*i)->drawModalContent(this);
 			}
@@ -214,7 +218,10 @@ void ofxTLAntescofoAction::add_action_curves(float beatnum, ActionGroup *ar, Cur
 }
 
 int ofxTLAntescofoAction::get_x(float beat) {
-	return normalizedXtoScreenX( timeline->beatToNormalizedX(beat), zoomBounds);
+	if (ofxAntescofoNote->mode_pianoroll()) // pianoroll
+		return normalizedXtoScreenX( timeline->beatToNormalizedX(beat), zoomBounds);
+	else // guido
+		return ofxAntescofoNote->beat2guidoX(beat);
 }
 
 
@@ -324,15 +331,6 @@ void ofxTLAntescofoAction::update()
 	mRectCross.width = 14;
 	mRectCross.height = 14;
 
-#if 0
-	ofxTLTrackHeader* th = timeline->getTrackHeader(this);
-	if (th) {
-		cout << "track bounds: x:" << bounds.x << " y:" << bounds.y << " w:" << bounds.width << " h:" << bounds.height << endl;
-		ofRectangle bh = th->getDrawRect();
-		cout << "headerbounds: x:" << bh.x << " y:" << bh.y << " w:" << bh.width << " h:" << bh.height << endl;
-	}
-#endif
-
 	int h = ofGetWindowHeight();
 	int y = bounds.y + bounds.height;
 	bounds.height = h - bounds.y;
@@ -342,7 +340,6 @@ void ofxTLAntescofoAction::update()
 		th->setDrawRect(r);
 		th->recalculateFooter();		
 	}
-
 	// tracks
 	int fromx = bounds.x + 200;
 	int w = 0;
@@ -649,7 +646,8 @@ void ofxTLAntescofoAction::update_groups()
 	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		if (debug_actiongroup) cout << "--------------------------------------------------------------" << endl;
 		//if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
-		(*i)->rect.x = normalizedXtoScreenX( timeline->beatToNormalizedX((*i)->beatnum), zoomBounds);
+
+		(*i)->rect.x = get_x((*i)->beatnum);
 		(*i)->rect.y = bounds.y + 1;
 		update_sub_duration(*i);
 		(*i)->rect.width = update_sub_width(*i);
@@ -1788,10 +1786,11 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 
 			curve->tlAction = (ofxTLAntescofoAction *)_timeline->getTrack("Actions");
 			curve->setTLTrack(curve->tlAction);
+			parentCurve->tlAction = curve->tlAction;
 
 			int boxh = (curve->tlAction->getBounds().height - parentCurve->HEADER_HEIGHT - 5) / parentCurve->curves.size();
 			int boxy = parentCurve->rect.y + parentCurve->HEADER_HEIGHT + i * boxh;
-			int boxw = getWidth();// + 30;
+			int boxw = 0;//getWidth();// + 30;
 			int boxx;
 			if (parentCurve->delay) boxx = curve->tlAction->get_x((parentCurve->beatnum + parentCurve->delay));
 			else boxx = parentCurve->rect.x;

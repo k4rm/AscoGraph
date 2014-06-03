@@ -55,5 +55,5 @@ class ofxTLBeatTicker : public ofxTLTicker {
 #endif
 	bool isSetup;
 	bool bMouseCursorInside;
-
+	bool disabled;
 };

@@ -776,7 +776,8 @@ bool BeatCurve::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coor
 		ofVec2f bx(bounds.x, 0);
 
 		for (int i = 0; i < keyframes.size(); i++) {
-			float x = timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds);
+			//float x = timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds);
+			float x = tlAction->get_x( keyframes[i]->beat );
 			if ( x > bounds.x && x > tlBounds.x) {
 				//cout << "get_first_last_displayed_keyframe: not found first=" << i-1 << endl;
 				*firsti = i - 1;
@@ -785,7 +786,8 @@ bool BeatCurve::get_first_last_displayed_keyframe(ofVec2f* coord1, ofVec2f* coor
 		}
 
 		for (int i = keyframes.size() - 1; i >= 0; i--) {
-			float x = timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds);
+			//float x = timeline->normalizedXtoScreenX( timeline->beatToNormalizedX( keyframes[i]->beat), zoomBounds);
+			float x = tlAction->get_x( keyframes[i]->beat );
 			if (x < bounds.x + bounds.width && x < tlBounds.x + tlBounds.width) {
 				*lasti = i;
 				//cout << "get_first_last_displayed_keyframe: not found last=" << i << endl;
