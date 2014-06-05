@@ -16,6 +16,7 @@
 #include "Function.h"
 #include "Environment.h"
 
+
 bool _debug = true;
 
 string ascograph_version = "1.04";
@@ -69,6 +70,7 @@ void iOSAscoGraph::setup(){
     guiMenu.view.hidden = true;
     
 	console = new ofxConsole(4, 500, 800, 300, 10);
+	mGotoPos = 0.;
 
     score_x = 5;
     if (is_retina)
@@ -374,6 +376,15 @@ void iOSAscoGraph::shouldRedraw() {
     bShouldRedraw = true;
 }
 
+void iOSAscoGraph::setGotoPos(float pos) {
+	cout << "Storing mGotopos " << pos << endl;
+	mGotoPos = pos;
+}
+
+
+void iOSAscoGraph::setMouseCursorGoto(bool bState) {
+  
+}
 
 void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
 {
@@ -411,11 +422,14 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
-		    /*cout << "mPlayLabel: " << mPlayLabel << endl;
-		    if (mPlayLabel.size()) {
+		    if (mGotoPos) {
+			    m.addStringArg("playfrombeat");
+			    m.addFloatArg(mGotoPos);
+		    } /*else if (mPlayLabel.size()) {
+			    cout << "mPlayLabel: " << mPlayLabel << endl;
 			    m.addStringArg("playfrom");
 			    m.addStringArg(mPlayLabel);
-		    } else*/
+		    } */else
 			    m.addStringArg("play");
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
@@ -427,7 +441,13 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
-		    m.addStringArg("start");
+            if (!mGotoPos) {
+			    m.addStringArg("start");
+			    m.addStringArg("");
+		    } else {
+			    m.addStringArg("gotobeat");
+			    m.addFloatArg(mGotoPos);
+		    }
 		    m.addStringArg("");
 		    mOSCsender.sendMessage(m);
 		    b->setValue(false);
@@ -456,6 +476,7 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
             ofxOscMessage m;
             m.setAddress("/antescofo/cmd");
             m.addStringArg("stop");
+            mGotoPos = 0.;
             //mPlayLabel.clear();
             mOSCsender.sendMessage(m);
             b->setValue(false);
@@ -588,11 +609,12 @@ void iOSAscoGraph::check_score_vector_status()
     bool done = false;
     
     for (int i = 0; i < current_score_chunks; i++) {
-        if (tmp_score[i].empty()) {
+        if (tmp_score.find(i) == tmp_score.end()) {
             done = false;
             break;
         }
     }
+    cout << "tmp_score.size()=" << tmp_score.size() << " current_score_chunks="<<current_score_chunks << endl;
     if (tmp_score.size() == current_score_chunks)
         done = true;
     
@@ -628,7 +650,7 @@ void iOSAscoGraph::update(){
                 
                 //if(m.getArgType(0) == OFXOSC_TYPE_){
                     current_score_chunks = (int)m.getArgAsFloat(0);
-                    ofLog() << "OSC received: current_score_chunks: " << current_score_chunks << endl;
+                    ofLog() << "OSC received: clearing, current_score_chunks: " << current_score_chunks << endl;
                     tmp_score.clear();
                 //}
                 mOsc_host = m.getRemoteIp();
@@ -641,6 +663,7 @@ void iOSAscoGraph::update(){
                 if(m.getArgType(1) == OFXOSC_TYPE_STRING){
                     ofLog() << "Filling slot " << cur << " of score." << endl;
                     tmp_score[cur] = m.getArgAsString(1);
+                    ofLog() << ">-------------" << endl << tmp_score[cur] << "<--------------" << endl;
                     check_score_vector_status();
                 }
             } else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {

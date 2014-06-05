@@ -4,8 +4,13 @@
 ofxGuido::ofxGuido(GuidoLayoutSettings& layoutSettings)
 {
 	guido = new GuidoComponent();
+#ifndef ASCOGRAPH_IOS
 	string textfont = ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf";
 	string guidofont = ofFilePath::getCurrentExeDir() + "../Resources/GUI/guido2.ttf";
+#else
+    string textfont("DroidSansMono.ttf");
+	string guidofont("GUI/guido2.ttf");
+#endif
 	guido->GuidoInit(textfont.c_str(), guidofont.c_str());
 	guido->setGuidoLayoutSettings(layoutSettings);
 }

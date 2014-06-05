@@ -79,6 +79,9 @@ public:
     void showJumpTrack();
     void push_tempo_value();
     void shouldRedraw();
+    void setGotoPos(float pos);
+    void setMouseCursorGoto(bool bState);
+    float mGotoPos;
     float score_x, score_y, score_w, score_h, mUIbottom_y, bpm;
     ofxTLZoomer2D* ofxAntescofoZoom;
     ofxTLAntescofoNote* ofxAntescofoNote;

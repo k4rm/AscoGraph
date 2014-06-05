@@ -24,6 +24,7 @@
 #include "Values.h"
 
 #define GROUP_COLOR_ALPHA 80
+#define ELEVATOR_WIDTH 12
 
 using namespace std;
 
@@ -149,6 +150,19 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void hide_all_curves();
 		void hide_all_groups(bool bJustCurves=false);
 		void hide_all_groups_rec(bool bJustCurves, ActionGroup* gf);
+
+		void elevator_enable();
+		void elevator_disable();
+		void elevator_update();
+		void draw_elevator();
+		void elevator_mouseMoved(ofMouseEventArgs& args);
+		void elevator_mousePressed(ofMouseEventArgs& args);
+		void elevator_mouseDragged(ofMouseEventArgs& args);
+		void elevator_mouseReleased(ofMouseEventArgs& args);
+		bool bElevatorEnabled, bElevatorShowMore;
+		ofRectangle mElevatorRect;
+		float mElevatorBarHeight, mElevatorBarY;
+		int mMaxHeight, mElevatorClickedY, mElevatorStartY;
 };
 
 class ActionGroup {

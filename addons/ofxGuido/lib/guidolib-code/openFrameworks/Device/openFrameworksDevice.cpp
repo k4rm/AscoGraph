@@ -69,13 +69,14 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
     int w, h;
     ofFbo::Settings settings;
 #ifdef ASCOGRAPH_IOS
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &w);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &h);
-
-    fWidth = h;
-    fHeight = w;
-    settings.width = h;
-    settings.height = w;
+    fWidth = 1024;
+    fHeight = 1024;
+    
+    /*GLint dims[2];
+    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &dims[0]);
+    fWidth = w = dims[0]; fHeight = h = dims[1];*/
+    settings.width = fWidth;
+    settings.height = fHeight;
     settings.numSamples = 0;
 #else
     glClear (GL_COLOR_BUFFER_BIT);
@@ -83,13 +84,6 @@ openFrameworksDevice::openFrameworksDevice(int width_, int height_, VGSystem* sy
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable( GL_DEPTH_TEST );
     glEnable(GL_MULTISAMPLE_ARB);
-    //glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &w);
-    //glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &h);
-    /*
-    GLint dims[2];
-    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &dims[0]);
-    w = dims[0]; h = dims[1];
-    */
 
     fWidth = 1024;
     fHeight = 1024;
@@ -127,7 +121,7 @@ bool openFrameworksDevice::BeginDraw()	{
 	ofClear(255,255,255, 0);
 	return true;
 }
-void openFrameworksDevice::EndDraw()		{ 
+void openFrameworksDevice::EndDraw()		{
 	drawCache.end();
 
 	ofPopStyle();
@@ -305,17 +299,17 @@ void openFrameworksDevice::NotifySize( int width, int height ) {
     int w, h;
     ofFbo::Settings settings;
 #ifdef ASCOGRAPH_IOS
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &w);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &h);
-    fWidth = h;
-    fHeight = w;
-    settings.width = h;
-    settings.height = w;
+    fWidth = 1024;
+    fHeight = 1024;
+    
+    //GLint dims[2];
+    //glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &dims[0]);
+    //fWidth = w = dims[0]; fHeight = h = dims[1];
+    settings.width = fWidth;
+    settings.height = fHeight;
     settings.numSamples = 0;
 #else
-    /*GLint dims[2];
-    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &dims[0]);
-    w = dims[0]; h = dims[1];*/
+
     fWidth = 1024;
     fHeight = 1024;
     settings.width = fWidth;

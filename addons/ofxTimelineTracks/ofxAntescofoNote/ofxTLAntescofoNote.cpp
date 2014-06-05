@@ -84,9 +84,8 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-//#define DEBUG_GUIDO_ASCOGRAPH 1
+#define DEBUG_GUIDO_ASCOGRAPH 1
 #define USE_GUIDO_IMAGE_STORAGE 1
-//#define USE_GUIDO_SVG 1
 int bitmapFontSize = 8;
 int guiXPadding = 15;
 
@@ -667,16 +666,21 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	for (int i = 0; i*stepx < format.width; i++) {
 		ofImage img;
 		img.allocate(fbow, fboh, OF_IMAGE_COLOR_ALPHA);
-
+        
 		oguido->setScale(1., 1.);
 		oguido->guido->getDevice()->SetOrigin(i*stepx, 0);
 		oguido->draw(0, render_y, render_w, render_h);
-
+#ifndef ASCOGRAPH_IOS
 		oguido->guido->getDevice()->drawCache.getTextureReference().readToPixels( img.getPixelsRef() );
+#else
+        oguido->guido->getDevice()->drawCache.readToPixels(img.getPixelsRef());
+#endif
 		img.update();
 		//img.saveImage(string("/tmp/img") + ofToString(i) + ".png");
 		guido_images.push_back(img);
-		//if (debug_guido) cout << "COPIED I=" << i << " fbow= " << fbow << " imgw=" << img.getWidth() << endl;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+		//cout << "COPIED I=" << i << " fbow=" << fbow << " fboh=" << fboh << " imgw=" << img.getWidth() << endl;
+#endif
 	}
 #endif
 
@@ -727,29 +731,36 @@ void ofxTLAntescofoNote::draw_guido() {
 #ifdef DEBUG_GUIDO_ASCOGRAPH
 		//cout << "nbimages=" << nbimages << " totalw=" << totalw << " fbow=" << fbow << endl;
 #endif
-		if (guido_x > 0) {
-			int firstn = guido_x * nbimages / totalw;
-			int secondn = firstn+1;
-			int firstx = guido_x % fbow;
-			int firstw = fbow - firstx;
-			int secondx = bounds.x + firstw;
-			int secondw = fbow - firstw;
+		int firstn = guido_x * nbimages / totalw;
+		int secondn = firstn+1;
+		int firstx = guido_x % fbow;
+		int firstw = fbow - firstx;
+		int secondx = bounds.x + firstw;
+		int secondw = bounds.width - firstw;
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-			//cout << "Draw guido_images: firstn=" << firstn << " 1stx="<< firstx << " firstw=" << firstw << endl;
+		cout << "Draw guido_images: firstn=" << firstn << " 1stx="<< firstx << " firstw=" << firstw << endl;
 #endif
-			guido_images[firstn].drawSubsection(bounds.x, bounds.y, firstw, render_h, firstx, 0);
-			if (firstx > 0 || firstw <= bounds.width) {
+        guido_images[firstn].drawSubsection(bounds.x, bounds.y, firstw, render_h, firstx, 0);
+		if (firstx > 0 || firstw <= bounds.width) {
+            if (secondw > fbow) secondw = fbow;
 #ifdef DEBUG_GUIDO_ASCOGRAPH
-				//cout << "-- 2ndn=" << secondn << " 2ndx="<< secondx << " 2ndw=" << secondw << " switches.size=" <<switches.size()<< endl;
+			cout << "-- 2ndn=" << secondn << " 2ndx="<< secondx << " 2ndw=" << secondw << " switches.size=" <<switches.size()<< " bounds.width = " << bounds.width << endl;
 #endif
-				if (secondn < nbimages) {
-					guido_images[secondn].drawSubsection(secondx, bounds.y, secondw, bounds.height, 0, 0);
-				} else cout << "!!!!!!!!!!!!! draw_guido: secondn=" << secondn << " >= nbimages=" << nbimages << endl;
+			if (secondn < nbimages) {
+				guido_images[secondn].drawSubsection(secondx, bounds.y, secondw, bounds.height, 0, 0);
+			} else cout << "!!!!!!!!!!!!! draw_guido: secondn=" << secondn << " >= nbimages=" << nbimages << endl;
+			if (secondx > 0 && secondw+secondx < bounds.width && secondn < nbimages-1) {
+				int thirdn = secondn+1;
+				int thirdx = secondx + secondw;
+				int thirdw = bounds.width - thirdx;
+#ifdef DEBUG_GUIDO_ASCOGRAPH
+				cout << "-- 3rdn=" << thirdn << " 3rdx="<< thirdx << " 3rdw=" << thirdw << " switches.size=" <<switches.size()<< " bounds.width = " << bounds.width << endl;
+#endif
+				guido_images[thirdn].drawSubsection(thirdx, bounds.y, thirdw, bounds.height, 0, 0);
 			}
-		} else {
-			guido_images[0].drawSubsection(bounds.x, bounds.y, render_w, render_h, 0, 0);
 		}
 #endif
+
 #if 0
 		// draw markers (separate loop used for calculate width)
 		float lastX = bounds.x + bounds.width;
@@ -1664,7 +1675,6 @@ int ofxTLAntescofoNote::pitchForScreenY(int y) {
 }
 
 bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
-#ifndef ASCOGRAPH_IOS
 	cout << "ofxTLAntescofoNote::mousePressed " << endl;
 	ofVec2f screenpoint(args.x, args.y);
 	shouldCreateNewSwitch = false;
@@ -1686,7 +1696,6 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 
 	bMousePressed = true;
 	if (!bounds.inside(args.x, args.y)) return false;
-	pointsAreDraggable = !ofGetModifierKeyShift();
 	//************************ Track Focusing
 	bool clickInRect = bounds.inside(screenpoint);
 	if(clickInRect){
@@ -1695,10 +1704,6 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 			//			return;
 		}
 	} else {
-		if(pointsAreDraggable){
-			//unselectAll();
-			focused = false;
-		}
 		return false;
 	}
 	updateDragOffsets(args.x);
@@ -1712,38 +1717,38 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 
 	// deja selected
 	if(clickedSwitchA != NULL){
+#ifndef ASCOGRAPH_IOS
 		mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
 		if(!ofGetModifierKeyShift()){
 			timeline->unselectAll();
 		}
+#endif
+
 		bool startAlreadySelected = clickedSwitchA->startSelected;
 		bool endAlreadySelected = clickedSwitchA->endSelected;
+#ifndef ASCOGRAPH_IOS
 		clickedSwitchA->startSelected = didSelectedStartTime || (ofGetModifierKeyShift() && startAlreadySelected);
 		clickedSwitchA->endSelected   = !didSelectedStartTime || (ofGetModifierKeyShift() && endAlreadySelected);
-		/*
-		if(didSelectedStartTime){
-			timeline->setDragTimeOffset( clickedSwitchA->dragOffsets.min );
-		}
-		else{
-			timeline->setDragTimeOffset( clickedSwitchA->dragOffsets.max );
-		}
-		*/
+#else
+        clickedSwitchA->startSelected = didSelectedStartTime;
+        clickedSwitchA->endSelected   = !didSelectedStartTime;
+#endif
 	} else { // premiere selection
-		//if(ofGetModifierKeyShift()){
 		draggingSelectionRange = true;
 		selectionRangeAnchor = args.x;
 		dragSelection.min = dragSelection.max = selectionRangeAnchor;
-		//	return true; // bool added by karm ? right value ?
-		//}
 
 		float normalizedCoord = screenXtoNormalizedX(args.x, zoomBounds);
 		clickedSwitchA = switchForScreenXY(args.x, args.y);
 		if(clickedSwitchA != NULL){
+#ifndef ASCOGRAPH_IOS
 			mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
 			//if we haven't already selected these, flag deselect
 			if((!clickedSwitchA->startSelected || !clickedSwitchA->endSelected) && !ofGetModifierKeyShift()){
 				timeline->unselectAll();
 			}
+#endif
+
 			clickedSwitchA->startSelected = true;
 			clickedSwitchA->endSelected   = true;
 		} else {
@@ -1776,7 +1781,6 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 #endif
 	}
 	draggingSelectionRange = false;
-#endif
 	return true;
 }
 

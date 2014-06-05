@@ -254,7 +254,7 @@ class ofxAntescofog : public ofxNSWindowApp
 
 		// UI
 		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem, mLockMenuItem, mFileMenu;
-		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC, *guiElevator;
+		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC;
 		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;
 		ofxUISlider *mSliderBPM;
@@ -302,9 +302,6 @@ class ofxAntescofog : public ofxNSWindowApp
 		void save_ColorPicker(string name);
 		void draw_ColorAsset(string name, ofColor *color);
 		string mColorChanged;
-		ofxUIRangeSlider* elevator;
-		void elevatorEnable();
-		void elevatorDisable();
 
 		// OSC setup
 		void draw_OSCSetup();

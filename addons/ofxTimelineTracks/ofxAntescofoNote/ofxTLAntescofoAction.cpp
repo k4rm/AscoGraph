@@ -58,12 +58,12 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	movingActionRect = ofRectangle(0, 0, 40, 20);
 	shouldDrawModalContent = false;
 	mTrackStates.clear();
-	mFilterActions = false;
+	bElevatorShowMore = mFilterActions = false;
 
 	mTrackBtnHeight = 13;
 	mTrackBtnWidth = 10;
 	mTrackBtnSpace = 20;
-	mFirstTrackBtn = 0;
+	mElevatorStartY = mMaxHeight = mFirstTrackBtn = 0;
 	mPrevTrackBtn.height = mNextTrackBtn.height = mTrackBtnHeight;
 
 	// store Antescofo tracks names
@@ -71,6 +71,8 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 		for (TrackDefinition::idx2t_t::iterator i = TrackDefinition::idx2track.begin(); i != TrackDefinition::idx2track.end(); i++)
 			mTrackStates[i->second->_name.substr(7)] = new TrackState(); // 7 because "track::"
 	}
+
+	elevator_disable();
 }
 
 
@@ -106,6 +108,12 @@ void ofxTLAntescofoAction::draw()
 		if (TrackDefinition::idx2track.size()) draw_antescofo_tracks_header();
 
 		update_groups();
+
+		if (bElevatorEnabled) {
+			ofPushMatrix();
+			ofTranslate(0, mElevatorStartY);
+		}
+
 		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			bool inbounds = zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
 					|| zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration);
@@ -145,14 +153,75 @@ void ofxTLAntescofoAction::draw()
 					(*i)->drawModalContent(this);
 			}
 		}
+		if (bElevatorEnabled) {
+			ofPopMatrix();
+			elevator_update();
+			draw_elevator();
+		}
 	}
+}
 
+
+void ofxTLAntescofoAction::elevator_disable(void) {
+	bElevatorEnabled = false;
+}
+
+void ofxTLAntescofoAction::elevator_enable(void) {
+	if (bElevatorEnabled) return;
+	bElevatorEnabled = true;
+	mElevatorBarY = bounds.y;
+	mElevatorStartY = 0;
+	elevator_update();
+}
+
+
+void ofxTLAntescofoAction::elevator_update(void) {
+	mElevatorRect.y = bounds.y + 1;
+	mElevatorRect.width = ELEVATOR_WIDTH;
+	mElevatorRect.x = bounds.x + bounds.width - mElevatorRect.width;
+	mElevatorRect.height = bounds.height - 1;
+
+	mElevatorBarHeight = ofMap(bounds.height, 0, mMaxHeight, 0, bounds.height);
+	mElevatorStartY = bounds.height - ofMap(mElevatorBarY, 0, bounds.y+bounds.height, 0, mMaxHeight);
+	//mElevatorBarRange.min = float(mElevatorStartY) / nMaxHeight;
+	//mElevatorBarRange.max = float(bounds.height) / mMaxHeight; 
+
+	cout << "Elevator: " << mElevatorRect.x << ", " << mElevatorRect.y << ", " << mElevatorRect.width << " x " << mElevatorRect.height << " bary= "<< mElevatorBarY <<" barh= " << mElevatorBarHeight << " mElevatorStartY=" << mElevatorStartY << endl;
+}
+
+
+void ofxTLAntescofoAction::draw_elevator(void) {
+	ofPushStyle();
+	if (bElevatorShowMore) ofSetColor(0, 0, 0, 40);
+	else ofSetColor(0, 0, 0, 20);
+	ofFill();
+	ofRect(mElevatorRect);
+
+	if (bElevatorShowMore) ofSetColor(0, 0, 0, 205);
+	else ofSetColor(0, 0, 0, 105);
+	ofRect(mElevatorRect.x, mElevatorBarY, ELEVATOR_WIDTH, mElevatorBarHeight);
+
+	ofPopStyle();
+}
+
+
+void ofxTLAntescofoAction::elevator_mousePressed(ofMouseEventArgs& args) {
+	mElevatorClickedY = args.y;
+}
+void ofxTLAntescofoAction::elevator_mouseMoved(ofMouseEventArgs& args) {
+	bElevatorShowMore = true;
+}
+void ofxTLAntescofoAction::elevator_mouseDragged(ofMouseEventArgs& args) {
+	mElevatorBarY = bounds.y + abs(args.y - mElevatorClickedY);
+}
+void ofxTLAntescofoAction::elevator_mouseReleased(ofMouseEventArgs& args) {
+	mElevatorClickedY = 0;
 }
 
 void ofxTLAntescofoAction::draw_antescofo_tracks_header(int x, int y, int sens) {
 		ofPushStyle();
 		ofFill();
-		ofSetColor(0, 0, 0, 255);
+		ofSetColor(0, 0, 0, 205);
 		if (sens > 0) { // next
 			ofTriangle(mNextTrackBtn.x, mNextTrackBtn.y, 
 				   mNextTrackBtn.x, mNextTrackBtn.y + mNextTrackBtn.height, 
@@ -189,7 +258,6 @@ void ofxTLAntescofoAction::draw_antescofo_tracks_header() {
 				draw_antescofo_tracks_header(x_nextbtn, y, 1);
 				break;
 			}
-
 			ofPushStyle();
 			int len = (i->first.size() + 1) * sizec;
 			if (i->second->selected) { ofFill(); ofSetColor(0, 0, 0, 100); }
@@ -476,6 +544,10 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 		toth += curh;
 	}
 	if (debugsub) cout << "update_sub_height: returning toth=" << toth << endl;
+	if (toth > bounds.height) {
+		elevator_enable();
+		if (mMaxHeight < toth) mMaxHeight = toth;
+	}
 	return toth;
 }
 
@@ -806,6 +878,10 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	cout << "mousePressed: x:"<< args.x << " y:" << args.y << endl;
 	bool res = false;
 #ifndef ASCOGRAPH_IOS
+	if (mElevatorRect.inside(args.x, args.y)) {
+		elevator_mousePressed(args);
+		return true;
+	}
 	// selection
 	ActionGroup* clickedGroup = 0;
 	if (foreground_groups.size()) clickedGroup = groupFromScreenPoint(args.x, args.y, foreground_groups);
@@ -876,6 +952,10 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 
 void ofxTLAntescofoAction::mouseMoved(ofMouseEventArgs& args, long millis)
 {
+	if (mElevatorRect.inside(args.x, args.y)) {
+		elevator_mouseMoved(args);
+		return;
+	} else bElevatorShowMore = false;
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); j != clickedCurves.end(); j++) {
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
@@ -894,6 +974,10 @@ void ofxTLAntescofoAction::mouseMoved(ofMouseEventArgs& args, long millis)
 
 void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 {
+	if (mElevatorRect.inside(args.x, args.y)) {
+		elevator_mouseDragged(args);
+		return;
+	}
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); j != clickedCurves.end(); j++) {
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
@@ -988,6 +1072,10 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 		disable();
 		ofxAntescofoNote->deleteActionTrack();
 		//timeline->removeTrack(this);
+		return;
+	}
+	if (mElevatorRect.inside(args.x, args.y)) {
+		elevator_mouseReleased(args);
 		return;
 	}
 	//if (!bounds.inside(args.x, args.y)) return;
