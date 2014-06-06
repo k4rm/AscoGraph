@@ -101,10 +101,12 @@ void ofxTLPage::update(){
 
 void ofxTLPage::draw(){	
     ofSetLineWidth(1);
-	for(int i = 0; i < headers.size(); i++){
+	//for(int i = 0; i < headers.size(); i++){
+	for(int i = headers.size() - 1; i >= 0; i--){
 		headers[i]->draw();
 		tracks[headers[i]->name]->_draw();
 	}
+   
 #if 0
 	// snap from bottom of ticker to bottom edge of timeline
 	//if(!headerHasFocus && !footerIsDragging && draggingInside && snapPoints.size() > 0){

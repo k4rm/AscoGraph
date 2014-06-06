@@ -151,6 +151,8 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void hide_all_groups(bool bJustCurves=false);
 		void hide_all_groups_rec(bool bJustCurves, ActionGroup* gf);
 
+		ofRectangle actualBounds;
+		bool is_in_bounds(ActionGroup* g);
 		void elevator_enable();
 		void elevator_disable();
 		void elevator_update();
@@ -183,6 +185,7 @@ class ActionGroup {
 		virtual string dump();
 		virtual int getHeight();
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
+		bool is_in_bounds_y(ofxTLAntescofoAction *tlAction);
 
 		// hierarchy related
 		vector<ActionGroup*> sons;

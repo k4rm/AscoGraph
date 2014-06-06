@@ -19,7 +19,7 @@
 
 bool _debug = true;
 
-string ascograph_version = "1.04";
+string ascograph_version = "1.05";
 
 extern ofxConsole* console;
 
@@ -663,7 +663,7 @@ void iOSAscoGraph::update(){
                 if(m.getArgType(1) == OFXOSC_TYPE_STRING){
                     ofLog() << "Filling slot " << cur << " of score." << endl;
                     tmp_score[cur] = m.getArgAsString(1);
-                    ofLog() << ">-------------" << endl << tmp_score[cur] << "<--------------" << endl;
+                    //ofLog() << ">-------------" << endl << tmp_score[cur] << "<--------------" << endl;
                     check_score_vector_status();
                 }
             } else if(m.getAddress() == "/antescofo/tempo" && m.getArgType(0) == OFXOSC_TYPE_FLOAT) {

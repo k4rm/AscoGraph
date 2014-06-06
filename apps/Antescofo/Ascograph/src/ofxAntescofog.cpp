@@ -1939,7 +1939,11 @@ void ofxAntescofog::mouseMoved( int x, int y){
 		bMouseCursorSet = false;
 		[[NSCursor arrowCursor] set];
 	}
-	//bShouldRedraw = true;
+
+	// redraw if in action track elevator
+	if (ofxAntescofoNote && ofxAntescofoNote->getActionTrack())
+		if (ofxAntescofoNote->getActionTrack()->mElevatorRect.inside(x, y))
+			bShouldRedraw = true;
 }
 
 //--------------------------------------------------------------

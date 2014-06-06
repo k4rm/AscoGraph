@@ -154,13 +154,14 @@ void BeatCurve::drawModalContent(){
 }
 
 bool BeatCurve::mousePressed(ofMouseEventArgs& args, long millis){
+	cout << "BeatCurve::mousePressed: " << args.x << ", " << args.y << endl;
 	if (!bounds.inside(args.x, args.y)) return false;
 	if(drawingEasingWindow){
 		return true;
 	}
 	else {
 		//return ofxTLBeatKeyframes::mousePressed(args,millis);
-		if (curve_debug_) cout <<"BeatCurve: mousepressed inside" << endl;
+		if (1 || curve_debug_) cout <<"BeatCurve: mousepressed inside" << endl;
 		ofVec2f screenpoint = ofVec2f(args.x, args.y);
 		keysAreStretchable = ofGetModifierShiftPressed() && ofGetModifierControlPressed();
 		keysDidDrag = false;

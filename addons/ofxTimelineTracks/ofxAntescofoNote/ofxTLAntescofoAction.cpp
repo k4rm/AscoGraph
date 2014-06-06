@@ -60,6 +60,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mTrackStates.clear();
 	bElevatorShowMore = mFilterActions = false;
 
+	actualBounds = bounds;
 	mTrackBtnHeight = 13;
 	mTrackBtnWidth = 10;
 	mTrackBtnSpace = 20;
@@ -88,6 +89,7 @@ void ofxTLAntescofoAction::setup()
 	load();
 
 	//update();
+	actualBounds = bounds;
 	disable();
 }
 
@@ -112,6 +114,9 @@ void ofxTLAntescofoAction::draw()
 		if (bElevatorEnabled) {
 			ofPushMatrix();
 			ofTranslate(0, mElevatorStartY);
+
+			glEnable(GL_SCISSOR_TEST);
+			glScissor(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 
 		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
@@ -154,6 +159,7 @@ void ofxTLAntescofoAction::draw()
 			}
 		}
 		if (bElevatorEnabled) {
+			glDisable(GL_SCISSOR_TEST);
 			ofPopMatrix();
 			elevator_update();
 			draw_elevator();
@@ -171,48 +177,59 @@ void ofxTLAntescofoAction::elevator_enable(void) {
 	bElevatorEnabled = true;
 	mElevatorBarY = bounds.y;
 	mElevatorStartY = 0;
+	actualBounds = bounds;
 	elevator_update();
 }
 
 
 void ofxTLAntescofoAction::elevator_update(void) {
-	mElevatorRect.y = bounds.y + 1;
+	mElevatorRect.y = bounds.y;
 	mElevatorRect.width = ELEVATOR_WIDTH;
-	mElevatorRect.x = bounds.x + bounds.width - mElevatorRect.width;
-	mElevatorRect.height = bounds.height - 1;
+	mElevatorRect.x = bounds.x;// + bounds.width - mElevatorRect.width;
+	mElevatorRect.height = bounds.height;
 
-	mElevatorBarHeight = ofMap(bounds.height, 0, mMaxHeight, 0, bounds.height);
-	mElevatorStartY = bounds.height - ofMap(mElevatorBarY, 0, bounds.y+bounds.height, 0, mMaxHeight);
-	//mElevatorBarRange.min = float(mElevatorStartY) / nMaxHeight;
-	//mElevatorBarRange.max = float(bounds.height) / mMaxHeight; 
+	// x -> boundsH
+	// bH -> mH
+	// -> x = bH2 / mH
+	mElevatorBarHeight = bounds.height * bounds.height / mMaxHeight;
 
-	cout << "Elevator: " << mElevatorRect.x << ", " << mElevatorRect.y << ", " << mElevatorRect.width << " x " << mElevatorRect.height << " bary= "<< mElevatorBarY <<" barh= " << mElevatorBarHeight << " mElevatorStartY=" << mElevatorStartY << endl;
+	//mElevatorStartY = ofMap(mElevatorBarY, bounds.y-mElevatorBarHeight, bounds.y, 0, mMaxHeight);
+	mElevatorStartY = - (mElevatorBarY - mElevatorRect.y) * mMaxHeight / bounds.height;
+	//ofClamp(mElevatorStartY, -100000, 0);
+	actualBounds.y = mElevatorStartY + bounds.y;
+
+	cout << "Elevator: " << mElevatorRect.x << ", " << mElevatorRect.y << ", " << mElevatorRect.width << " x " << mElevatorRect.height << " bary="<< mElevatorBarY <<" barh=" << mElevatorBarHeight << " mElevatorStartY=" << mElevatorStartY << endl;
 }
 
 
 void ofxTLAntescofoAction::draw_elevator(void) {
 	ofPushStyle();
-	if (bElevatorShowMore) ofSetColor(0, 0, 0, 40);
-	else ofSetColor(0, 0, 0, 20);
+	if (bElevatorShowMore) ofSetColor(0, 0, 0, 90);
+	else ofSetColor(0, 0, 0, 70);
 	ofFill();
 	ofRect(mElevatorRect);
 
-	if (bElevatorShowMore) ofSetColor(0, 0, 0, 205);
-	else ofSetColor(0, 0, 0, 105);
+	if (bElevatorShowMore) ofSetColor(0, 0, 0, 215);
+	else ofSetColor(0, 0, 0, 165);
 	ofRect(mElevatorRect.x, mElevatorBarY, ELEVATOR_WIDTH, mElevatorBarHeight);
 
 	ofPopStyle();
 }
 
-
+	
 void ofxTLAntescofoAction::elevator_mousePressed(ofMouseEventArgs& args) {
-	mElevatorClickedY = args.y;
+	bElevatorShowMore = true;
+	mElevatorClickedY = mElevatorBarY;
 }
 void ofxTLAntescofoAction::elevator_mouseMoved(ofMouseEventArgs& args) {
 	bElevatorShowMore = true;
 }
 void ofxTLAntescofoAction::elevator_mouseDragged(ofMouseEventArgs& args) {
-	mElevatorBarY = bounds.y + abs(args.y - mElevatorClickedY);
+	mElevatorBarY = args.y;
+	mElevatorBarY = ofClamp(mElevatorBarY, mElevatorRect.y, mElevatorRect.y+mElevatorRect.height);
+	int maxy = bounds.y+bounds.height;
+	if (mElevatorBarY + mElevatorBarHeight > maxy)
+		mElevatorBarY = maxy - mElevatorBarHeight;
 }
 void ofxTLAntescofoAction::elevator_mouseReleased(ofMouseEventArgs& args) {
 	mElevatorClickedY = 0;
@@ -226,12 +243,10 @@ void ofxTLAntescofoAction::draw_antescofo_tracks_header(int x, int y, int sens) 
 			ofTriangle(mNextTrackBtn.x, mNextTrackBtn.y, 
 				   mNextTrackBtn.x, mNextTrackBtn.y + mNextTrackBtn.height, 
 				   mNextTrackBtn.x + mNextTrackBtn.width, mNextTrackBtn.y + mNextTrackBtn.height/2); 
-
 		} else { // prev
 			ofTriangle(mPrevTrackBtn.x, mPrevTrackBtn.y + mPrevTrackBtn.height/2,
 				   mPrevTrackBtn.x + mPrevTrackBtn.width, mPrevTrackBtn.y, 
 				   mPrevTrackBtn.x + mPrevTrackBtn.width, mPrevTrackBtn.y + mPrevTrackBtn.height); 
-
 		}
 		ofPopStyle();
 }
@@ -720,7 +735,7 @@ void ofxTLAntescofoAction::update_groups()
 		//if ((*i)->group && !(*i)->group->is_in_bounds(this)) continue;
 
 		(*i)->rect.x = get_x((*i)->beatnum);
-		(*i)->rect.y = bounds.y + 1;
+		(*i)->rect.y = actualBounds.y + 1;
 		update_sub_duration(*i);
 		(*i)->rect.width = update_sub_width(*i);
 		
@@ -797,6 +812,7 @@ ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint_rec(ActionGroup* group, 
 }
 
 ActionGroup* ofxTLAntescofoAction::groupFromScreenPoint(int x, int y, vector<ActionGroup*>& groups) {
+	y -= mElevatorStartY;
 	for (vector<ActionGroup*>::const_iterator i = groups.begin(); i != groups.end(); i++) {
 		ActionGroup *gr = 0;
 		if ((*i)->rect.inside(x, y) && (gr = groupFromScreenPoint_rec(*i, x, y))) { 
@@ -934,18 +950,6 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			}
 		}
 	}
-
-#if 0
-	else { // selecting
-		draggingSelectionRange = true;
-		selectionRangeAnchor.x = args.x;
-		selectionRangeAnchor.y = args.y;
-		dragSelection.x = selectionRangeAnchor.x;
-		dragSelection.y = selectionRangeAnchor.y;
-		dragSelection.width = 0;
-		dragSelection.height = 0;
-	}
-#endif
 #endif
 	return res;
 }
@@ -974,7 +978,7 @@ void ofxTLAntescofoAction::mouseMoved(ofMouseEventArgs& args, long millis)
 
 void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 {
-	if (mElevatorRect.inside(args.x, args.y)) {
+	if (mElevatorClickedY) {
 		elevator_mouseDragged(args);
 		return;
 	}
@@ -1064,6 +1068,7 @@ bool ofxTLAntescofoAction::mouseReleased_tracks_header(ofMouseEventArgs& args, l
 
 void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 {
+	elevator_mouseReleased(args);
 	if (mouseReleased_tracks_header(args, millis)) {
 		return;
 	}
@@ -1072,10 +1077,6 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 		disable();
 		ofxAntescofoNote->deleteActionTrack();
 		//timeline->removeTrack(this);
-		return;
-	}
-	if (mElevatorRect.inside(args.x, args.y)) {
-		elevator_mouseReleased(args);
 		return;
 	}
 	//if (!bounds.inside(args.x, args.y)) return;
@@ -1281,12 +1282,14 @@ ofRectangle ofxTLAntescofoAction::getBounds()
 ofRectangle ofxTLAntescofoAction::getBoundedRect(ofRectangle& r)
 {
 	ofRectangle ret = r;
-	if (ret.x < bounds.x && ret.x + ret.width > bounds.x) {
-		ret.x = bounds.x;
+	if (ret.x < actualBounds.x && ret.x + ret.width > actualBounds.x) {
+		ret.x = actualBounds.x;
 		ret.width = r.width - ret.x - abs(r.x);
 	}
-	if (ret.x + ret.width > bounds.x + bounds.width)
-		ret.width = bounds.width - ret.x + bounds.x;// + abs(r.x);
+	if (ret.x + ret.width > actualBounds.x + actualBounds.width)
+		ret.width = actualBounds.width - ret.x + actualBounds.x;// + abs(r.x);
+
+	//ret.y = ofClamp(ret.y, bounds.y, bounds.y+bounds.height);
 
 	return ret;
 }
@@ -1541,12 +1544,30 @@ void ActionGroup::print() {
 }
 
 bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction) {
+	bool res = false;
 	ofRange r(_timeline->screenXtoNormalizedX(rect.x, tlAction->getZoomBounds()), _timeline->screenXtoNormalizedX(rect.x + rect.width, tlAction->getZoomBounds()));
-	return tlAction->getZoomBounds().intersects(r);
+	res = tlAction->getZoomBounds().intersects(r);
+
+	/*
+	if (res) {
+		if (rect.y >= tlAction->mElevatorStartY)
+		res = true;
+	}*/
+	return res;
 }
+
+bool ActionGroup::is_in_bounds_y(ofxTLAntescofoAction *tlAction) {
+	bool res = false;
+	if (rect.y + rect.height + tlAction->mElevatorStartY <= tlAction->getBounds().y + tlAction->getBounds().height + 100
+	    && rect.y + tlAction->mElevatorStartY >= tlAction->ofxAntescofoNote->getBounds().y) // tlAction->getBounds().y)
+		res = true;
+	return res;
+}
+
 
 void ActionGroup::draw_header(ofxTLAntescofoAction* tlAction, bool draw_rect)
 {
+	if (!is_in_bounds_y(tlAction)) return;
 	ofFill(); // rect color filled
 	ofSetColor(headerColor);
 	ofRectangle r(rect);
@@ -1569,13 +1590,18 @@ void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 	/*cout << "ActionGroup::draw: label:"<< realtitle << " toplevel:" << top_level_group << " inbounds:" << is_in_bounds(tlAction) <<  " x:"<<rect.x << " y:" << rect.y
 	     << " " << rect.width <<  "x"<< rect.height << " sons size: " << sons.size() << endl;
 	     */
+	bool inbounds = is_in_bounds(tlAction);
 	if (!hidden) {
-		if (is_in_bounds(tlAction)) {
+		if (inbounds) {
 			ofFill();
 			if (debug_actiongroup) cout << "deep level=" << deep_level << endl;
 			ofSetColor(200, 200, 200, deep_level*255);
 			ofRectangle inrect = rect;
 			inrect.y += HEADER_HEIGHT; inrect.height -= HEADER_HEIGHT;
+
+			if (inrect.y + tlAction->mElevatorStartY <= tlAction->getBounds().y) // don't draw outside of bounds during vertical scrolling
+				inrect.y = tlAction->getBounds().y;
+
 			ofRect(tlAction->getBoundedRect(inrect)); // draw background
 			for ( vector<ActionGroup*>::const_iterator i = sons.begin(); i != sons.end(); i++) {
 				if ((*i)->is_in_bounds(tlAction))
@@ -1583,7 +1609,7 @@ void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 			}
 		}
 	}
-	draw_header(tlAction);
+	if (inbounds) draw_header(tlAction);
 }
 
 
@@ -1728,14 +1754,16 @@ ActionMultiCurves::~ActionMultiCurves()
 
 void ActionMultiCurves::draw(ofxTLAntescofoAction *tlAction) {
 	if (tlAction->mFilterActions && !in_selected_track) return;
+	if (!is_in_bounds_y(tlAction)) return;
 	//cout << "ActionMultiCurves::draw: x:"<< rect.x << " y:" << rect.y << endl;
-	if (!hidden && is_in_bounds(tlAction)) {
+	bool inbounds = is_in_bounds(tlAction);
+	if (!hidden && inbounds) {
 		vector<ActionCurve*>::iterator j;
 		for (j = curves.begin(); j != curves.end(); j++) {
 			(*j)->draw(tlAction);
 		}
 	}
-	draw_header(tlAction, false);
+	if (inbounds) draw_header(tlAction, false);
 }
 
 void ActionMultiCurves::drawModalContent(ofxTLAntescofoAction *tlAction) {
@@ -2373,6 +2401,7 @@ int ActionMessage::getHeight() {
 
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
 	if (tlAction->mFilterActions && !in_selected_track) return;
+	if (!is_in_bounds_y(tlAction)) return;
 
 	ofFill();
 	ofSetColor(200, 200, 200, 255); //deep_level*255);

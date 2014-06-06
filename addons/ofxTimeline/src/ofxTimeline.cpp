@@ -1357,12 +1357,12 @@ void ofxTimeline::draw(){
 		}
         
 		ofPushStyle();
-		currentPage->draw();
 		if(showZoomer)zoomer->_draw();
         
 		//draw these because they overlay the rest of the timeline with info
         ticker->_draw();
         //inoutTrack->_draw();
+		currentPage->draw();
         ofPopStyle();
 		
 		if(modalTrack != NULL){
