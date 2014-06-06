@@ -2015,6 +2015,7 @@ void ofxAntescofog::windowResized(ofResizeEventArgs& resizeEventArgs) { // (int 
 	ofClear(255,255,255, 0);
 	drawCache.end();
 #endif
+	timeline.windowResized(resizeEventArgs);
 
 	bShouldRedraw = true;
 }

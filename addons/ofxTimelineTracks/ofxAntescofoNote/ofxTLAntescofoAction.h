@@ -58,6 +58,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 
 		virtual void setup();
 		virtual void draw();
+		void windowResized(ofResizeEventArgs& resizeEventArgs);
 		virtual void update();
 		void update_groups();
 		int update_sub_height(ActionGroup *ag);

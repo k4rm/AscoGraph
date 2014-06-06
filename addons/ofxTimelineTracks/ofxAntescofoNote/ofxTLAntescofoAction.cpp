@@ -74,6 +74,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	}
 
 	elevator_disable();
+	ofAddListener(ofEvents().windowResized, this, &ofxTLAntescofoAction::windowResized);
 }
 
 
@@ -148,7 +149,12 @@ void ofxTLAntescofoAction::draw()
 				foreground_groups[i]->draw(this);
 			}
 		}
-
+		if (bElevatorEnabled) {
+			glDisable(GL_SCISSOR_TEST);
+			ofPopMatrix();
+			elevator_update();
+			draw_elevator();
+		}
 		// draw modal windows for every curves
 		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 			bool inbounds = zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum) || zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration);
@@ -158,18 +164,14 @@ void ofxTLAntescofoAction::draw()
 					(*i)->drawModalContent(this);
 			}
 		}
-		if (bElevatorEnabled) {
-			glDisable(GL_SCISSOR_TEST);
-			ofPopMatrix();
-			elevator_update();
-			draw_elevator();
-		}
+
 	}
 }
 
 
 void ofxTLAntescofoAction::elevator_disable(void) {
 	bElevatorEnabled = false;
+	mElevatorStartY = 0;
 }
 
 void ofxTLAntescofoAction::elevator_enable(void) {
@@ -183,6 +185,10 @@ void ofxTLAntescofoAction::elevator_enable(void) {
 
 
 void ofxTLAntescofoAction::elevator_update(void) {
+	if (mMaxHeight < bounds.height) {
+		elevator_disable();
+		return;
+	}
 	mElevatorRect.y = bounds.y;
 	mElevatorRect.width = ELEVATOR_WIDTH;
 	mElevatorRect.x = bounds.x;// + bounds.width - mElevatorRect.width;
@@ -192,13 +198,10 @@ void ofxTLAntescofoAction::elevator_update(void) {
 	// bH -> mH
 	// -> x = bH2 / mH
 	mElevatorBarHeight = bounds.height * bounds.height / mMaxHeight;
-
-	//mElevatorStartY = ofMap(mElevatorBarY, bounds.y-mElevatorBarHeight, bounds.y, 0, mMaxHeight);
 	mElevatorStartY = - (mElevatorBarY - mElevatorRect.y) * mMaxHeight / bounds.height;
-	//ofClamp(mElevatorStartY, -100000, 0);
-	actualBounds.y = mElevatorStartY + bounds.y;
 
-	cout << "Elevator: " << mElevatorRect.x << ", " << mElevatorRect.y << ", " << mElevatorRect.width << " x " << mElevatorRect.height << " bary="<< mElevatorBarY <<" barh=" << mElevatorBarHeight << " mElevatorStartY=" << mElevatorStartY << endl;
+	actualBounds.y = mElevatorStartY + bounds.y;
+	//cout << "Elevator: " << mElevatorRect.x << ", " << mElevatorRect.y << ", " << mElevatorRect.width << " x " << mElevatorRect.height << " bary="<< mElevatorBarY <<" barh=" << mElevatorBarHeight << " mElevatorStartY=" << mElevatorStartY << endl;
 }
 
 
@@ -225,7 +228,7 @@ void ofxTLAntescofoAction::elevator_mouseMoved(ofMouseEventArgs& args) {
 	bElevatorShowMore = true;
 }
 void ofxTLAntescofoAction::elevator_mouseDragged(ofMouseEventArgs& args) {
-	mElevatorBarY = args.y;
+	mElevatorBarY = args.y - mElevatorClickedY + mElevatorRect.y;
 	mElevatorBarY = ofClamp(mElevatorBarY, mElevatorRect.y, mElevatorRect.y+mElevatorRect.height);
 	int maxy = bounds.y+bounds.height;
 	if (mElevatorBarY + mElevatorBarHeight > maxy)
@@ -339,6 +342,7 @@ void ofxTLAntescofoAction::attribute_header_colors(vector<ActionGroup*> groups) 
 
 void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 {
+	actualBounds = bounds;
 	// clean tabs
 	string tab("\t");
 	string doublespace("  ");
@@ -748,15 +752,15 @@ void ofxTLAntescofoAction::update_groups()
 }
 
 //--------------------------------------------------------------
-void ofxTLAntescofoAction::windowResized(int w, int h){
-
+void ofxTLAntescofoAction::windowResized(ofResizeEventArgs& resizeEventArgs){
+	elevator_update();
 }
 
 bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group) {
 	bool res = false;
 	if (!group) return res;
 	//cout << "mousePressed: rect:"<< header->realtitle<< " x:" << header->rect.x << " y:" << header->rect.y << " w:"<< header->rect.width << " h:" << header->rect.height << endl; 
-	if (group->rect.inside(args.x, args.y)) {
+	if (group->rect.inside(args.x, args.y - mElevatorStartY)) {
 		if (group->hidden) {
 			if (!ofGetModifierSelection())
 				group->hidden = false;
@@ -851,11 +855,14 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 				}
 			}
 #endif
-			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
-				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y)) {
+			//cout << "mousePressed_curve_rec: c->beatcurves[iac]->bounds " << c->beatcurves[iac]->bounds.x << ", " << c->beatcurves[iac]->bounds.y << " " << c->beatcurves[iac]->bounds.width << " x " << c->beatcurves[iac]->bounds.height << endl;
+			if (c->beatcurves[iac]->bounds.inside(args.x, args.y - mElevatorStartY) || c->beatcurves[iac]->drawingEasingWindow) {
+				//cout << "mousePressed_curve_rec: splitrect= " << c->mSplitBtnRect.x << ", " << c->mSplitBtnRect.y << " " << c->mSplitBtnRect.width << " x " << c->mSplitBtnRect.height << endl;
+				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y - mElevatorStartY)) {
 					ofRange zr = getZoomBounds();
 					c->beatcurves[iac]->setZoomBounds(zr);
-					c->beatcurves[iac]->mousePressed(args, millis);
+					ofMouseEventArgs args2 = args; args2.y -= mElevatorStartY;
+					c->beatcurves[iac]->mousePressed(args2, millis);
 					if (c->beatcurves[iac]->drawingEasingWindow)
 						shouldDrawModalContent = true;
 					clickedCurves.push_back(ac);
@@ -943,7 +950,8 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 						res = true;
 					} else if (!(*i)->hidden) {
 						// handle curve click
-						res = mousePressed_search_curve_rec(*j, args, millis);
+						ofMouseEventArgs args2 = args; args2 -= mElevatorStartY;
+						res = mousePressed_search_curve_rec(*j, args2, millis);
 					}
 					//if (res) return res;
 				}
@@ -964,7 +972,7 @@ void ofxTLAntescofoAction::mouseMoved(ofMouseEventArgs& args, long millis)
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
 			for (int iac = 0; iac < c->beatcurves.size(); iac++) {
-				if (c->beatcurves[iac]->bounds.inside(args.x, args.y)) {
+				if (c->beatcurves[iac]->bounds.inside(args.x, args.y - mElevatorStartY)) {
 					//cout << "mouseMoved dyncast ok" << endl;
 					if (c->beatcurves.size() == 1) {
 						c->beatcurves[iac]->mouseMoved(args, millis);
@@ -1007,8 +1015,9 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 				//if (c->beatcurves[iac]->bounds.inside(args.x, args.y) {
 					//if (c->beatcurves.size() == 1) {
 						int w = c->beatcurves[iac]->bounds.width;
+						ofMouseEventArgs args2; args2 = args; args2.y -= mElevatorStartY;
 						//cout << "mouseDragged dyncast ok: calling beatcurve mouseDragged: howmany:"<< (*j)->howmany << " varname:"<< c->varname << endl;
-						c->beatcurves[iac]->mouseDragged(args, millis);
+						c->beatcurves[iac]->mouseDragged(args2, millis);
 
 						// extend curve box width on mouseDrag
 						if (c->beatcurves[iac]->bounds.width != w) {
@@ -1093,7 +1102,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 			ActionCurve *c = (*i);
 			//cout << "mouseReleased: splitbtn: x:" << c->mSplitBtnRect.x << " y:"<< c->mSplitBtnRect.y << " " << c->mSplitBtnRect.width << "x" << c->mSplitBtnRect.height << endl;
 			// split btn
-			if (c->mSplitBtnRect.inside(args.x, args.y)) {
+			if (c->mSplitBtnRect.inside(args.x, args.y - mElevatorStartY)) {
 				cout << "mouseReleased: split" << endl;
 				if (c->beatcurves.size() > 1)
 					c->split();
@@ -1105,10 +1114,11 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 					//if (c->beatcurves.size() == 1) {
 						if (shouldDrawModalContent && c->beatcurves[iac]->drawingEasingWindow == false)
 							continue;
-						if (!shouldDrawModalContent && !c->beatcurves[iac]->bounds.inside(args.x, args.y))
+						if (!shouldDrawModalContent && !c->beatcurves[iac]->bounds.inside(args.x, args.y - mElevatorStartY))
 							c->beatcurves[iac]->unselectAll();
 						cout << "mouseReleased: calling beatcurve varname:" << c->varname << endl;
-						c->beatcurves[iac]->mouseReleased(args, millis);
+						ofMouseEventArgs args2 = args; args2.y -= mElevatorStartY;
+						c->beatcurves[iac]->mouseReleased(args2, millis);
 						//done = true;
 					//}
 				}

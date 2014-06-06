@@ -101,8 +101,8 @@ void ofxTLPage::update(){
 
 void ofxTLPage::draw(){	
     ofSetLineWidth(1);
-	//for(int i = 0; i < headers.size(); i++){
-	for(int i = headers.size() - 1; i >= 0; i--){
+	for(int i = 0; i < headers.size(); i++){
+	//for(int i = headers.size() - 1; i >= 0; i--){
 		headers[i]->draw();
 		tracks[headers[i]->name]->_draw();
 	}

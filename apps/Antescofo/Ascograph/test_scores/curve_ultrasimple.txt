@@ -1,10 +1,14 @@
 
 BPM 60
 
-NOTE C2 5
+NOTE C2 1
 NOTE C2 2
 GROUP Solo
 		{
+			pouet tpoeut
+			pouet tpoeut
+			pouet tpoeut
+			pouet tpoeut
 			pouet tpoeut
 				
 			1/2 solo_num_ech 13  ; <----- porte
@@ -23,51 +27,31 @@ GROUP Solo
 
 			3/2 solo_num_ech 7  ; <----- radio
 			solo_PlayEch start
-
-			curve echRadio @grain := 0.05s, @action := solo_lvl_ech $ampEchS 10
-				{$ampEchS
-						{		{ 0. } @type "quad_out"
-							1/2	{ 0.4 } @type "quad"
-							1/2 { 0.01 } @type "quad_out"
-							1/2	{ 0.5 } @type "quad"
-							1/2 { 0.01 } @type "quad_out"
-							1/2	{ 0.2 } @type "quad_out"
-							2 	{ 0. } 
-						}
-				}
-		}
-
-NOTE C2 5
-
-				curve freqg7s  @Grain := 0.05s, @Action := CS_solo_lignes c g7.freq (@midi2hz($freqg7s))
-					{ $freqg7s
-						{
-								{ 87. } 
-							3/3 { 87. } @type "quad"
-							2/3	{ 92 } 
-							1/6	{ 92 } @type "exp"
-							1/6	{ 98 } @type "exp"
-							3/4	{ 91 } @type "exp"
-							1/4	{ 97 } @type "exp"
-							1/4	{ 101 }
-						}
-					}
-
-NOTE C4 4.0
-
-curve @action := plot $NOW $x $y $z {
-	$x
-	{		{ 2.0 }
-		1.0	{ 4.0 } @type "exp"
-		1.0	{ 1.4 }
-	}
-	$y, $z
-	{		{5.0, 4.0}
-		3.0	{0.3 ,7.0}
-	}
+Curve __anonymous24_curve  @Action :=
+        {
+            plot $NOW $x $y $z
+        }
+{
+    $x
+    {
+          { 2 } @type "linear"
+        1 { 4 } @type "exp"
+        1 { 1.4 }
+    }
+    $y
+    {
+          { 5 } @type "linear"
+        3 { 0.3 }
+    }
+    $z
+    {
+          { 4 } @type "linear"
+        3 { 7 }
+    }
+}
 }
 
-     
+     /*
 TRILL (f3 g3) 10
 Curve slider  @Grain := 0.05 s, @Action :=
         {
@@ -82,6 +66,7 @@ Curve slider  @Grain := 0.05 s, @Action :=
     }
 }
 
+*/
 
 
 
@@ -89,27 +74,3 @@ Curve slider  @Grain := 0.05 s, @Action :=
 
 
 NOTE A1 10
-Curve _anonymous100_curve  @Action :=
-        {
-            plot $NOW $x $y $z 
-        }
-{
-    $x
-    {
-          { 2.0 } @type "linear"
-        4.0 { 4.0 } @type "linear"
-        1.0 { 1.4 }
-    }
-    $y
-    {
-          { 5.0 } @type "linear"
-        6.0 { 0.3 }
-    }
-    $z
-    {
-          { 4.0 } @type "linear"
-        0.16498 { 0.985494 } @type "bounce"
-        4.83502 { 7.0 } @type "linear"
-        3.0623112 { 3.20833 }
-    }
-}
