@@ -102,6 +102,9 @@ void ofxTLAntescofoAction::viewWasResized(ofEventArgs& args){
 	cout << "ofxTLAntescofoAction:view was resized" << endl;
 	resize();
 
+	mElevatorBarY = bounds.y;
+	mElevatorStartY = 0;
+	actualBounds = bounds;
 	if (bElevatorEnabled) elevator_enable();
 }
 
@@ -266,7 +269,7 @@ void ofxTLAntescofoAction::elevator_mouseDragged(ofMouseEventArgs& args) {
 	//if (args.y > mElevatorClickedY) // going down
 		mElevatorBarY = mElevatorBarYClicked + args.y - mElevatorClickedY;
 	//else mElevatorBarY = mElevatorBarClickedY + mElevatorClickedY - args.y;
-	cout << "elevator_mouseDragged: args.y=" << args.y << " mElevatorBarY=" << mElevatorBarY << " mElevatorClickedY=" << mElevatorClickedY << endl;
+	//cout << "elevator_mouseDragged: args.y=" << args.y << " mElevatorBarY=" << mElevatorBarY << " mElevatorClickedY=" << mElevatorClickedY << endl;
 	mElevatorBarY = ofClamp(mElevatorBarY, mElevatorRect.y, mElevatorRect.y+mElevatorRect.height);
 	int maxy = bounds.y+bounds.height;
 	if (mElevatorBarY + mElevatorBarHeight > maxy)
@@ -790,13 +793,12 @@ void ofxTLAntescofoAction::update_groups()
 //--------------------------------------------------------------
 void ofxTLAntescofoAction::windowResized(ofResizeEventArgs& resizeEventArgs){
 	bHasToResize = true;
-	elevator_update();
 }
 
-bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group) {
+bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group, bool recurs) {
+	cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << endl; 
 	bool res = false;
 	if (!group) return res;
-	//cout << "mousePressed: rect:"<< header->realtitle<< " x:" << header->rect.x << " y:" << header->rect.y << " w:"<< header->rect.width << " h:" << header->rect.height << endl; 
 	if (group->rect.inside(args.x, args.y - mElevatorStartY)) {
 		if (group->hidden) {
 			if (!ofGetModifierSelection())
@@ -821,7 +823,7 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 			/*ActionMultiCurves* c = 0;
 			if ((c = dynamic_cast<ActionMultiCurves*>(group)))
 				c->hidden = true;*/
-		} else {
+		} else if (recurs) {
 			if (group) { // not hidden and click in group
 				if (group->sons.size()) { // rec in subgroups
 					ActionGroup *a = group;
@@ -957,7 +959,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			     << "\tcolNum_begin:" << clickedGroup->colNum_begin << " colNum_end:" << clickedGroup->colNum_end << endl;
 			mAntescofog->editorShowLine(clickedGroup->lineNum_begin, clickedGroup->lineNum_end, clickedGroup->colNum_begin, clickedGroup->colNum_end);
 		}
-		mousePressed_in_header(args, clickedGroup);
+		res = mousePressed_in_header(args, clickedGroup, false);
 		// bring it to foreground level : if CMD pressed : bring background
 		if (clickedGroup->is_in_header(args.x, args.y) && ofGetModifierSelection()) {
 			cout << "Bringing to front group : " << clickedGroup->realtitle << endl;
@@ -968,12 +970,19 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			//clickedGroup->bringBack();
 			foreground_groups.clear();
 		}
+		if (!res && !clickedGroup->hidden) {
+			// handle curve click
+			ofMouseEventArgs args2 = args; args2 -= mElevatorStartY;
+			res = mousePressed_search_curve_rec(clickedGroup, args2, millis);
+		}
 	}
+	if (res) return res;
 	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		if (mousePressed_in_header(args, *i)) {
+		if (*i != clickedGroup && mousePressed_in_header(args, *i)) {
 			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 			return true;
 		} else if (*i) { // look for subgroups
+			//res = mousePressed_search_curve_rec(*i, args, millis);
 			ActionGroup* a = *i;
 			if (!(*i)->hidden) {
 				// handle curve click
@@ -982,7 +991,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			if (a->sons.size()) {
 				for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					// handle arrow click
-					if (*j &&  mousePressed_in_header(args, *j)) {
+					if (*j != clickedGroup && *j &&  mousePressed_in_header(args, *j)) {
 						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 						res = true;
 					} else if (!(*i)->hidden) {
@@ -1615,6 +1624,7 @@ bool ActionGroup::is_in_bounds_y(ofxTLAntescofoAction *tlAction) {
 void ActionGroup::draw_header(ofxTLAntescofoAction* tlAction, bool draw_rect)
 {
 	if (!is_in_bounds_y(tlAction)) return;
+	if (tlAction->mFilterActions && !in_selected_track) return;
 	ofFill(); // rect color filled
 	ofSetColor(headerColor);
 	ofRectangle r(rect);
@@ -1640,16 +1650,18 @@ void ActionGroup::draw(ofxTLAntescofoAction *tlAction)
 	bool inbounds = is_in_bounds(tlAction);
 	if (!hidden) {
 		if (inbounds) {
-			ofFill();
-			if (debug_actiongroup) cout << "deep level=" << deep_level << endl;
-			ofSetColor(200, 200, 200, deep_level*255);
-			ofRectangle inrect = rect;
-			inrect.y += HEADER_HEIGHT; inrect.height -= HEADER_HEIGHT;
+			if (!(tlAction->mFilterActions && in_selected_track)) { // group not filtered out: display
+				ofFill();
+				if (debug_actiongroup) cout << "deep level=" << deep_level << endl;
+				ofSetColor(200, 200, 200, deep_level*255);
+				ofRectangle inrect = rect;
+				inrect.y += HEADER_HEIGHT; inrect.height -= HEADER_HEIGHT;
 
-			if (inrect.y + tlAction->mElevatorStartY <= tlAction->getBounds().y) // don't draw outside of bounds during vertical scrolling
-				inrect.y = tlAction->getBounds().y;
+				if (inrect.y + tlAction->mElevatorStartY <= tlAction->getBounds().y) // don't draw outside of bounds during vertical scrolling
+					inrect.y = tlAction->getBounds().y;
 
-			ofRect(tlAction->getBoundedRect(inrect)); // draw background
+				ofRect(tlAction->getBoundedRect(inrect)); // draw background
+			}
 			for ( vector<ActionGroup*>::const_iterator i = sons.begin(); i != sons.end(); i++) {
 				if ((*i)->is_in_bounds(tlAction))
 					(*i)->draw(tlAction);

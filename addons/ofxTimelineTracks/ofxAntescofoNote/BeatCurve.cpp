@@ -159,6 +159,8 @@ bool BeatCurve::mousePressed(ofMouseEventArgs& args, long millis){
 	if(drawingEasingWindow){
 		return true;
 	}
+	if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y))
+		return true;
 	else {
 		//return ofxTLBeatKeyframes::mousePressed(args,millis);
 		if (curve_debug_) cout <<"BeatCurve: mousepressed inside" << endl;
@@ -253,8 +255,7 @@ bool BeatCurve::mousePressed(ofMouseEventArgs& args, long millis){
 			}
 		}
 
-		if(bDrawApplyButton && mApplyBtnRect.inside(args.x, args.y))
-			return true;
+
 		return selectedKeyframe != NULL;
 	}
 }

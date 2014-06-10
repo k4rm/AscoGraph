@@ -70,7 +70,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void update_avoid_overlap_rec(ActionGroup* g, int w, int h);
 
 		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
-		bool mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group);
+		bool mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group, bool recurs=true);
 		virtual bool mousePressed_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis);
 		virtual bool mousePressed_search_curve_rec(ActionGroup* a, ofMouseEventArgs& args, long millis);
 		virtual void mouseMoved(ofMouseEventArgs& args, long millis);
