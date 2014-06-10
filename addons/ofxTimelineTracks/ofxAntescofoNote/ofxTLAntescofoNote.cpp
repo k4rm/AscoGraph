@@ -84,7 +84,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-//#define DEBUG_GUIDO_ASCOGRAPH 1
+#define DEBUG_GUIDO_ASCOGRAPH 1
 #define USE_GUIDO_IMAGE_STORAGE 1
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -951,7 +951,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	cout << "Getting Guido string from note " << fromi << " to " << toi << endl;
 #endif
 	string ret1 = "[ ", ret2 = ret1;
-	int pageFormat_w = mDur_in_beats * 1.3;// MIN(switches.size() / 8, 20); // TODO utiliser le maxbeat dur ?
+	int pageFormat_w = mDur_in_beats * 1.9;// MIN(switches.size() / 8, 20);
 	if (!pageFormat_w) pageFormat_w = 20;
 	ret1 +=	"\\pageFormat<" + ofToString(pageFormat_w) + "cm, 15cm, 0cm, 1cm, 0cm, 1cm>";
 	if (fromi == 0) {
@@ -966,7 +966,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 	bool isChord1 = false, isChord2 = false, isGrace = false;
 	ofRange staffbeat1(0, 0), staffbeat2(0, 0);
 	bool was_tied = false;
-	bool was_trill1 = false, was_trill2 = false, was_multi = false;
+	bool was_trill1 = false, was_trill2 = false, was_multi1 = false, was_multi2 = false;
 	int curStaff = 1, guidoId = 0;
 	for (int i = fromi; i <= toi; i++) {
 		if (switches[i]->pitch && abs(switches[i]->pitch) < pitch_limit_between_staves) {
@@ -1001,10 +1001,12 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			else if (i && switches[i-1]->type == ANTESCOFO_TRILL && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
 				add_string_staff(ret1, ret2, curStaff, ",");
 			else add_string_staff(ret1, ret2, curStaff, "{");
-		} else if (switches[i]->type == ANTESCOFO_MULTI && switches[i]->pitch) {
-			if (!was_multi) {
+		} 
+#if 0 // until Guido glissando are fixed
+		else if (switches[i]->type == ANTESCOFO_MULTI && switches[i]->pitch) {
+			if (!was_multi1 && !was_multi2) {
 				add_string_staff(ret1, ret2, curStaff, "\\glissando<fill=\"true\">(");
-				was_multi = true;
+				if (curStaff==1) was_multi1 = true; else was_multi2 = true;
 				/*if (switches[i+1]->type == ANTESCOFO_MULTI && switches[i+1]->beat.min == switches[i]->beat.min) { // handle multi of chords
 					add_string_staff(ret1, ret2, curStaff, "{");
 					was_multi_chord = true;
@@ -1012,16 +1014,22 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			} 
 			//if (i && switches[i-1]->type == ANTESCOFO_MULTI && switches[i-1]->pitch && switches[i-1]->beat.min == switches[i]->beat.min)
 				//add_string_staff(ret1, ret2, curStaff, ",");
-		} else if (switches[i]->type == ANTESCOFO_MULTI_STOP) {
-			if (was_multi) { i++; while (i < toi && switches[i]->type == ANTESCOFO_MULTI_DUMMY) i++; } // skip dummies 
 		}
+		else if (switches[i]->type == ANTESCOFO_MULTI_STOP) {
+			if (was_multi1 || was_multi2) { i++; while (i < toi && switches[i]->type == ANTESCOFO_MULTI_DUMMY) i++; } // skip dummies 
+		}
+#endif
 		int istied = 0;
 		if ((istied = has_next_event_tied_pitch(i, switches[i]->pitch)))
 			add_string_staff(ret1, ret2, curStaff, " \\tieBegin ");
 
 		//XXX cout << "i= " << i  << " type= " << switches[i]->type << endl;
 		// get Guido string for current note
+#if 0 // until Guido glissando are fixed
 		if (switches[i]->type != ANTESCOFO_MULTI_DUMMY) {
+#else
+		{
+#endif
 			if (isGrace)
 				add_string_staff(ret1, ret2, curStaff, getGuidoStringNoteName(switches[i]->pitch));
 			else {
@@ -1031,9 +1039,7 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 			}
 			if (switches[i]->type != ANTESCOFO_CHORD) guidoId++;
 		}
-
 		if (isGrace) { add_string_staff(ret1, ret2, curStaff, ")"); isGrace = false; }
-		
 		if (!istied && switches[i]->is_tied) {
 			add_string_staff(ret1, ret2, curStaff, " \\tieEnd ");
 		}
@@ -1049,11 +1055,14 @@ string ofxTLAntescofoNote::getGuidoString(int fromx, int fromi, int tox, int toi
 		if (switches[i]->type == ANTESCOFO_TRILL && switches[i]->pitch && (i == switches.size()-1 || (switches[i+1]->type != ANTESCOFO_TRILL || (switches[i+1]->beat.min != switches[i]->beat.min)))) {
 			if (was_trill1) { add_string_staff(ret1, ret2, 1, "})"); was_trill1 = false; }
 			if (was_trill2) { add_string_staff(ret1, ret2, 2, "})"); was_trill2 = false; }
-		} else if (was_multi && (i == switches.size()-1 || (switches[i+1]->beat.min != switches[i]->beat.min && switches[i+1]->type != ANTESCOFO_MULTI_STOP && switches[i+1]->type != ANTESCOFO_MULTI_DUMMY))) {
-			add_string_staff(ret1, ret2, curStaff, ")");
-			was_multi = false;
-		} else {
-
+		} 
+#if 0 // until Guido glissandi are fixed
+		else if ((was_multi1 || was_multi2) && (i == switches.size()-1 || (switches[i+1]->beat.min != switches[i]->beat.min && switches[i+1]->type != ANTESCOFO_MULTI_STOP && switches[i+1]->type != ANTESCOFO_MULTI_DUMMY))) {
+			//if (was_multi1) { add_string_staff(ret1, ret2, 1, ")"); was_multi1 = false; }
+			//if (was_multi1) { add_string_staff(ret1, ret2, 2, ")"); was_multi1 = false; }
+		}
+#endif
+		else {
 			if (i+1 == switches.size() || (switches[i]->type == ANTESCOFO_CHORD && (switches[i+1]->beat.min != switches[i]->beat.min || (switches[i+1]->type == ANTESCOFO_NOTE && switches[i+1]->duration == 0.)))) { // last note of a CHORD
 				if (isChord1) {
 					add_string_staff(ret1, ret2, 1, " }");

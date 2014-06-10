@@ -97,6 +97,9 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void add_action(float beatnum, string action, Event *e);
 		void add_action_curves(float beatnum, ActionGroup *ar, Curve *c);
 
+		void viewWasResized(ofEventArgs& args);
+		void resize();
+		bool bHasToResize;
 		int get_max_note_beat();
 		void clear_actions();
 		void move_action();
@@ -165,7 +168,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		bool bElevatorEnabled, bElevatorShowMore;
 		ofRectangle mElevatorRect;
 		float mElevatorBarHeight, mElevatorBarY;
-		int mMaxHeight, mElevatorClickedY, mElevatorStartY;
+		int mMaxHeight, mElevatorClickedY, mElevatorStartY, mElevatorBarYClicked, mOldBoundsY;
 };
 
 class ActionGroup {

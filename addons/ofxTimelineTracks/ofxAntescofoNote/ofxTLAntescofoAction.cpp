@@ -64,8 +64,9 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mTrackBtnHeight = 13;
 	mTrackBtnWidth = 10;
 	mTrackBtnSpace = 20;
-	mElevatorStartY = mMaxHeight = mFirstTrackBtn = 0;
+	mElevatorClickedY = mElevatorStartY = mMaxHeight = mFirstTrackBtn = 0;
 	mPrevTrackBtn.height = mNextTrackBtn.height = mTrackBtnHeight;
+	bHasToResize = true;
 
 	// store Antescofo tracks names
 	if (TrackDefinition::idx2track.size()) {
@@ -81,6 +82,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 ofxTLAntescofoAction::~ofxTLAntescofoAction()
 {
 	clear_actions();
+	if (timeline) ofRemoveListener(timeline->timelineEvents.viewWasResized, this, &ofxTLAntescofoAction::viewWasResized);
 }
 
 void ofxTLAntescofoAction::setup()
@@ -91,9 +93,38 @@ void ofxTLAntescofoAction::setup()
 
 	//update();
 	actualBounds = bounds;
+
+
 	disable();
 }
 
+void ofxTLAntescofoAction::viewWasResized(ofEventArgs& args){
+	cout << "ofxTLAntescofoAction:view was resized" << endl;
+	resize();
+
+	if (bElevatorEnabled) elevator_enable();
+}
+
+void ofxTLAntescofoAction::resize() {
+	if (!isEnabled()) return;
+	int h = ofGetWindowHeight();
+	int y = bounds.y + bounds.height;
+	int bh = h - bounds.y;
+	//ofxTLTrackHeader* th = timeline->getTrackHeader(this);
+	//if (th && bounds != th->getDrawRect()) {
+	if (h != bounds.y + bounds.height && timeline) {
+		bounds.height = bh;
+		ofRectangle r(bounds.x, bounds.y - 18, bounds.width, 18);
+		ofxTLTrackHeader* th = timeline->getTrackHeader(this);
+		if (th) {
+			//cout << "ofxTLAntescofoAction::resize: goin to recalculateFooter"<< endl;
+			th->setDrawRect(r);
+			th->recalculateFooter();		
+			setDrawRect(bounds);
+		}
+	}
+	bHasToResize = false;
+}
 void ofxTLAntescofoAction::draw()
 {
 	if (mActionGroups.empty()) {
@@ -175,7 +206,7 @@ void ofxTLAntescofoAction::elevator_disable(void) {
 }
 
 void ofxTLAntescofoAction::elevator_enable(void) {
-	if (bElevatorEnabled) return;
+	//cout << "elevator_enable: bounds.y="<<bounds.y << " enabled:" << bElevatorEnabled<< endl;
 	bElevatorEnabled = true;
 	mElevatorBarY = bounds.y;
 	mElevatorStartY = 0;
@@ -198,6 +229,7 @@ void ofxTLAntescofoAction::elevator_update(void) {
 	// bH -> mH
 	// -> x = bH2 / mH
 	mElevatorBarHeight = bounds.height * bounds.height / mMaxHeight;
+	//cout << "!!!!!!!!!!!!!!!!! mElevatorBarY=" << mElevatorBarY << " mElevatorRect.y=" << mElevatorRect.y << " mMaxHeight=" << mMaxHeight << " bounds.y="<< bounds.y << " bounds.height=" << bounds.height << endl;
 	mElevatorStartY = - (mElevatorBarY - mElevatorRect.y) * mMaxHeight / bounds.height;
 
 	actualBounds.y = mElevatorStartY + bounds.y;
@@ -222,13 +254,19 @@ void ofxTLAntescofoAction::draw_elevator(void) {
 	
 void ofxTLAntescofoAction::elevator_mousePressed(ofMouseEventArgs& args) {
 	bElevatorShowMore = true;
-	mElevatorClickedY = mElevatorBarY;
+	mElevatorClickedY = args.y; //mElevatorBarY;
+	mElevatorBarYClicked = mElevatorBarY;
 }
 void ofxTLAntescofoAction::elevator_mouseMoved(ofMouseEventArgs& args) {
 	bElevatorShowMore = true;
 }
 void ofxTLAntescofoAction::elevator_mouseDragged(ofMouseEventArgs& args) {
-	mElevatorBarY = args.y - mElevatorClickedY + mElevatorRect.y;
+	if (!mElevatorClickedY) return;
+	//mElevatorBarY = args.y - mElevatorClickedY + mElevatorRect.y;
+	//if (args.y > mElevatorClickedY) // going down
+		mElevatorBarY = mElevatorBarYClicked + args.y - mElevatorClickedY;
+	//else mElevatorBarY = mElevatorBarClickedY + mElevatorClickedY - args.y;
+	cout << "elevator_mouseDragged: args.y=" << args.y << " mElevatorBarY=" << mElevatorBarY << " mElevatorClickedY=" << mElevatorClickedY << endl;
 	mElevatorBarY = ofClamp(mElevatorBarY, mElevatorRect.y, mElevatorRect.y+mElevatorRect.height);
 	int maxy = bounds.y+bounds.height;
 	if (mElevatorBarY + mElevatorBarHeight > maxy)
@@ -338,6 +376,8 @@ void ofxTLAntescofoAction::attribute_header_colors(vector<ActionGroup*> groups) 
 		}
 		*/
 	}
+
+	ofAddListener(timeline->timelineEvents.viewWasResized, this, &ofxTLAntescofoAction::viewWasResized);
 }
 
 void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
@@ -411,6 +451,8 @@ void ofxTLAntescofoAction::load()
 	//mFont.loadFont ("menlo.ttf", 10);
 }
 
+
+
 void ofxTLAntescofoAction::update()
 {
 	mRectCross.x = bounds.x + bounds.width - 20;
@@ -418,15 +460,8 @@ void ofxTLAntescofoAction::update()
 	mRectCross.width = 14;
 	mRectCross.height = 14;
 
-	int h = ofGetWindowHeight();
-	int y = bounds.y + bounds.height;
-	bounds.height = h - bounds.y;
-	ofxTLTrackHeader* th = timeline->getTrackHeader(this);
-	if (th && bounds != th->getDrawRect()) {
-		ofRectangle r(bounds.x, bounds.y - 18, bounds.width, 18);
-		th->setDrawRect(r);
-		th->recalculateFooter();		
-	}
+	if (bHasToResize) resize();
+
 	// tracks
 	int fromx = bounds.x + 200;
 	int w = 0;
@@ -440,6 +475,7 @@ void ofxTLAntescofoAction::update()
 			break;
 		}
 	}
+	if (bElevatorEnabled) elevator_update();
 	//cout << "track bounds: x:" << bounds.x << " y:" << bounds.y << " w:" << bounds.width << " h:" << bounds.height << endl;
 }
 
@@ -564,7 +600,7 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 	}
 	if (debugsub) cout << "update_sub_height: returning toth=" << toth << endl;
 	if (toth > bounds.height) {
-		elevator_enable();
+		if (!bElevatorEnabled) elevator_enable();
 		if (mMaxHeight < toth) mMaxHeight = toth;
 	}
 	return toth;
@@ -753,6 +789,7 @@ void ofxTLAntescofoAction::update_groups()
 
 //--------------------------------------------------------------
 void ofxTLAntescofoAction::windowResized(ofResizeEventArgs& resizeEventArgs){
+	bHasToResize = true;
 	elevator_update();
 }
 
@@ -1900,6 +1937,17 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 	//cout << " ============ values:"<< values.size() << " delays:"<<  delays.size() << " ========= " << endl;
 	// add object
 	if (values.size() && delays.size() && (*(values.begin())).size()) {
+		// search value min/max
+
+		double min = 0, max = 0;
+		for (int i = 0; i < parentCurve->howmany && i < values.size(); i++) {
+			// set values ranges
+			int j = 0;
+			for (vector<double>::iterator ii = values[i].begin(); ii != values[i].end(); ii++) {
+				if (min > (*ii)) min = (*ii);
+				if (max < (*ii)) max = (*ii);
+			}
+		}	
 		ofColor color(250, 0, 0, 255);
 		for (int i = 0; i < parentCurve->howmany && i < values.size(); i++) {
 			BeatCurve* curve = new BeatCurve();
@@ -1929,13 +1977,6 @@ bool ActionCurve::create_from_parser_objects(list<Var*> &var, vector<AnteDuratio
 			curve->viewIsDirty = true;
 			curve->ref = this;
 
-			// set values ranges
-			int j = 0;
-			double min = 0, max = 0;
-			for (vector<double>::iterator ii = values[i].begin(); ii != values[i].end(); ii++) {
-				if (min > (*ii)) min = (*ii);
-				if (max < (*ii)) max = (*ii);
-			}
 			curve->setValueRangeMax(max);
 			curve->setValueRangeMin(min);
 			// set keyframes

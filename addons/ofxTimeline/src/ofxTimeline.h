@@ -440,12 +440,12 @@ class ofxTimeline : ofThread {
 	void setTicker(ofxTLTicker* t) { ticker = t; }
 	ofxTLTicker* getTicker() { return ticker; }
     int zoomHeight;
+    ofxTLEvents timelineEvents;
 
   protected:
 
     ofxTimecode timecode;
 	ofxMSATimer timer;
-    ofxTLEvents timelineEvents;
     ofxTLColors colors;
 
     ofxTLInOut* inoutTrack;
