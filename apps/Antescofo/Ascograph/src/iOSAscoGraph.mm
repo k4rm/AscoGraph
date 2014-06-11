@@ -19,7 +19,7 @@
 
 bool _debug = true;
 
-string ascograph_version = "1.05";
+string ascograph_version = "1.06";
 
 extern ofxConsole* console;
 
@@ -464,7 +464,9 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
 			    m.addStringArg("nextevent");
 		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
 			    m.addStringArg("previousevent");
+            cout << "going to send message!" << endl;
 		    mOSCsender.sendMessage(m);
+            cout << "sent message done" << endl;
 		    b->setValue(false);
 	    }
     }
@@ -911,12 +913,17 @@ void iOSAscoGraph::touchCancelled(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void iOSAscoGraph::lostFocus(){
-    
+    cout << "iOSAscoGraph::lostFocus" << endl;
+    if (bonjour) {
+        bonjour->removeEventListeners(this);
+    }
 }
 
 //--------------------------------------------------------------
 void iOSAscoGraph::gotFocus(){
-    
+    cout << "iOSAscoGraph::gotFocus" << endl;
+    setupBonjour();
+    setupOSC();
 }
 
 //--------------------------------------------------------------

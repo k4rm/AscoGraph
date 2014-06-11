@@ -154,33 +154,40 @@ void ofxTLAntescofoAction::draw()
 			glScissor(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 
-		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-			bool inbounds = zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
+#if 0
+		if (mFilterActions) { //tracks lines
+			draw_tracks_lines();
+		} else 
+#endif
+		{
+			for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
+				bool inbounds = zoomBounds.max >= timeline->beatToNormalizedX((*i)->beatnum)
 					|| zoomBounds.min <= timeline->beatToNormalizedX((*i)->beatnum + (*i)->duration);
-			if (ofxAntescofoNote->mode_guido()) inbounds = true;
-			if (inbounds) {
-				ofSetColor(0, 0, 0, 125);
+				if (ofxAntescofoNote->mode_guido()) inbounds = true;
+				if (inbounds) {
+					ofSetColor(0, 0, 0, 125);
 
-				ActionGroup *act = *i;
-				act->draw(this);
-				
-				if (debug_actiongroup) act->print();
-			
-				if (0 && movingAction) {
-					ofPushStyle();
-					ofFill();
-					//ofSetColor(123, 13, 13, 140);
-					ofSetColor(200, 200, 200, 255);
-					ofRect(movingActionRect);
-					ofPopStyle();
+					ActionGroup *act = *i;
+					act->draw(this);
+
+					if (debug_actiongroup) act->print();
+
+					if (0 && movingAction) {
+						ofPushStyle();
+						ofFill();
+						//ofSetColor(123, 13, 13, 140);
+						ofSetColor(200, 200, 200, 255);
+						ofRect(movingActionRect);
+						ofPopStyle();
+					}
+
 				}
-					
 			}
-		}
 
-		if (foreground_groups.size()) {
-			for (int i = 0; i < foreground_groups.size(); i++) {
-				foreground_groups[i]->draw(this);
+			if (foreground_groups.size()) {
+				for (int i = 0; i < foreground_groups.size(); i++) {
+					foreground_groups[i]->draw(this);
+				}
 			}
 		}
 		if (bElevatorEnabled) {
@@ -202,6 +209,10 @@ void ofxTLAntescofoAction::draw()
 	}
 }
 
+void ofxTLAntescofoAction::draw_tracks_lines() {
+	//for (map<string, TrackState*>::iterator i = mTrackStates.begin(); i != mTrackStates.end(); i++, curTrackN++) {
+
+}
 
 void ofxTLAntescofoAction::elevator_disable(void) {
 	bElevatorEnabled = false;
@@ -796,7 +807,7 @@ void ofxTLAntescofoAction::windowResized(ofResizeEventArgs& resizeEventArgs){
 }
 
 bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group, bool recurs) {
-	cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << endl; 
+	//cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << endl; 
 	bool res = false;
 	if (!group) return res;
 	if (group->rect.inside(args.x, args.y - mElevatorStartY)) {
@@ -955,7 +966,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	if (clickedGroup) {
 		cout << "clickedGroup: " << clickedGroup->realtitle << endl;
 		if (clickedGroup) {
-			cout << "show selection: lineNum_begin:" << clickedGroup->lineNum_begin << " lineNum_end:" << clickedGroup->lineNum_end << endl
+			cout << "show selection: lineNum_begin:" << clickedGroup->lineNum_begin << " lineNum_end:" << clickedGroup->lineNum_end
 			     << "\tcolNum_begin:" << clickedGroup->colNum_begin << " colNum_end:" << clickedGroup->colNum_end << endl;
 			mAntescofog->editorShowLine(clickedGroup->lineNum_begin, clickedGroup->lineNum_end, clickedGroup->colNum_begin, clickedGroup->colNum_end);
 		}

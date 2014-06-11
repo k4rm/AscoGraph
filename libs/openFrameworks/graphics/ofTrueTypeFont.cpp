@@ -204,6 +204,7 @@ bool compare_cps(const charProps & c1, const charProps & c2){
 
 #ifdef TARGET_OSX
 static string osxFontPathByName( string fontname ){
+    cout << "----------!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!------> osxFontPathByName: fontname=" << fontname << endl;
 	CFStringRef targetName = CFStringCreateWithCString(NULL, fontname.c_str(), kCFStringEncodingUTF8);
 	CTFontDescriptorRef targetDescriptor = CTFontDescriptorCreateWithNameAndSize(targetName, 0.0);
 	CFURLRef targetURL = (CFURLRef) CTFontDescriptorCopyAttribute(targetDescriptor, kCTFontURLAttribute);
@@ -218,6 +219,7 @@ static string osxFontPathByName( string fontname ){
 	
 	CFRelease(targetName);
 	CFRelease(targetDescriptor);
+    cout << "----------!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!------> osxFontPathByName: fontpath=" << fontPath << endl;
 
 	return fontPath;
 }

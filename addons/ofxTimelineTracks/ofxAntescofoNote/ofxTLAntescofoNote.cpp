@@ -84,7 +84,7 @@
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
 bool debug_loadscore = false;
-#define DEBUG_GUIDO_ASCOGRAPH 1
+//#define DEBUG_GUIDO_ASCOGRAPH 1
 #define USE_GUIDO_IMAGE_STORAGE 1
 int bitmapFontSize = 8;
 int guiXPadding = 15;
@@ -832,7 +832,9 @@ void ofxTLAntescofoNote::draw_guido() {
 
 float ofxTLAntescofoNote::beat2guidoX(float beat) {
 	if (beat2switchId.find(beat) != beat2switchId.end()) { // exact match
-		return switches[ beat2switchId[beat] ]->guidoCoords.x - guido_x;
+		int id = beat2switchId[beat];
+		if (switches.size() > id && id >= 0)
+			return switches[ id ]->guidoCoords.x - guido_x;
 	} else { // search for near match
 		for (map<float, int>::const_iterator i = beat2switchId.begin(); i != beat2switchId.end(); i++) {
 			map<float, int>::const_iterator j = i; j++;

@@ -116,6 +116,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		vector<ActionGroup*> foreground_groups;
 
 		// antescofo tracks
+		void draw_tracks_lines();
 		void draw_antescofo_tracks_header();
 		void draw_antescofo_tracks_header(int x, int y, int sens);
 		map<string, TrackState*> mTrackStates;

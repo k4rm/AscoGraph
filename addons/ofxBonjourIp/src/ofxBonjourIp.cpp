@@ -188,7 +188,14 @@ string ofxBonjourIp::GetMyIPAddress()
 // netservice callback
 void ofxBonjourIp::NetServicePublishedCallBack(CFNetServiceRef theService, CFStreamError* error, void* info) {
     
-    if(error->error != 0) ofLog() << "Error: " << error->error;
+    if(error->error != 0) {
+        ofLog() << "ofxBonjourIp::NetServicePublishedCallBack: Error: " << error->error;
+        if (info) {
+            ofxBonjourIp* bonjour = (ofxBonjourIp*)info;
+            if (bonjour) bonjour->connectedToService = false;
+        }
+        return;
+    }
     
     const char *type = CFStringGetCStringPtr(CFNetServiceGetType(theService), kCFStringEncodingMacRoman); //_ofxBonjourIp._tcp.
     ofLog() << "type: " << type;
@@ -224,7 +231,11 @@ void ofxBonjourIp::NetServiceBrowserCallBack(CFNetServiceBrowserRef browser,CFOp
     ofLog() << "----------------------";
     
     if(error->error != 0) {
-        ofLog() << "Error: " << error->error;
+        ofLog() << "ofxBonjourIp::NetServiceBrowserCallBack: Error: " << error->error;
+        if (info) {
+            ofxBonjourIp* bonjour = (ofxBonjourIp*)info;
+            if (bonjour) bonjour->connectedToService = false;
+        }
         return;
     }
     
@@ -278,7 +289,13 @@ void ofxBonjourIp::NetServiceResolvedCallBack(CFNetServiceRef theService, CFStre
     
     //ofLog() << "netService resolved";
     bool serviceResolved = false;
-    if(error->error != 0) ofLog() << "Error: " << error->error;
+    if(error->error != 0) {
+        ofLog() << "ofxBonjourIp::NetServiceResolvedCallBack: Error: " << error->error;
+        if (info) {
+            ofxBonjourIp* bonjour = (ofxBonjourIp*)info;
+            if (bonjour) bonjour->connectedToService = false;
+        }
+    }
     
     CFArrayRef addresses = CFNetServiceGetAddressing(theService);
     struct sockaddr * socketAddress = NULL;
