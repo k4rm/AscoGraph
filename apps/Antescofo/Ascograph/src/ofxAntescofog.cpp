@@ -203,11 +203,15 @@ void ofxAntescofog::menu_item_hit(int n)
 			[ editor autocomplete];
 			break;
 		case INT_CONSTANT_BUTTON_LOCK:
-			cout << "Locking AscoGraph." << endl;
-			bLockAscoGraph = !bLockAscoGraph;
-			[editor setEditable:!bLockAscoGraph];
-			[mLockMenuItem setState:(bLockAscoGraph ? NSOnState : NSOffState)];
-			break;
+			{
+				cout << "Locking AscoGraph." << endl;
+				bLockAscoGraph = !bLockAscoGraph;
+				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
+				if (actiontrack) actiontrack->setEditable(!bLockAscoGraph);
+				[editor setEditable:!bLockAscoGraph];
+				[mLockMenuItem setState:(bLockAscoGraph ? NSOnState : NSOffState)];
+				break;
+			}
 		case INT_CONSTANT_BUTTON_FIND:
 			cout << "Setting find text mode" << endl; 
 			if (!bShowFind) {
@@ -365,12 +369,6 @@ void ofxAntescofog::menu_item_hit(int n)
 			{
 				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
 				if (actiontrack) actiontrack->hide_all_curves();
-				break;
-			}
-		case INT_CONSTANT_BUTTON_CLOSE_ALL_GROUPS:
-			{
-				ofxTLAntescofoAction* actiontrack = ofxAntescofoNote->getActionTrack();
-				if (actiontrack) actiontrack->hide_all_groups();
 				break;
 			}
 	}
@@ -1957,32 +1955,6 @@ void ofxAntescofog::mousePressed( int x, int y, int button ) {
 //--------------------------------------------------------------
 void ofxAntescofog::mouseDragged( int x, int y, int button ){
 	int topy = guiBottom->getRect()->y + guiBottom->getRect()->height;
-#if 0
-	if (button == 3 && ofGetWindowHeight() < topy + timeline.getDrawRect().height) { // scroll events
-		ofxUIRangeSlider *r = (ofxUIRangeSlider*)guiElevator->getWidget("elevator");
-		double vlow = r->getPercentValueLow() * 255;
-		double vhigh = r->getPercentValueHigh() * 255;
-		int score_h = timeline.getDrawRect().height;
-		double ny = score_y + 3*y;
-		if (ny > topy)
-			ny = topy;
-		if (ny + score_h < topy)
-			ny = score_y + 200;
-		if (topy + ny > ofGetWindowHeight())
-			ny = ofGetWindowHeight() + topy - score_h;
-		double m = ny / (score_h + topy) + 0.1;
-		double nvl = m - 1;
-		double nvh = m - 0.5;
-		r->setValueLow(nvl*255);
-		r->setValueHigh(nvh*255);
-
-		//cout << "Elevator scrolled: score_y: " << score_y << " ny:" << ny << " barvalues: [ "<< nvl << " - "<< nvh<<" ]"<< endl;
-		score_y = ny;
-	}
-#endif
-	if (timeline.getTrackHeader(ofxAntescofoZoom)->getBounds().inside(x, y) || ofxAntescofoZoom->getBounds().inside(x, y)) {
-
-	}
 
 	bShouldRedraw = true;
 }

@@ -66,7 +66,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mTrackBtnSpace = 20;
 	mElevatorClickedY = mElevatorStartY = mMaxHeight = mFirstTrackBtn = 0;
 	mPrevTrackBtn.height = mNextTrackBtn.height = mTrackBtnHeight;
-	bHasToResize = true;
+	bActionsEditable = bHasToResize = true;
 
 	// store Antescofo tracks names
 	if (TrackDefinition::idx2track.size()) {
@@ -305,6 +305,11 @@ void ofxTLAntescofoAction::draw_antescofo_tracks_header(int x, int y, int sens) 
 		}
 		ofPopStyle();
 }
+
+void ofxTLAntescofoAction::setEditable(bool state) {
+	bActionsEditable = state;
+}
+
 
 void ofxTLAntescofoAction::draw_antescofo_tracks_header() {
 	bool selected = false;
@@ -981,7 +986,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			//clickedGroup->bringBack();
 			foreground_groups.clear();
 		}
-		if (!res && !clickedGroup->hidden) {
+		if (!res && !clickedGroup->hidden && bActionsEditable) {
 			// handle curve click
 			ofMouseEventArgs args2 = args; args2 -= mElevatorStartY;
 			res = mousePressed_search_curve_rec(clickedGroup, args2, millis);
@@ -995,7 +1000,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		} else if (*i) { // look for subgroups
 			//res = mousePressed_search_curve_rec(*i, args, millis);
 			ActionGroup* a = *i;
-			if (!(*i)->hidden) {
+			if (!(*i)->hidden && bActionsEditable) {
 				// handle curve click
 				res = mousePressed_search_curve_rec(*i, args, millis);
 			}
@@ -1005,7 +1010,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 					if (*j != clickedGroup && *j &&  mousePressed_in_header(args, *j)) {
 						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 						res = true;
-					} else if (!(*i)->hidden) {
+					} else if (!(*i)->hidden && bActionsEditable) {
 						// handle curve click
 						ofMouseEventArgs args2 = args; args2 -= mElevatorStartY;
 						res = mousePressed_search_curve_rec(*j, args2, millis);
@@ -1047,6 +1052,7 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 		elevator_mouseDragged(args);
 		return;
 	}
+	if (!bActionsEditable) return;
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); j != clickedCurves.end(); j++) {
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
@@ -1152,6 +1158,7 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 	movingAction = false;
 
 
+	if (!bActionsEditable) return;
 	std::unique (clickedCurves.begin(), clickedCurves.end());
 	bool done = false;
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); !done && j != clickedCurves.end(); j++) {
@@ -1165,7 +1172,6 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 					c->split();
 				done = true;
 			}
-
 			for (int iac = 0; iac < c->beatcurves.size() && !done; iac++) {
 				if (c->beatcurves.size()) { 
 					//if (c->beatcurves.size() == 1) {

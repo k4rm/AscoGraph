@@ -112,6 +112,8 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void show(string label);
 		void show_rec(ActionGroup* a, string label);
 		void replaceEditorScore(ActionCurve* actioncurve);
+		void setEditable(bool state);
+		bool bActionsEditable;
 
 		vector<ActionGroup*> foreground_groups;
 

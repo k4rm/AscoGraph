@@ -1,6 +1,6 @@
 # vim:set ft=cmake:syn on
 
-set(ASCOGRAPH_VERSION_NUMBER "0.110")
+set(ASCOGRAPH_VERSION_NUMBER "0.111")
 
 set(ANTESCOFO_FAUST 0)
 set(ANTESCOFO_CSOUND 0)
