@@ -791,6 +791,7 @@ void ofxTLAntescofoNote::draw_guido() {
 
 		if (mSelectedGuidoSwitchId != -1) { // draw click selected note
 			cout << "draw_guido: drawing selected note: " << mSelectedGuidoSwitchId << endl;
+			mAntescofog->setGotoPos(switches[mSelectedGuidoSwitchId]->beat.min);
 			ofFill();
 			//ofRectangle r(switches[mSelectedGuidoSwitchId]->guidoCoords.x+bounds.x - switches[mSelectedGuidoSwitchId]->guidoCoords.width/2, bounds.y + 16, 
 			//	      switches[mSelectedGuidoSwitchId]->guidoCoords.width, bounds.height - 32);
@@ -1754,6 +1755,7 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 		if(clickedSwitchA != NULL){
 #ifndef ASCOGRAPH_IOS
 			mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
+			mAntescofog->setGotoPos(clickedSwitchA->beat.min);
 			//if we haven't already selected these, flag deselect
 			if((!clickedSwitchA->startSelected || !clickedSwitchA->endSelected) && !ofGetModifierKeyShift()){
 				timeline->unselectAll();
