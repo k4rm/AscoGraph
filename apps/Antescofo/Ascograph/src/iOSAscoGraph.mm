@@ -854,13 +854,14 @@ void iOSAscoGraph::touchDown(ofTouchEventArgs & touch){
     if (!guiMenu.view.hidden)
         guiMenu.view.hidden = true;
     bShouldRedraw = true;
+    mLastTouchX = touch.x;
 }
 
 //--------------------------------------------------------------
 void iOSAscoGraph::touchMoved(ofTouchEventArgs & touch){
     bShouldRedraw = true;
 
-    static int lastx = 0;
+    //static int lastx = 0;
 #if 0
     cout << "touchMoved:" << touch.x << ", " << touch.y << " xspeed=" << touch.xspeed << endl;
     if (ofxAntescofoNote->getBounds().inside(touch.x, touch.y)) {
@@ -873,9 +874,10 @@ void iOSAscoGraph::touchMoved(ofTouchEventArgs & touch){
         
 		if (1) {
 			float c = z.center();
-			float d = ((lastx - touch.x) * 0.01) - c;
+			float d = ((mLastTouchX - touch.x) * 0.01) - c;
             
 			z.min = ofClamp(z.min + d, 0, 1); z.max = ofClamp(z.max + d, 0, 1);
+            
 			if (z.min == .0 && z.span() < oldz.span())
 				z.max = oldz.max - oldz.min;
 			if (z.max == 1. && z.span() < oldz.span())
@@ -890,7 +892,7 @@ void iOSAscoGraph::touchMoved(ofTouchEventArgs & touch){
 			//lastpos = pos;
 		}
     }
-    lastx = touch.x;
+    mLastTouchX = touch.x;
 #endif
 }
 

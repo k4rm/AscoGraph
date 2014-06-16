@@ -830,7 +830,7 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 					c->hidden = false;
 			}
 			return res;
-		} else if (group->is_in_header(args.x, args.y)) {
+		} else if (group->is_in_header(args.x, args.y - mElevatorStartY)) {
 			if (!ofGetModifierSelection())
 				group->hidden = true;
 			res = true;

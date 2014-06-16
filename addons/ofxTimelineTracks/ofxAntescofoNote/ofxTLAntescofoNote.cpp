@@ -1729,22 +1729,14 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 
 	// deja selected
 	if(clickedSwitchA != NULL){
+		mAntescofog->setGotoPos(clickedSwitchA->beat.min);
 #ifndef ASCOGRAPH_IOS
 		mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
 		if(!ofGetModifierKeyShift()){
 			timeline->unselectAll();
 		}
 #endif
-
-		bool startAlreadySelected = clickedSwitchA->startSelected;
-		bool endAlreadySelected = clickedSwitchA->endSelected;
-#ifndef ASCOGRAPH_IOS
-		clickedSwitchA->startSelected = didSelectedStartTime || (ofGetModifierKeyShift() && startAlreadySelected);
-		clickedSwitchA->endSelected   = !didSelectedStartTime || (ofGetModifierKeyShift() && endAlreadySelected);
-#else
-        clickedSwitchA->startSelected = didSelectedStartTime;
-        clickedSwitchA->endSelected   = !didSelectedStartTime;
-#endif
+		clickedSwitchA->endSelected = clickedSwitchA->startSelected = true;
 	} else { // premiere selection
 		draggingSelectionRange = true;
 		selectionRangeAnchor = args.x;
@@ -1755,12 +1747,8 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 		if(clickedSwitchA != NULL){
 #ifndef ASCOGRAPH_IOS
 			mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
-			mAntescofog->setGotoPos(clickedSwitchA->beat.min);
-			//if we haven't already selected these, flag deselect
-			if((!clickedSwitchA->startSelected || !clickedSwitchA->endSelected) && !ofGetModifierKeyShift()){
-				timeline->unselectAll();
-			}
 #endif
+			mAntescofog->setGotoPos(clickedSwitchA->beat.min);
 
 			clickedSwitchA->startSelected = true;
 			clickedSwitchA->endSelected   = true;
@@ -1777,10 +1765,11 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 		//}
 
 		//if we clicked where to create a new switch, but still have a selection, first deselect
+		/*
 		if(shouldCreateNewSwitch && howManySwitchesAreSelected() > 0){
 			shouldCreateNewSwitch = false;
 			timeline->unselectAll();
-		}
+		}*/
 #if 0 // was here
 		if(shouldCreateNewSwitch){
 			ofxTLAntescofoNoteOn* newNote = new ofxTLAntescofoNoteOn();

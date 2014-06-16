@@ -90,6 +90,7 @@ public:
     ofxTLBeatJump* ofxJumpTrack;
     bool bHide;
     string current_score;
+    int mLastTouchX;
     
     string TEXT_CONSTANT_TEMP_FILENAME;
     string TEXT_CONSTANT_TEMP_ACTION_FILENAME;
