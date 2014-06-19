@@ -691,6 +691,8 @@ set( MACOSX_RESOURCE_FILES_FONTS
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/defaultColors.xml
 	${CMAKE_SOURCE_DIR}/../bin/data/_Page_One_trackPositions.xml 
 	${CMAKE_SOURCE_DIR}/../bin/data/timeline0_Page_One_trackPositions.xml 
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/arrowcurve_up.png
+	${CMAKE_SOURCE_DIR}/../bin/data/GUI/arrowcurve_down.png
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/stop_.png
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/stop_down.png
 	${CMAKE_SOURCE_DIR}/../bin/data/GUI/stop_over.png

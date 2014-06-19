@@ -64,6 +64,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mTrackBtnHeight = 13;
 	mTrackBtnWidth = 10;
 	mTrackBtnSpace = 20;
+	mCurveBeingEdited = 0;
 	mElevatorClickedY = mElevatorStartY = mMaxHeight = mFirstTrackBtn = 0;
 	mPrevTrackBtn.height = mNextTrackBtn.height = mTrackBtnHeight;
 	bActionsEditable = bHasToResize = true;
@@ -93,7 +94,8 @@ void ofxTLAntescofoAction::setup()
 
 	//update();
 	actualBounds = bounds;
-
+	mCurveArrowImgUp.loadImage(ofFilePath::getCurrentExeDir() + "../Resources/GUI/arrowcurve_up.png");
+	mCurveArrowImgDown.loadImage(ofFilePath::getCurrentExeDir() + "../Resources/GUI/arrowcurve_down.png");
 
 	disable();
 }
@@ -195,6 +197,9 @@ void ofxTLAntescofoAction::draw()
 			ofPopMatrix();
 			elevator_update();
 			draw_elevator();
+		}
+		if (mCurveBeingEdited) { // if editing a curve
+			draw_curve_big();
 		}
 		// draw modal windows for every curves
 		for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
@@ -815,7 +820,19 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 	//cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << endl; 
 	bool res = false;
 	if (!group) return res;
+	ActionMultiCurves* c = 0;
+	//cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden <<" before" << endl; 
 	if (group->rect.inside(args.x, args.y - mElevatorStartY)) {
+		cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << " inside" << endl; 
+		if (!group->hidden && (c = dynamic_cast<ActionMultiCurves*>(group))) {
+			cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << " open or close" << endl; 
+			if (c->mCurveArrowImgRect.inside(args.x, args.y - mElevatorStartY)) {
+				if (mCurveBeingEdited) close_down_curve_editor(c);
+				else open_up_curve_editor(c);
+			}
+			cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << " return" << endl; 
+			return true;
+		}
 		if (group->hidden) {
 			if (!ofGetModifierSelection())
 				group->hidden = false;
@@ -824,8 +841,6 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 				Event *e = group->event;
 				//mAntescofog->editorShowLine(e->scloc->begin.line, e->scloc->end.line);
 				res = true;
-
-				ActionMultiCurves* c = 0;
 				if ((c = dynamic_cast<ActionMultiCurves*>(group)) && !ofGetModifierSelection())
 					c->hidden = false;
 			}
@@ -911,15 +926,17 @@ bool ofxTLAntescofoAction::mousePressed_curve_rec(ActionGroup* a, ofMouseEventAr
 			}
 #endif
 			//cout << "mousePressed_curve_rec: c->beatcurves[iac]->bounds " << c->beatcurves[iac]->bounds.x << ", " << c->beatcurves[iac]->bounds.y << " " << c->beatcurves[iac]->bounds.width << " x " << c->beatcurves[iac]->bounds.height << endl;
-			if (c->beatcurves[iac]->bounds.inside(args.x, args.y - mElevatorStartY) || c->beatcurves[iac]->drawingEasingWindow) {
+			int y = args.y; if (!mCurveBeingEdited || a != mCurveBeingEdited) y -= mElevatorStartY;
+			if (c->beatcurves[iac]->bounds.inside(args.x, y) || c->beatcurves[iac]->drawingEasingWindow) {
 				//cout << "mousePressed_curve_rec: splitrect= " << c->mSplitBtnRect.x << ", " << c->mSplitBtnRect.y << " " << c->mSplitBtnRect.width << " x " << c->mSplitBtnRect.height << endl;
-				if (c->beatcurves.size() /* == 1*/ || c->mSplitBtnRect.inside(args.x, args.y - mElevatorStartY)) {
+				if (c->beatcurves.size() || c->mSplitBtnRect.inside(args.x, y)) {
 					ofRange zr = getZoomBounds();
 					c->beatcurves[iac]->setZoomBounds(zr);
-					ofMouseEventArgs args2 = args; args2.y -= mElevatorStartY;
+					ofMouseEventArgs args2 = args; if (!mCurveBeingEdited || a != mCurveBeingEdited) args2.y -= mElevatorStartY;
 					c->beatcurves[iac]->mousePressed(args2, millis);
 					if (c->beatcurves[iac]->drawingEasingWindow)
 						shouldDrawModalContent = true;
+					cout << "mousePressed_curve_rec: adding" << endl;
 					clickedCurves.push_back(ac);
 					res = true;
 				}
@@ -953,12 +970,21 @@ bool ofxTLAntescofoAction::mousePressed_search_curve_rec(ActionGroup* a, ofMouse
 
 bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 {
-	cout << "mousePressed: x:"<< args.x << " y:" << args.y << endl;
+	cout << "ofxTLAntescofoAction::mousePressed: x:"<< args.x << " y:" << args.y << endl;
 	bool res = false;
 #ifndef ASCOGRAPH_IOS
 	if (mElevatorRect.inside(args.x, args.y)) {
 		elevator_mousePressed(args);
 		return true;
+	}
+	if (mCurveBeingEdited) {
+		if (mCurveBeingEdited->rect.inside(args.x, args.y)) // in big curve
+			res = mCurveBeingEdited->mousePressed(args, millis);
+		else if (mCurveBeingEdited->mCurveArrowImgRect.inside(args.x, args.y)) {
+			close_down_curve_editor(mCurveBeingEdited);
+			res = true;
+		}
+		if (res) return res;
 	}
 	// selection
 	ActionGroup* clickedGroup = 0;
@@ -1030,6 +1056,8 @@ void ofxTLAntescofoAction::mouseMoved(ofMouseEventArgs& args, long millis)
 		elevator_mouseMoved(args);
 		return;
 	} else bElevatorShowMore = false;
+	if (mCurveBeingEdited && mCurveBeingEdited->rect.inside(args.x, args.y))
+		mCurveBeingEdited->mouseMoved(args, millis);
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); j != clickedCurves.end(); j++) {
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
@@ -1053,6 +1081,8 @@ void ofxTLAntescofoAction::mouseDragged(ofMouseEventArgs& args, long millis)
 		return;
 	}
 	if (!bActionsEditable) return;
+	if (mCurveBeingEdited && mCurveBeingEdited->rect.inside(args.x, args.y))
+		mCurveBeingEdited->mouseDragged(args, millis);
 	for (vector<ActionMultiCurves*>::iterator j = clickedCurves.begin(); j != clickedCurves.end(); j++) {
 		for (vector<ActionCurve*>::iterator i = (*j)->curves.begin(); i != (*j)->curves.end(); i++) {
 			ActionCurve *c = (*i);
@@ -1157,6 +1187,8 @@ void ofxTLAntescofoAction::mouseReleased(ofMouseEventArgs& args, long millis)
 	}
 	movingAction = false;
 
+	if (mCurveBeingEdited && mCurveBeingEdited->rect.inside(args.x, args.y))
+		mCurveBeingEdited->mouseReleased(args, millis);
 
 	if (!bActionsEditable) return;
 	std::unique (clickedCurves.begin(), clickedCurves.end());
@@ -1757,6 +1789,27 @@ ActionMultiCurves::ActionMultiCurves(float beatnum_, float delay_, Curve* c, Eve
 	}
 }
 
+void ActionMultiCurves::draw_header(ofxTLAntescofoAction* tlAction, bool draw_rect)
+{
+	ActionGroup::draw_header(tlAction, draw_rect);
+
+	if (!is_in_bounds_y(tlAction)) return;
+	if (tlAction->mFilterActions && !in_selected_track) return;
+
+	if (!hidden) {
+		ofNoFill();
+		ofSetColor(0, 0, 0, 255);
+		//cout << "draw_header curve: " << realtitle << " " << rect.x+rect.width-20 << " " << rect.y+5  << endl;
+		mCurveArrowImgRect.x = rect.x+rect.width-40;
+		mCurveArrowImgRect.y = rect.y+1;
+		mCurveArrowImgRect.width = 16;
+		mCurveArrowImgRect.height = 16;
+
+		if (!tlAction->mCurveBeingEdited) {
+			tlAction->mCurveArrowImgUp.draw(mCurveArrowImgRect);
+		}
+	}
+}
 
 /*
  * Split a multi curve into tracks
@@ -2459,7 +2512,6 @@ ActionMessage::ActionMessage(float beatnum_, float delay_, Action* a, Event *e)
 	action = a;
 	hidden = false;
 
-
 	if (dynamic_cast<KillAction*>(a))
 		is_kill = true;
 
@@ -2572,5 +2624,137 @@ bool ActionGroup::is_in_header(int x, int y)
 	ofRectangle r(rect);
 	r.height = HEADER_HEIGHT;
 	return r.inside(x, y);
+}
+
+void ofxTLAntescofoAction::close_down_curve_editor(ActionMultiCurves* c) {
+	mCurveBeingEdited = NULL;
+}
+
+
+void ofxTLAntescofoAction::open_up_curve_editor(ActionMultiCurves* c) {
+	mCurveBeingEdited = c;
+	c->hidden = false;
+}
+
+void ofxTLAntescofoAction::draw_curve_big() {
+	if (mCurveBeingEdited) {
+		mCurveBeingEdited->draw_big(this);
+	}
+}
+
+
+void ActionMultiCurves::draw_big(ofxTLAntescofoAction* tlAction) {
+	ofRectangle notebounds = tlAction->ofxAntescofoNote->getBounds();
+	ofPushStyle();
+	ofFill();
+	ofSetColor(0, 0, 0, 74);
+	ofRect(notebounds);
+	ofPopStyle();
+
+	// update
+	notebounds.y += 10;
+	notebounds.height -= 20;
+	int cury = notebounds.y;
+	rect.y = cury;
+	int boxy = rect.y;// + HEADER_HEIGHT;
+	//int boxh = (bounds.height - c->HEADER_HEIGHT - curh - 5) / c->curves.size();
+	int boxh = notebounds.height / curves.size();
+	//boxh *= resize_factor;
+	int boxw = getWidth();
+	int boxx = rect.x;
+	if (delay) boxx = tlAction->get_x(beatnum /*c->header->delay*/ + delay);
+	//cout << "ActionMultiCurves::draw_big: notebounds.height:" << notebounds.height << " boxx: " << boxx << " delay:" << delay << " y:" << boxy << " boxw=" << boxw << " boxh=" << boxh << endl;
+	ofSetColor(255, 255, 255, 145);
+	ofFill();
+	ofRect(boxx, boxy, boxw, notebounds.height);
+	ofSetColor(0, 0, 0, 255);
+	ofNoFill();
+	ofRect(boxx, boxy, boxw, notebounds.height);
+	ofRectangle cbounds(boxx, boxy, boxw, boxh);
+	for (int k = 0; k < curves.size(); k++) {
+		ActionCurve *ac = curves[k];
+		if (k) cbounds.y += boxh;
+		for (int iac = 0; iac < ac->beatcurves.size(); iac++) {
+			ac->beatcurves[iac]->setBounds(cbounds);
+			ofRange zr(tlAction->getZoomBounds());
+			ac->beatcurves[iac]->setZoomBounds(zr);
+			ac->beatcurves[iac]->setTLBounds(notebounds);
+			ac->beatcurves[iac]->viewIsDirty = true;
+		}
+	}
+	int curh = rect.height = getHeight();
+
+	// draw
+	if (tlAction->mFilterActions && !in_selected_track) return;
+	vector<ActionCurve*>::iterator j;
+	for (j = curves.begin(); j != curves.end(); j++) {
+		(*j)->draw(tlAction);
+	}
+	//draw_header(tlAction);
+
+	if (tlAction->mCurveBeingEdited == this) {
+		mCurveArrowImgRect.x = rect.x - 20;
+		mCurveArrowImgRect.y = notebounds.y + 20;
+		mCurveArrowImgRect.width = 16;
+		mCurveArrowImgRect.height = 16;
+		tlAction->mCurveArrowImgDown.draw(mCurveArrowImgRect);
+	}
+}
+
+bool ActionMultiCurves::mousePressed(ofMouseEventArgs& args, long millis) {
+	bool res = false;
+	cout << "Calling ActionMultiCurves::mousePressed" << endl;
+	for (vector<ActionCurve*>::iterator i = curves.begin(); !res && i != curves.end(); i++) {
+		ActionCurve *c = (*i);
+		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
+			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
+				cout << "Calling ActionMultiCurves::mousePressed beatcurve" << endl;
+				res = c->beatcurves[iac]->mousePressed(args, millis);
+			}
+		}
+	}
+	return res;
+}
+
+bool ActionMultiCurves::mouseMoved(ofMouseEventArgs& args, long millis) {
+	bool res = false;
+	for (vector<ActionCurve*>::iterator i = curves.begin(); !res && i != curves.end(); i++) {
+		ActionCurve *c = (*i);
+		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
+			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
+				c->beatcurves[iac]->mouseMoved(args, millis);
+				res = true;
+			}
+		}
+	}
+	return res;
+}
+
+bool ActionMultiCurves::mouseDragged(ofMouseEventArgs& args, long millis) {
+	bool res = false;
+	for (vector<ActionCurve*>::iterator i = curves.begin(); !res && i != curves.end(); i++) {
+		ActionCurve *c = (*i);
+		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
+			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
+				c->beatcurves[iac]->mouseDragged(args, millis);
+				res = true;
+			}
+		}
+	}
+	return res;
+}
+
+bool ActionMultiCurves::mouseReleased(ofMouseEventArgs& args, long millis) {
+	bool res = false;
+	for (vector<ActionCurve*>::iterator i = curves.begin(); !res && i != curves.end(); i++) {
+		ActionCurve *c = (*i);
+		for (int iac = 0; !res && iac < c->beatcurves.size(); iac++) {
+			if (c->beatcurves[iac]->bounds.inside(args.x, args.y) || c->beatcurves[iac]->drawingEasingWindow) {
+				c->beatcurves[iac]->mouseReleased(args, millis);
+				res = true;
+			}
+		}
+	}
+	return res;
 }
 

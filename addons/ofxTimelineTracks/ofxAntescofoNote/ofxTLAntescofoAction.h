@@ -103,6 +103,9 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		int get_max_note_beat();
 		void clear_actions();
 		void move_action();
+		virtual void draw_curve_big();
+		void open_up_curve_editor(ActionMultiCurves* c);
+		void close_down_curve_editor(ActionMultiCurves* c);
 		void attribute_header_colors(vector<ActionGroup*> actiongroups);
 		ofColor get_random_color();
 		void drawBitmapStringHighlight(string text, int x, int y, const ofColor& background, const ofColor& foreground);
@@ -114,6 +117,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		void replaceEditorScore(ActionCurve* actioncurve);
 		void setEditable(bool state);
 		bool bActionsEditable;
+		ActionMultiCurves* mCurveBeingEdited;
 
 		vector<ActionGroup*> foreground_groups;
 
@@ -145,6 +149,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		bool bEditorShow;
 		bool draggingSelectionRange, movingAction;
 		ofRectangle movingActionRect;
+		ofImage mCurveArrowImgUp, mCurveArrowImgDown;
 		ofPoint selectionRangeAnchor;
 		ofRectangle dragSelection;
 		ofRectangle mRectCross;
@@ -193,6 +198,11 @@ class ActionGroup {
 		virtual int getHeight();
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
 		bool is_in_bounds_y(ofxTLAntescofoAction *tlAction);
+
+		virtual bool mousePressed(ofMouseEventArgs& args, long millis) { return false; }
+		virtual bool mouseDragged(ofMouseEventArgs& args, long millis) { return false; }
+		virtual bool mouseMoved(ofMouseEventArgs& args, long millis) { return false; }
+		virtual bool mouseReleased(ofMouseEventArgs& args, long millis) { return false; }
 
 		// hierarchy related
 		vector<ActionGroup*> sons;
@@ -255,6 +265,8 @@ class ActionMultiCurves : public ActionGroup {
 
 		virtual void draw(ofxTLAntescofoAction *tlAction_);
 		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
+		virtual void draw_header(ofxTLAntescofoAction *tlAction, bool draw_rect = true);
+		virtual void draw_big(ofxTLAntescofoAction* tlAction);
 		virtual void print();
 		virtual string dump();
 		int getWidth();
@@ -268,6 +280,12 @@ class ActionMultiCurves : public ActionGroup {
 		int howmany, nbvects;
 		bool isValid;
 		float deep_level;
+		ofRectangle mCurveArrowImgRect;
+
+		virtual bool mousePressed(ofMouseEventArgs& args, long millis);
+		virtual bool mouseDragged(ofMouseEventArgs& args, long millis);
+		virtual bool mouseMoved(ofMouseEventArgs& args, long millis);
+		virtual bool mouseReleased(ofMouseEventArgs& args, long millis);
 };
 
 class ActionCurve {
@@ -308,7 +326,6 @@ class ActionCurve {
 		vector<SimpleContFunction>* simple_vect;
 		vector<AnteDuration*>* dur_vect;
 };
-
 
 class TrackState {
 	public:

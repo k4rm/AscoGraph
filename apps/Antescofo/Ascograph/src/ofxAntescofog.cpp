@@ -410,7 +410,6 @@ void ofxAntescofog::setMouseCursorGoto(bool bState) {
 		//[v addCursorRect:ofxAntescofoBeatTicker->bounds cursor:resizeRightCursor];
 		//[aCursor setOnMouseEntered:YES];
 		//[[NSCursor resizeRightCursor] set];
-		cout << "setting cursor" << endl;
 
 		NSRect rect = NSMakeRect( timeline.getTrackHeader(ofxAntescofoBeatTicker)->getBounds().x, timeline.getTrackHeader(ofxAntescofoBeatTicker)->getBounds().y,
 					ofxAntescofoBeatTicker->getBounds().width, timeline.getTrackHeader(ofxAntescofoBeatTicker)->getBounds().height + ofxAntescofoBeatTicker->getBounds().height);
@@ -418,6 +417,8 @@ void ofxAntescofog::setMouseCursorGoto(bool bState) {
 		[v addCursorRect:rect cursor:cur];
 		[cur set];
 	} else {
+		[v resetCursorRects];
+		[v discardCursorRects];
 		[[NSCursor arrowCursor] set];
 	}
 
@@ -1921,7 +1922,7 @@ void ofxAntescofog::keyReleased(int key){
 void ofxAntescofog::mouseMoved( int x, int y){
 	// zoom cursor:
 	if (!ofxAntescofoZoom) return;
-	string zoom_icon_path(ofFilePath::getCurrentExeDir() + "../Resources/zoom_cursor.png");
+	static string zoom_icon_path(ofFilePath::getCurrentExeDir() + "../Resources/zoom_cursor.png");
 	static NSImage* zoom_img = [[NSImage alloc] initWithContentsOfFile: [NSString stringWithUTF8String:zoom_icon_path.c_str()]];
 	static NSCursor* cur = [[NSCursor alloc] initWithImage:zoom_img hotSpot:[[NSCursor currentCursor] hotSpot]];
 
@@ -1935,6 +1936,8 @@ void ofxAntescofog::mouseMoved( int x, int y){
 		bMouseCursorSet = true;
 	} else if (bMouseCursorSet) {
 		bMouseCursorSet = false;
+		[v resetCursorRects];
+		[v discardCursorRects];
 		[[NSCursor arrowCursor] set];
 	}
 

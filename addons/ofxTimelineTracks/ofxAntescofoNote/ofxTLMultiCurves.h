@@ -72,7 +72,7 @@ class ofxTLMultiCurves : public ofxTLTrack {
 
     void addKeyframeAtBeatAtCurveId(int which, float val, float beat);
     void changeKeyframeEasingAtCurveId(int which, float beat, string type);
-
+    void draw_big(ofRectangle& notebounds);
 
     ofxTLBeatCurves* getCurve(int which);
     ofRectangle mSplitBtnRect;

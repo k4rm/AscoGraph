@@ -931,3 +931,8 @@ void BeatCurve::draw(){
 	}
 
 }
+
+void BeatCurve::draw_big(ofRectangle& notebounds){
+	cout << "BeatCurve::draw_big" << endl;
+
+}

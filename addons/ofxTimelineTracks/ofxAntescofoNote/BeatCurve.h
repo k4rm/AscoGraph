@@ -57,6 +57,7 @@ class BeatCurve : public BeatKeyframes {
 		virtual ~BeatCurve();
 
 		virtual void draw();
+		virtual void draw_big(ofRectangle& notebounds);
 		virtual void recomputePreviews();
 		virtual void drawModalContent();
 

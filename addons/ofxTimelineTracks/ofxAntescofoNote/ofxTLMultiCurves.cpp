@@ -106,6 +106,49 @@ void ofxTLMultiCurves::draw() {
     }
 }
 
+void ofxTLMultiCurves::draw_big(ofRectangle& notebounds) {
+	ofRectangle inbounds(notebounds);
+	notebounds.width -= 50;
+	notebounds.height -= 30;
+	
+	if (notebounds.height < 20)
+		notebounds.height = 50;
+	if (notebounds.width < 20)
+		notebounds.width = 20;
+    if (isEnabled()) {
+	if (howmany > 1) { // draw Split btn
+		ofPushStyle();
+		ofFill();
+		ofSetColor(timeline->getColors().backgroundColor);
+		mSplitBtnRect.x = bounds.x + bounds.width - 80;
+		mSplitBtnRect.y = bounds.y - 13 - 4;
+		mSplitBtnRect.width = 60;
+		mSplitBtnRect.height = 14;
+		ofRect(mSplitBtnRect);
+		ofSetColor(0);
+		ofNoFill();
+		ofRect(mSplitBtnRect);
+
+		ofDrawBitmapString("Split",  mSplitBtnRect.x + 4, mSplitBtnRect.y + 10);
+
+		// draw min bg
+		/*ofSetColor(200, 0, 0, 160);
+		ofFill();
+		ofRect(bounds);
+		*/
+		ofPopStyle();
+	}
+
+        for (int i = 0; i < howmany; i++) {
+            if (curves[i]) {
+		//cout << "Drawing --------- curve : " << i << endl;
+                curves[i]->draw();
+	    }
+        }
+    }
+}
+
+
 
 void ofxTLMultiCurves::setup() {
     return;
