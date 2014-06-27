@@ -416,12 +416,13 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 	// extract data
 	if (e->gfwd) {
 		float d = 0;
-		if (e->gfwd && e->gfwd->delay() && e->gfwd->delay()->value() && e->gfwd->delay()->value()->is_value())
-			d = (double)e->gfwd->delay()->eval();
+		if (e->gfwd && e->gfwd->delay().value() && e->gfwd->delay().value()->is_value())
+			d = (double)e->gfwd->delay().eval();
 
 		ActionGroup *ag = 0;
 		// can be group
 		Gfwd* g = dynamic_cast<Gfwd*>(e->gfwd);
+		AtomicSequence* as = dynamic_cast<AtomicSequence*>(e->gfwd);
 		Message* m = dynamic_cast<Message*>(e->gfwd);
 		Curve* c = dynamic_cast<Curve*>(e->gfwd);
 		Lfwd* l = dynamic_cast<Lfwd*>(e->gfwd);
@@ -430,7 +431,13 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 
 		if (g) {
 			ag = new ActionGroup(beatnum, d, g, e);
-		} else if (m) { // can be message
+		}/* else if (as && as->_actions.size()) { // can be atomic actions list
+			d += as->delay().eval();
+			for (int i = 0; i < as->_actions.size(); i++) {
+
+			}
+
+		} */else if (m) { // can be message
 			ag = new ActionMessage(beatnum, d, m, e);
 		} else if (k) { // can be kill/abort
 			ag = new ActionMessage(beatnum, d, k, e);
@@ -440,8 +447,8 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 			ag = new ActionMessage(beatnum, d, p, e);
 		} else if (l && l->_group) { // can be a loop
 			ag = new ActionGroup(beatnum, d, l->_group, e);
-			if (l->_period && l->_period->value() && l->_period->value()->is_value())
-				ag->period = l->_period->eval();
+			if (l->_period.value() && l->_period.value()->is_value())
+				ag->period = l->_period.eval();
 			ag->realtitle = ag->title = l->label();
 		}
 		if (ag)
@@ -719,6 +726,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 		} else if ((c = dynamic_cast<ActionMultiCurves*>(ag))) {
 			int len = sizec * (ag->title.size());
 			if (c->delay)
+				//len += abs(get_x(c->beatnum + c->delay)) - abs(get_x(c->beatnum));
 				len += get_x(c->beatnum + c->delay) - get_x(c->beatnum);
 			maxw = len;
 			if (c->isValid) {
@@ -823,15 +831,15 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 	ActionMultiCurves* c = 0;
 	//cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden <<" before" << endl; 
 	if (group->rect.inside(args.x, args.y - mElevatorStartY)) {
-		cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << " inside" << endl; 
 		if (!group->hidden && (c = dynamic_cast<ActionMultiCurves*>(group))) {
-			cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << " open or close" << endl; 
 			if (c->mCurveArrowImgRect.inside(args.x, args.y - mElevatorStartY)) {
+				cout  << "mousePressed_in_header: group "<< group->realtitle << " INNA DI ARROW " << endl;
 				if (mCurveBeingEdited) close_down_curve_editor(c);
 				else open_up_curve_editor(c);
+				return true;
 			}
 			cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << " return" << endl; 
-			return true;
+			return group->is_in_header(args.x, args.y - mElevatorStartY);
 		}
 		if (group->hidden) {
 			if (!ofGetModifierSelection())
@@ -1015,12 +1023,14 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		if (!res && !clickedGroup->hidden && bActionsEditable) {
 			// handle curve click
 			ofMouseEventArgs args2 = args; args2 -= mElevatorStartY;
-			res = mousePressed_search_curve_rec(clickedGroup, args2, millis);
+			mousePressed_search_curve_rec(clickedGroup, args2, millis);
 		}
 	}
-	if (res) return res;
+	if (res) { 
+		//cout << "Not Leaving.... mousepressed: SHIT: clickedCurves:"<< clickedCurves.size() << endl;
+	}
 	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
-		if (*i != clickedGroup && mousePressed_in_header(args, *i)) {
+		if (!res && *i != clickedGroup && mousePressed_in_header(args, *i)) {
 			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 			return true;
 		} else if (*i) { // look for subgroups
@@ -1033,7 +1043,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 			if (a->sons.size()) {
 				for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					// handle arrow click
-					if (*j != clickedGroup && *j &&  mousePressed_in_header(args, *j)) {
+					if (*j != clickedGroup && *j && mousePressed_in_header(args, *j)) {
 						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
 						res = true;
 					} else if (!(*i)->hidden && bActionsEditable) {
@@ -1047,6 +1057,8 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		}
 	}
 #endif
+
+	cout << "Leaving mousepressed: SHIT: clickedCurves:"<< clickedCurves.size() << endl;
 	return res;
 }
 
@@ -1537,8 +1549,8 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 	} else if (l && l->_group) { // can be a loop
 		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [loop] ("<<action->label()<<")" << endl;
 		ag = new ActionGroup(beatnum, d, l->_group, e);
-		if (l->_period && l->_period->value() && l->_period->value()->is_value())
-			ag->period = l->_period->eval();
+		if (l->_period.value() && l->_period.value()->is_value())
+			ag->period = l->_period.eval();
 		ag->realtitle = ag->title = l->label();
 	}
 	if (ag)
@@ -1631,8 +1643,8 @@ string ActionGroup::dump()
 double ActionGroup::get_delay(Action* tmpa) 
 {
 	double d = 0.;
-	if (tmpa && tmpa->delay() && tmpa->delay()->is_constant()) { //->value() && tmpa->delay()->value()->is_value()) {
-		d = tmpa->delay()->eval();
+	if (tmpa && tmpa->delay().is_constant()) {
+		d = tmpa->delay().eval();
 	}
 	return d;
 }
@@ -1653,11 +1665,6 @@ bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction) {
 	ofRange r(_timeline->screenXtoNormalizedX(rect.x, tlAction->getZoomBounds()), _timeline->screenXtoNormalizedX(rect.x + rect.width, tlAction->getZoomBounds()));
 	res = tlAction->getZoomBounds().intersects(r);
 
-	/*
-	if (res) {
-		if (rect.y >= tlAction->mElevatorStartY)
-		res = true;
-	}*/
 	return res;
 }
 
@@ -2424,12 +2431,14 @@ int ActionCurve::getWidth() {
 			minx = screenpoint_first.x;
 
 		// check if last point displayed or not
-		if (lasti < beatcurves[i]->getKeyframes().size() - 1)
+		if (lasti < beatcurves[i]->getKeyframes().size() - 1) {
 			maxx = tlbounds.x + tlbounds.width;//beatcurves[i]->bounds.x + beatcurves[i]->bounds.width;
-		else if (maxx < screenpoint_last.x)
+		} else if (maxx < screenpoint_last.x) {
 			maxx = screenpoint_last.x;
+		}
 	}
 	int d = maxx - minx - parentCurve->rect.x;
+	//cout << "->>>>>>>>>>>>>>>>>>>>>>>>>> width=" << d << endl;
 	return d;// + 5;
 }
 

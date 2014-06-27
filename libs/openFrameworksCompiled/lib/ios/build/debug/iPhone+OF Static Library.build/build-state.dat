@@ -3126,7 +3126,7 @@ r0
 
 CCheck dependencies
 r0
-lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies6ee086d8244bb941^6c3d87d8244bb941^---0#1#1#--18"Check dependencies36"57589A74-3FB7-4AF6-B036-C726AFA6D46F-
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies19041adfec52b941^fbcb1adfec52b941^---0#1#1#--18"Check dependencies36"3ABB8A19-374D-478C-ADDE-2C537BD22C77-
 
 CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7/AVFoundationVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/video/AVFoundationVideoGrabber.mm normal armv7 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
 s423651512.428898
@@ -16880,6 +16880,252 @@ oclang: warning: -lpthread: 'linker' input unused
 lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection97"Compile /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSViewController.mm339"CompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/ofxiOSViewController.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSViewController.mm normal armv7s objective-c++ com.apple.compilers.llvm.clang.1_0.compiler86588dcf6840b941^8faaeecf6840b941^-49"clang: warning: -lpthread: 'linker' input unused-0#0#1#-19%DVTDocumentLocation2@96"file:///Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSViewController.mm0000000000000000^4535"CompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/ofxiOSViewController.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSViewController.mm normal armv7s objective-c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c++ -arch armv7s -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wnon-virtual-dtor -Woverloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wno-switch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wno-unused-variable -Wno-unused-value -Wno-empty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wno-constant-conversion -Wno-int-conversion -Wno-bool-conversion -Wno-enum-conversion -Wno-shorten-64-to-32 -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -Wno-c++11-extensions -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk -fstrict-aliasing -Wno-protocol -Wdeprecated-declarations -Wno-invalid-offsetof -g -Wno-sign-conversion -miphoneos-version-min=4.0 -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/ofxiOS_iphoneos_Debug.hmap -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/include -I../../../../libs/openFrameworks -I../../../../libs/openFrameworks/.settings -I../../../../libs/openFrameworks/3d -I../../../../libs/openFrameworks/app -I../../../../libs/openFrameworks/communication -I../../../../libs/openFrameworks/events -I../../../../libs/openFrameworks/gl -I../../../../libs/openFrameworks/graphics -I../../../../libs/openFrameworks/math -I../../../../libs/openFrameworks/sound -I../../../../libs/openFrameworks/types -I../../../../libs/openFrameworks/utils -I../../../../libs/openFrameworks/video -I../../../../addons/ofxiOS -I../../../../addons/ofxiOS/src -I../../../../addons/ofxiOS/src/app -I../../../../addons/ofxiOS/src/core -I../../../../addons/ofxiOS/src/events -I../../../../addons/ofxiOS/src/gl -I../../../../addons/ofxiOS/src/sound -I../../../../addons/ofxiOS/src/utils -I../../../../addons/ofxiOS/src/video -I../../../../addons/ofxMultiTouch -I../../../../addons/ofxMultiTouch/src -I../../../../addons/ofxAccelerometer -I../../../../addons/ofxAccelerometer/src -I../../../../libs/poco/include -I../../../../libs/freetype/include -I../../../../libs/freetype/include/freetype2 -I../../../../libs/fmodex/include -I../../../../libs/glew/include -I../../../../libs/FreeImage/include -I../../../../libs/tess2/include -I../../../../libs/rtaudio/include -I../../../../libs/glu/include_ios -I../../../../libs/openssl/include -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/DerivedSources/armv7s -I/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/DerivedSources -Wno-non-virtual-dtor -Wno-overloaded-virtual -F/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios -D__MACOSX_CORE__ -lpthread -MMD -MT dependencies -MF /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/ofxiOSViewController.d --serialize-diagnostics /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/ofxiOSViewController.dia -c /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSViewController.mm -o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/ofxiOSViewController.o36"3A2A1C81-C2B5-4B38-AC9A-992CD38238C1-
 b0AF980E1-91B3-4A7F-87B3-4B744CAF6582
 
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/AVFoundationVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/video/AVFoundationVideoGrabber.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/AVFoundationVideoPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/video/AVFoundationVideoPlayer.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/AVSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/AVSoundPlayer.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/EAGLView.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/gl/EAGLView.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ES1Renderer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/gl/ES1Renderer.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ES2Renderer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/gl/ES2Renderer.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/SoundEngine.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/SoundEngine.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/SoundInputStream.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/SoundInputStream.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/SoundOutputStream.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/SoundOutputStream.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/SoundStream.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/SoundStream.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/of3dGraphics.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/of3dGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/of3dPrimitives.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dPrimitives.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/of3dUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/of3dUtils.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofAppRunner.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/app/ofAppRunner.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofAppiOSWindow.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/app/ofAppiOSWindow.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofBaseTypes.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofBaseTypes.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofBitmapFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofBitmapFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofCamera.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofCamera.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofColor.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofColor.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofEasyCam.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofEasyCam.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofEvents.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/events/ofEvents.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofFbo.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofFbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofFileUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofFileUtils.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofGLProgrammableRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLProgrammableRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofGLRenderer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLRenderer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofGLUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofGLUtils.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofGraphics.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofGraphics.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofImage.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofImage.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofLight.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofLight.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofLog.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofLog.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofMaterial.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofMaterial.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofMath.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofMatrix3x3.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix3x3.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofMatrix4x4.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofMatrix4x4.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofMatrixStack.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofMatrixStack.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofMesh.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofMesh.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofNode.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/3d/ofNode.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofParameter.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameter.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofParameterGroup.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofParameterGroup.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofPath.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPath.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofPixels.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPixels.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofPolyline.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofPolyline.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofQuaternion.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofQuaternion.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofRectangle.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/types/ofRectangle.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofRendererCollection.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofRendererCollection.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofShader.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofShader.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofSoundStream.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/sound/ofSoundStream.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofSystemUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofSystemUtils.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofTessellator.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTessellator.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofTexture.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofTexture.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofThread.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofThread.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofTrueTypeFont.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/graphics/ofTrueTypeFont.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofURLFileLoader.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofURLFileLoader.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofUtils.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofUtils.cpp normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofVbo.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVbo.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofVboMesh.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/gl/ofVboMesh.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofVec2f.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec2f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofVec4f.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/math/ofVec4f.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoGrabber.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofVideoPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/video/ofVideoPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofXml.o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworks/utils/ofXml.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxAccelerometer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxAccelerometer/src/ofxAccelerometer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxMultiTouch.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxMultiTouch/src/ofxMultiTouch.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxOpenALSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/ofxOpenALSoundPlayer.cpp normal i386 c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSAccelerometer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/events/ofxiOSAccelerometer.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSAlerts.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/events/ofxiOSAlerts.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSAppDelegate.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSAppDelegate.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSCoreLocation.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/utils/ofxiOSCoreLocation.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSEAGLView.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSEAGLView.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSExternalDisplay.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/utils/ofxiOSExternalDisplay.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSExtras.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/utils/ofxiOSExtras.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSImagePicker.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/utils/ofxiOSImagePicker.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSKeyboard.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/utils/ofxiOSKeyboard.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSMapKit.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/utils/ofxiOSMapKit.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSMapKitDelegate.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/utils/ofxiOSMapKitDelegate.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSSoundPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/ofxiOSSoundPlayer.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSSoundStream.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/ofxiOSSoundStream.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSSoundStreamDelegate.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/sound/ofxiOSSoundStreamDelegate.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSVideoGrabber.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/video/ofxiOSVideoGrabber.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSVideoPlayer.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/video/ofxiOSVideoPlayer.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/i386/ofxiOSViewController.o /Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxiOS/src/core/ofxiOSViewController.mm normal i386 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
 CCreateUniversalBinary /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/libofxiOS_iphoneos_Debug.a normal armv7\ armv7s
 s424354150.646704
 e424354153.083294
@@ -17000,4 +17246,7 @@ xarmv7s
 o/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: -dynamic not specified the following flags are invalid: -ObjC 
 lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection194"Libtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/libofxiOS_iphoneos_Debug.a normal armv7s194"Libtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/libofxiOS_iphoneos_Debug.a normal armv7s81b13e64214bb941^14ea0166214bb941^-159"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: -dynamic not specified the following flags are invalid: -ObjC -0#0#1#--2528"Libtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/libofxiOS_iphoneos_Debug.a normal armv7s    cd /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios    export IPHONEOS_DEPLOYMENT_TARGET=4.0    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only armv7s -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk -L/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios -L/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/kiss/lib/linux -L/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/kiss/lib/linux64 -L/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../tess2/lib/ios -L/Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/project/ios/../../../poco/lib/ios -filelist /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/ofxiOS_iphoneos_Debug.LinkFileList -ObjC ../../../../libs/FreeImage/lib/osx/freeimage.a ../../../../libs/freetype/lib/ios/freetype.a ../../../../libs/FreeImage/lib/ios/freeimage.a ../../../../libs/poco/lib/ios/PocoNet.a ../../../../libs/poco/lib/ios/PocoNetSSL.a ../../../../libs/poco/lib/ios/PocoCrypto.a ../../../../libs/poco/lib/ios/PocoXML.a ../../../../libs/poco/lib/ios/PocoZip.a ../../../../libs/poco/lib/ios/PocoUtil.a ../../../../libs/poco/lib/ios/PocoFoundation.a ../../../../libs/tess2/lib/ios/tess2.a ../../../../libs/glu/lib/ios/glu.a ../../../../libs/glu/lib/ios/glu-ios.a ../../../../libs/openssl/lib/ios/ssl.a ../../../../libs/openssl/lib/ios/crypto.a -framework AudioToolbox -framework OpenGLES -framework UIKit -framework OpenAL -framework Foundation -framework CoreGraphics -framework CoreLocation -framework QuartzCore -framework MapKit -framework AVFoundation -framework CoreAudio -framework CoreMedia -framework CoreVideo -o /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/build/debug/iPhone+OF\ Static\ Library.build/Objects-normal/armv7s/libofxiOS_iphoneos_Debug.a36"C1E0FF55-7E3E-4ADC-B7A4-E663E734027C-
 b4A7D1B88-DC03-41FD-950E-A9E0D3A6AB40
+
+CLibtool /Users/coffy/Documents/ircam/git/AscoGraph/libs/openFrameworksCompiled/lib/ios/libofxiOS_iphonesimulator_Debug.a normal i386
+r0
 

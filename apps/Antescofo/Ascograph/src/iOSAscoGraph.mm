@@ -571,8 +571,10 @@ void iOSAscoGraph::setupBonjour(){
     
     // find me (server)
     bonjour->startService(); // make device 'discoverable' with defaults.
-    //bonjour->startService("_ofxBonjourIp._tcp.", "", 7777, "local");
-    
+    //bonjour->startService("_AscoGraph._tcp.", "AscoGraph / iPad", 7777, "local");
+    //bonjour->startService("_ofxBonjourIp._tcp.", "AscoGraph / iPad", 7777, "local");
+    //bonjour->startService("_ofxBonjourIp._tcp.", "Antescofo", 7777, "local");
+
     // find another device (client)- note will not discover itself
     bonjour->discoverService(); // discover other device with defaults.
     //bonjour->discoverService(type, domain);
@@ -946,6 +948,10 @@ void iOSAscoGraph::onPublishedService(const void* sender, string &serviceIp) {
 
 void iOSAscoGraph::onDiscoveredService(const void* sender, string &serviceIp) {
     ofLog() << "Received discovered service event: " << serviceIp;
+    for (int i = 0; i < mDdl_host_lists->getToggles().size(); i++) {
+        if (mDdl_host_lists->getToggles()[i]->getLabelWidget()->getLabel() == serviceIp)
+            return;
+    }
     antescofo_hostnames.push_back(serviceIp);
     mDdl_host_lists->addToggle(serviceIp);
     //send_OSC_getscore();

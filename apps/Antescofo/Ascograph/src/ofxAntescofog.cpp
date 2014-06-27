@@ -1698,7 +1698,7 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 				//cout << "autocompletion: adding internal command: " << cmd << endl;
 				[editor pushback_keywords:cmd.c_str()];
 			}
-			for (Environment::dicof_t::iterator i = ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.begin();
+			for (GlobalEnvironment::dicof_t::iterator i = ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.begin();
 			     i !=  ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.end(); i++) {
 				string cmd = i->second->name();
 				//cout << "autocompletion: adding internal function: " << cmd << endl;

@@ -2093,6 +2093,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		return 0;
 	}
 #endif
+	AtomicSequence::allow_restructuring = false;
 	score = mAntescofo->Parse(filename);
 	if (score == NULL) {
 		//::Error("%s\n", filename.c_str());
