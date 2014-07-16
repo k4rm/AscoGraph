@@ -68,6 +68,7 @@ ofxTLAntescofoAction::ofxTLAntescofoAction(ofxAntescofog *Antescofog)
 	mElevatorClickedY = mElevatorStartY = mMaxHeight = mFirstTrackBtn = 0;
 	mPrevTrackBtn.height = mNextTrackBtn.height = mTrackBtnHeight;
 	bActionsEditable = bHasToResize = true;
+	bViewActionWithDeepLevels = false;
 
 	// store Antescofo tracks names
 	if (TrackDefinition::idx2track.size()) {
@@ -759,7 +760,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 // avoid x overlapping
 void ofxTLAntescofoAction::update_avoid_overlap_rec(ActionGroup* g, int w, int h)
 {
-	return;
+	if (bViewActionWithDeepLevels) return;
 	if (g->rect.width + g->rect.x > w) {
 		//XXX if (g->rect.y + g->rect.height < h) 
 			g->rect.width = w - g->rect.x;
@@ -1812,8 +1813,10 @@ void ActionMultiCurves::draw_header(ofxTLAntescofoAction* tlAction, bool draw_re
 		mCurveArrowImgRect.width = 16;
 		mCurveArrowImgRect.height = 16;
 
-		if (!tlAction->mCurveBeingEdited) {
-			tlAction->mCurveArrowImgUp.draw(mCurveArrowImgRect);
+		if (rect.x+16 <= mCurveArrowImgRect.x) {
+			if (!tlAction->mCurveBeingEdited) {
+				tlAction->mCurveArrowImgUp.draw(mCurveArrowImgRect);
+			}
 		}
 	}
 }

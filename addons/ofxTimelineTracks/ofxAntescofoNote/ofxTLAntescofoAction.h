@@ -140,6 +140,7 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		ofTrueTypeFont mFont;
 		int sizec;
 		Score *mScore;
+		bool bViewActionWithDeepLevels;
 #ifdef ASCOGRAPH_IOS
         iOSAscoGraph *mAntescofog;
 #else

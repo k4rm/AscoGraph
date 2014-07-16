@@ -64,6 +64,7 @@
 #define INT_CONSTANT_BUTTON_AUTOCOMPLETE	41
 #define INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR	42
 #define INT_CONSTANT_BUTTON_LOCK		43
+#define INT_CONSTANT_BUTTON_ACTIONVIEWDEEPMODE	44
 #define INT_CONSTANT_BUTTON_OPENRECENT		200
 #define INT_CONSTANT_BUTTON_CUES_INDEX  	300
 
@@ -253,7 +254,7 @@ class ofxAntescofog : public ofxNSWindowApp
 #endif
 
 		// UI
-		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem, mLockMenuItem, mFileMenu;
+		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem, mLockMenuItem, mFileMenu, mActionsViewDeepLevelModeMenuItem;
 		ofxUICanvas *guiTop, *guiBottom, *guiSetup_OSC;
 		ofxUICanvas *guiSetup_Colors, *guiFind;
 		ofxUIScrollableCanvas *guiError;

@@ -192,6 +192,14 @@ void ofxAntescofog::menu_item_hit(int n)
 			ofxAntescofoNote->setAutoScroll(bAutoScroll);
 			[mAutoscrollMenuItem setState:(bAutoScroll ? NSOnState : NSOffState)];
 			break;
+		case INT_CONSTANT_BUTTON_ACTIONVIEWDEEPMODE:
+		{
+			cout << "Setting Action View Deep Mode Level." << endl;
+			ofxTLAntescofoAction* actiontrck = ofxAntescofoNote->getActionTrack();
+			if (actiontrck)
+				actiontrck->bViewActionWithDeepLevels = !actiontrck->bViewActionWithDeepLevels;
+			break;
+		}
 		case INT_CONSTANT_BUTTON_LINEWRAP:
 			bLineWrapMode = !bLineWrapMode;
 			cout << "Setting line wrapping mode:" << bLineWrapMode << endl; 
@@ -772,6 +780,12 @@ void ofxAntescofog::setupUI() {
 	[mLineWrapModeMenuItem setTag:INT_CONSTANT_BUTTON_LINEWRAP];
 	[mLineWrapModeMenuItem setState:NSOnState];
 	[viewMenu addItem:mLineWrapModeMenuItem];
+	// actions view deep levels
+	mActionsViewDeepLevelModeMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Actions view Deep Level mode" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[mActionsViewDeepLevelModeMenuItem setTag:INT_CONSTANT_BUTTON_ACTIONVIEWDEEPMODE];
+	[mActionsViewDeepLevelModeMenuItem setState:NSOffState];
+	[viewMenu addItem:mActionsViewDeepLevelModeMenuItem];
+
 	// open all curves
 	id openAllCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Open all curves" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	[openAllCurvesMenuItem setTag:INT_CONSTANT_BUTTON_OPEN_ALL_CURVES];
