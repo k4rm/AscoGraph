@@ -2417,29 +2417,27 @@ void ActionCurve::setWidth(int w) {
 
 
 int ActionCurve::getWidth() {
-	ofVec2f screenpoint_first, screenpoint_last;
-	int firsti = 0, lasti = 0;
 	int maxx = 0, minx = 0;
 	for (int i = 0; i < beatcurves.size(); i++) {
 		ofRectangle tlbounds = beatcurves[i]->tlAction->getBounds();
 		ofRange tlzbounds = beatcurves[i]->tlAction->getZoomBounds();
-		//cout <<"ActionCurve::getWidth(): bounds: "<<  tlbounds.x << ", " << tlbounds.y << " wxh:" << tlbounds.width << "x" << tlbounds.height << endl;
 		beatcurves[i]->setTLBounds(tlbounds);
 		beatcurves[i]->setZoomBounds(tlzbounds);
-		beatcurves[i]->get_first_last_displayed_keyframe(&screenpoint_first, &screenpoint_last, &firsti, &lasti);
-		if (minx > screenpoint_first.x)
-			minx = screenpoint_first.x;
+		//beatcurves[i]->recomputePreviews();
+		if (beatcurves[i]->keyframes.size() == 0) { cout << "ActionCurve::getWidth ERROR null keyframes, skippin' i=" <<i << endl; continue; }
+		int x1 = beatcurves[i]->tlAction->get_x( beatcurves[i]->keyframes[0]->beat );
+		int l = beatcurves[i]->keyframes.size() - 1;
+		int x2 = beatcurves[i]->tlAction->get_x( beatcurves[i]->keyframes[l]->beat );
 
-		// check if last point displayed or not
-		if (lasti < beatcurves[i]->getKeyframes().size() - 1) {
-			maxx = tlbounds.x + tlbounds.width;//beatcurves[i]->bounds.x + beatcurves[i]->bounds.width;
-		} else if (maxx < screenpoint_last.x) {
-			maxx = screenpoint_last.x;
+		if (!minx || minx > x1)
+			minx = x1;
+		if (!maxx || maxx < x2) {
+			maxx = x2;
 		}
 	}
-	int d = maxx - minx - parentCurve->rect.x;
-	//cout << "->>>>>>>>>>>>>>>>>>>>>>>>>> width=" << d << endl;
-	return d;// + 5;
+
+	int d = maxx - minx;
+	return d;
 }
 
 int ActionCurve::getHeight() {
@@ -2661,8 +2659,9 @@ void ActionMultiCurves::draw_big(ofxTLAntescofoAction* tlAction) {
 	ofPopStyle();
 
 	// update
-	notebounds.y += 10;
-	notebounds.height -= 20;
+	int border_height = 15; // y distance between note track top and curve rect
+	notebounds.y += border_height;
+	notebounds.height -= border_height*2;
 	int cury = notebounds.y;
 	rect.y = cury;
 	int boxy = rect.y;// + HEADER_HEIGHT;
@@ -2699,7 +2698,27 @@ void ActionMultiCurves::draw_big(ofxTLAntescofoAction* tlAction) {
 	for (j = curves.begin(); j != curves.end(); j++) {
 		(*j)->draw(tlAction);
 	}
-	//draw_header(tlAction);
+
+	// draw grid bar
+	ofFill(); ofSetColor(255, 255, 255, 155); // white rect
+	int bottomy = notebounds.y + notebounds.height;
+	ofRect(rect.x, bottomy, rect.width, border_height);
+	ofSetColor(0, 0, 0, 255);
+	int maxb = beatnum+delay + _timeline->normalizedXToBeat( _timeline->screenXtoNormalizedX(getWidth(), tlAction->getZoomBounds()) );
+	cout << "GetWidth= " << getWidth() << " maxb= " << maxb << endl;
+	float step = 1.; // TODO
+	for (int b = beatnum+delay; b <= maxb; b += step) { // draw beat ticks + string num
+		int x = tlAction->get_x(b);
+		ofRect(x, bottomy, 1, border_height/3); // draw tick
+		string num = ofToString(b+1);
+		tlAction->mFont.drawString(num, x, bottomy+border_height/2 + 7);
+	}
+	for (float b = beatnum+delay; b <= maxb; b += step/10) { // draw small beat ticks
+		float x = tlAction->get_x(b);
+		int h = border_height/3;
+		if (int(floor(b*10)) % 5 == 0) h += 6;
+		ofRect(x, bottomy, 1, h); // draw tick
+	}
 
 	if (tlAction->mCurveBeingEdited == this) {
 		mCurveArrowImgRect.x = rect.x - 20;

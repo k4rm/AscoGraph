@@ -96,10 +96,11 @@ class BeatKeyframes : public Keyframes
 
 	ActionCurve* ref;
 	void keyPressed(ofKeyEventArgs& args);
+	vector<BeatKeyframe*> keyframes;
 
 	protected:
 	virtual BeatKeyframe* newKeyframe();
-	vector<BeatKeyframe*> keyframes;
+	vector<BeatKeyframe*> selectedKeyframes;
 
 	//cached previews for fast drawing of large timelines
 	ofPolyline preview;
@@ -131,7 +132,6 @@ class BeatKeyframes : public Keyframes
 	//this is called before the keyframe is deleted and removed from the keyframes vector
 	virtual void willDeleteKeyframe(BeatKeyframe* keyframe) {}
 
-	vector<BeatKeyframe*> selectedKeyframes;
 	BeatKeyframe* selectedKeyframe;
 	BeatKeyframe* hoverKeyframe;
 
