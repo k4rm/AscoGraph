@@ -9,7 +9,7 @@
 class ofxGuido
 {
 public:
-	ofxGuido(GuidoLayoutSettings& layoutSettings);
+	ofxGuido(GuidoLayoutSettings* layoutSettings);
 	~ofxGuido() {}
 
 	bool compile_string(const string& gstr);

@@ -137,6 +137,7 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
 
 #ifdef USE_GUIDO
 	GuidoLayoutSettings layoutSettings;
+	/*
 	layoutSettings.systemsDistance = 75;
 	layoutSettings.spring = 110; //1.1;
 	layoutSettings.force = 750;
@@ -145,7 +146,8 @@ ofxTLAntescofoNote::ofxTLAntescofoNote(ofxAntescofog* g)
 	layoutSettings.resizePage2Music = true;
 	layoutSettings.neighborhoodSpacing = 0;
 	layoutSettings.optimalPageFill = 0;
-	oguido = new ofxGuido(layoutSettings);
+	*/
+	oguido = new ofxGuido(NULL);//layoutSettings);
 	oguido->guido->setResizePageToMusic(true);
 	mCurGuidoId = -1, mCurSwitchId = -1;
 	guido_y = bounds.y;
@@ -571,6 +573,7 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 	if (oguido) {
 		delete oguido;
 		GuidoLayoutSettings layoutSettings;
+		/*
 		layoutSettings.systemsDistance = 75;
 		layoutSettings.spring = 110; //1.1;
 		layoutSettings.force = 750;
@@ -579,7 +582,8 @@ bool ofxTLAntescofoNote::render_guido(float xfactor)
 		layoutSettings.resizePage2Music = true;
 		layoutSettings.neighborhoodSpacing = 0;
 		layoutSettings.optimalPageFill = 0;
-		oguido = new ofxGuido(layoutSettings);
+		*/
+		oguido = new ofxGuido(NULL);//layoutSettings);
 		oguido->guido->setResizePageToMusic(true);
 	}
 	int backingWidth, backingHeight;

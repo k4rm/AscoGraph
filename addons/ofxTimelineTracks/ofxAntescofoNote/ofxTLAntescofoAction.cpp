@@ -1492,7 +1492,7 @@ void ActionGroup::createActionGroup_fill(Action* action)
 {
 	if (action) {
 		string lab = action->label();
-		if (strncmp(lab.c_str(), "_anonymous", 9) != 0 && strncmp(lab.c_str(), "eventgroup", 10) != 0)
+		if (strncmp(lab.c_str(), "__anonymous", 9) != 0 && strncmp(lab.c_str(), "eventgroup", 10) != 0)
 			realtitle = lab;
 		//if (lab.size() && strncmp(lab.c_str(), "eventgroup", 10) == 0) {
 		if (event->gfwd == action) {
@@ -1672,7 +1672,7 @@ bool ActionGroup::is_in_bounds(ofxTLAntescofoAction *tlAction) {
 bool ActionGroup::is_in_bounds_y(ofxTLAntescofoAction *tlAction) {
 	bool res = false;
 	if (rect.y + rect.height + tlAction->mElevatorStartY <= tlAction->getBounds().y + tlAction->getBounds().height + 100
-	    && rect.y + tlAction->mElevatorStartY >= tlAction->ofxAntescofoNote->getBounds().y) // tlAction->getBounds().y)
+	    || rect.y + tlAction->mElevatorStartY >= tlAction->ofxAntescofoNote->getBounds().y) // tlAction->getBounds().y)
 		res = true;
 	return res;
 }

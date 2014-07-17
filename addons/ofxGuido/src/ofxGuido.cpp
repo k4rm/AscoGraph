@@ -1,7 +1,7 @@
 #include "ofxGuido.h"
 
 
-ofxGuido::ofxGuido(GuidoLayoutSettings& layoutSettings)
+ofxGuido::ofxGuido(GuidoLayoutSettings* layoutSettings)
 {
 	guido = new GuidoComponent();
 #ifndef ASCOGRAPH_IOS
@@ -12,7 +12,7 @@ ofxGuido::ofxGuido(GuidoLayoutSettings& layoutSettings)
 	string guidofont("GUI/guido2.ttf");
 #endif
 	guido->GuidoInit(textfont.c_str(), guidofont.c_str());
-	guido->setGuidoLayoutSettings(layoutSettings);
+	if (layoutSettings) guido->setGuidoLayoutSettings(*layoutSettings);
 }
 
 
