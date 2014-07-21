@@ -1714,6 +1714,7 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 			}
 			for (GlobalEnvironment::dicof_t::iterator i = ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.begin();
 			     i !=  ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.end(); i++) {
+				if (!i->second) break;
 				string cmd = i->second->name();
 				//cout << "autocompletion: adding internal function: " << cmd << endl;
 				[editor pushback_keywords:cmd.c_str()];

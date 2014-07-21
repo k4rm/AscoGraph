@@ -826,7 +826,7 @@ void ofxTLAntescofoAction::windowResized(ofResizeEventArgs& resizeEventArgs){
 }
 
 bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, ActionGroup* group, bool recurs) {
-	//cout << "mousePressed_in_header: group "<< group->realtitle << " hidden="<<group->hidden << endl; 
+	//cout << "mousePressed_in_header: group "<< group->title << " hidden="<<group->hidden << endl; 
 	bool res = false;
 	if (!group) return res;
 	ActionMultiCurves* c = 0;
@@ -843,7 +843,7 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 			return group->is_in_header(args.x, args.y - mElevatorStartY);
 		}
 		if (group->hidden) {
-			if (!ofGetModifierSelection())
+			//if (!ofGetModifierSelection())
 				group->hidden = false;
 			cout << "mousePressed: setting action '"<< group->title <<"' hidden:"<< group->hidden << endl;
 			if (group) {
@@ -863,6 +863,7 @@ bool ofxTLAntescofoAction::mousePressed_in_header(ofMouseEventArgs& args, Action
 			/*ActionMultiCurves* c = 0;
 			if ((c = dynamic_cast<ActionMultiCurves*>(group)))
 				c->hidden = true;*/
+			group->hidden = true;
 		} else if (recurs) {
 			if (group) { // not hidden and click in group
 				if (group->sons.size()) { // rec in subgroups
@@ -1028,6 +1029,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		}
 	}
 	if (res) { 
+		return res;
 		//cout << "Not Leaving.... mousepressed: SHIT: clickedCurves:"<< clickedCurves.size() << endl;
 	}
 	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
@@ -2147,7 +2149,7 @@ void ActionCurve::print()
 	cout << "\tActionCurve::print: "<< endl; 
 	vector<SimpleContFunction>::iterator s = simple_vect->begin();
 	for (vector<AnteDuration*>::iterator k = dur_vect->begin(); k != dur_vect->end(); k++, s++) {
-		cout << "\t\tdelay: " << (*k)->eval();
+		if (*k) cout << "\t\tdelay: " << (*k)->eval();
 		if (s != simple_vect->end())
 			cout << "  y0: " << s->y0 << " y1: " << s->y1 << endl;
 	}
@@ -2708,7 +2710,6 @@ void ActionMultiCurves::draw_big(ofxTLAntescofoAction* tlAction) {
 	ofRect(rect.x, bottomy, rect.width, border_height);
 	ofSetColor(0, 0, 0, 255);
 	int maxb = beatnum+delay + _timeline->normalizedXToBeat( _timeline->screenXtoNormalizedX(getWidth(), tlAction->getZoomBounds()) );
-	cout << "GetWidth= " << getWidth() << " maxb= " << maxb << endl;
 	float step = 1.; // TODO
 	for (int b = beatnum+delay; b <= maxb; b += step) { // draw beat ticks + string num
 		int x = tlAction->get_x(b);

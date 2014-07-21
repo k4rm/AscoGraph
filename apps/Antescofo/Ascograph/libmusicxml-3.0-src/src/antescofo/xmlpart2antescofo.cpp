@@ -915,13 +915,13 @@ rational xmlpart2antescofo::noteDuration ( const notevisitor& nv )
 	}
 
 	// get measure time signature, check for ternary
-	cout << "TimeSignature: " << w.nBeats << " / " << w.nBeat_type << " is ";
+	//cout << "TimeSignature: " << w.nBeats << " / " << w.nBeat_type << " is ";
 	bool is_tern = false;
 	if ((w.nBeats == 6 && (w.nBeat_type == 4 || w.nBeat_type == 8 || w.nBeat_type == 16))
 	   || (w.nBeats == 9 && (w.nBeat_type == 4 || w.nBeat_type == 8 || w.nBeat_type == 16))
 	   || (w.nBeats == 12 && (w.nBeat_type == 4 || w.nBeat_type == 8 || w.nBeat_type == 16)))
 		is_tern = true;
-	cout << (is_tern ? "ternaire" : "binary") << endl;
+	//cout << (is_tern ? "ternaire" : "binary") << endl;
 
 	if (is_tern)
 		dur *= rational(2, 3);

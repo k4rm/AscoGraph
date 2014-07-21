@@ -764,11 +764,11 @@ void antescofowriter::final_compress()
 	vector<measure_elt>::iterator i = next;
 	next++;
 	for (; i != v_Notes.end() && next != v_Notes.end(); ) {
-		cout << "final_compress loop"<<endl;
+		//cout << "final_compress loop"<<endl;
 		bool compressed = false;
 		if (next->type == i->type) {
 			if (next->type == ANTESCOFO_REST) {
-				cout << "final_compress loop merging"<<endl;
+				//cout << "final_compress loop merging"<<endl;
 				merge_notes(i, next);
 				//compressed = true;
 			}

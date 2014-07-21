@@ -59,10 +59,6 @@ Curve __anonymous24_curve  @Action :=
 }
 
 
-}
-
-     /*
-TRILL (f3 g3) 10
 Curve slider  @Grain := 0.05 s, @Action :=
         {
             print $x 
@@ -76,10 +72,9 @@ Curve slider  @Grain := 0.05 s, @Action :=
     }
 }
 
-*/
 
 
-
+}
 
 
 
