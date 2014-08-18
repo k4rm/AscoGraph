@@ -75,6 +75,209 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	guiBottom = 0;
 }
 
+@implementation NSFindWindow 
+@synthesize fog;
+-(void)keyDown:(NSEvent *)theEvent 
+{
+	switch([theEvent keyCode]) {
+		case 53: // esc
+			NSLog(@"NSFindWindow: ESC pressed: closing Find window.");
+			[self close];
+			break;
+		default:
+			;
+	}
+}
+- (void) windowWillClose:(NSNotification *)notification
+{
+	NSWindow *windowAboutToClose = [notification object];
+	if (fog && fog->mFindWindow == windowAboutToClose) {
+		NSLog(@"NSFindWindow: about to close");
+		fog->mFindWindow = NULL;
+	}
+}
+/* simple trampolines for signaling click events to the non-ObjC object ofxAntescofog */
+-(void)findText_pressed
+{
+	if (fog) fog->findText_pressed();
+}
+-(void)replaceText_pressed
+{
+	if (fog) fog->replaceText_pressed();
+}
+@end
+
+@implementation NSFindTextField
+-(void)keyDown:(NSEvent *)theEvent 
+{
+	NSLog(@"NSFindTextField: pressed: %d", [theEvent keyCode]);
+	
+	switch([theEvent keyCode]) {
+		case 53: // esc
+			NSLog(@"NSFindTextField: ESC pressed: closing Find window.");
+			//[self close];
+			[super keyDown:theEvent];
+			break;
+		default:
+			;
+	}
+}
+@end
+
+void ofxAntescofog::findText_pressed() {
+	NSString *nsstr = [mFindTextField stringValue]; 
+	string str([nsstr UTF8String]);
+
+	if (str.size()) {
+		cout << "findText_pressed: going to find string: [ " << str << " ]" << endl;
+		[editor setMatchCase:[mBtnFindMatchCase state]];
+		[editor setWrapMode:[mBtnFindWrapMode state]];
+		[ editor searchText:str ];
+	}
+}
+
+void ofxAntescofog::replaceText_pressed() {
+	NSString *nsstr = [mFindTextField stringValue]; 
+	string str([nsstr UTF8String]);
+
+	NSString *nsstr2 = [mReplaceTextField stringValue]; 
+	string str2([nsstr2 UTF8String]);
+
+	if (str.size()) {
+		cout << "replaceText_pressed: going to replace string: [ " << str << " ] with [ " << str2 << " ]" << endl;
+		[editor setMatchCase:[mBtnFindMatchCase state]];
+		[editor setWrapMode:[mBtnFindWrapMode state]];
+		[ editor searchNreplaceText:str str2:str2 ];
+	}
+}
+
+void ofxAntescofog::create_Find_and_Replace_window() {
+	bShowColorSetup = false;
+	bShowOSCSetup = false;
+	bShowFind = true;
+	//if (mFindWindow) [mFindWindow release];
+	int mFindWindow_w = 500, mFindWindow_h = 180;
+	// window
+	mFindWindow = [[NSFindWindow alloc] initWithContentRect:NSMakeRect(0, 0, mFindWindow_w, mFindWindow_h)
+		styleMask:NSTitledWindowMask|NSClosableWindowMask backing:NSBackingStoreBuffered defer:NO];
+	//autorelease];
+	[mFindWindow setFog:this];
+	[mFindWindow setOpaque:NO];
+	[mFindWindow cascadeTopLeftFromPoint:NSMakePoint(320, 710)];
+	[mFindWindow setTitle:@"Find / Replace"];
+	[mFindWindow makeKeyAndOrderFront:[cocoaWindow->delegate getNSWindow]];
+	[mFindWindow setBackgroundColor:[NSColor colorWithDeviceRed:0.3 green:0.3 blue:0.3 alpha:0.52]];
+	[mFindWindow setHasShadow:YES];
+	[mFindWindow useOptimizedDrawing:YES];
+	[mFindWindow setMovableByWindowBackground:YES];
+
+	[[NSNotificationCenter defaultCenter] addObserver:mFindWindow
+		selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification object:mFindWindow];
+	// label Find:
+	NSTextField *textField;
+	textField = [[NSTextField alloc] initWithFrame:NSMakeRect(25, mFindWindow_h-50, 40, 17)];
+	[textField setStringValue:@"Find:"];
+	[textField setBezeled:NO];
+	[textField setDrawsBackground:NO];
+	[textField setEditable:NO];
+	[textField setSelectable:NO];
+	[textField setTextColor:[NSColor whiteColor]];
+	[[mFindWindow contentView] addSubview:textField];
+	[textField release];
+
+	// Textbox find
+	NSFindTextField *tf = [[NSFindTextField alloc] initWithFrame: NSMakeRect(66, mFindWindow_h-50, 270, 20)];
+	//tf.delegate = (id)mFindWindow;
+	[tf setEditable:YES];
+	[tf setSelectable:YES];
+	[tf setEnabled:YES];
+	[tf setBackgroundColor:[NSColor colorWithDeviceRed:0.3 green:0.3 blue:0.3 alpha:0.7]];
+	[tf setTextColor:[NSColor whiteColor]];
+	[[mFindWindow contentView] addSubview: tf];
+	//[mFindWindow setContentView:tf];
+	//[mFindWindow makeKeyAndOrderFront:nil];
+	[mFindWindow makeFirstResponder:tf];
+	mFindTextField = tf;
+	[tf release];
+
+	// Find Button
+	NSButton *btn = [[NSButton alloc] initWithFrame:NSMakeRect(340, mFindWindow_h-50-5, 100,24)];
+	[[btn cell] setControlSize:NSRegularControlSize];
+	[btn setButtonType:NSMomentaryPushInButton];
+	[btn setBordered:YES];
+	[btn setBezelStyle:NSRoundedBezelStyle];
+	[btn setImagePosition:NSNoImage];
+	[btn setAlignment:NSCenterTextAlignment];
+	[[btn cell] setControlTint:NSBlueControlTint];
+	[btn setEnabled:YES];
+	[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+	[btn setTitle:@"Find"];
+	[btn setTarget:mFindWindow];
+	[btn setAction:@selector(findText_pressed)];
+	[[mFindWindow contentView] addSubview: btn];
+	[btn release];
+
+	// label Replace:
+	textField = [[NSTextField alloc] initWithFrame:NSMakeRect(5, mFindWindow_h-50-50, 60, 17)];
+	[textField setStringValue:@"Replace:"];
+	[textField setBezeled:NO];
+	[textField setDrawsBackground:NO];
+	[textField setEditable:NO];
+	[textField setSelectable:NO];
+	[textField setTextColor:[NSColor whiteColor]];
+	[[mFindWindow contentView] addSubview:textField];
+	[textField release];
+
+	// Textbox replace
+	tf = [[NSFindTextField alloc] initWithFrame: NSMakeRect(66, mFindWindow_h-50-50, 270, 20)];
+	//tf.delegate = (id)mFindWindow;
+	[tf setEditable:YES];
+	[tf setSelectable:YES];
+	[tf setEnabled:YES];
+	[tf setBackgroundColor:[NSColor colorWithDeviceRed:0.3 green:0.3 blue:0.3 alpha:0.7]];
+	[tf setTextColor:[NSColor whiteColor]];
+	[[mFindWindow contentView] addSubview: tf];
+	mReplaceTextField = tf;
+	[tf release];
+
+	// Replace Button
+	btn = [[NSButton alloc] initWithFrame:NSMakeRect(340, mFindWindow_h-50-5-50, 100,24)];
+	[[btn cell] setControlSize:NSRegularControlSize];
+	[btn setButtonType:NSMomentaryPushInButton];
+	[btn setBordered:YES];
+	[btn setBezelStyle:NSRoundedBezelStyle];
+	[btn setImagePosition:NSNoImage];
+	[btn setAlignment:NSCenterTextAlignment];
+	[[btn cell] setControlTint:NSBlueControlTint];
+	[btn setEnabled:YES];
+	[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+	[btn setTitle:@"Replace"];
+	[btn setTarget:mFindWindow];
+	[btn setAction:@selector(replaceText_pressed)];
+	[[mFindWindow contentView] addSubview: btn];
+	[btn release];
+
+	// match case button
+	mBtnFindMatchCase = [[NSButton alloc] initWithFrame:NSMakeRect (80, mFindWindow_h-50-5-50-50, 140, 25)];
+	[mBtnFindMatchCase setButtonType:NSSwitchButton];
+	[mBtnFindMatchCase setBezelStyle:0];
+	[mBtnFindMatchCase setTitle:@"Case sensitive"];
+	[mBtnFindMatchCase setState:NSOffState];
+	[[mFindWindow contentView] addSubview:mBtnFindMatchCase];
+	[mBtnFindMatchCase release];
+	// wrap mode button
+	mBtnFindWrapMode = [[NSButton alloc] initWithFrame:NSMakeRect (300, mFindWindow_h-50-5-50-50, 150, 25)];
+	[mBtnFindWrapMode setButtonType:NSSwitchButton];
+	[mBtnFindWrapMode setBezelStyle:0];
+	[mBtnFindWrapMode setTitle:@"Wrap around"];
+	[mBtnFindWrapMode setState:NSOnState];
+	[[mFindWindow contentView] addSubview:mBtnFindWrapMode];
+	[mBtnFindWrapMode release];
+
+
+	[[cocoaWindow->delegate getNSWindow] addChildWindow:mFindWindow ordered:NSWindowAbove];
+}
+
 
 void ofxAntescofog::menu_item_hit(int n)
 {
@@ -222,20 +425,11 @@ void ofxAntescofog::menu_item_hit(int n)
 				break;
 			}
 		case INT_CONSTANT_BUTTON_FIND:
-#if 0 // Find/Replace window draft
+#if 1 // Find/Replace window draft
 			cout << "Setting find text mode" << endl; 
+			if (mFindWindow == NULL) bShowFind = false;
 			if (!bShowFind) {
-				bShowColorSetup = false;
-				bShowOSCSetup = false;
-				//bShowFind = true;
-				if (mFindWindow) [mFindWindow release];
-				mFindWindow = [[[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200)
-								 styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO]
-								 autorelease];
-				[mFindWindow cascadeTopLeftFromPoint:NSMakePoint(20,20)];
-				[mFindWindow setTitle:@"Find / Replace"];
-				[mFindWindow makeKeyAndOrderFront:nil];
-				
+				create_Find_and_Replace_window();
 			}
 #else
 			if (!bShowFind) {
@@ -1377,11 +1571,11 @@ void ofxAntescofog::draw() {
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_error();
-	} else if (bShowFind) { // find/replace
+	} /*else if (bShowFind) { // find/replace
 		ofSetColor(ofxAntescofoNote->color_staves_bg);
 		ofRect(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 		draw_FindText();
-	} else { // draw normal
+	}*/ else { // draw normal
 		if (bMayUseCache && !timeline.getIsPlaying() && !bShouldRedraw) {
 			drawCache.draw(0, 0);
 		} else {
@@ -2634,10 +2828,10 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    mOsc_port_MAX = mTextOscPortRemote->getTextString();
             guiSetup_OSC->disable();
 	    setupOSC();
-        } else if (bShowFind) {
+        }/* else if (bShowFind) {
 	    bShowFind = false;
 	    guiFind->disable();
-	}
+	}*/
 
         e.widget->toggleVisible();
         ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;

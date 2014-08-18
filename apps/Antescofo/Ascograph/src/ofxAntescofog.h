@@ -175,6 +175,20 @@ class AntescofoTimeline : public ofxTimeline
 	void keypressed(ofKeyEventArgs& args) {}
 };
 
+#ifdef TARGET_OSX
+@interface NSFindWindow : NSWindow {
+	ofxAntescofog* fog;
+}
+@property (nonatomic, assign) ofxAntescofog* fog;
+-(void)findText_pressed;
+-(void)keyDown:(NSEvent *)theEvent;
+@end
+@interface NSFindTextField : NSTextField {
+}
+-(void)keyDown:(NSEvent *)theEvent;
+@end
+#endif
+
 //class ofxAntescofog : public ofBaseApp
 class ofxAntescofog : public ofxNSWindowApp
 #ifdef USE_HTTPD
@@ -227,6 +241,9 @@ class ofxAntescofog : public ofxNSWindowApp
 		void shouldRedraw();
 		void setMouseCursorGoto(bool bState);
 		void setGotoPos(float pos);
+		void findText_pressed();
+		void replaceText_pressed();
+		NSFindWindow* mFindWindow;
 		
 		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
 		ofxTLBeatTicker *ofxAntescofoBeatTicker, *ofxAntescofoBeatTickerSim;
@@ -339,9 +356,11 @@ class ofxAntescofog : public ofxNSWindowApp
 		struct timeval last_draw_time;
 
 		// find text
-		id mFindWindow;
+		NSFindTextField* mFindTextField, *mReplaceTextField;
 		bool bFindTextInitDone, bShowFind;
+		void create_Find_and_Replace_window();
 		void draw_FindText();
+		NSButton* mBtnFindMatchCase, *mBtnFindWrapMode;
 
 #ifdef USE_HTTPD
 		// httpd

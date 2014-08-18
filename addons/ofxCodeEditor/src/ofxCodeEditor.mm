@@ -253,6 +253,8 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (void) setupEditor
 {  
 	editorContent = 0;
+	bMatchCase = false;
+	bWrapMode = YES;
 	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: (sptr_t) "Antescofo"];
 	// alternatively: [mEditor setEditorProperty: SCI_SETLEXERLANGUAGE parameter: nil value: (sptr_t) "mysql"];
 
@@ -494,9 +496,14 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 
 - (void) setWrapMode:(bool)mode
 {
-	[mEditor setGeneralProperty: SCI_SETWRAPMODE parameter:mode value:mode];
+	//[mEditor setGeneralProperty: SCI_SETWRAPMODE parameter:mode value:mode];
+	bWrapMode = mode;
 }
 
+- (void) setMatchCase:(bool)mode
+{
+	bMatchCase = mode;
+}
 
 //--------------------------------------------------------------------------------------------------
 
@@ -572,7 +579,7 @@ static const char * box_xpm[] = {
 
 	int res = [ mEditor findAndReplaceText: text1
 			    	        byText: text2
-				     matchCase: NO
+				     matchCase: bMatchCase
 				     wholeWord: NO
 					 doAll: YES];
 	cout << "searchNreplace Text: res:" << res << endl;
@@ -612,10 +619,10 @@ static const char * box_xpm[] = {
 	cout << "CodeEditor: will search for text: " << str.c_str() << endl;
 
 	bool res = [mEditor findAndHighlightText: text
-			matchCase: NO
+			matchCase: bMatchCase
 			wholeWord: NO
 			scrollTo: YES
-			wrap: YES
+			wrap: bWrapMode
 			//backwards: YES];
 			backwards: NO];
 

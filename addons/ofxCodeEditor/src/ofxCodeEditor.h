@@ -30,6 +30,7 @@
     char *dic_char_list;
     char *curr_dic_char_list;
     id<ScintillaViewMyDelegate> mDelegate;
+    bool bMatchCase, bWrapMode;
 };
 
 //@property (nonatomic, assign) id <ScintillaViewMyDelegate> delegate;
@@ -65,6 +66,7 @@
 - (int) searchNreplaceText:(string)str str2:(string)str2;
 - (void) searchNext: (string) str;
 - (void) setWrapMode:(bool)mode;
+- (void) setMatchCase:(bool)mode;
 - (void) replaceString:(int)linea lineb:(int)lineb str:(const char *)str;
 - (void) replaceString:(int)linea lineb:(int)lineb cola:(int)cola colb:(int)colb str:(const char*)str;
 - (void) insertStringAtPos:(int)posa posb:(int)posb str:(const char*)str;
