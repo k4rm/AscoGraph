@@ -348,7 +348,7 @@ void antescofowriter::insertNote(int type, float pitch, rational dur, float nmea
 void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasure, rational &curBeat, int flag_, string rehearsal) {
 	vector<measure_elt>::iterator i;
 	if (debug_) cout << "; Addnote(beat:"<<curBeat.getNumerator() << "/" << curBeat.getDenominator() << ", meas:" << nmeasure <<" pitch:"<<pitch << " dur:"<< dur.getNumerator()<<"/"<<dur.getDenominator() << " type:"<<  type << " bpm:"<<fBPM<<") ";
-	if (dur.toFloat() < 0.00001) return;
+	if (dur.toFloat() < 0.00001 && (dur.getNumerator() && !dur.getDenominator())) return;
 
 	//cout << "AddBeat: beat:" << curBeat.toFloat() << " measure " << nmeasure << endl;
 	//curBeat = AddBeat(curBeat, nmeasure);
