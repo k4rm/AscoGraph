@@ -339,6 +339,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		struct timeval last_draw_time;
 
 		// find text
+		id mFindWindow;
 		bool bFindTextInitDone, bShowFind;
 		void draw_FindText();
 

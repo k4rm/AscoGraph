@@ -61,6 +61,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	ofxJumpTrack = 0;
 	audioTrack = NULL;
 	ofxAntescofoSim = 0;
+	mFindWindow = NULL;
 	subWindow = NULL;
 	mOsc_beat = -1;
 	mGotoPos = 0.;
@@ -221,7 +222,22 @@ void ofxAntescofog::menu_item_hit(int n)
 				break;
 			}
 		case INT_CONSTANT_BUTTON_FIND:
+#if 0 // Find/Replace window draft
 			cout << "Setting find text mode" << endl; 
+			if (!bShowFind) {
+				bShowColorSetup = false;
+				bShowOSCSetup = false;
+				//bShowFind = true;
+				if (mFindWindow) [mFindWindow release];
+				mFindWindow = [[[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 200)
+								 styleMask:NSTitledWindowMask backing:NSBackingStoreBuffered defer:NO]
+								 autorelease];
+				[mFindWindow cascadeTopLeftFromPoint:NSMakePoint(20,20)];
+				[mFindWindow setTitle:@"Find / Replace"];
+				[mFindWindow makeKeyAndOrderFront:nil];
+				
+			}
+#else
 			if (!bShowFind) {
 				timeline.disable();
 				bShowColorSetup = false;
@@ -229,6 +245,7 @@ void ofxAntescofog::menu_item_hit(int n)
 				bShowFind = true;
 				guiBottom->disable();
 			}
+#endif
 			break;
 		case INT_CONSTANT_BUTTON_SIMULATE:
 			{
@@ -380,14 +397,6 @@ void ofxAntescofog::menu_item_hit(int n)
 				break;
 			}
 	}
-	
-	if (n >= INT_CONSTANT_BUTTON_OPENRECENT) {
-		int m = n - INT_CONSTANT_BUTTON_OPENRECENT;
-		string f = mRecentFiles[mRecentFiles.size() - 1 - m];
-		cout << "mRecentFiles size: " << mRecentFiles.size() << " m = " << m << endl ;
-		cout << "Open Recent Drop down list hit : " << f << endl;
-		loadScore(f, true);
-	}
 	if (n >= INT_CONSTANT_BUTTON_CUES_INDEX) {
 		cout << "Cuepoints Drop Down List hit: " << endl; 
 		map<int, string>::iterator li = mCuesIndexToString.find(n - INT_CONSTANT_BUTTON_CUES_INDEX);
@@ -400,7 +409,14 @@ void ofxAntescofog::menu_item_hit(int n)
 			m.addStringArg(mPlayLabel);
 			mOSCsender.sendMessage(m);
 		}
+	} else if (n >= INT_CONSTANT_BUTTON_OPENRECENT) {
+		int m = n - INT_CONSTANT_BUTTON_OPENRECENT;
+		string f = mRecentFiles[mRecentFiles.size() - 1 - m];
+		cout << "mRecentFiles size: " << mRecentFiles.size() << " m = " << m << endl ;
+		cout << "Open Recent Drop down list hit : " << f << endl;
+		loadScore(f, true);
 	}
+
 	bShouldRedraw = true;
 }
 
