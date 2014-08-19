@@ -25,7 +25,7 @@ get_filename_component(OPENFRAMEWORKS_CMAKE_DIR_ROOT ${CMAKE_CURRENT_LIST_FILE} 
 get_filename_component(OPENFRAMEWORKS_ROOT "${OPENFRAMEWORKS_CMAKE_DIR_ROOT}/../../../../" ABSOLUTE)
 set(OPENFRAMEWORKS_ADDONS_ROOT ${OPENFRAMEWORKS_ROOT}/addons/)
 
-set (ANTESCOFO_LIB_PATH ${OPENFRAMEWORKS_ROOT}/../antescofo_New )
+set (ANTESCOFO_LIB_PATH ${OPENFRAMEWORKS_ROOT}/../antescofo )
 set (ANTESCOFO_PARSER_INCL_PATH ${ANTESCOFO_LIB_PATH}/includes ${ANTESCOFO_LIB_PATH}/parser)
 
 set (PATH_MACOS_SDK "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/")
@@ -554,7 +554,7 @@ if (ANTESCOFO_CSOUND)
 endif(ANTESCOFO_CSOUND)
 
 if (GUIDO)
-	set (OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxGuido/lib/guidolib-code/build/MacOSX "${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
+	set (OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxGuido/lib "${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS}")
 
 endif()
 
@@ -813,7 +813,7 @@ ADD_CUSTOM_COMMAND(
 		COMMAND sed "s/ASCOGRAPHVERSION/${ASCOGRAPH_VERSION_NUMBER}/g" Info.plist_orig > Info.plist
 		#COMMAND codesign -f -v --deep -s "Mac Developer: Thomas Coffy (HQ2W4T359C)" bin/Ascograph.app/Contents/Frameworks/libfmodex.dylib --all-architectures
 		#COMMAND codesign -f -v --deep -s 'Mac Developer: Thomas Coffy' bin/Ascograph.app/Contents/MacOS/Ascograph  --all-architectures
-		COMMAND codesign -f -v --deep -s 'Mac Developer: Thomas Coffy' bin/Ascograph.app  --all-architectures
+		#COMMAND codesign -f -v --deep -s 'Mac Developer: Thomas Coffy' bin/Ascograph.app  --all-architectures
 )
 
 
