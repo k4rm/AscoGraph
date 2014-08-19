@@ -425,6 +425,7 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 		Gfwd* g = dynamic_cast<Gfwd*>(e->gfwd);
 		AtomicSequence* as = dynamic_cast<AtomicSequence*>(e->gfwd);
 		Message* m = dynamic_cast<Message*>(e->gfwd);
+		AssignmentAction* asa = dynamic_cast<AssignmentAction*>(e->gfwd);
 		Curve* c = dynamic_cast<Curve*>(e->gfwd);
 		Lfwd* l = dynamic_cast<Lfwd*>(e->gfwd);
 		KillAction* k = dynamic_cast<KillAction*>(e->gfwd);
@@ -440,6 +441,8 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 
 		} */else if (m) { // can be message
 			ag = new ActionMessage(beatnum, d, m, e);
+		} else if (asa) { // can be an assignment action
+			ag = new ActionMessage(beatnum, d, asa, e);
 		} else if (k) { // can be kill/abort
 			ag = new ActionMessage(beatnum, d, k, e);
 		} else if (c) { // can be a curve
@@ -1529,6 +1532,7 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 	// can be group
 	Gfwd *g = dynamic_cast<Gfwd*>(tmpa);
 	Message *m = dynamic_cast<Message*>(tmpa);
+	AssignmentAction *asa = dynamic_cast<AssignmentAction*>(tmpa);
 	Curve* c = dynamic_cast<Curve*>(tmpa);
 	Lfwd* l = dynamic_cast<Lfwd*>(tmpa);
 	KillAction* k = dynamic_cast<KillAction*>(tmpa);
@@ -1540,6 +1544,9 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 	} else if (m) { // can be message
 		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [message] ("<<action->label()<<")" << endl;
 		ag = new ActionMessage(beatnum, d, m, e); 
+	} else if (asa) { // can be an assignment action
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [assignment] ("<<action->label()<<")" << endl;
+		ag = new ActionMessage(beatnum, d, asa, e);
 	} else if (k) { // can be a kill/abort
 		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [kill] ("<<action->label()<<")" << endl;
 		ag = new ActionMessage(beatnum, d, k, e);
@@ -1881,6 +1888,8 @@ void ActionCurve::split()
 		string newscore;
 		[actionTrack->mAntescofog->editor getEditorContent:newscore];
 		cout << "split: newscore = " << newscore << endl;
+		cout << "split: label size= " << label.size() << endl;
+		cout << "split: label = " << label << endl;
 		ofxAntescofog* fog = actionTrack->mAntescofog;
 		if (((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore, fog->mScore_filename))
 			actionTrack->show(label);

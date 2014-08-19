@@ -3,6 +3,7 @@ BPM 60
 
 NOTE C2 1
 NOTE C2 2
+	$yo := 3
 GROUP Solo
 		{
 			pouet tpoeut
@@ -29,34 +30,29 @@ GROUP Solo
 			3/2 solo_num_ech 7  ; <----- radio
 			solo_PlayEch start
 */
-Curve __anonymous24_curve  @Action :=
+Curve __anonymous1040_curve  @Action :=
         {
-            plot $NOW $x $y $z
-        }
+            plot $NOW $x $y $z	; tight=0 loose=0 no tempo_expr
+        }	; tight=0 loose=0 no tempo_expr
 {
     $x
     {
-          { 2 } @type "linear"
-        1 { 4 } @type "linear"
+           { 2 } @type "linear"
+        1  { 4 } @type "linear"
         1 { 1.4 }
-    }
-    $j
-    {
-          { 2 } @type "linear"
-        1 { 1.5 } @type "linear"
-        1 { 1.2 }
     }
     $y
     {
-          { 5 } @type "linear"
-        3 { 1.4 }
+           { 5 } @type "linear"
+        3 { 0.3 }
     }
     $z
     {
-          { 4 } @type "linear"
+           { 4 } @type "linear"
         3 { 7 }
     }
 }
+
 
 
 Curve slider  @Grain := 0.05 s, @Action :=
@@ -75,6 +71,36 @@ Curve slider  @Grain := 0.05 s, @Action :=
 
 
 }
+
+
+
+NOTE A1 10
+
+NOTE A1 10
+Curve __anonymous187_curve  @Action :=
+        {
+            plot $NOW $x $y $z	; tight=0 loose=0 no tempo_expr
+        }	; tight=0 loose=0 no tempo_expr
+{
+    $x
+    {
+           { 2 } @type "linear"
+        1  { 4 } @type "linear"
+        1 { 1.4 }
+    }
+    $y
+    {
+           { 5 } @type "linear"
+        3 { 0.3 }
+    }
+    $z
+    {
+           { 4 } @type "linear"
+        3 { 7 }
+    }
+}
+
+
 
 
 

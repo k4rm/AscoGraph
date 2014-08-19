@@ -2227,9 +2227,9 @@ void ofxAntescofog::gotMessage(ofMessage msg){
 
 void ofxAntescofog::draw_error()
 {
-    //ofSetColor(0, 0, 0, 100);
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
-    ofSetColor(255, 255, 255, 240);
+    //ofSetColor(255, 255, 255, 240);
+    ofSetColor(0, 0, 0, 255);
 
     guiError->draw();
 
@@ -2246,7 +2246,8 @@ void ofxAntescofog::draw_error()
 		    c = 0;
 	    err2 += err[i];
     }
-    ofSetColor(255, 255, 255, 200);
+    //ofSetColor(255, 255, 255, 200);
+    ofSetColor(0, 0, 0, 255);
     ofFill();
     ofSetDrawBitmapMode(OF_BITMAPMODE_SIMPLE);
     ofDrawBitmapString(err2, 50, 300);
