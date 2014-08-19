@@ -549,8 +549,28 @@ static const char * box_xpm[] = {
 }
 */
 
-- (void) searchNext: (string) str
+- (void) searchText: (string) str backwards:(bool)pBackWards
 {
+	NSString *text = [NSString stringWithUTF8String:str.c_str() ];
+	cout << "CodeEditor: will search text: " << str.c_str() << endl;
+
+	bool res = [mEditor findAndHighlightText: text
+		matchCase: bMatchCase
+		wholeWord: NO
+		scrollTo: YES
+		wrap: bWrapMode
+		//backwards: YES];
+		backwards: pBackWards];
+
+	//if (!res) return;
+	long matchStart = [mEditor getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
+	long matchEnd = [mEditor getGeneralProperty: SCI_GETSELECTIONEND parameter: 0];
+	[mEditor setGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd];
+	cout << "searchText: " << str << "-->"<< matchStart<< ":" << matchEnd << endl;
+	//[ self showLine:matchStart lineb:matchEnd ];
+
+	//if ([[searchField stringValue] isEqualToString: @"XX"]) [self showAutocompletion];
+
   int searchFlags= 0;
   /*if (matchCase)
     searchFlags |= SCFIND_MATCHCASE;
@@ -571,7 +591,7 @@ static const char * box_xpm[] = {
 	      */
 }
 
--(int) searchNreplaceText:(string)str str2:(string)str2
+-(int) searchNreplaceText:(string)str str2:(string)str2 doAll:(bool)pDoAll
 {
 	NSString *text1 = [NSString stringWithUTF8String:str.c_str() ];
 	NSString *text2 = [NSString stringWithUTF8String:str2.c_str() ];
@@ -581,7 +601,7 @@ static const char * box_xpm[] = {
 			    	        byText: text2
 				     matchCase: bMatchCase
 				     wholeWord: NO
-					 doAll: YES];
+					 doAll: pDoAll];
 	cout << "searchNreplace Text: res:" << res << endl;
 	return res;
 }

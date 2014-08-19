@@ -97,13 +97,21 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	}
 }
 /* simple trampolines for signaling click events to the non-ObjC object ofxAntescofog */
--(void)findText_pressed
+-(void)findNextText_pressed
 {
-	if (fog) fog->findText_pressed();
+	if (fog) fog->findNextText_pressed();
+}
+-(void)findPrevText_pressed
+{
+	if (fog) fog->findPrevText_pressed();
 }
 -(void)replaceText_pressed
 {
 	if (fog) fog->replaceText_pressed();
+}
+-(void)replaceAllText_pressed
+{
+	if (fog) fog->replaceAllText_pressed();
 }
 @end
 
@@ -124,7 +132,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 }
 @end
 
-void ofxAntescofog::findText_pressed() {
+void ofxAntescofog::findPrevText_pressed() {
 	NSString *nsstr = [mFindTextField stringValue]; 
 	string str([nsstr UTF8String]);
 
@@ -132,7 +140,19 @@ void ofxAntescofog::findText_pressed() {
 		cout << "findText_pressed: going to find string: [ " << str << " ]" << endl;
 		[editor setMatchCase:[mBtnFindMatchCase state]];
 		[editor setWrapMode:[mBtnFindWrapMode state]];
-		[ editor searchText:str ];
+		[ editor searchText:str backwards:YES ];
+	}
+}
+
+void ofxAntescofog::findNextText_pressed() {
+	NSString *nsstr = [mFindTextField stringValue]; 
+	string str([nsstr UTF8String]);
+
+	if (str.size()) {
+		cout << "findText_pressed: going to find string: [ " << str << " ]" << endl;
+		[editor setMatchCase:[mBtnFindMatchCase state]];
+		[editor setWrapMode:[mBtnFindWrapMode state]];
+		[ editor searchText:str backwards:NO];
 	}
 }
 
@@ -147,7 +167,22 @@ void ofxAntescofog::replaceText_pressed() {
 		cout << "replaceText_pressed: going to replace string: [ " << str << " ] with [ " << str2 << " ]" << endl;
 		[editor setMatchCase:[mBtnFindMatchCase state]];
 		[editor setWrapMode:[mBtnFindWrapMode state]];
-		[ editor searchNreplaceText:str str2:str2 ];
+		[ editor searchNreplaceText:str str2:str2 doAll:NO ];
+	}
+}
+
+void ofxAntescofog::replaceAllText_pressed() {
+	NSString *nsstr = [mFindTextField stringValue]; 
+	string str([nsstr UTF8String]);
+
+	NSString *nsstr2 = [mReplaceTextField stringValue]; 
+	string str2([nsstr2 UTF8String]);
+
+	if (str.size()) {
+		cout << "replaceText_pressed: going to replace string: [ " << str << " ] with [ " << str2 << " ]" << endl;
+		[editor setMatchCase:[mBtnFindMatchCase state]];
+		[editor setWrapMode:[mBtnFindWrapMode state]];
+		[ editor searchNreplaceText:str str2:str2 doAll:YES ];
 	}
 }
 
@@ -156,7 +191,7 @@ void ofxAntescofog::create_Find_and_Replace_window() {
 	bShowOSCSetup = false;
 	bShowFind = true;
 	//if (mFindWindow) [mFindWindow release];
-	int mFindWindow_w = 500, mFindWindow_h = 180;
+	int mFindWindow_w = 550, mFindWindow_h = 180;
 	// window
 	mFindWindow = [[NSFindWindow alloc] initWithContentRect:NSMakeRect(0, 0, mFindWindow_w, mFindWindow_h)
 		styleMask:NSTitledWindowMask|NSClosableWindowMask backing:NSBackingStoreBuffered defer:NO];
@@ -200,7 +235,7 @@ void ofxAntescofog::create_Find_and_Replace_window() {
 	mFindTextField = tf;
 	[tf release];
 
-	// Find Button
+	// Find Prev Button
 	NSButton *btn = [[NSButton alloc] initWithFrame:NSMakeRect(340, mFindWindow_h-50-5, 100,24)];
 	[[btn cell] setControlSize:NSRegularControlSize];
 	[btn setButtonType:NSMomentaryPushInButton];
@@ -211,9 +246,26 @@ void ofxAntescofog::create_Find_and_Replace_window() {
 	[[btn cell] setControlTint:NSBlueControlTint];
 	[btn setEnabled:YES];
 	[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
-	[btn setTitle:@"Find"];
+	[btn setTitle:@"Find Prev"];
 	[btn setTarget:mFindWindow];
-	[btn setAction:@selector(findText_pressed)];
+	[btn setAction:@selector(findPrevText_pressed)];
+	[[mFindWindow contentView] addSubview: btn];
+	[btn release];
+
+	// Find Next Button
+	btn = [[NSButton alloc] initWithFrame:NSMakeRect(440, mFindWindow_h-50-5, 100,24)];
+	[[btn cell] setControlSize:NSRegularControlSize];
+	[btn setButtonType:NSMomentaryPushInButton];
+	[btn setBordered:YES];
+	[btn setBezelStyle:NSRoundedBezelStyle];
+	[btn setImagePosition:NSNoImage];
+	[btn setAlignment:NSCenterTextAlignment];
+	[[btn cell] setControlTint:NSBlueControlTint];
+	[btn setEnabled:YES];
+	[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+	[btn setTitle:@"Find Next"];
+	[btn setTarget:mFindWindow];
+	[btn setAction:@selector(findNextText_pressed)];
 	[[mFindWindow contentView] addSubview: btn];
 	[btn release];
 
@@ -254,6 +306,23 @@ void ofxAntescofog::create_Find_and_Replace_window() {
 	[btn setTitle:@"Replace"];
 	[btn setTarget:mFindWindow];
 	[btn setAction:@selector(replaceText_pressed)];
+	[[mFindWindow contentView] addSubview: btn];
+	[btn release];
+
+	// Replace All Button
+	btn = [[NSButton alloc] initWithFrame:NSMakeRect(440, mFindWindow_h-50-5-50, 100,24)];
+	[[btn cell] setControlSize:NSRegularControlSize];
+	[btn setButtonType:NSMomentaryPushInButton];
+	[btn setBordered:YES];
+	[btn setBezelStyle:NSRoundedBezelStyle];
+	[btn setImagePosition:NSNoImage];
+	[btn setAlignment:NSCenterTextAlignment];
+	[[btn cell] setControlTint:NSBlueControlTint];
+	[btn setEnabled:YES];
+	[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+	[btn setTitle:@"Replace All"];
+	[btn setTarget:mFindWindow];
+	[btn setAction:@selector(replaceAllText_pressed)];
 	[[mFindWindow contentView] addSubview: btn];
 	[btn release];
 

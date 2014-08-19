@@ -180,7 +180,8 @@ class AntescofoTimeline : public ofxTimeline
 	ofxAntescofog* fog;
 }
 @property (nonatomic, assign) ofxAntescofog* fog;
--(void)findText_pressed;
+-(void)findNextText_pressed;
+-(void)findPrevText_pressed;
 -(void)keyDown:(NSEvent *)theEvent;
 @end
 @interface NSFindTextField : NSTextField {
@@ -241,8 +242,10 @@ class ofxAntescofog : public ofxNSWindowApp
 		void shouldRedraw();
 		void setMouseCursorGoto(bool bState);
 		void setGotoPos(float pos);
-		void findText_pressed();
+		void findNextText_pressed();
+		void findPrevText_pressed();
 		void replaceText_pressed();
+		void replaceAllText_pressed();
 		NSFindWindow* mFindWindow;
 		
 		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
