@@ -60,6 +60,7 @@ static void CheckForKeyword(StyleContext& sc, WordList* keywordlists[], int acti
   int length = sc.LengthCurrent() + 1; // +1 for the next char
   char* s = new char[length];
   sc.GetCurrentLowered(s, length);
+
   if (keywordlists[0]->InList(s)) 
     sc.ChangeState(SCE_ANTESCOFO_MAJORKEYWORD | activeState);
   else

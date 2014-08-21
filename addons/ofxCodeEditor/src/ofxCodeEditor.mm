@@ -4,6 +4,8 @@
 #import "ScintillaCocoa.h"
 #import "InfoBar.h"
 
+#define USE_EDITOR_TABS 0
+
 static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 /*
@@ -170,6 +172,13 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		NSLog(@"autocomplete: nothing to complete.");
 }
 
+- (void) tab_pressed:(id)sender
+{
+	NSLog(@"ofxCodeEditor: -------> Tab %d pressed.", [sender tag]);
+
+
+}
+
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect {
 	NSLog(@"ofxCodeEditor: setup: %.1f, %.1f : %.1fx%.1f", rect.x, rect.y, rect.width, rect.height);
 	NSRect r;
@@ -184,7 +193,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[mEditor setScreen:[window screen]];
 
 	[mEditor setOwner:mWindow];
-	NSLog(@"ofxEditor: scintillaview allocated");
+	NSLog(@"ofxCodeEditor: scintillaview allocated");
 
 
 	[mEditor setBounds:NSMakeRect(0, 0, rect.width, rect.height)];
@@ -202,19 +211,19 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 
 	s = [glview bounds];
-	NSLog(@"ofxEditor: setup: GLView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: GLView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 	s = [glview frame];
-	NSLog(@"ofxEditor: setup: GLView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: GLView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 	s = [mEditor bounds];
-	NSLog(@"ofxEditor: setup: ScintillaView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: ScintillaView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 	s = [mEditor frame];
-	NSLog(@"ofxEditor: setup: ScintillaView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: ScintillaView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 
 
 	s = [[window contentView] bounds];
-	NSLog(@"ofxEditor: setup: window bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: window bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 	s = [[window contentView] frame];
-	NSLog(@"ofxEditor: setup: window frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: window frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 
 
 	splitView = [[NSSplitView alloc] initWithFrame:[[window contentView] frame]];
@@ -224,24 +233,97 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	//CGFloat dividerThickness = [splitView dividerThickness];
 	//[scrollview frame].origin.x += dividerThickness; [scrollview frame].size.width -= dividerThickness;
 	[splitView setDelegate:splitViewDelegate];
-	NSLog(@"ofxEditor: setup: splitview: adding glview");
+	NSLog(@"ofxCodeEditor: setup: splitview: adding glview");
 	[splitView addSubview:glview];// positioned:NSWindowAbove relativeTo:nil];
-	NSLog(@"ofxEditor: setup: splitview: adding scintillaview");
-	[splitView addSubview:mEditor]; 
+	NSLog(@"ofxCodeEditor: setup: splitview: adding scintillaview");
+
+#ifdef USE_EDITOR_TABS
+	// tabsView
+	tabsView = [[NSView alloc] initWithFrame:[mEditor frame]];
+	NSRect tf = [mEditor frame]; //tf.origin.y = tf.size.height; tf.size.height = 20;
+	[tabsView setBounds:tf];
+
+	[tabsView addSubview:mEditor];
+	[splitView addSubview:tabsView];
+#else
+	// right: direct view
+	[splitView addSubview:mEditor];
+#endif
+
+	mEditorsList.push_back(mEditor);
 
 	s = [splitView frame];
-	NSLog(@"ofxEditor: setup: splitView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: splitView frame: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 	s = [splitView bounds];
-	NSLog(@"ofxEditor: setup: splitView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
+	NSLog(@"ofxCodeEditor: setup: splitView bounds: %.1f, %.1f : %.1fx%.1f", s.origin.x, s.origin.y, s.size.width, s.size.height);
 
-	NSLog(@"ofxEditor: setup: splitviews subviews count %d, setting splitview to window contentView", [[splitView subviews] count]);
+	NSLog(@"ofxCodeEditor: setup: splitviews subviews count %d, setting splitview to window contentView", [[splitView subviews] count]);
 	[window setContentView:splitView];
-	NSLog(@"ofxEditor: setup: window subviews count %d", [[[window contentView] subviews] count]);
+	NSLog(@"ofxCodeEditor: setup: window subviews count %d", [[[window contentView] subviews] count]);
 	//[splitView release];
 
 	[self setupEditor];
 }
 
+- (void) loadFileInTab:(NSString*)insertedfile
+{
+	if (mEditorsFilenames.size() == 1) { // open tabs
+		NSLog(@"ofxCodeEditor: loadFileInTab: [%@]", insertedfile);
+		mEditorsFilenames.push_back(insertedfile);
+
+		// create space for Tab Bar
+		NSRect bounds = [mEditor bounds];
+		[mEditor setBounds:NSMakeRect(bounds.origin.x, 20, bounds.size.width, bounds.size.height)]; // XXX diminuer H
+		bounds = [mEditor bounds];
+		//NSRect frame = [mEditor frame];
+		//[mEditor setFrame:NSMakeRect(frame.origin.x, 20, frame.size.width, frame.size.height)];
+		NSButton *btn = [[NSButton alloc] initWithFrame:NSMakeRect(bounds.origin.x, [tabsView bounds].size.height, 80, 20)];
+		NSRect btnbounds = [btn bounds];
+
+		cout << "ofxCodeEditor: Editor bounds : " << bounds.origin.x << ", "<< bounds.origin.y << " - " << bounds.size.width << " x "<< bounds.size.height << endl;
+		cout << "ofxCodeEditor: button bounds : " << btnbounds.origin.x << ", "<< btnbounds.origin.y << " - " << btnbounds.size.width << " x "<< btnbounds.size.height << endl;
+
+		[[btn cell] setControlSize:NSRegularControlSize];
+		[btn setButtonType:NSMomentaryPushInButton];
+		[btn setBordered:NO];
+		[btn setBezelStyle:NSThickSquareBezelStyle];
+		[btn setImagePosition:NSNoImage];
+		[btn setAlignment:NSCenterTextAlignment];
+		//[[btn cell] setControlTint:NSBlueControlTint];
+		[btn setEnabled:YES];
+		[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+		[btn setTitle:insertedfile];
+		[btn setTarget:self];
+		[btn setTag:0];
+		[btn setAction:@selector(tab_pressed)];
+		[tabsView addSubview:btn];
+		NSRectFill([ btn bounds ]);
+	}
+
+}
+
+/*
+   Find inserted files (for example for macros) and open them in tabbed editors
+*/
+- (void) checkForInsertedFiles
+{
+	if (!editorContent) return;
+	
+	// only one file for now, a while() needs to be added
+	NSRange range = [editorContent rangeOfString:@"@insert \"" options:NSCaseInsensitiveSearch];
+	if (range.location > 0 && range.length > 0) {
+		range.location += 1;
+		range.length -= 1;
+		NSString *substring = [[editorContent substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		NSRange quoterange = [substring rangeOfString:@"\""];
+		if (quoterange.location != NSNotFound)
+		{
+			NSString *insertedfile = [substring substringToIndex:[substring length]-quoterange.location+1];
+			NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]", insertedfile);
+			[self loadFileInTab:insertedfile ];
+		}
+	}
+}
 //--------------------------------------------------------------------------------------------------
 
 typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
@@ -563,13 +645,15 @@ static const char * box_xpm[] = {
 		backwards: pBackWards];
 
 	//if (!res) return;
+#if 0
 	long matchStart = [mEditor getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
 	long matchEnd = [mEditor getGeneralProperty: SCI_GETSELECTIONEND parameter: 0];
 	[mEditor setGeneralProperty: SCI_FINDINDICATORFLASH parameter: matchStart value:matchEnd];
+	//[mEditor setGeneralProperty: SCI_FINDINDICATORSHOW parameter: matchStart value:matchEnd];
 	cout << "searchText: " << str << "-->"<< matchStart<< ":" << matchEnd << endl;
-	//[ self showLine:matchStart lineb:matchEnd ];
+	//[mEditor setGeneralProperty: SCI_FINDINDICATORHIDE parameter:nil value:nil];
+#endif
 
-	//if ([[searchField stringValue] isEqualToString: @"XX"]) [self showAutocompletion];
 
   int searchFlags= 0;
   /*if (matchCase)
@@ -605,6 +689,12 @@ static const char * box_xpm[] = {
 	cout << "searchNreplace Text: res:" << res << endl;
 	return res;
 }
+
+-(void) searchFinish
+{
+	[mEditor setGeneralProperty: SCI_FINDINDICATORHIDE parameter:nil value:nil];
+}
+
 
 - (string) getSelection
 {
@@ -664,21 +754,33 @@ static const char * box_xpm[] = {
 	//[ splitView release ];
 }
 
+- (int) tabsSize
+{
+	return mEditorsList.size();
+}
+
+- (int) tabsHeight
+{
+	return EDITOR_TAB_HEIGHT;
+}
 
 // load text
-//void ofxCodeEditor::loadFile(string filename)
 - (void) loadFile: (string) filename
 {
 	cout << "ofxCodeEditor: loadfile:" << filename << endl;
 	NSError* error = nil;
 
+	NSString* nsfilename = [NSString stringWithUTF8String:filename.c_str()];
+	mEditorsFilenames.push_back(nsfilename);
 	if (editorContent) {
 		[editorContent release];
 		editorContent = 0;
 	}
-	editorContent = [NSString stringWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]
+	cout << "ofxCodeEditor: cleared" << endl;
+	editorContent = [NSString stringWithContentsOfFile:nsfilename
 		encoding:NSUTF8StringEncoding
 		error: &error];
+	cout << "ofxCodeEditor: allocated" << endl;
 	if (error && [[error domain] isEqual: NSCocoaErrorDomain]) {
 		NSLog(@"%@", error);
 		editorContent = [NSString stringWithContentsOfFile:[[NSString alloc] initWithCString:filename.c_str()]
@@ -689,10 +791,16 @@ static const char * box_xpm[] = {
 	}
 
 
+	cout << "ofxCodeEditor: setstring" << endl;
 	[mEditor setString: editorContent];
 	if (!error)
 		[mWindow setTitle:[NSString stringWithUTF8String:filename.c_str()]];
+	cout << "ofxCodeEditor: setup" << endl;
 	[self setupEditor];
+
+#if USE_EDITOR_TABS
+	[self checkForInsertedFiles];
+#endif
 }
 
 - (void) scrollLine: (int) line
@@ -885,7 +993,6 @@ static const char * box_xpm[] = {
 // -------------------------------------------------------------------------------
 //  splitView:resizeSubviewsWithOldSize:
 //
-//  Keep the left split pane from resizing as the user moves the divider line.
 // -------------------------------------------------------------------------------
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 { 
@@ -906,6 +1013,7 @@ static const char * box_xpm[] = {
 		rightFrame.size.width = newFrame.size.width - leftFrame.size.width - dividerThickness;
 		rightFrame.size.height = newFrame.size.height;
 		rightFrame.origin.x = leftFrame.size.width + dividerThickness;
+		//rightFrame.origin.y = 20;
 		[right setFrame:rightFrame];
 	} else {
 		NSLog(@"resizeSubviewsWithOldSize: error only one view present in NSSplitView");

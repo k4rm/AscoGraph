@@ -153,6 +153,7 @@ void ofxAntescofog::findNextText_pressed() {
 		[editor setMatchCase:[mBtnFindMatchCase state]];
 		[editor setWrapMode:[mBtnFindWrapMode state]];
 		[ editor searchText:str backwards:NO];
+		[ editor searchFinish ];
 	}
 }
 
@@ -1967,12 +1968,18 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 		if (!fullTextEditor) {
 			NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
 			NSView *nsview_ = [cocoaWindow->delegate getNSView];
-			ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, ofGetHeight());
+			int h = ofGetHeight();
+			//if ([ editor tabsSize ])  // if tabs should be open, shift down the editor's view
+			//	h -= [ editor tabHeight ];
+			ofRectangle r(editor_x, 0, CONSTANT_EDITOR_VIEW_WIDTH, h);
 			[ editor setup: nswin glview:nsview_ rect:r];
 		} else {
 			NSWindow *nswin = [cocoaWindow->delegate getNSWindow]; 
 			NSView *nsview_ = [cocoaWindow->delegate getNSView];
-			ofRectangle r(0, 0, ofGetWidth(), ofGetHeight());
+			int h = ofGetHeight();
+			//if ([ editor tabsSize ]) 
+			//	h -= [ editor tabHeight ];
+			ofRectangle r(0, 0, ofGetWidth(), h);
 			[ editor setup: nswin glview:nsview_ rect:r];
 		}
 
@@ -2849,38 +2856,6 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 		timeline.enable();
 	else timelineSim.enable();
         guiBottom->enable();
-    }
-    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_FIND) {
-	    cout << "Find button hit!" << endl;
-	    ofxUILabel *l = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->getLabelWidget();
-	    if (l) {
-		    string str = l->getLabel();
-		    if (str.size()) {
-			    [ editor searchText:str ];
-			    //guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND_NEXT)->setVisible(true);
-			    //((ofxUILabelToggle*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_FIND_NEXT))->setLabelVisible(true);
-		    } else cout << "empty search string" << endl;
-	    } else { cout << "can not get search string " << endl; }
-    }
-    if(e.widget->getName() == TEXT_CONSTANT_BUTTON_REPLACE) {
-	    cout << "Replace button hit!" << endl;
-	    ofxUILabel *l = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_TEXT))->getLabelWidget();
-	    ofxUILabel *l2 = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE_TEXT))->getLabelWidget();
-	    int res = 0;
-	    if (l) {
-		    string str = l->getLabel();
-		    string str2 = l2 ? l2->getLabel() : "";
-		    if (str.size()) {
-			    res = [ editor searchNreplaceText:str str2:str2];
-			    ofxUILabel *l = ((ofxUIWidgetWithLabel*)guiFind->getWidget(TEXT_CONSTANT_BUTTON_REPLACE_NB))->getLabelWidget();
-			    l->setVisible(true);
-			    mFindReplaceOccur->setVisible(true);
-			    mFindReplaceOccur->setLabel(ofToString(res));
-			    string out;
-			    [ editor getEditorContent:out ];
-			    cout << out << endl;
-		    } else cout << "empty search string" << endl;
-	    } else { cout << "can not get search string " << endl; }
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_BACK)
 	{
