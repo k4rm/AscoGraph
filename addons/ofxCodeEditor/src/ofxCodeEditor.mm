@@ -189,6 +189,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 	mGLview = glview;
 	mWindow = window;
+	editorContent = nil;
 	mEditor = [[[ScintillaView alloc] initWithFrame:r] autorelease];
 	[mEditor setScreen:[window screen]];
 
@@ -774,10 +775,10 @@ if (result)
 
 	NSString* nsfilename = [NSString stringWithUTF8String:filename.c_str()];
 	mEditorsFilenames.push_back(nsfilename);
-	if (editorContent) {
+	/*if (editorContent) {
 		[editorContent release];
-		editorContent = 0;
-	}
+		editorContent = nil;
+	}*/
 	[self setupEditor];
 	editorContent = [NSString stringWithContentsOfFile:nsfilename
 		encoding:NSUTF8StringEncoding
@@ -1007,9 +1008,21 @@ if (result)
 		NSRect rightFrame = [right frame];
 		NSLog(@"resizeSubviewsWithOldSize 2 is good !");
 		rightFrame.size.width = newFrame.size.width - leftFrame.size.width - dividerThickness;
-		rightFrame.size.height = newFrame.size.height;
 		rightFrame.origin.x = leftFrame.size.width + dividerThickness;
+#if USE_EDITOR_TABS
+		NSView *editor = [[right subviews] objectAtIndex:0];
+		NSRect editorframe = [editor frame];
+		editorframe.size.height = newFrame.size.height - 20;
+		editorframe.origin.y = 0; //newFrame.size.height-20; // TODO
+		[editor setFrame:editorframe];
+
+		rightFrame.size.height = newFrame.size.height;
 		rightFrame.origin.y = newFrame.origin.y;
+		NSLog(@"resizeSubviewsWithOldSize: y=%.1f", newFrame.origin.y);
+#else
+		rightFrame.size.height = newFrame.size.height;
+		rightFrame.origin.y = newFrame.origin.y;
+#endif
 		[right setFrame:rightFrame];
 	} else {
 		NSLog(@"resizeSubviewsWithOldSize: error only one view present in NSSplitView");
