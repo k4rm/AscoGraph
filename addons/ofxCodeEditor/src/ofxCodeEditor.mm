@@ -9,15 +9,15 @@
 static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 /*
-@implementation MyScintillaView
+   @implementation MyScintillaView
 
-- (void)notification: (Scintilla::SCNotification*)notification
-{
-	cout << "MyScintillaView: notify " << endl;
+   - (void)notification: (Scintilla::SCNotification*)notification
+   {
+   cout << "MyScintillaView: notify " << endl;
 
-}
-@end
-*/
+   }
+   @end
+   */
 
 @implementation ofxCodeEditor
 //@synthesize delegate;
@@ -76,7 +76,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		return;
 	vector<string>::iterator i = std::unique (dic_keywords.begin(), dic_keywords.end());
 	dic_keywords.resize(i - dic_keywords.begin());
-	
+
 	if (normal_keywords) [self pushback_keywords:normal_keywords];
 	if (major_keywords) [self pushback_keywords:major_keywords];
 	if (procedure_keywords) [self pushback_keywords:procedure_keywords];
@@ -115,7 +115,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	while (pos >= 0) {
 		char ch = (char)[mEditor getGeneralProperty:SCI_GETCHARAT parameter:pos];
 		if (ch == ' ' || ch == ',' || ch == '.' || ch == '\n' || ch == '(' || ch == ')'
-		    || ch == '[' || ch ==']' || ch == '{'||  ch == '}')
+				|| ch == '[' || ch ==']' || ch == '{'||  ch == '}')
 			break;
 		prefix = ch + prefix;;
 		//NSLog(@"autocomplete: last char='%c' prefix=%s", ch, prefix.c_str());
@@ -193,8 +193,6 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[mEditor setScreen:[window screen]];
 
 	[mEditor setOwner:mWindow];
-	NSLog(@"ofxCodeEditor: scintillaview allocated");
-
 
 	[mEditor setBounds:NSMakeRect(0, 0, rect.width, rect.height)];
 
@@ -237,7 +235,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[splitView addSubview:glview];// positioned:NSWindowAbove relativeTo:nil];
 	NSLog(@"ofxCodeEditor: setup: splitview: adding scintillaview");
 
-#ifdef USE_EDITOR_TABS
+#if USE_EDITOR_TABS
 	// tabsView
 	tabsView = [[NSView alloc] initWithFrame:[mEditor frame]];
 	NSRect tf = [mEditor frame]; //tf.origin.y = tf.size.height; tf.size.height = 20;
@@ -280,7 +278,11 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		NSButton *btn = [[NSButton alloc] initWithFrame:NSMakeRect(bounds.origin.x, [tabsView bounds].size.height, 80, 20)];
 		NSRect btnbounds = [btn bounds];
 
+		NSRect frame = [mEditor frame];
+		NSRect btnframe = [btn frame];
+		cout << "ofxCodeEditor: Editor frame : " << frame.origin.x << ", "<< frame.origin.y << " - " << frame.size.width << " x "<< frame.size.height << endl;
 		cout << "ofxCodeEditor: Editor bounds : " << bounds.origin.x << ", "<< bounds.origin.y << " - " << bounds.size.width << " x "<< bounds.size.height << endl;
+		cout << "ofxCodeEditor: button frame : " << btnframe.origin.x << ", "<< btnframe.origin.y << " - " << btnframe.size.width << " x "<< btnframe.size.height << endl;
 		cout << "ofxCodeEditor: button bounds : " << btnbounds.origin.x << ", "<< btnbounds.origin.y << " - " << btnbounds.size.width << " x "<< btnbounds.size.height << endl;
 
 		[[btn cell] setControlSize:NSRegularControlSize];
@@ -304,11 +306,11 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 /*
    Find inserted files (for example for macros) and open them in tabbed editors
-*/
+   */
 - (void) checkForInsertedFiles
 {
-	if (!editorContent) return;
-	
+	//if (!editorContent) return;
+
 	// only one file for now, a while() needs to be added
 	NSRange range = [editorContent rangeOfString:@"@insert \"" options:NSCaseInsensitiveSearch];
 	if (range.location > 0 && range.length > 0) {
@@ -472,9 +474,9 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 
 
 	/* TODO try to register for dragndrop
-	[[[splitView subviews] objectAtIndex:1] registerForDraggedTypes: [NSArray arrayWithObjects:
-                                   NSStringPboardType, ScintillaRecPboardType, NSFilenamesPboardType, nil]];
-	 */
+	   [[[splitView subviews] objectAtIndex:1] registerForDraggedTypes: [NSArray arrayWithObjects:
+	   NSStringPboardType, ScintillaRecPboardType, NSFilenamesPboardType, nil]];
+	   */
 
 	//[mEditor setGeneralProperty: SCI_AUTOCCOMPLETE parameter:0 value:0];
 	[self setAutoCompleteOn];
@@ -488,7 +490,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (NSDragOperation) draggingEntered: (id <NSDraggingInfo>) sender
 {
 	NSLog(@"CodeEditor: dragginEntered");
- // return mOwner.backend->DraggingEntered(sender);
+	// return mOwner.backend->DraggingEntered(sender);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -499,7 +501,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (NSDragOperation) draggingUpdated: (id <NSDraggingInfo>) sender
 {
 	NSLog(@"CodeEditor: draggingU");
-  //return mOwner.backend->DraggingUpdated(sender);
+	//return mOwner.backend->DraggingUpdated(sender);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -510,7 +512,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (void) draggingExited: (id <NSDraggingInfo>) sender
 {
 	NSLog(@"CodeEditor: draggingE");
-  //mOwner.backend->DraggingExited(sender);
+	//mOwner.backend->DraggingExited(sender);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -518,7 +520,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (BOOL) prepareForDragOperation: (id <NSDraggingInfo>) sender
 {
 	NSLog(@"CodeEditor: drag prep");
-  //return YES;
+	//return YES;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -526,7 +528,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (BOOL) performDragOperation: (id <NSDraggingInfo>) sender
 {
 	NSLog(@"CodeEditor: drag perf");
-  //return mOwner.backend->PerformDragOperation(sender);  
+	//return mOwner.backend->PerformDragOperation(sender);  
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -537,7 +539,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (NSDragOperation) draggingSourceOperationMaskForLocal: (BOOL) flag
 {
 	NSLog(@"CodeEditor: drag sour");
- // return NSDragOperationCopy | NSDragOperationMove | NSDragOperationDelete;
+	// return NSDragOperationCopy | NSDragOperationMove | NSDragOperationDelete;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -549,7 +551,7 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 - (void) draggedImage: (NSImage *) image endedAt: (NSPoint) screenPoint operation: (NSDragOperation) operation
 {
 	NSLog(@"CodeEditor: drag im");
-  //if (operation == NSDragOperationDelete) mOwner.backend->WndProc(SCI_CLEAR, 0, 0);
+	//if (operation == NSDragOperationDelete) mOwner.backend->WndProc(SCI_CLEAR, 0, 0);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -559,20 +561,20 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
  */
 - (void) concludeDragOperation: (id <NSDraggingInfo>) sender
 {
-  // Clean up is the same as if we are no longer the drag target.
-  //mOwner.backend->DraggingExited(sender);
+	// Clean up is the same as if we are no longer the drag target.
+	//mOwner.backend->DraggingExited(sender);
 }
 
 
 
 /*j
 
-- (void) notify(intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam)
-{
-	cout << "CodeEditor: notify " << iMessage << endl;
+  - (void) notify(intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam)
+  {
+  cout << "CodeEditor: notify " << iMessage << endl;
 
 
-	//[mEditor setGeneralProperty: SCI_AUTOCCOMPLETE parameter: 0 value: 0];
+//[mEditor setGeneralProperty: SCI_AUTOCCOMPLETE parameter: 0 value: 0];
 }
 */
 
@@ -608,28 +610,28 @@ static const char * box_xpm[] = {
 	".........   "};
 
 /*
-- (void) showAutocompletion
-{
-	const char *words = normal_keywords;
-	[mEditor setGeneralProperty: SCI_AUTOCSETIGNORECASE parameter: 1 value:0];
-	[mEditor setGeneralProperty: SCI_REGISTERIMAGE parameter: 1 value:(sptr_t)box_xpm];
-	const int imSize = 12;
-	[mEditor setGeneralProperty: SCI_RGBAIMAGESETWIDTH parameter: imSize value:0];
-	[mEditor setGeneralProperty: SCI_RGBAIMAGESETHEIGHT parameter: imSize value:0];
-	char image[imSize * imSize * 4];
-	for (size_t y = 0; y < imSize; y++) {
-		for (size_t x = 0; x < imSize; x++) {
-			char *p = image + (y * imSize + x) * 4;
-			p[0] = 0xFF;
-			p[1] = 0xA0;
-			p[2] = 0;
-			p[3] = x * 23;
-		}
-	}
-	[mEditor setGeneralProperty: SCI_REGISTERRGBAIMAGE parameter: 2 value:(sptr_t)image];
-	[mEditor setGeneralProperty: SCI_AUTOCSHOW parameter: 0 value:(sptr_t)words];
-}
-*/
+   - (void) showAutocompletion
+   {
+   const char *words = normal_keywords;
+   [mEditor setGeneralProperty: SCI_AUTOCSETIGNORECASE parameter: 1 value:0];
+   [mEditor setGeneralProperty: SCI_REGISTERIMAGE parameter: 1 value:(sptr_t)box_xpm];
+   const int imSize = 12;
+   [mEditor setGeneralProperty: SCI_RGBAIMAGESETWIDTH parameter: imSize value:0];
+   [mEditor setGeneralProperty: SCI_RGBAIMAGESETHEIGHT parameter: imSize value:0];
+   char image[imSize * imSize * 4];
+   for (size_t y = 0; y < imSize; y++) {
+   for (size_t x = 0; x < imSize; x++) {
+   char *p = image + (y * imSize + x) * 4;
+   p[0] = 0xFF;
+   p[1] = 0xA0;
+   p[2] = 0;
+   p[3] = x * 23;
+   }
+   }
+   [mEditor setGeneralProperty: SCI_REGISTERRGBAIMAGE parameter: 2 value:(sptr_t)image];
+   [mEditor setGeneralProperty: SCI_AUTOCSHOW parameter: 0 value:(sptr_t)words];
+   }
+   */
 
 - (void) searchText: (string) str backwards:(bool)pBackWards
 {
@@ -655,24 +657,24 @@ static const char * box_xpm[] = {
 #endif
 
 
-  int searchFlags= 0;
-  /*if (matchCase)
-    searchFlags |= SCFIND_MATCHCASE;
-  if (wholeWord)
-    searchFlags |= SCFIND_WHOLEWORD;
-    */
+	int searchFlags= 0;
+	/*if (matchCase)
+	  searchFlags |= SCFIND_MATCHCASE;
+	  if (wholeWord)
+	  searchFlags |= SCFIND_WHOLEWORD;
+	  */
 
-  /*
-  NSString *text = [NSString stringWithUTF8String:str.c_str() ];
+	/*
+	   NSString *text = [NSString stringWithUTF8String:str.c_str() ];
 
-      bool result = [ mEditor directCall:mEditor
-                                 message: SCI_SEARCHNEXT
-                                  wParam: searchFlags
-                                  lParam: (sptr_t) text];
+	   bool result = [ mEditor directCall:mEditor
+message: SCI_SEARCHNEXT
+wParam: searchFlags
+lParam: (sptr_t) text];
 
-      if (result)
-	      [self setGeneralProperty: SCI_SCROLLCARET value: 0];
-	      */
+if (result)
+[self setGeneralProperty: SCI_SCROLLCARET value: 0];
+*/
 }
 
 -(int) searchNreplaceText:(string)str str2:(string)str2 doAll:(bool)pDoAll
@@ -682,10 +684,10 @@ static const char * box_xpm[] = {
 	cout << "CodeEditor: will searchNreplace for text: " << str << " with text:" << str2 << endl;
 
 	int res = [ mEditor findAndReplaceText: text1
-			    	        byText: text2
-				     matchCase: bMatchCase
-				     wholeWord: NO
-					 doAll: pDoAll];
+		byText: text2
+		matchCase: bMatchCase
+		wholeWord: NO
+		doAll: pDoAll];
 	cout << "searchNreplace Text: res:" << res << endl;
 	return res;
 }
@@ -729,12 +731,12 @@ static const char * box_xpm[] = {
 	cout << "CodeEditor: will search for text: " << str.c_str() << endl;
 
 	bool res = [mEditor findAndHighlightText: text
-			matchCase: bMatchCase
-			wholeWord: NO
-			scrollTo: YES
-			wrap: bWrapMode
-			//backwards: YES];
-			backwards: NO];
+		matchCase: bMatchCase
+		wholeWord: NO
+		scrollTo: YES
+		wrap: bWrapMode
+		//backwards: YES];
+		backwards: NO];
 
 	//if (!res) return;
 	long matchStart = [mEditor getGeneralProperty: SCI_GETSELECTIONSTART parameter: 0];
@@ -776,11 +778,10 @@ static const char * box_xpm[] = {
 		[editorContent release];
 		editorContent = 0;
 	}
-	cout << "ofxCodeEditor: cleared" << endl;
+	[self setupEditor];
 	editorContent = [NSString stringWithContentsOfFile:nsfilename
 		encoding:NSUTF8StringEncoding
 		error: &error];
-	cout << "ofxCodeEditor: allocated" << endl;
 	if (error && [[error domain] isEqual: NSCocoaErrorDomain]) {
 		NSLog(@"%@", error);
 		editorContent = [NSString stringWithContentsOfFile:[[NSString alloc] initWithCString:filename.c_str()]
@@ -789,14 +790,9 @@ static const char * box_xpm[] = {
 		if (error && [[error domain] isEqual: NSCocoaErrorDomain])
 			NSLog(@"%@", error);
 	}
-
-
-	cout << "ofxCodeEditor: setstring" << endl;
 	[mEditor setString: editorContent];
 	if (!error)
 		[mWindow setTitle:[NSString stringWithUTF8String:filename.c_str()]];
-	cout << "ofxCodeEditor: setup" << endl;
-	[self setupEditor];
 
 #if USE_EDITOR_TABS
 	[self checkForInsertedFiles];
@@ -1013,7 +1009,7 @@ static const char * box_xpm[] = {
 		rightFrame.size.width = newFrame.size.width - leftFrame.size.width - dividerThickness;
 		rightFrame.size.height = newFrame.size.height;
 		rightFrame.origin.x = leftFrame.size.width + dividerThickness;
-		//rightFrame.origin.y = 20;
+		rightFrame.origin.y = newFrame.origin.y;
 		[right setFrame:rightFrame];
 	} else {
 		NSLog(@"resizeSubviewsWithOldSize: error only one view present in NSSplitView");
