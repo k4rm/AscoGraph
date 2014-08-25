@@ -28,7 +28,7 @@
     NSView*		tabsView;
     ScintillaView*	mEditor; // current tab
     vector<ScintillaView*> mEditorsList; // tabs list
-    vector<NSString*>	mEditorsFilenames;
+    vector<string>	mEditorsFilenames;
     string		mFilePath;
     vector<NSButton*>	mTabButtons;
     int mCurrentTabEditor;
@@ -87,6 +87,7 @@
 - (int) tabsSize;
 - (int) tabsHeight;
 - (void) tab_pressed:(id)sender;
+- (string) tab_get_filename;
 //- (void) notify(intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
 //- (void)notification: (Scintilla::SCNotification*)notification;
 

@@ -4385,7 +4385,7 @@ void Editor::StartAutoComplete() {
 
 void Editor::NotifyChar(int ch) {
 	static string laststring;
-	printf("Editor::NotifyChar: %d\n", ch);
+	//printf("Editor::NotifyChar: %d\n", ch);
 	if (ch == ' ' || ch == ',' || ch == '.' || ch == '\n' || ch == '(' || ch == ')' || ch == '[' || ch ==']' || ch == '{'||  ch == '}') {
 		laststring.clear();
 		SCNotification scn = {0};

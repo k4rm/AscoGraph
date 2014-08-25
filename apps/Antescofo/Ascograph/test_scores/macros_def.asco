@@ -16,6 +16,9 @@
 	$X*60.0/$RT_TEMPO
 }
 
+; PUTAIN
+
+
 ; second to beat
 @FUN_DEF s2b(X) {
 	$RT_TEMPO*$X/60.

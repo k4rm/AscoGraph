@@ -73,7 +73,7 @@ void ScintillaBase::AddCharUTF(char *s, unsigned int len, bool treatAsDBCS) {
 	if (!isFillUp) {
 		Editor::AddCharUTF(s, len, treatAsDBCS);
 	}
-	cout << "ScintillaBase::AddCharUTF: " << ac.Active() << endl;
+	//cout << "ScintillaBase::AddCharUTF: " << ac.Active() << endl;
 	if (ac.Active()) {
 		AutoCompleteCharacterAdded(s[0]);
 		// For fill ups add the character after the autocompletion has

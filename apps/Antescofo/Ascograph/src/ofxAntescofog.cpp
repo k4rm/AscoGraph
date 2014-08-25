@@ -780,9 +780,7 @@ string ofxAntescofog::getApplicationSupportSettingFile() {
 void ofxAntescofog::populateOpenRecentMenu() {
 	static bool created = false;
 	if (mRecentFiles.size()) {
-		for (int i = 0; i < mRecentFiles.size(); i++) {
-			cout << "Recent File : " << mRecentFiles[i] << endl;
-		}
+		//for (int i = 0; i < mRecentFiles.size(); i++) cout << "Recent File : " << mRecentFiles[i] << endl;
 		NSMenuItem* openRecent = [mFileMenu itemWithTag:INT_CONSTANT_BUTTON_OPENRECENT];
 		NSMenu *mysubmenu;
 		if (openRecent) {
@@ -2414,12 +2412,13 @@ void ofxAntescofog::saveScore(bool stopSimu) {
 		[ editor getEditorContent:s ];
 		if (!s.empty()) {
 			// save and try to parse
-			cout << "Saving score: " << mScore_filename << endl;
+			string scorefilename = [ editor tab_get_filename ];
+			cout << "Saving score: " << scorefilename << endl;
 			ofstream outfile;
-			outfile.open (mScore_filename.c_str());
+			outfile.open (scorefilename.c_str());
 			outfile << s;
 			outfile.close();
-			loadScore(mScore_filename, false);
+			loadScore(mScore_filename, true);
 		}
 	}
 
@@ -2431,11 +2430,12 @@ bool ofxAntescofog::edited() {
 	[ editor getEditorContent:editorcontent ];
 
 	string filecontent;
+	string scorefilename = [ editor tab_get_filename ];
 	ifstream file;
-	file.open (mScore_filename.c_str(), ios::ate);
+	file.open (scorefilename.c_str(), ios::ate);
 	int fsize;
 	fsize = (int) file.tellg();
-	cout << "file: " << mScore_filename << " fsize=" << fsize << endl;
+	cout << "file: " << scorefilename << " fsize=" << fsize << endl;
 	file.seekg (0, ios::beg);
 	if (fsize <= 0)
 		return false;

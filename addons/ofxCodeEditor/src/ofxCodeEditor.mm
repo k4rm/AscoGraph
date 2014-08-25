@@ -262,8 +262,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 {
 	if (mEditorsFilenames.size() == 1) { // open tabs
 		NSLog(@"ofxCodeEditor: loadFileInTab: [%@]", insertedfile);
-		// TODO ofFilePath::getBaseName() if the filename is an absolute path
-		mEditorsFilenames.push_back(insertedfile);
+		mEditorsFilenames.push_back([insertedfile UTF8String]);
 
 		NSError* error = nil;
 		NSString *insertedfile_fullpath = [[NSString stringWithUTF8String:mFilePath.c_str()] stringByAppendingString:insertedfile];
@@ -287,15 +286,13 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		bounds = [mEditor bounds];
 		NSRect frame = [mEditor frame];
 
-		[self tabCreate:insertedfile index:1];
+		[self tabCreate:[insertedfile UTF8String] index:1];
 
 		// create editor instance for this tab
 		ScintillaView* anEditor = [[[ScintillaView alloc] initWithFrame:frame] autorelease];
 		[anEditor setScreen:[mWindow screen]];
 
 		[anEditor setOwner:tabsView];
-		//[anEditor setOwner:tabsView]; // mWindow
-		//[anEditor setOwner:mWindow]; // mWindow
 
 		[anEditor setString: editorContent];
 		[anEditor setBounds:bounds];
@@ -308,9 +305,9 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 }
 
-- (void) tabCreate:(NSString*)tabname index:(int)index
+- (void) tabCreate:(string)tabname index:(int)index
 {
-	int tabsize = 140;
+	int tabsize = 180;
 
 	NSRect frame = [mEditor frame];
 	int x = frame.origin.x + index*tabsize;
@@ -336,7 +333,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	//[[btn cell] setControlTint:NSBlueControlTint];
 	[btn setEnabled:YES];
 	[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
-	[btn setTitle:tabname];
+	[btn setTitle:[NSString stringWithUTF8String:tabname.c_str()]];
 	[btn setTarget:self];
 	[btn setTag:index];
 	[btn setAction:@selector(tab_pressed:)];
@@ -359,10 +356,14 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		
 		// change current tab to color back
 		NSButton* btn = mTabButtons[mCurrentTabEditor];
-		[[btn cell] setState:NO];
+		[[btn cell] setState:YES];
 
-		NSView* viewfrom = mEditorsList[mCurrentTabEditor];
-		NSView* viewto = mEditorsList[tabnb];
+		ScintillaView* viewfrom = mEditorsList[mCurrentTabEditor];
+		ScintillaView* viewto = mEditorsList[tabnb];
+
+		// change viewto tab size 
+		[viewto setFrame:[viewfrom frame]];
+		[viewto setBounds:[viewfrom bounds]];
 
 		[viewfrom setOwner:tabsView];
 		[viewto setOwner:tabsView];
@@ -373,20 +374,18 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 		[tabsView replaceSubview:viewfrom with:viewto];
 
-		cout << "WWWWWWOOOOOOOOOOWWWWWWWWW"<< endl;
 		mEditor = mEditorsList[tabnb];
 
-		//if (tabnb != 0)
 		//[viewto release];
 		//[viewfrom release];
 		mCurrentTabEditor = tabnb;
 
 		editorContent = editorContentsList[tabnb];
-		[mWindow setTitle:mEditorsFilenames[tabnb]];
+		[mWindow setTitle:[NSString stringWithUTF8String:mEditorsFilenames[tabnb].c_str()]];
 
 		// change tab button title
 		btn = mTabButtons[tabnb];
-		[[btn cell] setState:YES];
+		[[btn cell] setState:NO];
 	}
 
 }
@@ -400,7 +399,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 	// TODO only one file for now, a while() needs to be added
 	NSRange range = [editorContent rangeOfString:@"@insert \"" options:NSCaseInsensitiveSearch];
-	if (range.location > 0 && range.length > 0) {
+	if (range.location >= 0 && range.length > 0) {
 
 		[self tabCreate:mEditorsFilenames[0] index:0];
 
@@ -410,15 +409,32 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		NSRange quoterange = [substring rangeOfString:@"\""];
 		if (quoterange.location != NSNotFound)
 		{
-			NSString *insertedfile = [substring substringToIndex:[substring length]-quoterange.location+1];
-			NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]", insertedfile);
+			NSString *insertedfile = [substring substringToIndex:quoterange.location];
+			NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]\nquoterange:%d-%d\n", insertedfile, quoterange.location, quoterange.length);
+			//NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]", insertedfile);
 			[self loadFileInTab:insertedfile];
 
+			// set all tabs to no selected except first
+			for (int i = 0; i < mTabButtons.size(); i++) {
+				NSButton* btn = mTabButtons[i];
+				[[btn cell] setState:YES];
+			}
+
 			NSButton* btn = mTabButtons[0];
-			[[btn cell] setState:YES];
+			[[btn cell] setState:NO];
 		}
 	}
 }
+
+- (string) tab_get_filename
+{
+	//cout << "tab_get_filename: mCurrentTabEditor=" << mCurrentTabEditor << " mEditorsFilenames.size()=" << mEditorsFilenames.size() << " path=" << mFilePath << endl;
+		//" et " << [ mEditorsFilenames[mCurrentTabEditor] UTF8String ]<< endl;
+	string s = mFilePath + mEditorsFilenames[mCurrentTabEditor];
+
+	return s;
+}
+
 //--------------------------------------------------------------------------------------------------
 
 typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
@@ -859,18 +875,45 @@ if (result)
 	return EDITOR_TAB_HEIGHT;
 }
 
+
 // load text
 - (void) loadFile: (string) filename
 {
 	cout << "ofxCodeEditor: loadfile:" << filename << endl;
 	NSError* error = nil;
+	mCurrentTabEditor = 0;
+
+	// clear tabs
+	bool resetframe = mTabButtons.size();
+	for (int i = 0; i < mTabButtons.size(); i++) {
+		[ mTabButtons[i] removeFromSuperview];
+	}
+	mTabButtons.clear();
+	for (int i = 1; i < mEditorsList.size(); i++) {
+		[ mEditorsList[i] removeFromSuperview];
+	}
+
+	if (mEditorsList.size() > 1) {
+		while(mEditorsList.size() > 1) [ mEditorsList.back() release ], mEditorsList.pop_back();
+		mEditor = mEditorsList[0];
+	}
+
+	if (resetframe) {
+		NSRect frame = [mEditor frame];
+		NSRect bounds = [mEditor bounds];
+		bounds.origin.y = 0;
+		[ mEditor setFrame:frame];
+		[ mEditor setBounds:bounds];
+	}
 
 	mEditorsFilenames.clear();
 	mFilePath = ofFilePath::getEnclosingDirectory(filename, false);
 
 	string justfilename = ofFilePath::getFileName(filename);
+	mEditorsFilenames.push_back(justfilename);
+
 	NSString* nsfilename = [NSString stringWithUTF8String:justfilename.c_str()];
-	mEditorsFilenames.push_back(nsfilename);
+
 	/*if (editorContent) {
 		[editorContent release];
 		editorContent = nil;
@@ -996,18 +1039,18 @@ if (result)
 }
 - (int) getNbLines
 {
-	return [mEditor getGeneralProperty: SCI_GETLINECOUNT];
+	return [mEditorsList[mCurrentTabEditor] getGeneralProperty: SCI_GETLINECOUNT];
 }
 
 
 - (int) getLenght
 {
-	return [mEditor getGeneralProperty: SCI_GETLENGTH];
+	return [mEditorsList[mCurrentTabEditor] getGeneralProperty: SCI_GETLENGTH];
 }
 
 - (void) setEditable: (bool) ed
 {
-	[mEditor setEditable:ed];
+	[mEditorsList[mCurrentTabEditor] setEditable:ed];
 }
 
 - (void) getEditorContent: (string&) content
@@ -1017,7 +1060,7 @@ if (result)
 		cout << "ofxCodeEditor : content len: " << n << endl;
 		char cstr[n];
 
-		[ScintillaView directCall:mEditor message:SCI_GETTEXT wParam:(uptr_t)(n+1) lParam:(sptr_t)cstr];
+		[ScintillaView directCall:mEditorsList[mCurrentTabEditor] message:SCI_GETTEXT wParam:(uptr_t)(n+1) lParam:(sptr_t)cstr];
 		if (cstr) {
 			//[ mEditor setGeneralProperty: SCI_SETSAVEPOINT value:0]; // mark the file saved : TODO wait until antescofo parsing is OK ?
 			content = cstr;
@@ -1108,6 +1151,7 @@ if (result)
 		rightFrame.origin.x = leftFrame.size.width + dividerThickness;
 #if USE_EDITOR_TABS
 		if ([[right subviews] count ] > 1) {
+			NSLog(@"resizeSubviewsWithOldSize: count=%d", [[right subviews] count]);
 			NSView *editor = [[right subviews] objectAtIndex:0];
 			NSRect editorframe = [editor frame];
 			editorframe.size.height = newFrame.size.height - 20;
@@ -1121,7 +1165,6 @@ if (result)
 
 			rightFrame.size.height = newFrame.size.height;
 			rightFrame.origin.y = newFrame.origin.y;
-			NSLog(@"resizeSubviewsWithOldSize: y=%.1f", newFrame.origin.y);
 		}
 #else
 		rightFrame.size.height = newFrame.size.height;
