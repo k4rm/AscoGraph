@@ -60,7 +60,7 @@ BeatCurve::~BeatCurve()
 
 
 float BeatCurve::interpolateValueForKeys(BeatKeyframe* start, BeatKeyframe* end, float sampleBeat){
-	//cout << "interpolate: " << sampleBeat << endl;; 
+	//cout << "BeatCurve: interpolateValueForKeys: sampleBeat="<<sampleBeat << " start:" << start->beat << "/" << start->value << " end:" << end->beat << "/" << end->value<< endl;
 	TweenBeatKeyframe* tweenKeyStart = (TweenBeatKeyframe*)start;
 	TweenBeatKeyframe* tweenKeyEnd = (TweenBeatKeyframe*)end;
 	return ofxTween::map(sampleBeat, tweenKeyStart->beat, tweenKeyEnd->beat, tweenKeyStart->value, tweenKeyEnd->value,
@@ -504,6 +504,7 @@ void BeatCurve::mouseReleased(ofMouseEventArgs& args, long millis){
 
 // change keyframe easing type
 void BeatCurve::changeKeyframeEasing(float beat, string type) {
+	std::transform(type.begin(), type.end(), type.begin(), ::tolower); // to_lower case
 	float dcumul = 0;//ref->parentCurve->header->beatnum;
 	int i = 0;
 	bool done = false;

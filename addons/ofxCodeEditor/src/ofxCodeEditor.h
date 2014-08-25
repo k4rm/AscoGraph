@@ -28,6 +28,7 @@
     ScintillaView*	mEditor; // current tab
     vector<ScintillaView*> mEditorsList; // tabs list
     vector<NSString*> mEditorsFilenames;
+    int mCurrentTabEditor;
     const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords, *client_keywords, *user_keywords;
     vector<string> action_keywords;
     vector<string> dic_keywords, curr_dic_keywords;
@@ -42,7 +43,7 @@
 @property (nonatomic, assign) id<ScintillaViewMyDelegate> delegate;
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect;
 - (void) die;
-- (void) setupEditor;
+- (void) setupEditor: (ScintillaView*)editor;
 - (void) showLine: (int) linea lineb: (int) lineb;
 - (void) showLine: (int) linea lineb:(int)lineb cola:(int)cola colb:(int)colb;
 - (void) setCurrentPos:(int) pos;
@@ -82,6 +83,7 @@
 - (void) setAutoCompleteOn;
 - (int) tabsSize;
 - (int) tabsHeight;
+- (void) tab_pressed:(id)sender;
 //- (void) notify(intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
 //- (void)notification: (Scintilla::SCNotification*)notification;
 

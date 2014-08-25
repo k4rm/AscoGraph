@@ -186,20 +186,23 @@ float ofxTLBeatKeyframes::sampleAtPercent(float percent){
 }
 
 float ofxTLBeatKeyframes::sampleAtBeat(float sampleBeat){
-	//cout << "ofxTLBeatKeyframes:: sampleAtBeat:" << sampleBeat << endl;
+	cout << "ofxTLBeatKeyframes:: sampleAtBeat:" << sampleBeat << endl;
 	//sampleBeat = ofClamp(sampleBeat, 0, timeline->getDurationInMilliseconds());
 
 	//edge cases
 	if(keyframes.size() == 0){
+		cout << "ofxTLBeatKeyframes:: keyframes is empty :( -> "<<  ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true) << endl;
 		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
 	}
 
 	if(sampleBeat <= keyframes[0]->beat){
+		cout << "ofxTLBeatKeyframes:: sampleBeat <= keyframes beat 0 :( -> "<<evaluateKeyframeAtBeat(keyframes[0], sampleBeat) <<  endl;
 		return evaluateKeyframeAtBeat(keyframes[0], sampleBeat);
 		//		return keyframes[0]->value;
 	}
 
 	if(sampleBeat >= keyframes[keyframes.size()-1]->beat){
+		cout << "ofxTLBeatKeyframes:: sampleBeat >= keyframes last :( --> "<< evaluateKeyframeAtBeat(keyframes[keyframes.size()-1], sampleBeat) << endl;
 		//return keyframes[keyframes.size()-1]->value;
 		return evaluateKeyframeAtBeat(keyframes[keyframes.size()-1], sampleBeat);
 	}
@@ -214,10 +217,13 @@ float ofxTLBeatKeyframes::sampleAtBeat(float sampleBeat){
 		if(keyframes[i]->beat >= sampleBeat){
 			lastKeyframeIndex = i;
 			lastSampleBeat = sampleBeat;
+			cout << "ofxTLBeatKeyframes:: sampleBeat > WTF :( --> "<< interpolateValueForKeys(keyframes[i-1], keyframes[i], sampleBeat) <<endl;
 			return interpolateValueForKeys(keyframes[i-1], keyframes[i], sampleBeat);
 		}
 	}
 	ofLog(OF_LOG_ERROR, "ofxTLBeatKeyframes --- Error condition, couldn't find keyframe for percent " + ofToString(sampleBeat));
+
+	cout << "ofxTLBeatKeyframes:: return defaultvalue --> "<< defaultValue <<endl;
 	return defaultValue;
 }
 

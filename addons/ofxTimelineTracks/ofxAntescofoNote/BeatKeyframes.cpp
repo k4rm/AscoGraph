@@ -194,33 +194,40 @@ float BeatKeyframes::sampleAtBeat(float sampleBeat){
 
 	//edge cases
 	if(keyframes.size() == 0){
+		//cout << "BeatKeyframes:: sampleAtBeat "<< sampleBeat<< " :keyframes empty" << sampleBeat << " return " << ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true) << endl;
 		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
 	}
 
 	if(sampleBeat <= keyframes[0]->beat){
+		//cout << "BeatKeyframes:: sampleAtBeat "<< sampleBeat<< " <= keyframes[0]->beat : return: evaluateKeyframeAtBeat(keyframes[0], sampleBeat)" << sampleBeat << endl;
 		return evaluateKeyframeAtBeat(keyframes[0], sampleBeat);
 		//		return keyframes[0]->value;
 	}
 
 	if(sampleBeat >= keyframes[keyframes.size()-1]->beat){
+		//cout << "BeatKeyframes:: sampleAtBeat "<< sampleBeat<< " >= keyframes[keyframes.size()-1]->beat : return " << evaluateKeyframeAtBeat(keyframes[keyframes.size()-1], sampleBeat) << endl;
 		//return keyframes[keyframes.size()-1]->value;
 		return evaluateKeyframeAtBeat(keyframes[keyframes.size()-1], sampleBeat);
 	}
 
 	//optimization for linear playback
 	int startKeyframeIndex = 1;
+	/*
 	if(sampleBeat >= lastSampleBeat){
 		startKeyframeIndex = lastKeyframeIndex;
 	}
+	*/
 
 	for(int i = startKeyframeIndex; i < keyframes.size(); i++){
 		if(keyframes[i]->beat >= sampleBeat){
 			lastKeyframeIndex = i;
 			lastSampleBeat = sampleBeat;
+			//cout << "BeatKeyframes:: sampleAtBeat "<< sampleBeat<< "  : last for: return " << interpolateValueForKeys(keyframes[i-1], keyframes[i], sampleBeat) << endl;
 			return interpolateValueForKeys(keyframes[i-1], keyframes[i], sampleBeat);
 		}
 	}
 	ofLog(OF_LOG_ERROR, "BeatKeyframes --- Error condition, couldn't find keyframe for percent " + ofToString(sampleBeat));
+	//cout << "BeatKeyframes:: sampleAtBeat "<< sampleBeat<< "  return default val: " << defaultValue << endl;
 	return defaultValue;
 }
 

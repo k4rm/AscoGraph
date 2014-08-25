@@ -4,7 +4,7 @@
 #import "ScintillaCocoa.h"
 #import "InfoBar.h"
 
-#define USE_EDITOR_TABS 0
+#define USE_EDITOR_TABS 1
 
 static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
@@ -172,13 +172,6 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		NSLog(@"autocomplete: nothing to complete.");
 }
 
-- (void) tab_pressed:(id)sender
-{
-	NSLog(@"ofxCodeEditor: -------> Tab %d pressed.", [sender tag]);
-
-
-}
-
 - (void) setup: (NSWindow*) window glview: (NSView*) glview rect: (ofRectangle&) rect {
 	NSLog(@"ofxCodeEditor: setup: %.1f, %.1f : %.1fx%.1f", rect.x, rect.y, rect.width, rect.height);
 	NSRect r;
@@ -243,6 +236,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[tabsView setBounds:tf];
 
 	[tabsView addSubview:mEditor];
+	mCurrentTabEditor = 0;
 	[splitView addSubview:tabsView];
 #else
 	// right: direct view
@@ -261,46 +255,97 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	NSLog(@"ofxCodeEditor: setup: window subviews count %d", [[[window contentView] subviews] count]);
 	//[splitView release];
 
-	[self setupEditor];
+	[self setupEditor:mEditor];
 }
 
 - (void) loadFileInTab:(NSString*)insertedfile
 {
 	if (mEditorsFilenames.size() == 1) { // open tabs
 		NSLog(@"ofxCodeEditor: loadFileInTab: [%@]", insertedfile);
+		// TODO ofFilePath::getBaseName() if the filename is an absolute path
 		mEditorsFilenames.push_back(insertedfile);
 
 		// create space for Tab Bar
 		NSRect bounds = [mEditor bounds];
 		[mEditor setBounds:NSMakeRect(bounds.origin.x, 20, bounds.size.width, bounds.size.height)]; // XXX diminuer H
 		bounds = [mEditor bounds];
-		//NSRect frame = [mEditor frame];
-		//[mEditor setFrame:NSMakeRect(frame.origin.x, 20, frame.size.width, frame.size.height)];
-		NSButton *btn = [[NSButton alloc] initWithFrame:NSMakeRect(bounds.origin.x, [tabsView bounds].size.height, 80, 20)];
-		NSRect btnbounds = [btn bounds];
-
 		NSRect frame = [mEditor frame];
-		NSRect btnframe = [btn frame];
-		cout << "ofxCodeEditor: Editor frame : " << frame.origin.x << ", "<< frame.origin.y << " - " << frame.size.width << " x "<< frame.size.height << endl;
-		cout << "ofxCodeEditor: Editor bounds : " << bounds.origin.x << ", "<< bounds.origin.y << " - " << bounds.size.width << " x "<< bounds.size.height << endl;
-		cout << "ofxCodeEditor: button frame : " << btnframe.origin.x << ", "<< btnframe.origin.y << " - " << btnframe.size.width << " x "<< btnframe.size.height << endl;
-		cout << "ofxCodeEditor: button bounds : " << btnbounds.origin.x << ", "<< btnbounds.origin.y << " - " << btnbounds.size.width << " x "<< btnbounds.size.height << endl;
 
-		[[btn cell] setControlSize:NSRegularControlSize];
-		[btn setButtonType:NSMomentaryPushInButton];
-		[btn setBordered:NO];
-		[btn setBezelStyle:NSThickSquareBezelStyle];
-		[btn setImagePosition:NSNoImage];
-		[btn setAlignment:NSCenterTextAlignment];
-		//[[btn cell] setControlTint:NSBlueControlTint];
-		[btn setEnabled:YES];
-		[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
-		[btn setTitle:insertedfile];
-		[btn setTarget:self];
-		[btn setTag:0];
-		[btn setAction:@selector(tab_pressed)];
-		[tabsView addSubview:btn];
-		NSRectFill([ btn bounds ]);
+		[self tabCreate:insertedfile index:1];
+
+		// create editor instance for this tab
+		ScintillaView* anEditor = [[[ScintillaView alloc] initWithFrame:frame] autorelease];
+		[anEditor setScreen:[mWindow screen]];
+
+		[anEditor setOwner:mWindow];
+
+		[anEditor setBounds:bounds];
+		[anEditor setAutoresizingMask:NSViewWidthSizable];
+
+		[self setupEditor:anEditor];
+		mEditorsList.push_back(anEditor);
+	}
+
+}
+
+- (void) tabCreate:(NSString*)tabname index:(int)index
+{
+	int tabsize = 140;
+
+	NSRect frame = [mEditor frame];
+	int x = frame.origin.x + index*tabsize;
+	//if (index) x += 20;
+	NSButton *btn = [[NSButton alloc] initWithFrame:NSMakeRect(x, frame.size.height - 20, tabsize, 20)];
+	frame = [mEditor frame];
+	NSRect btnbounds = [btn bounds];
+	NSRect btnframe = [btn frame];
+	NSRect bounds = [mEditor bounds];
+	cout << "ofxCodeEditor: Editor frame : " << frame.origin.x << ", "<< frame.origin.y << " - " << frame.size.width << " x "<< frame.size.height << endl;
+	cout << "ofxCodeEditor: Editor bounds : " << bounds.origin.x << ", "<< bounds.origin.y << " - " << bounds.size.width << " x "<< bounds.size.height << endl;
+	cout << "ofxCodeEditor: button frame : " << btnframe.origin.x << ", "<< btnframe.origin.y << " - " << btnframe.size.width << " x "<< btnframe.size.height << endl;
+	cout << "ofxCodeEditor: button bounds : " << btnbounds.origin.x << ", "<< btnbounds.origin.y << " - " << btnbounds.size.width << " x "<< btnbounds.size.height << endl;
+
+	[[btn cell] setControlSize:NSRegularControlSize];
+	[btn setButtonType:NSMomentaryPushInButton];
+	[btn setBordered:YES];
+	[btn setBezelStyle:NSSmallSquareBezelStyle]; //NSThickSquareBezelStyle];
+	[btn setImagePosition:NSNoImage];
+	[btn setAlignment:NSCenterTextAlignment];
+	//[[btn cell] setControlTint:NSBlueControlTint];
+	[btn setEnabled:YES];
+	[btn setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+	[btn setTitle:tabname];
+	[btn setTarget:self];
+	[btn setTag:index];
+	[btn setAction:@selector(tab_pressed:)];
+	[tabsView addSubview:btn positioned:NSWindowAbove relativeTo:mEditor];
+}
+
+
+- (void) tab_pressed:(id)sender
+{
+	int tabnb = [sender tag];
+	NSLog(@"ofxCodeEditor: -------> Tab %d pressed.", [sender tag]);
+
+	if (tabnb <= mEditorsList.size()) {
+
+		//[mEditorsList[mCurrentTabEditor] retain]; // retain the old
+
+		NSLog(@"ofxCodeEditor: -------> Editors:%d Swapping Views: %d and %d.", mEditorsList.size(), mCurrentTabEditor, tabnb);
+		//[tabsView replaceSubview:mEditorsList[mCurrentTabEditor] with:mEditorsList[tabnb]];
+		if (mCurrentTabEditor) {
+			[mEditorsList[mCurrentTabEditor] removeFromSuperview];
+		}
+		if (tabnb > 0) {
+			[tabsView addSubview:mEditorsList[tabnb]];// positioned:NSWindowAbove relativeTo:mEditor];
+		} else {
+		}
+
+		cout << "WWWWWWOOOOOOOOOOWWWWWWWWW"<< endl;
+		mEditor = mEditorsList[tabnb];
+
+		//if (tabnb == 0) [mEditorsList[mCurrentTabEditor] release]; // if we're going back the 1st tab, release
+		mCurrentTabEditor = tabnb;
 	}
 
 }
@@ -312,9 +357,12 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 {
 	//if (!editorContent) return;
 
-	// only one file for now, a while() needs to be added
+	// TODO only one file for now, a while() needs to be added
 	NSRange range = [editorContent rangeOfString:@"@insert \"" options:NSCaseInsensitiveSearch];
 	if (range.location > 0 && range.length > 0) {
+
+		[self tabCreate:mEditorsFilenames[0] index:0];
+
 		range.location += 1;
 		range.length -= 1;
 		NSString *substring = [[editorContent substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -323,7 +371,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		{
 			NSString *insertedfile = [substring substringToIndex:[substring length]-quoterange.location+1];
 			NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]", insertedfile);
-			[self loadFileInTab:insertedfile ];
+			[self loadFileInTab:insertedfile];
 		}
 	}
 }
@@ -335,16 +383,16 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 /**
  * Initialize scintilla editor (styles, colors, markers, folding etc.].
  */
-- (void) setupEditor
+- (void) setupEditor: (ScintillaView*)editor
 {  
 	editorContent = 0;
 	bMatchCase = false;
 	bWrapMode = YES;
-	[mEditor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: (sptr_t) "Antescofo"];
+	[editor setGeneralProperty: SCI_SETLEXER parameter: SCLEX_ANTESCOFO value: (sptr_t) "Antescofo"];
 	// alternatively: [mEditor setEditorProperty: SCI_SETLEXERLANGUAGE parameter: nil value: (sptr_t) "mysql"];
 
 	// Number of styles we use with this lexer.
-	[mEditor setGeneralProperty: SCI_SETSTYLEBITS value: [mEditor getGeneralProperty: SCI_GETSTYLEBITSNEEDED]];
+	[editor setGeneralProperty: SCI_SETSTYLEBITS value: [mEditor getGeneralProperty: SCI_GETSTYLEBITSNEEDED]];
 
 	// Keywords to highlight. Indices are:
 	// 0 - Major keywords (reserved keywords)
@@ -355,19 +403,19 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 	// 5 - Procedure keywords (keywords used in procedures like "begin" and "end")
 	// 6..8 - User keywords 1..3
 	if (major_keywords)
-		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 0 value: major_keywords];
+		[editor setReferenceProperty: SCI_SETKEYWORDS parameter: 0 value: major_keywords];
 	if (normal_keywords)
-		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 1 value: normal_keywords];
+		[editor setReferenceProperty: SCI_SETKEYWORDS parameter: 1 value: normal_keywords];
 	if (system_keywords)
-		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 4 value: system_keywords];
+		[editor setReferenceProperty: SCI_SETKEYWORDS parameter: 4 value: system_keywords];
 	if (procedure_keywords)
-		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 5 value: procedure_keywords];
+		[editor setReferenceProperty: SCI_SETKEYWORDS parameter: 5 value: procedure_keywords];
 	if (client_keywords)
-		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 6 value: client_keywords];
+		[editor setReferenceProperty: SCI_SETKEYWORDS parameter: 6 value: client_keywords];
 	if (user_keywords)
-		[mEditor setReferenceProperty: SCI_SETKEYWORDS parameter: 7 value: user_keywords];
+		[editor setReferenceProperty: SCI_SETKEYWORDS parameter: 7 value: user_keywords];
 
-	[mEditor setGeneralProperty: SCI_COLOURISE parameter:-1 value: 0];
+	[editor setGeneralProperty: SCI_COLOURISE parameter:-1 value: 0];
 	// Colors and styles for various syntactic elements. First the default style.
 	//[mEditor setStringProperty: SCI_STYLESETFONT parameter: STYLE_DEFAULT value: @"Helvetica"];
 	// [mEditor setStringProperty: SCI_STYLESETFONT parameter: STYLE_DEFAULT value: @"Monospac821 BT"]; // Very pleasing programmer's font.
@@ -376,99 +424,99 @@ typedef void(*SciNotifyFunc) (intptr_t windowid, unsigned int iMessage, uintptr_
 
 	//[mEditor setGeneralProperty: SCI_STYLECLEARALL parameter: 0 value: 0];	
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_DEFAULT value: [NSColor blackColor]];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_COMMENT fromHTML: @"#097BF7"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_COMMENTLINE fromHTML: @"#097BF7"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_HIDDENCOMMAND fromHTML: @"#097BF7"];
-	[mEditor setColorProperty: SCI_STYLESETBACK parameter: SCE_ANTESCOFO_HIDDENCOMMAND fromHTML: @"#F0F0F0"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_NUMBER fromHTML: @"#7F7F00"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_SQSTRING fromHTML: @"#FFAA3E"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_DEFAULT value: [NSColor blackColor]];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_COMMENT fromHTML: @"#097BF7"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_COMMENTLINE fromHTML: @"#097BF7"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_HIDDENCOMMAND fromHTML: @"#097BF7"];
+	[editor setColorProperty: SCI_STYLESETBACK parameter: SCE_ANTESCOFO_HIDDENCOMMAND fromHTML: @"#F0F0F0"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_NUMBER fromHTML: @"#7F7F00"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_SQSTRING fromHTML: @"#FFAA3E"];
 
 	// Note: if we were using ANSI quotes we would set the DQSTRING to the same color as the 
 	//       the back tick string.
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_DQSTRING fromHTML: @"#274A6D"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_DQSTRING fromHTML: @"#274A6D"];
 
 	// Keyword highlighting.
 
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_MAJORKEYWORD fromHTML: @"#007F00"];
-	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_MAJORKEYWORD value: 1];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_MAJORKEYWORD fromHTML: @"#007F00"];
+	[editor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_MAJORKEYWORD value: 1];
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_KEYWORD fromHTML: @"#FF0000"];
-	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_KEYWORD value: 1];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_KEYWORD fromHTML: @"#FF0000"];
+	[editor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_KEYWORD value: 1];
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_PROCEDUREKEYWORD fromHTML: @"#0DB01E"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_PROCEDUREKEYWORD fromHTML: @"#0DB01E"];
 	//[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_PROCEDUREKEYWORD value: 1];
 
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_VARIABLE fromHTML: @"#ff1111"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_SYSTEMVARIABLE fromHTML: @"#FF0000"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_KNOWNSYSTEMVARIABLE fromHTML: @"#0000A5"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_VARIABLE fromHTML: @"#ff1111"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_SYSTEMVARIABLE fromHTML: @"#FF0000"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_KNOWNSYSTEMVARIABLE fromHTML: @"#0000A5"];
 
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_USER1 fromHTML: @"#808080"];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_USER2 fromHTML: @"#808080"];
-	[mEditor setColorProperty: SCI_STYLESETBACK parameter: SCE_ANTESCOFO_USER2 fromHTML: @"#F0E0E0"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_USER1 fromHTML: @"#808080"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_USER2 fromHTML: @"#808080"];
+	[editor setColorProperty: SCI_STYLESETBACK parameter: SCE_ANTESCOFO_USER2 fromHTML: @"#F0E0E0"];
 
 	// The following 3 styles have no impact as we did not set a keyword list for any of them.
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_FUNCTION value: [NSColor redColor]];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_FUNCTION value: [NSColor redColor]];
 
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_IDENTIFIER value: [NSColor blackColor]];
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_QUOTEDIDENTIFIER fromHTML: @"#274A6D"];
-	[mEditor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_OPERATOR value: 1];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_IDENTIFIER value: [NSColor blackColor]];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: SCE_ANTESCOFO_QUOTEDIDENTIFIER fromHTML: @"#274A6D"];
+	[editor setGeneralProperty: SCI_STYLESETBOLD parameter: SCE_ANTESCOFO_OPERATOR value: 1];
 
 	// Line number style.
-	[mEditor setColorProperty: SCI_STYLESETFORE parameter: STYLE_LINENUMBER fromHTML: @"#F0F0F0"];
-	[mEditor setColorProperty: SCI_STYLESETBACK parameter: STYLE_LINENUMBER fromHTML: @"#808080"];
+	[editor setColorProperty: SCI_STYLESETFORE parameter: STYLE_LINENUMBER fromHTML: @"#F0F0F0"];
+	[editor setColorProperty: SCI_STYLESETBACK parameter: STYLE_LINENUMBER fromHTML: @"#808080"];
 
-	[mEditor setGeneralProperty: SCI_SETMARGINTYPEN parameter: 0 value: SC_MARGIN_NUMBER];
-	[mEditor setGeneralProperty: SCI_SETMARGINWIDTHN parameter: 0 value: 40];
+	[editor setGeneralProperty: SCI_SETMARGINTYPEN parameter: 0 value: SC_MARGIN_NUMBER];
+	[editor setGeneralProperty: SCI_SETMARGINWIDTHN parameter: 0 value: 40];
 
 	// Markers.
-	[mEditor setGeneralProperty: SCI_SETMARGINWIDTHN parameter: 1 value: 10];
+	[editor setGeneralProperty: SCI_SETMARGINWIDTHN parameter: 1 value: 10];
 
-	[mEditor setLexerProperty: @"braces.check" value: @"1"];
+	[editor setLexerProperty: @"braces.check" value: @"1"];
 
 	// Some special lexer properties.
-	[mEditor setLexerProperty: @"fold" value: @"1"];
-	[mEditor setLexerProperty: @"fold.compact" value: @"1"];
-	[mEditor setLexerProperty: @"fold.comment" value: @"1"];
-	[mEditor setLexerProperty: @"fold.preprocessor" value: @"1"];
+	[editor setLexerProperty: @"fold" value: @"1"];
+	[editor setLexerProperty: @"fold.compact" value: @"1"];
+	[editor setLexerProperty: @"fold.comment" value: @"1"];
+	[editor setLexerProperty: @"fold.preprocessor" value: @"1"];
 
 	// Folder setup.
-	[mEditor setGeneralProperty: SCI_SETMARGINWIDTHN parameter: 2 value: 16];
-	[mEditor setGeneralProperty: SCI_SETMARGINMASKN parameter: 2 value: SC_MASK_FOLDERS];
-	[mEditor setGeneralProperty: SCI_SETMARGINSENSITIVEN parameter: 2 value: 1];
-	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDEROPEN value: SC_MARK_BOXMINUS];
-	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDER value: SC_MARK_BOXPLUS];
-	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERSUB value: SC_MARK_VLINE];
-	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERTAIL value: SC_MARK_LCORNER];
-	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDEREND value: SC_MARK_BOXPLUSCONNECTED];
+	[editor setGeneralProperty: SCI_SETMARGINWIDTHN parameter: 2 value: 16];
+	[editor setGeneralProperty: SCI_SETMARGINMASKN parameter: 2 value: SC_MASK_FOLDERS];
+	[editor setGeneralProperty: SCI_SETMARGINSENSITIVEN parameter: 2 value: 1];
+	[editor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDEROPEN value: SC_MARK_BOXMINUS];
+	[editor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDER value: SC_MARK_BOXPLUS];
+	[editor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERSUB value: SC_MARK_VLINE];
+	[editor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERTAIL value: SC_MARK_LCORNER];
+	[editor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDEREND value: SC_MARK_BOXPLUSCONNECTED];
 	[mEditor setGeneralProperty: SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDEROPENMID value: SC_MARK_BOXMINUSCONNECTED];
-	[mEditor setGeneralProperty : SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERMIDTAIL value: SC_MARK_TCORNER];
+	[editor setGeneralProperty : SCI_MARKERDEFINE parameter: SC_MARKNUM_FOLDERMIDTAIL value: SC_MARK_TCORNER];
 	for (int n= 25; n < 32; ++n) // Markers 25..31 are reserved for folding.
 	{
-		[mEditor setColorProperty: SCI_MARKERSETFORE parameter: n value: [NSColor whiteColor]];
-		[mEditor setColorProperty: SCI_MARKERSETBACK parameter: n value: [NSColor blackColor]];
+		[editor setColorProperty: SCI_MARKERSETFORE parameter: n value: [NSColor whiteColor]];
+		[editor setColorProperty: SCI_MARKERSETBACK parameter: n value: [NSColor blackColor]];
 	}
 
 	// Init markers & indicators for highlighting of syntax errors.
-	[mEditor setColorProperty: SCI_INDICSETFORE parameter: 0 value: [NSColor redColor]];
-	[mEditor setGeneralProperty: SCI_INDICSETUNDER parameter: 0 value: 1];
-	[mEditor setGeneralProperty: SCI_INDICSETSTYLE parameter: 0 value: INDIC_SQUIGGLE];
+	[editor setColorProperty: SCI_INDICSETFORE parameter: 0 value: [NSColor redColor]];
+	[editor setGeneralProperty: SCI_INDICSETUNDER parameter: 0 value: 1];
+	[editor setGeneralProperty: SCI_INDICSETSTYLE parameter: 0 value: INDIC_SQUIGGLE];
 
-	[mEditor setColorProperty: SCI_MARKERSETBACK parameter: 0 fromHTML: @"#B1151C"];
+	[editor setColorProperty: SCI_MARKERSETBACK parameter: 0 fromHTML: @"#B1151C"];
 
-	[mEditor setColorProperty: SCI_SETSELBACK parameter: 1 value: [NSColor selectedTextBackgroundColor]];
+	[editor setColorProperty: SCI_SETSELBACK parameter: 1 value: [NSColor selectedTextBackgroundColor]];
 
 	// Uncomment if you wanna see auto wrapping in action.
 	//[mEditor setGeneralProperty: SCI_SETWRAPMODE parameter: SC_WRAP_WORD value: 0];
 
 	InfoBar* infoBar = [[[InfoBar alloc] initWithFrame: NSMakeRect(0, 0, 400, 0)] autorelease];
 	[infoBar setDisplay: IBShowAll];
-	[mEditor setInfoBar: infoBar top: NO];
+	[editor setInfoBar: infoBar top: NO];
 
-	[mEditor setGeneralProperty: SCI_SETTABWIDTH parameter: 4 value: 0];
+	[editor setGeneralProperty: SCI_SETTABWIDTH parameter: 4 value: 0];
 
 	intptr_t windowid;
 	//[mEditor registerNotifyCallback:windowid value:notify];
@@ -773,13 +821,15 @@ if (result)
 	cout << "ofxCodeEditor: loadfile:" << filename << endl;
 	NSError* error = nil;
 
-	NSString* nsfilename = [NSString stringWithUTF8String:filename.c_str()];
+	mEditorsFilenames.clear();
+	string justfilename = ofFilePath::getFileName(filename);
+	NSString* nsfilename = [NSString stringWithUTF8String:justfilename.c_str()];
 	mEditorsFilenames.push_back(nsfilename);
 	/*if (editorContent) {
 		[editorContent release];
 		editorContent = nil;
 	}*/
-	[self setupEditor];
+	[self setupEditor:mEditor];
 	editorContent = [NSString stringWithContentsOfFile:nsfilename
 		encoding:NSUTF8StringEncoding
 		error: &error];
@@ -1010,15 +1060,22 @@ if (result)
 		rightFrame.size.width = newFrame.size.width - leftFrame.size.width - dividerThickness;
 		rightFrame.origin.x = leftFrame.size.width + dividerThickness;
 #if USE_EDITOR_TABS
-		NSView *editor = [[right subviews] objectAtIndex:0];
-		NSRect editorframe = [editor frame];
-		editorframe.size.height = newFrame.size.height - 20;
-		editorframe.origin.y = 0; //newFrame.size.height-20; // TODO
-		[editor setFrame:editorframe];
+		if ([[right subviews] count ] > 1) {
+			NSView *editor = [[right subviews] objectAtIndex:0];
+			NSRect editorframe = [editor frame];
+			editorframe.size.height = newFrame.size.height - 20;
+			editorframe.origin.y = 0; //newFrame.size.height-20; // TODO
+			[editor setFrame:editorframe];
 
-		rightFrame.size.height = newFrame.size.height;
-		rightFrame.origin.y = newFrame.origin.y;
-		NSLog(@"resizeSubviewsWithOldSize: y=%.1f", newFrame.origin.y);
+			NSRect editorbounds = [editor bounds];
+			editorbounds.size.height = newFrame.size.height - 20;
+			editorbounds.origin.y = 0; //newFrame.size.height-20; // TODO
+			[editor setBounds:editorbounds];
+
+			rightFrame.size.height = newFrame.size.height;
+			rightFrame.origin.y = newFrame.origin.y;
+			NSLog(@"resizeSubviewsWithOldSize: y=%.1f", newFrame.origin.y);
+		}
 #else
 		rightFrame.size.height = newFrame.size.height;
 		rightFrame.origin.y = newFrame.origin.y;

@@ -2335,6 +2335,7 @@ void ActionCurve::changeKeyframeEasing(float beat, string type) {
 				if (debug_edit_curve) cout << "ofxTLAntescofoAction:: change keyframe" << endl;
 				Value* v = (Value*)s->type->is_value();
 				//StringValue *sv = dynamic_cast<StringValue*>(s->type);
+				std::transform(type.begin(), type.end(), type.begin(), ::tolower);
 				*v = StringValue(type);
 				done = true;
 				break;
