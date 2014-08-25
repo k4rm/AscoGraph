@@ -265,6 +265,22 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		// TODO ofFilePath::getBaseName() if the filename is an absolute path
 		mEditorsFilenames.push_back(insertedfile);
 
+		NSError* error = nil;
+		NSString *insertedfile_fullpath = [[NSString stringWithUTF8String:mFilePath.c_str()] stringByAppendingString:insertedfile];
+
+		editorContent = [NSString stringWithContentsOfFile:insertedfile_fullpath
+			encoding:NSUTF8StringEncoding
+			error: &error];
+		if (error && [[error domain] isEqual: NSCocoaErrorDomain]) {
+			NSLog(@"%@", error);
+			editorContent = [NSString stringWithContentsOfFile:insertedfile_fullpath
+				encoding:NSMacOSRomanStringEncoding
+				error: &error];
+			if (error && [[error domain] isEqual: NSCocoaErrorDomain])
+				NSLog(@"%@", error);
+		}
+		editorContentsList.push_back(editorContent);
+
 		// create space for Tab Bar
 		NSRect bounds = [mEditor bounds];
 		[mEditor setBounds:NSMakeRect(bounds.origin.x, 20, bounds.size.width, bounds.size.height)]; // XXX diminuer H
@@ -277,10 +293,14 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		ScintillaView* anEditor = [[[ScintillaView alloc] initWithFrame:frame] autorelease];
 		[anEditor setScreen:[mWindow screen]];
 
-		[anEditor setOwner:mWindow];
+		[anEditor setOwner:tabsView];
+		//[anEditor setOwner:tabsView]; // mWindow
+		//[anEditor setOwner:mWindow]; // mWindow
 
+		[anEditor setString: editorContent];
 		[anEditor setBounds:bounds];
 		[anEditor setAutoresizingMask:NSViewWidthSizable];
+		[tabsView addSubview:anEditor positioned:NSWindowBelow relativeTo:mEditor];
 
 		[self setupEditor:anEditor];
 		mEditorsList.push_back(anEditor);
@@ -306,7 +326,9 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	cout << "ofxCodeEditor: button bounds : " << btnbounds.origin.x << ", "<< btnbounds.origin.y << " - " << btnbounds.size.width << " x "<< btnbounds.size.height << endl;
 
 	[[btn cell] setControlSize:NSRegularControlSize];
-	[btn setButtonType:NSMomentaryPushInButton];
+	//[[btn cell] setHighlightsBy:NSCellLightsByBackground];
+	//[btn setButtonType:NSMomentaryPushInButton];
+	[btn setButtonType:NSOnOffButton];
 	[btn setBordered:YES];
 	[btn setBezelStyle:NSSmallSquareBezelStyle]; //NSThickSquareBezelStyle];
 	[btn setImagePosition:NSNoImage];
@@ -318,9 +340,10 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[btn setTarget:self];
 	[btn setTag:index];
 	[btn setAction:@selector(tab_pressed:)];
-	[tabsView addSubview:btn positioned:NSWindowAbove relativeTo:mEditor];
-}
 
+	[tabsView addSubview:btn positioned:NSWindowAbove relativeTo:mEditor];
+	mTabButtons.push_back(btn);
+}
 
 - (void) tab_pressed:(id)sender
 {
@@ -329,23 +352,41 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 	if (tabnb <= mEditorsList.size()) {
 
-		//[mEditorsList[mCurrentTabEditor] retain]; // retain the old
+		NSLog(@"ofxCodeEditor: -------> Editors:%lu Swapping Views: %d and %d.", mEditorsList.size(), mCurrentTabEditor, tabnb);
 
-		NSLog(@"ofxCodeEditor: -------> Editors:%d Swapping Views: %d and %d.", mEditorsList.size(), mCurrentTabEditor, tabnb);
-		//[tabsView replaceSubview:mEditorsList[mCurrentTabEditor] with:mEditorsList[tabnb]];
-		if (mCurrentTabEditor) {
-			[mEditorsList[mCurrentTabEditor] removeFromSuperview];
-		}
-		if (tabnb > 0) {
-			[tabsView addSubview:mEditorsList[tabnb]];// positioned:NSWindowAbove relativeTo:mEditor];
-		} else {
-		}
+		//[mEditorsList[tabnb] setOwner:mWindow]; // mWindow
+		//[mEditorsList[mCurrentTabEditor] setOwner:tabsView]; // mWindow
+		
+		// change current tab to color back
+		NSButton* btn = mTabButtons[mCurrentTabEditor];
+		[[btn cell] setState:NO];
+
+		NSView* viewfrom = mEditorsList[mCurrentTabEditor];
+		NSView* viewto = mEditorsList[tabnb];
+
+		[viewfrom setOwner:tabsView];
+		[viewto setOwner:tabsView];
+
+		//if (mCurrentTabEditor != 0)
+		[viewfrom retain];
+		//[viewto retain];
+
+		[tabsView replaceSubview:viewfrom with:viewto];
 
 		cout << "WWWWWWOOOOOOOOOOWWWWWWWWW"<< endl;
 		mEditor = mEditorsList[tabnb];
 
-		//if (tabnb == 0) [mEditorsList[mCurrentTabEditor] release]; // if we're going back the 1st tab, release
+		//if (tabnb != 0)
+		//[viewto release];
+		//[viewfrom release];
 		mCurrentTabEditor = tabnb;
+
+		editorContent = editorContentsList[tabnb];
+		[mWindow setTitle:mEditorsFilenames[tabnb]];
+
+		// change tab button title
+		btn = mTabButtons[tabnb];
+		[[btn cell] setState:YES];
 	}
 
 }
@@ -372,6 +413,9 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 			NSString *insertedfile = [substring substringToIndex:[substring length]-quoterange.location+1];
 			NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]", insertedfile);
 			[self loadFileInTab:insertedfile];
+
+			NSButton* btn = mTabButtons[0];
+			[[btn cell] setState:YES];
 		}
 	}
 }
@@ -822,6 +866,8 @@ if (result)
 	NSError* error = nil;
 
 	mEditorsFilenames.clear();
+	mFilePath = ofFilePath::getEnclosingDirectory(filename, false);
+
 	string justfilename = ofFilePath::getFileName(filename);
 	NSString* nsfilename = [NSString stringWithUTF8String:justfilename.c_str()];
 	mEditorsFilenames.push_back(nsfilename);
@@ -845,6 +891,7 @@ if (result)
 	if (!error)
 		[mWindow setTitle:[NSString stringWithUTF8String:filename.c_str()]];
 
+	editorContentsList.push_back(editorContent);
 #if USE_EDITOR_TABS
 	[self checkForInsertedFiles];
 #endif

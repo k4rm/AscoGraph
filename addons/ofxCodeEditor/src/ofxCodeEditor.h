@@ -24,10 +24,13 @@
     NSView*		mGLview;
     NSWindow*		mWindow;
     NSString*		editorContent;
+    vector<NSString*>	editorContentsList;
     NSView*		tabsView;
     ScintillaView*	mEditor; // current tab
     vector<ScintillaView*> mEditorsList; // tabs list
-    vector<NSString*> mEditorsFilenames;
+    vector<NSString*>	mEditorsFilenames;
+    string		mFilePath;
+    vector<NSButton*>	mTabButtons;
     int mCurrentTabEditor;
     const char *normal_keywords, *major_keywords, *procedure_keywords, *system_keywords, *client_keywords, *user_keywords;
     vector<string> action_keywords;
