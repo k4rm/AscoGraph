@@ -372,14 +372,16 @@ void ofxAntescofog::menu_item_hit(int n)
 				break;
 			}
 		case INT_CONSTANT_BUTTON_RELOAD:
-			askToSaveScore();
-			ofxAntescofoNote->clear();
-			loadScore(mScore_filename, false);
+			if (askToSaveScore() != INT_CONSTANT_BUTTON_CANCEL_SAVE) {
+				ofxAntescofoNote->clear();
+				loadScore(mScore_filename, false);
+			}
 			break;
 		case INT_CONSTANT_BUTTON_NEW:
-			askToSaveScore();
-			ofxAntescofoNote->clear();
-			newScore();
+			if (askToSaveScore() != INT_CONSTANT_BUTTON_CANCEL_SAVE) {
+				ofxAntescofoNote->clear();
+				newScore();
+			}
 			break;
 
 		case INT_CONSTANT_BUTTON_SAVE:
@@ -727,7 +729,17 @@ void ofxAntescofog::setGotoPos(float pos) {
 static ofxAntescofog *fog;
 
 @implementation ofxCocoaDelegate (ofxAntescofogAdditions)
-	- (void)menu_item_hit:(id)sender
+- (void)gonna_terminate:(id)sender
+{
+	if (fog) {
+		if (fog->askToSaveScore() != INT_CONSTANT_BUTTON_CANCEL_SAVE) {
+			cout << "gonna_terminate: Going to leave."<<endl;
+			exit(0);
+		}
+	}
+}
+
+- (void)menu_item_hit:(id)sender
 {
 
 	NSMenuItem *i = (NSMenuItem*)sender;
@@ -741,7 +753,6 @@ static ofxAntescofog *fog;
 - (void) receiveNotification:(NSNotification *) notification
 {
 	if ([[notification name] isEqualToString:@"DoubleClick"]) {
-
 		NSDictionary *userInfo = notification.userInfo;
 		int line = [[userInfo objectForKey:@"line"] intValue];
 		NSLog(@"DoubleClick on line: %d", line);
@@ -749,7 +760,11 @@ static ofxAntescofog *fog;
 			fog->editorDoubleclicked(line);
 		}
 		return;
-	} 
+	} else if ([[notification name] isEqualToString:NSTextDidChangeNotification]) {
+		if (fog) {
+			fog->editorTextDidChange();
+		}
+	}
 	NSLog(@"Notification: %@", [notification name]);
 }
 @end
@@ -848,7 +863,7 @@ void ofxAntescofog::setupUI() {
 
 	// . quit
 	id quitTitle = [@"Quit " stringByAppendingString:appName];
-	id quitMenuItem = [[[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(terminate:) keyEquivalent:@"q"] autorelease];
+	id quitMenuItem = [[[NSMenuItem alloc] initWithTitle:quitTitle action:@selector(gonna_terminate:) keyEquivalent:@"q"] autorelease];
 	[quitMenuItem setTag:INT_CONSTANT_BUTTON_QUIT];
 	[appMenu addItem:quitMenuItem];
 	[menubar addItem:appMenuItem];
@@ -1140,8 +1155,6 @@ void ofxAntescofog::setupUI() {
 	// register double click on editor notification callback
 	[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
 	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:NSTextDidChangeNotification object:nil];
-	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:nil object:nil];
-	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"" object:nil];
 
 	//guiSetup_Colors->setScrollableDirections(false, true);
 	guiError->setScrollAreaToScreen();
@@ -2454,13 +2467,49 @@ bool ofxAntescofog::edited() {
 		return true;
 }
 
-void ofxAntescofog::askToSaveScore() {
-	if (edited()) {
-		cout << "askToSaveScore: file modified" << endl;
-		saveAsScore();
+int ofxAntescofog::draw_asksave_window()
+{
+	string scorefilename = [ editor tab_get_filename ];
+	string question = "Save changes to \"";
+	question += scorefilename;
+	question += "\" before closing ?";
 
+	// create alert dialog
+	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+	[alert addButtonWithTitle:@"Cancel"];
+	[alert addButtonWithTitle:@"OK"];
+	[alert addButtonWithTitle:@"Don't save"];
+	[alert setMessageText:[NSString stringWithCString:question.c_str() encoding:NSUTF8StringEncoding]];
+	NSInteger returnCode = [alert runModal];
+	// if OK was clicked, assign value to text
+	if ( returnCode == NSAlertFirstButtonReturn )
+		return INT_CONSTANT_BUTTON_CANCEL_SAVE; // cancel
+	
+	if ( returnCode == NSAlertSecondButtonReturn )
+		return INT_CONSTANT_BUTTON_OK_SAVE; // OK
+
+	if ( returnCode == NSAlertThirdButtonReturn )
+		return INT_CONSTANT_BUTTON_DONT_SAVE; // dont save
+	return 0;
+}
+
+
+// return true when score is saved
+int ofxAntescofog::askToSaveScore() {
+	if (edited()) {
+		int ret = draw_asksave_window();
+
+		cout << " return => " << ret << endl;
+		if (ret == INT_CONSTANT_BUTTON_OK_SAVE) {
+			saveScore();
+		}
+		return ret;
+
+		cout << "askToSaveScore: file modified" << endl;
+		//saveAsScore();
 	} else
 		cout << "askToSaveScore: file not modified" << endl;
+	return 0;
 }
 
 
@@ -2583,7 +2632,11 @@ int ofxAntescofog::loadScore(string filename, bool reloadEditor, bool sendOsc) {
 #endif
 	// update editor if opened
 	if (bEditorShow && reloadEditor) {
+		[[NSNotificationCenter defaultCenter] removeObserver:[NSApp delegate] name:NSTextDidChangeNotification object:nil];
+
 		[ editor loadFile:mScore_filename ];
+
+		[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:NSTextDidChangeNotification object:nil];
 		cout << "Editor scrolling to pos: " << lineEditor << " scroll:"<< lineEditorScroll << endl;
 		if (lineEditorPos)
 			[ editor gotoPos:lineEditorPos];
@@ -2900,6 +2953,13 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    score_y = ny;
     }
 #endif
+}
+
+void ofxAntescofog::editorTextDidChange()
+{
+	if (editor) {
+		[editor tabEdited];
+	}
 }
 
 void ofxAntescofog::editorDoubleclicked(int line)

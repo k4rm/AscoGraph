@@ -65,6 +65,9 @@
 #define INT_CONSTANT_BUTTON_TOGGLE_FULL_EDITOR	42
 #define INT_CONSTANT_BUTTON_LOCK		43
 #define INT_CONSTANT_BUTTON_ACTIONVIEWDEEPMODE	44
+#define INT_CONSTANT_BUTTON_CANCEL_SAVE		45
+#define INT_CONSTANT_BUTTON_DONT_SAVE		46
+#define INT_CONSTANT_BUTTON_OK_SAVE		47
 #define INT_CONSTANT_BUTTON_OPENRECENT		200
 #define INT_CONSTANT_BUTTON_CUES_INDEX  	300
 
@@ -235,6 +238,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		ofxCodeEditor* editor;
 		void editorShowLine(int linea, int lineb, int cola, int colb);
 		void editorDoubleclicked(int line);
+		void editorTextDidChange();
 		void replaceEditorScore(int linebegin, int lineend, int cola, int colb, string actstr);
 		void createCodeTemplate(int which);
 		void showJumpTrack();
@@ -246,6 +250,8 @@ class ofxAntescofog : public ofxNSWindowApp
 		void findPrevText_pressed();
 		void replaceText_pressed();
 		void replaceAllText_pressed();
+		int askToSaveScore();
+		int draw_asksave_window();
 		NSFindWindow* mFindWindow;
 		
 		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
@@ -340,7 +346,6 @@ class ofxAntescofog : public ofxNSWindowApp
 		void saveScore(bool stopSimu = true);
 		void saveAsScore();
 		void newScore();
-		void askToSaveScore();
 		bool edited();
 
 		// MIDI file conversion

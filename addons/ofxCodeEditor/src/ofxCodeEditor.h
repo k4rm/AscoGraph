@@ -88,6 +88,8 @@
 - (int) tabsHeight;
 - (void) tab_pressed:(id)sender;
 - (string) tab_get_filename;
+- (void) tabEdited;
+
 //- (void) notify(intptr_t windowid, unsigned int iMessage, uintptr_t wParam, uintptr_t lParam);
 //- (void)notification: (Scintilla::SCNotification*)notification;
 
