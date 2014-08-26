@@ -12,6 +12,8 @@
 
 #import <AppKit/AppKit.h>
 
+void ofGLReadyCallback();
+
 //------------------------------------------------------------
 ofxCocoaWindow :: ofxCocoaWindow()
 {
@@ -41,6 +43,7 @@ void ofxCocoaWindow :: setupOpenGL( int w, int h, int screenMode )
                                                  windowMode : (ofWindowMode)screenMode ] autorelease ];
 
     [ NSApp setDelegate : delegate ];
+    ofGLReadyCallback();
 }
 
 //------------------------------------------------------------

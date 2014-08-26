@@ -130,6 +130,25 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 			;
 	}
 }
+- (BOOL)performKeyEquivalent:(NSEvent *)event {
+    if (([event modifierFlags] & NSDeviceIndependentModifierFlagsMask) == NSCommandKeyMask) {
+        // The command key is the ONLY modifier key being pressed.
+        if ([[event charactersIgnoringModifiers] isEqualToString:@"x"]) {
+            return [NSApp sendAction:@selector(cut:) to:[[self window] firstResponder] from:self];
+        } else if ([[event charactersIgnoringModifiers] isEqualToString:@"c"]) {
+            return [NSApp sendAction:@selector(copy:) to:[[self window] firstResponder] from:self];
+        } else if ([[event charactersIgnoringModifiers] isEqualToString:@"v"]) {
+            return [NSApp sendAction:@selector(paste:) to:[[self window] firstResponder] from:self];
+        } else if ([[event charactersIgnoringModifiers] isEqualToString:@"a"]) {
+            return [NSApp sendAction:@selector(selectAll:) to:[[self window] firstResponder] from:self];
+        }
+    }
+    if ([event keyCode] == 53) // ESC
+    {	cout << "NSFindTextField: ESC" << endl;
+	[[self window] close];
+    }
+    return [super performKeyEquivalent:event];
+}
 @end
 
 void ofxAntescofog::findPrevText_pressed() {
