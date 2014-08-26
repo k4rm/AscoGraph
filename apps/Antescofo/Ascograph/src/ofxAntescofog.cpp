@@ -147,6 +147,11 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
     {	cout << "NSFindTextField: ESC" << endl;
 	[[self window] close];
     }
+    if ((event.keyCode == 36) || (event.keyCode == 76)) {
+	    NSFindWindow* w = (NSFindWindow*)[self window];
+	    [w findNextText_pressed];
+	    return true;
+    }
     return [super performKeyEquivalent:event];
 }
 @end
@@ -156,7 +161,7 @@ void ofxAntescofog::findPrevText_pressed() {
 	string str([nsstr UTF8String]);
 
 	if (str.size()) {
-		cout << "findText_pressed: going to find string: [ " << str << " ]" << endl;
+		cout << "findPrevText_pressed: going to find string: [ " << str << " ]" << endl;
 		[editor setMatchCase:[mBtnFindMatchCase state]];
 		[editor setWrapMode:[mBtnFindWrapMode state]];
 		[ editor searchText:str backwards:YES ];
@@ -168,7 +173,7 @@ void ofxAntescofog::findNextText_pressed() {
 	string str([nsstr UTF8String]);
 
 	if (str.size()) {
-		cout << "findText_pressed: going to find string: [ " << str << " ]" << endl;
+		cout << "findNextText_pressed: going to find string: [ " << str << " ]" << endl;
 		[editor setMatchCase:[mBtnFindMatchCase state]];
 		[editor setWrapMode:[mBtnFindWrapMode state]];
 		[ editor searchText:str backwards:NO];
