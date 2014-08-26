@@ -307,7 +307,6 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 - (void) tabEdited
 {
-	cout << "tabEdited" << endl;
 	if (mTabButtons.size()) {
 		NSString* t = [mTabButtons[mCurrentTabEditor] title];
 		if (t && [t characterAtIndex:0] != '*') {

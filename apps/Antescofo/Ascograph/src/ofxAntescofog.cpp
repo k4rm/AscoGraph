@@ -765,7 +765,7 @@ static ofxAntescofog *fog;
 			fog->editorTextDidChange();
 		}
 	}
-	NSLog(@"Notification: %@", [notification name]);
+	//NSLog(@"Notification: %@", [notification name]);
 }
 @end
 
