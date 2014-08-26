@@ -277,16 +277,18 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		if (error && [[error domain] isEqual: NSCocoaErrorDomain])
 			NSLog(@"%@", error);
 	}
+	NSRect bounds, frame;
+	if (editorContentsList.size() == 1) { // first tab
+		frame = [tabsView frame];
+		[tabsView setFrame:NSMakeRect(frame.origin.x, 20, frame.size.width, frame.size.height)];
+		bounds = [mEditor bounds];
+		[mEditor setBounds:NSMakeRect(bounds.origin.x, /*2*/0, bounds.size.width, bounds.size.height)]; // -20
+	}
 	editorContentsList.push_back(editorContent);
-
-	// create space for Tab Bar
-	NSRect bounds = [mEditor bounds];
-	[mEditor setBounds:NSMakeRect(bounds.origin.x, 20, bounds.size.width, bounds.size.height)]; // XXX diminuer H
-	bounds = [mEditor bounds];
-	NSRect frame = [mEditor frame];
 
 	[self tabCreate:[insertedfile UTF8String] index:editorContentsList.size()-1];
 
+	frame = [mEditor frame];
 	// create editor instance for this tab
 	ScintillaView* anEditor = [[[ScintillaView alloc] initWithFrame:frame] autorelease];
 	[anEditor setScreen:[mWindow screen]];
@@ -297,6 +299,11 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[anEditor setBounds:bounds];
 	[anEditor setAutoresizingMask:NSViewWidthSizable];
 	[tabsView addSubview:anEditor positioned:NSWindowBelow relativeTo:mEditor];
+
+	bounds = [mEditor bounds];
+	[anEditor setBounds:bounds];
+	frame = [mEditor frame];
+	[anEditor setFrame:frame];
 
 	[self setupEditor:anEditor];
 	mEditorsList.push_back(anEditor);
@@ -1214,6 +1221,7 @@ if (result)
 
 					rightFrame.size.height = newFrame.size.height;
 					rightFrame.origin.y = newFrame.origin.y;
+
 				}
 			}
 		} else {

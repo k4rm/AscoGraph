@@ -262,6 +262,62 @@
 			remoteGlobalIDString = D455A7AA18E5DFB20046E750;
 			remoteInfo = AscoGraph;
 		};
+		D4C201D419ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC09D05546B4700DB518D;
+			remoteInfo = pd_static;
+		};
+		D4C201D619ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E9974E53077083C700206F68;
+			remoteInfo = max_static;
+		};
+		D4C201D819ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9F26032C176697A800DBF658;
+			remoteInfo = internal_documentation;
+		};
+		D4C201DA19ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9FC90A0017D93B2300FC032E;
+			remoteInfo = standalone_offline;
+		};
+		D4C201DC19ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D44DA3B817E71C86008E274D;
+			remoteInfo = lib_offline;
+		};
+		D4C201DE19ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CF45CD01181534AA00DAF6D7;
+			remoteInfo = "max6-sdk";
+		};
+		D4C201E019ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D492DEBE18E9695F00F7F7F0;
+			remoteInfo = antescofo_parser;
+		};
+		D4C201E219ACEFF100FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D492DECB18E9695F00F7F7F0;
+			remoteInfo = antescofo_parserTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -698,6 +754,7 @@
 		D4A985BE18F14B3A00D5603B /* iOSAscoGraphMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iOSAscoGraphMenu.mm; sourceTree = "<group>"; };
 		D4A985BF18F14B3A00D5603B /* iOSAscoGraphMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSAscoGraphMenu.h; sourceTree = "<group>"; };
 		D4A985C118F14F4700D5603B /* iOSAscoGraphMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iOSAscoGraphMenu.xib; sourceTree = "<group>"; };
+		D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "antescofo~.xcodeproj"; path = "../../../../antescofo/antescofo~.xcodeproj"; sourceTree = "<group>"; };
 		D4C68D9B18F430D8000060BC /* ofxGuido.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGuido.cpp; sourceTree = "<group>"; };
 		D4C68D9C18F430D8000060BC /* ofxGuido.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGuido.h; sourceTree = "<group>"; };
 		D4C693A618F43235000060BC /* GuidoComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuidoComponent.cpp; sourceTree = "<group>"; };
@@ -1797,6 +1854,7 @@
 				D4E1230518ECB68C00BCDB0E /* Icon.png */,
 				D402F06518E6B50900F757DC /* AscoGraph-Info.plist */,
 				D402F06718E6B55300F757DC /* AscoGraph-Prefix.pch */,
+				D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */,
 				D455A7B418E5DFB20046E750 /* AscoGraph */,
 				D402F04618E6B0CA00F757DC /* openFrameworks */,
 				D402F09B18E6B99500F757DC /* libofxiOS_iphoneos_Debug.a */,
@@ -1863,6 +1921,21 @@
 				D42CF7D318E9806E00E3FBFB /* exports.h */,
 			);
 			path = AscoGraph;
+			sourceTree = "<group>";
+		};
+		D4C201CA19ACEFF000FCB755 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4C201D519ACEFF100FCB755 /* antescofo~.pd_darwin */,
+				D4C201D719ACEFF100FCB755 /* antescofo~.mxo */,
+				D4C201D919ACEFF100FCB755 /* internal_documentation */,
+				D4C201DB19ACEFF100FCB755 /* antescofo. */,
+				D4C201DD19ACEFF100FCB755 /* standalone_offline copy. */,
+				D4C201DF19ACEFF100FCB755 /* antescofo~.mxo */,
+				D4C201E119ACEFF100FCB755 /* libantescofo_parser.a */,
+				D4C201E319ACEFF100FCB755 /* antescofo_parserTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		D4C684D618F430D2000060BC /* ofxGuido */ = {
@@ -2021,6 +2094,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = D4C201CA19ACEFF000FCB755 /* Products */;
+					ProjectRef = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+				},
+				{
 					ProductGroup = D402F05918E6B43000F757DC /* Products */;
 					ProjectRef = D402F05618E6B3FC00F757DC /* iOS+OFLib.xcodeproj */;
 				},
@@ -2039,6 +2116,62 @@
 			fileType = archive.ar;
 			path = libofxiOS_iphoneos_Debug.a;
 			remoteRef = D402F05C18E6B43000F757DC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201D519ACEFF100FCB755 /* antescofo~.pd_darwin */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = "antescofo~.pd_darwin";
+			remoteRef = D4C201D419ACEFF100FCB755 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201D719ACEFF100FCB755 /* antescofo~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "antescofo~.mxo";
+			remoteRef = D4C201D619ACEFF100FCB755 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201D919ACEFF100FCB755 /* internal_documentation */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = internal_documentation;
+			remoteRef = D4C201D819ACEFF100FCB755 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201DB19ACEFF100FCB755 /* antescofo. */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = antescofo.;
+			remoteRef = D4C201DA19ACEFF100FCB755 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201DD19ACEFF100FCB755 /* standalone_offline copy. */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "standalone_offline copy.";
+			remoteRef = D4C201DC19ACEFF100FCB755 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201DF19ACEFF100FCB755 /* antescofo~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "antescofo~.mxo";
+			remoteRef = D4C201DE19ACEFF100FCB755 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201E119ACEFF100FCB755 /* libantescofo_parser.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libantescofo_parser.a;
+			remoteRef = D4C201E019ACEFF100FCB755 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D4C201E319ACEFF100FCB755 /* antescofo_parserTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = antescofo_parserTests.xctest;
+			remoteRef = D4C201E219ACEFF100FCB755 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2429,8 +2562,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(OF_CORE_HEADERS)/**",
 					src,
-					../../../../antescofo_New/includes/,
-					../../../../antescofo_New/parser,
+					../../../../antescofo/includes/,
+					../../../../antescofo/parser,
 					../../../addons/ofxOsc/libs/oscpack/src,
 					"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/include/c++/4.2.1/",
 				);
@@ -2449,10 +2582,7 @@
 					"/Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxGuido/lib/guidolib-code/build/iOS",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"$(OF_CORE_LIBS)",
-					"-L/Users/coffy/Library/Developer/Xcode/DerivedData/antescofo~-dfqdglhxnbqdcwcwcthgfhewvovm/Build/Products/Development-iphoneos/",
-				);
+				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -2503,8 +2633,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(OF_CORE_HEADERS)/**",
 					src,
-					../../../../antescofo_New/includes/,
-					../../../../antescofo_New/parser,
+					../../../../antescofo/includes/,
+					../../../../antescofo/parser,
 					../../../addons/ofxOsc/libs/oscpack/src,
 					"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/include/c++/4.2.1/",
 				);
@@ -2523,10 +2653,7 @@
 					"/Users/coffy/Documents/ircam/git/AscoGraph/addons/ofxGuido/lib/guidolib-code/build/iOS",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"$(OF_CORE_LIBS)",
-					"-L/Users/coffy/Library/Developer/Xcode/DerivedData/antescofo~-dfqdglhxnbqdcwcwcthgfhewvovm/Build/Products/Development-iphoneos/",
-				);
+				OTHER_LDFLAGS = "$(OF_CORE_LIBS)";
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

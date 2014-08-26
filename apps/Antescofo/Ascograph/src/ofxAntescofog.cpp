@@ -2466,6 +2466,7 @@ bool ofxAntescofog::edited() {
 	string editorcontent;
 	[ editor getEditorContent:editorcontent ];
 
+	if (editorcontent.empty()) return false;
 	string filecontent;
 	string scorefilename = [ editor tab_get_filename ];
 	ifstream file;

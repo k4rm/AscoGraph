@@ -5,32 +5,32 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>4B7EA09A-D052-4103-9E0A-0EC998CC42A5</string>
+	<string>1064EE0A-65A3-4473-88EA-A322382BFCA2</string>
 	<key>IDESourceControlProjectName</key>
 	<string>AscoGraph</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>1F16932E-40AC-4B78-9E01-B554D70B44B3</key>
-		<string>https://github.com/openframeworks/openFrameworks.git</string>
 		<key>7CFA9B4D-DEEC-4595-92F5-4776CE94FE5D</key>
 		<string>git+ssh://git.forge.ircam.fr/Mutant-libs.git</string>
+		<key>7F839AB2-D7C6-422E-8D31-488D60A54314</key>
+		<string>https://github.com/rezaali/ofxUI.git</string>
 		<key>BB33454F-B5FA-471E-AEC2-FA79735E486D</key>
 		<string>git+ssh://git.forge.ircam.fr/AscoGraph.git</string>
 		<key>E7717AEE-6CCB-444A-BE93-DF71E4DC5B01</key>
 		<string>git+ssh://git.forge.ircam.fr/antescofo.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>apps/Antescofo/Ascograph/AscoGraph/AscoGraph.xcodeproj/project.xcworkspace</string>
+	<string>apps/Antescofo/Ascograph/AscoGraph.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>1F16932E-40AC-4B78-9E01-B554D70B44B3</key>
-		<string>../../../../../../../openFrameworks</string>
 		<key>7CFA9B4D-DEEC-4595-92F5-4776CE94FE5D</key>
 		<string>../../../../../../Mutant-libs</string>
+		<key>7F839AB2-D7C6-422E-8D31-488D60A54314</key>
+		<string>../../../../../addons/ofxUI</string>
 		<key>BB33454F-B5FA-471E-AEC2-FA79735E486D</key>
-		<string>../../../../../..</string>
+		<string>../../../../..</string>
 		<key>E7717AEE-6CCB-444A-BE93-DF71E4DC5B01</key>
-		<string>../../../../../../antescofo_New</string>
+		<string>../../../../../../antescofo</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>git+ssh://git.forge.ircam.fr/AscoGraph.git</string>
@@ -68,9 +68,9 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>1F16932E-40AC-4B78-9E01-B554D70B44B3</string>
+			<string>7F839AB2-D7C6-422E-8D31-488D60A54314</string>
 			<key>IDESourceControlWCCName</key>
-			<string>openFrameworks</string>
+			<string>ofxUI</string>
 		</dict>
 	</array>
 </dict>
