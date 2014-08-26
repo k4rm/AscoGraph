@@ -232,7 +232,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 #if USE_EDITOR_TABS
 	// tabsView
 	tabsView = [[NSView alloc] initWithFrame:[mEditor frame]];
-	NSRect tf = [mEditor frame]; //tf.origin.y = tf.size.height; tf.size.height = 20;
+	NSRect tf = [mEditor frame];
 	[tabsView setBounds:tf];
 
 	[tabsView addSubview:mEditor];
@@ -419,9 +419,13 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 				NSButton* btn = mTabButtons[i];
 				[[btn cell] setState:YES];
 			}
-
 			NSButton* btn = mTabButtons[0];
 			[[btn cell] setState:NO];
+
+			// set view on top :
+			mEditor = mEditorsList[0];
+			[mEditor removeFromSuperview];
+			[tabsView addSubview:mEditor positioned:NSWindowAbove relativeTo:nil];
 		}
 	}
 }
@@ -889,19 +893,27 @@ if (result)
 		[ mTabButtons[i] removeFromSuperview];
 	}
 	mTabButtons.clear();
+	/*
 	for (int i = 1; i < mEditorsList.size(); i++) {
 		[ mEditorsList[i] removeFromSuperview];
 	}
+	*/
 
 	if (mEditorsList.size() > 1) {
-		while(mEditorsList.size() > 1) [ mEditorsList.back() release ], mEditorsList.pop_back();
+		while(mEditorsList.size() > 1) {
+			ScintillaView* s = mEditorsList.back();
+			[ s removeFromSuperview ];
+			//[ s release ];
+			mEditorsList.pop_back();
+		}
 		mEditor = mEditorsList[0];
 	}
 
 	if (resetframe) {
 		NSRect frame = [mEditor frame];
 		NSRect bounds = [mEditor bounds];
-		bounds.origin.y = 0;
+		frame.origin.y = bounds.origin.y = 0;
+		frame.size.height = bounds.size.height = [tabsView bounds].size.height;
 		[ mEditor setFrame:frame];
 		[ mEditor setBounds:bounds];
 	}
@@ -1152,24 +1164,39 @@ if (result)
 #if USE_EDITOR_TABS
 		if ([[right subviews] count ] > 1) {
 			NSLog(@"resizeSubviewsWithOldSize: count=%d", [[right subviews] count]);
+			// set y and h
+			for (int i = 0; i < [[right subviews] count]; i++) {
+				NSView* n = [[right subviews] objectAtIndex:i];
+				if ([n isKindOfClass: [NSButton class]]) {
+					NSRect f = [n frame];
+					f.origin.y = newFrame.size.height - 20;
+					[n setFrame:f];
+				}
+				if ([n isKindOfClass: [ScintillaView class]]) {
+					NSRect editorframe = [n frame];
+					editorframe.size.height = newFrame.size.height - 20;
+					editorframe.origin.y = 0;
+					[n setFrame:editorframe];
+
+					NSRect editorbounds = [n bounds];
+					editorbounds.size.height = newFrame.size.height - 20;
+					editorbounds.origin.y = 0;
+					[n setBounds:editorbounds];
+
+					rightFrame.size.height = newFrame.size.height;
+					rightFrame.origin.y = newFrame.origin.y;
+				}
+			}
+		} else {
 			NSView *editor = [[right subviews] objectAtIndex:0];
 			NSRect editorframe = [editor frame];
-			editorframe.size.height = newFrame.size.height - 20;
-			editorframe.origin.y = 0; //newFrame.size.height-20; // TODO
+			editorframe.size.height = newFrame.size.height;
 			[editor setFrame:editorframe];
 
-			NSRect editorbounds = [editor bounds];
-			editorbounds.size.height = newFrame.size.height - 20;
-			editorbounds.origin.y = 0; //newFrame.size.height-20; // TODO
-			[editor setBounds:editorbounds];
-
-			rightFrame.size.height = newFrame.size.height;
-			rightFrame.origin.y = newFrame.origin.y;
 		}
-#else
-		rightFrame.size.height = newFrame.size.height;
-		rightFrame.origin.y = newFrame.origin.y;
 #endif
+		rightFrame.size.height = newFrame.size.height;
+		//rightFrame.origin.y = newFrame.origin.y;
 		[right setFrame:rightFrame];
 	} else {
 		NSLog(@"resizeSubviewsWithOldSize: error only one view present in NSSplitView");
