@@ -260,49 +260,46 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 - (void) loadFileInTab:(NSString*)insertedfile
 {
-	if (mEditorsFilenames.size() == 1) { // open tabs
-		NSLog(@"ofxCodeEditor: loadFileInTab: [%@]", insertedfile);
-		mEditorsFilenames.push_back([insertedfile UTF8String]);
+	NSLog(@"ofxCodeEditor: loadFileInTab: [%@]", insertedfile);
+	mEditorsFilenames.push_back([insertedfile UTF8String]);
 
-		NSError* error = nil;
-		NSString *insertedfile_fullpath = [[NSString stringWithUTF8String:mFilePath.c_str()] stringByAppendingString:insertedfile];
+	NSError* error = nil;
+	NSString *insertedfile_fullpath = [[NSString stringWithUTF8String:mFilePath.c_str()] stringByAppendingString:insertedfile];
 
+	editorContent = [NSString stringWithContentsOfFile:insertedfile_fullpath
+		encoding:NSUTF8StringEncoding
+		error: &error];
+	if (error && [[error domain] isEqual: NSCocoaErrorDomain]) {
+		NSLog(@"%@", error);
 		editorContent = [NSString stringWithContentsOfFile:insertedfile_fullpath
-			encoding:NSUTF8StringEncoding
+			encoding:NSMacOSRomanStringEncoding
 			error: &error];
-		if (error && [[error domain] isEqual: NSCocoaErrorDomain]) {
+		if (error && [[error domain] isEqual: NSCocoaErrorDomain])
 			NSLog(@"%@", error);
-			editorContent = [NSString stringWithContentsOfFile:insertedfile_fullpath
-				encoding:NSMacOSRomanStringEncoding
-				error: &error];
-			if (error && [[error domain] isEqual: NSCocoaErrorDomain])
-				NSLog(@"%@", error);
-		}
-		editorContentsList.push_back(editorContent);
-
-		// create space for Tab Bar
-		NSRect bounds = [mEditor bounds];
-		[mEditor setBounds:NSMakeRect(bounds.origin.x, 20, bounds.size.width, bounds.size.height)]; // XXX diminuer H
-		bounds = [mEditor bounds];
-		NSRect frame = [mEditor frame];
-
-		[self tabCreate:[insertedfile UTF8String] index:1];
-
-		// create editor instance for this tab
-		ScintillaView* anEditor = [[[ScintillaView alloc] initWithFrame:frame] autorelease];
-		[anEditor setScreen:[mWindow screen]];
-
-		[anEditor setOwner:tabsView];
-
-		[anEditor setString: editorContent];
-		[anEditor setBounds:bounds];
-		[anEditor setAutoresizingMask:NSViewWidthSizable];
-		[tabsView addSubview:anEditor positioned:NSWindowBelow relativeTo:mEditor];
-
-		[self setupEditor:anEditor];
-		mEditorsList.push_back(anEditor);
 	}
+	editorContentsList.push_back(editorContent);
 
+	// create space for Tab Bar
+	NSRect bounds = [mEditor bounds];
+	[mEditor setBounds:NSMakeRect(bounds.origin.x, 20, bounds.size.width, bounds.size.height)]; // XXX diminuer H
+	bounds = [mEditor bounds];
+	NSRect frame = [mEditor frame];
+
+	[self tabCreate:[insertedfile UTF8String] index:editorContentsList.size()-1];
+
+	// create editor instance for this tab
+	ScintillaView* anEditor = [[[ScintillaView alloc] initWithFrame:frame] autorelease];
+	[anEditor setScreen:[mWindow screen]];
+
+	[anEditor setOwner:tabsView];
+
+	[anEditor setString: editorContent];
+	[anEditor setBounds:bounds];
+	[anEditor setAutoresizingMask:NSViewWidthSizable];
+	[tabsView addSubview:anEditor positioned:NSWindowBelow relativeTo:mEditor];
+
+	[self setupEditor:anEditor];
+	mEditorsList.push_back(anEditor);
 }
 
 - (void) tabEdited
@@ -329,6 +326,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	NSRect btnbounds = [btn bounds];
 	NSRect btnframe = [btn frame];
 	NSRect bounds = [mEditor bounds];
+	//cout << "ofxCodeEditor: tabCreate: " << tabname << " index=" << index << endl; 
 	cout << "ofxCodeEditor: Editor frame : " << frame.origin.x << ", "<< frame.origin.y << " - " << frame.size.width << " x "<< frame.size.height << endl;
 	cout << "ofxCodeEditor: Editor bounds : " << bounds.origin.x << ", "<< bounds.origin.y << " - " << bounds.size.width << " x "<< bounds.size.height << endl;
 	cout << "ofxCodeEditor: button frame : " << btnframe.origin.x << ", "<< btnframe.origin.y << " - " << btnframe.size.width << " x "<< btnframe.size.height << endl;
@@ -341,6 +339,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[btn setBordered:YES];
 	[btn setBezelStyle:NSSmallSquareBezelStyle]; //NSThickSquareBezelStyle];
 	[btn setImagePosition:NSNoImage];
+	//[btn setAlignment:NSLeftTextAlignment]; 
 	[btn setAlignment:NSCenterTextAlignment];
 	//[[btn cell] setControlTint:NSBlueControlTint];
 	[btn setEnabled:YES];
@@ -357,7 +356,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 - (void) tab_pressed:(id)sender
 {
 	int tabnb = [sender tag];
-	NSLog(@"ofxCodeEditor: -------> Tab %d pressed.", [sender tag]);
+	//NSLog(@"ofxCodeEditor: -------> Tab %d pressed.", [sender tag]);
 
 	if (tabnb <= mEditorsList.size()) {
 
@@ -366,9 +365,12 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		//[mEditorsList[tabnb] setOwner:mWindow]; // mWindow
 		//[mEditorsList[mCurrentTabEditor] setOwner:tabsView]; // mWindow
 		
-		// change current tab to color back
-		NSButton* btn = mTabButtons[mCurrentTabEditor];
-		[[btn cell] setState:YES];
+		// change other tabs to color back
+		NSButton* btn;
+		for (int i = 0; i < mTabButtons.size(); i++) {
+			btn = mTabButtons[i];
+			[[btn cell] setState:YES];
+		}
 
 		ScintillaView* viewfrom = mEditorsList[mCurrentTabEditor];
 		ScintillaView* viewto = mEditorsList[tabnb];
@@ -404,41 +406,55 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 /*
    Find inserted files (for example for macros) and open them in tabbed editors
-   */
+ */
 - (void) checkForInsertedFiles
 {
 	//if (!editorContent) return;
 
-	// TODO only one file for now, a while() needs to be added
-	NSRange range = [editorContent rangeOfString:@"@insert \"" options:NSCaseInsensitiveSearch];
-	if (range.location >= 0 && range.length > 0) {
-
-		[self tabCreate:mEditorsFilenames[0] index:0];
+	NSString* scorecontent = editorContent;
+	int len = [editorContent length];
+	// search for @insert "
+	int n = 0;
+	NSRange fullrange = NSMakeRange(0, len);
+	NSRange range = [editorContent rangeOfString:@"@insert \"" options:NSCaseInsensitiveSearch range:fullrange];
+	while (range.length > 0) {
+		if (n == 0) {
+			[self tabCreate:mEditorsFilenames[n] index:n];
+			n++;
+		}
 
 		range.location += 1;
 		range.length -= 1;
-		NSString *substring = [[editorContent substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		NSString *substring = [[scorecontent substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		NSRange quoterange = [substring rangeOfString:@"\""];
 		if (quoterange.location != NSNotFound)
 		{
+			n++;
 			NSString *insertedfile = [substring substringToIndex:quoterange.location];
 			NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]\nquoterange:%d-%d\n", insertedfile, quoterange.location, quoterange.length);
-			//NSLog(@"ofxCodeEditor: checkForInsertedFiles: [%@]", insertedfile);
 			[self loadFileInTab:insertedfile];
 
-			// set all tabs to no selected except first
-			for (int i = 0; i < mTabButtons.size(); i++) {
-				NSButton* btn = mTabButtons[i];
-				[[btn cell] setState:YES];
-			}
-			NSButton* btn = mTabButtons[0];
-			[[btn cell] setState:NO];
-
-			// set view on top :
-			mEditor = mEditorsList[0];
-			[mEditor removeFromSuperview];
-			[tabsView addSubview:mEditor positioned:NSWindowAbove relativeTo:nil];
 		}
+		len -= range.location + range.length;
+		fullrange = NSMakeRange(range.location + range.length, len);
+		//NSLog(@"ofxCodeEditor: checkForInsertedFiles: searching for in range: %d-%d", fullrange.location, fullrange.length);
+		range = [scorecontent rangeOfString:@"@insert \"" options:NSCaseInsensitiveSearch range:fullrange];
+	}
+
+	if (n) {
+		// set all tabs to no selected except first
+		for (int i = 0; i < mTabButtons.size(); i++) {
+			NSButton* btn = mTabButtons[i];
+			[[btn cell] setState:YES];
+		}
+		NSButton* btn = mTabButtons[0];
+		[[btn cell] setState:NO];
+
+		// set view on top :
+		mEditor = mEditorsList[0];
+		[mEditor removeFromSuperview];
+		[tabsView addSubview:mEditor positioned:NSWindowAbove relativeTo:nil];
+
 	}
 }
 
@@ -920,6 +936,7 @@ if (result)
 		}
 		mEditor = mEditorsList[0];
 	}
+	editorContentsList.clear();
 
 	if (resetframe) {
 		NSRect frame = [mEditor frame];
@@ -1157,9 +1174,9 @@ if (result)
 // -------------------------------------------------------------------------------
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 { 
-	NSLog(@"resizeSubviewsWithOldSize: oldSize: w:%.1f h:%.1f", oldSize.width, oldSize.height);
+	//NSLog(@"resizeSubviewsWithOldSize: oldSize: w:%.1f h:%.1f", oldSize.width, oldSize.height);
 	NSRect newFrame = [sender frame]; // get the new size of the whole splitView
-	NSLog(@"resizeSubviewsWithOldSize: subviews count: %d", [[sender subviews] count]);
+	//NSLog(@"resizeSubviewsWithOldSize: subviews count: %d", [[sender subviews] count]);
 	NSView *left = [[sender subviews] objectAtIndex:0];
 	NSRect leftFrame = [left frame];
 	CGFloat dividerThickness = [sender dividerThickness];
@@ -1170,7 +1187,7 @@ if (result)
 	{
 		NSView *right = [[sender subviews] objectAtIndex:1];
 		NSRect rightFrame = [right frame];
-		NSLog(@"resizeSubviewsWithOldSize 2 is good !");
+		//NSLog(@"resizeSubviewsWithOldSize 2 is good !");
 		rightFrame.size.width = newFrame.size.width - leftFrame.size.width - dividerThickness;
 		rightFrame.origin.x = leftFrame.size.width + dividerThickness;
 #if USE_EDITOR_TABS

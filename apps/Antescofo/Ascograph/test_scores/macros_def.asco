@@ -59,7 +59,7 @@
 }
 
 /*
-@FUN_DEF tempo($BIDON) {
+@fun_def tempo($BIDON) {
 	$RT_TEMPO
 }
 */
