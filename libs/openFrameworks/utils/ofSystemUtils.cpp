@@ -400,20 +400,20 @@ ofFileDialogResult ofSystemSaveDialog(string defaultName, string messageName){
 	//------------------------------------------------------------------------------       OSX
 	//----------------------------------------------------------------------------------------
 #ifdef TARGET_OSX
-
-	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	NSSavePanel * saveDialog = [NSSavePanel savePanel];
-	[saveDialog setMessage:[NSString stringWithUTF8String:messageName.c_str()]];
-	[saveDialog setNameFieldStringValue:[NSString stringWithUTF8String:defaultName.c_str()]];
-
-	NSInteger buttonClicked = [saveDialog runModal];
-	restoreAppWindowFocus();
-
-	if(buttonClicked == NSFileHandlingPanelOKButton){
-		results.filePath = string([[[saveDialog URL] path] UTF8String]);
+    @autoreleasepool {
+		NSSavePanel * saveDialog = [NSSavePanel savePanel];
+		NSOpenGLContext *context = [NSOpenGLContext currentContext];
+		[saveDialog setMessage:[NSString stringWithUTF8String:messageName.c_str()]];
+		[saveDialog setNameFieldStringValue:[NSString stringWithUTF8String:defaultName.c_str()]];
+        
+		NSInteger buttonClicked = [saveDialog runModal];
+		restoreAppWindowFocus();
+		[context makeCurrentContext];
+        
+		if(buttonClicked == NSFileHandlingPanelOKButton){
+			results.filePath = string([[[saveDialog URL] path] UTF8String]);
+		}
 	}
-	[pool drain];
-
 #endif
 	//----------------------------------------------------------------------------------------
 	//----------------------------------------------------------------------------------------

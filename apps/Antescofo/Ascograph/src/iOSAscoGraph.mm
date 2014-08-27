@@ -19,7 +19,7 @@
 
 bool _debug = true;
 
-string ascograph_version = "1.06";
+string ascograph_version = "1.07";
 
 extern ofxConsole* console;
 

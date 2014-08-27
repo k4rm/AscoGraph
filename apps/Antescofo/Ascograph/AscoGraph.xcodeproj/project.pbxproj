@@ -229,12 +229,12 @@
 		D42CF7F918E98B7700E3FBFB /* ofxModifierKeys_impl_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = D42CF7EC18E98B7700E3FBFB /* ofxModifierKeys_impl_mac.mm */; };
 		D42CF7FA18E98B7700E3FBFB /* ofxModifierKeys_impl_win.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D42CF7ED18E98B7700E3FBFB /* ofxModifierKeys_impl_win.cpp */; };
 		D42CF7FF18E9920000E3FBFB /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42CF7FE18E9920000E3FBFB /* CoreMIDI.framework */; };
-		D433C56518EC334400B41CFC /* libantescofo_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D42CF80118E9938100E3FBFB /* libantescofo_parser.a */; };
 		D433C57218EC6C9900B41CFC /* ofxHotKeys_impl_iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = D433C57118EC6C9900B41CFC /* ofxHotKeys_impl_iOS.mm */; };
 		D433C5AF18ECB15400B41CFC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D433C59D18ECB15400B41CFC /* README.md */; };
 		D433C5B018ECB15400B41CFC /* ofxBonjourIp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D433C59F18ECB15400B41CFC /* ofxBonjourIp.cpp */; };
 		D4A985C018F14B3A00D5603B /* iOSAscoGraphMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4A985BE18F14B3A00D5603B /* iOSAscoGraphMenu.mm */; };
 		D4A985C218F14F4700D5603B /* iOSAscoGraphMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4A985C118F14F4700D5603B /* iOSAscoGraphMenu.xib */; };
+		D4C201F719ADC77700FCB755 /* libantescofo_parser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4C201E119ACEFF100FCB755 /* libantescofo_parser.a */; };
 		D4C6938F18F430D9000060BC /* ofxGuido.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4C68D9B18F430D8000060BC /* ofxGuido.cpp */; };
 		D4C693B718F43235000060BC /* GuidoComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4C693A618F43235000060BC /* GuidoComponent.cpp */; };
 		D4C693B818F43235000060BC /* openFrameworksDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4C693A818F43235000060BC /* openFrameworksDevice.cpp */; };
@@ -317,6 +317,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = D492DECB18E9695F00F7F7F0;
 			remoteInfo = antescofo_parserTests;
+		};
+		D4C201F519ADC6BD00FCB755 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4C201C919ACEFF000FCB755 /* antescofo~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D492DEBD18E9695F00F7F7F0;
+			remoteInfo = antescofo_parser;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -794,7 +801,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D433C56518EC334400B41CFC /* libantescofo_parser.a in Frameworks */,
+				D4C201F719ADC77700FCB755 /* libantescofo_parser.a in Frameworks */,
 				D42CF7FF18E9920000E3FBFB /* CoreMIDI.framework in Frameworks */,
 				D42CF72318E97C9000E3FBFB /* Accelerate.framework in Frameworks */,
 				D402F20D18E6BD2800F757DC /* libvorbisenc.a in Frameworks */,
@@ -2034,6 +2041,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D4C201F619ADC6BD00FCB755 /* PBXTargetDependency */,
 			);
 			name = AscoGraph;
 			productName = AscoGraph;
@@ -2441,6 +2449,11 @@
 			isa = PBXTargetDependency;
 			target = D455A7AA18E5DFB20046E750 /* AscoGraph */;
 			targetProxy = D455A7CB18E5DFB20046E750 /* PBXContainerItemProxy */;
+		};
+		D4C201F619ADC6BD00FCB755 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = antescofo_parser;
+			targetProxy = D4C201F519ADC6BD00FCB755 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
