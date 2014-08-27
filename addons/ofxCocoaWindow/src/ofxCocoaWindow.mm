@@ -43,7 +43,19 @@ void ofxCocoaWindow :: setupOpenGL( int w, int h, int screenMode )
                                                  windowMode : (ofWindowMode)screenMode ] autorelease ];
 
     [ NSApp setDelegate : delegate ];
-    ofGLReadyCallback();
+    // the following is borrowed from ofGLReadyCallback() without AlphaBlending :
+    ofLogVerbose("ofAppRunner") << "GL ready";
+    ofLogVerbose("ofAppRunner") << "Vendor:   " << (char*)glGetString(GL_VENDOR);
+    ofLogVerbose("ofAppRunner") << "Renderer: " << (char*)glGetString(GL_RENDERER);
+    ofLogVerbose("ofAppRunner") << "Version:  " << (char*)glGetString(GL_VERSION);
+    ofLogVerbose("ofAppRunner") << "GLSL:     " << (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+    if(ofGetGLProgrammableRenderer()){
+	    ofGetGLProgrammableRenderer()->setup();
+    }
+
+    //Default colors etc are now in ofGraphics - ofSetupGraphicDefaults
+    ofSetupGraphicDefaults();
 }
 
 //------------------------------------------------------------
