@@ -289,6 +289,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	[self tabCreate:[insertedfile UTF8String] index:editorContentsList.size()-1];
 
 	frame = [mEditor frame];
+	bounds = [mEditor bounds];
 	// create editor instance for this tab
 	ScintillaView* anEditor = [[[ScintillaView alloc] initWithFrame:frame] autorelease];
 	[anEditor setScreen:[mWindow screen]];
@@ -366,6 +367,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 	//NSLog(@"ofxCodeEditor: -------> Tab %d pressed.", [sender tag]);
 
 	if (tabnb <= mEditorsList.size()) {
+		if (mCurrentTabEditor == tabnb) return;
 
 		NSLog(@"ofxCodeEditor: -------> Editors:%lu Swapping Views: %d and %d.", mEditorsList.size(), mCurrentTabEditor, tabnb);
 
@@ -385,6 +387,19 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 		// change viewto tab size 
 		[viewto setFrame:[viewfrom frame]];
 		[viewto setBounds:[viewfrom bounds]];
+
+#if 0
+		NSRect r = [viewfrom frame];
+		cout << "------> Going to replace views: " << endl;
+		cout << "------> FROM frame: " << r.origin.x << ", " << r.origin.y << ", " << r.size.width << "x" << r.size.height << endl;
+		r = [viewfrom bounds];
+		cout << "------> FROM bounds:" << r.origin.x << ", " << r.origin.y << ", " << r.size.width << "x" << r.size.height << endl;
+
+		r = [viewto frame];
+		cout << "------> TO   frame: " << r.origin.x << ", " << r.origin.y << ", " << r.size.width << "x" << r.size.height << endl;
+		r = [viewto bounds];
+		cout << "------> TO   bounds:" << r.origin.x << ", " << r.origin.y << ", " << r.size.width << "x" << r.size.height << endl;
+#endif
 
 		[viewfrom setOwner:tabsView];
 		[viewto setOwner:tabsView];
