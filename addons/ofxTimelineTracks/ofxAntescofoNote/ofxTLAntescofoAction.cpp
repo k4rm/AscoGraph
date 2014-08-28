@@ -24,7 +24,9 @@
 #include <position.hh>
 #include "ofxHotKeys.h"
 #ifndef ASCOGRAPH_IOS
-# include "ofxCodeEditor.h"
+# ifndef TARGET_LINUX
+#  include "ofxCodeEditor.h"
+# endif
 #endif
 #include "BeatCurve.h"
 
@@ -1008,12 +1010,14 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 		clickedGroups.clear();
 	}
 	if (clickedGroup) {
+#ifndef TARGET_LINUX
 		cout << "clickedGroup: " << clickedGroup->realtitle << endl;
 		if (clickedGroup) {
 			cout << "show selection: lineNum_begin:" << clickedGroup->lineNum_begin << " lineNum_end:" << clickedGroup->lineNum_end
 			     << "\tcolNum_begin:" << clickedGroup->colNum_begin << " colNum_end:" << clickedGroup->colNum_end << endl;
 			mAntescofog->editorShowLine(clickedGroup->lineNum_begin, clickedGroup->lineNum_end, clickedGroup->colNum_begin, clickedGroup->colNum_end);
 		}
+#endif
 		res = mousePressed_in_header(args, clickedGroup, false);
 		// bring it to foreground level : if CMD pressed : bring background
 		if (clickedGroup->is_in_header(args.x, args.y) && ofGetModifierSelection()) {
@@ -1037,7 +1041,9 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	}
 	for (vector<ActionGroup*>::const_iterator i = mActionGroups.begin(); i != mActionGroups.end(); i++) {
 		if (!res && *i != clickedGroup && mousePressed_in_header(args, *i)) {
+#ifndef TARGET_LINUX
 			if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
+#endif
 			return true;
 		} else if (*i) { // look for subgroups
 			//res = mousePressed_search_curve_rec(*i, args, millis);
@@ -1050,7 +1056,9 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 				for (vector<ActionGroup*>::const_iterator j = a->sons.begin(); j != a->sons.end(); j++) {
 					// handle arrow click
 					if (*j != clickedGroup && *j && mousePressed_in_header(args, *j)) {
+#ifndef TARGET_LINUX
 						if (!clickedGroup) mAntescofog->editorShowLine((*i)->lineNum_begin, (*i)->lineNum_end, (*i)->colNum_begin, (*i)->colNum_end);
+#endif
 						res = true;
 					} else if (!(*i)->hidden && bActionsEditable) {
 						// handle curve click
@@ -1419,6 +1427,7 @@ ofRectangle ofxTLAntescofoAction::getBoundedRect(ofRectangle& r)
 
 void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
 #ifndef ASCOGRAPH_IOS
+#ifndef TARGET_LINUX
 	vector<Action*>::const_iterator i;
 	float d = 0;
 	string newscore;
@@ -1431,6 +1440,7 @@ void ofxTLAntescofoAction::replaceEditorScore(ActionCurve* actioncurve) {
 		mAntescofog->replaceEditorScore(actioncurve->parentCurve->lineNum_begin, actioncurve->parentCurve->lineNum_end,
 				actioncurve->parentCurve->colNum_begin, actioncurve->parentCurve->colNum_end, actstr);
 	}
+#endif
 #endif
 }
 
@@ -1838,6 +1848,7 @@ void ActionMultiCurves::draw_header(ofxTLAntescofoAction* tlAction, bool draw_re
 void ActionCurve::split()
 {
 #ifndef ASCOGRAPH_IOS
+#ifndef TARGET_LINUX
 	if (debug_edit_curve) cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl;
 	if (parentCurve->antescofo_curve) {
 		if (debug_edit_curve) cout << "ActionMultiCurves:: split " << parentCurve->antescofo_curve->label() << endl; 
@@ -1894,6 +1905,7 @@ void ActionCurve::split()
 		if (((ofxTLAntescofoNote *)_timeline->getTrack("Notes"))->loadscoreAntescofo_fromString(newscore, fog->mScore_filename))
 			actionTrack->show(label);
 	}
+#endif
 #endif
 }
 

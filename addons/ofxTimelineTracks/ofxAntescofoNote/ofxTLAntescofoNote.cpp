@@ -1735,10 +1735,12 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 	if(clickedSwitchA != NULL){
 		mAntescofog->setGotoPos(clickedSwitchA->beat.min);
 #ifndef ASCOGRAPH_IOS
+#ifndef TARGET_LINUX
 		mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
 		if(!ofGetModifierKeyShift()){
 			timeline->unselectAll();
 		}
+#endif
 #endif
 		clickedSwitchA->endSelected = clickedSwitchA->startSelected = true;
 	} else { // premiere selection
@@ -1750,7 +1752,9 @@ bool ofxTLAntescofoNote::mousePressed(ofMouseEventArgs& args, long millis){
 		clickedSwitchA = switchForScreenXY(args.x, args.y);
 		if(clickedSwitchA != NULL){
 #ifndef ASCOGRAPH_IOS
+#ifndef TARGET_LINUX
 			mAntescofog->editorShowLine(clickedSwitchA->lineNum_begin, clickedSwitchA->lineNum_end, clickedSwitchA->colNum_begin, clickedSwitchA->colNum_end);
+#endif
 #endif
 			mAntescofog->setGotoPos(clickedSwitchA->beat.min);
 
@@ -2507,8 +2511,10 @@ float ofxTLAntescofoNote::convertAntescofoOutputToTime(float mOsc_beat, float mO
 		}
 	}
 #ifndef ASCOGRAPH_IOS
+#ifndef TARGET_LINUX
 	if(switchA != NULL && bAutoScroll)
 		mAntescofog->editorShowLine(switchA->lineNum_begin, switchA->lineNum_end, switchA->colNum_begin, switchA->colNum_end);
+#endif
 #endif
 	// TODO : save detectedPitch = mOsc_pitch; in order to display it in a purple color in draw()
 	return r;

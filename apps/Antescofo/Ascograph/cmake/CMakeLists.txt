@@ -157,27 +157,70 @@ set (OPENFRAMEWORKS_LIB_SOURCES
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQtUtils.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQuickTimeGrabber.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQuickTimePlayer.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitGrabber.mm
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitPlayer.mm
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofVideoGrabber.cpp
 	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofVideoPlayer.cpp
-	${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitMovieRenderer.m
 )
 
 
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofSystemUtils.cpp
-	PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitGrabber.mm
-	PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitPlayer.mm
-	PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitMovieRenderer.m
-	PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES( ${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/app/ofAppGLFWWindow.cpp
-	PROPERTIES COMPILE_FLAGS "-x objective-c++")
+if(APPLE)
+	set (OPENFRAMEWORKS_LIB_SOURCES ${OPENFRAMEWORKS_LIB_SOURCES}
+		${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitMovieRenderer.m
+		${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitGrabber.mm
+		${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitPlayer.mm
+	)
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/utils/ofSystemUtils.cpp
+		PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitGrabber.mm
+		PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitPlayer.mm
+		PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/video/ofQTKitMovieRenderer.m
+		PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES( ${OPENFRAMEWORKS_ROOT}/libs/openFrameworks/app/ofAppGLFWWindow.cpp
+		PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(../src/mainMacOSX.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofog.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoAction.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatJump.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
+	# ofxCocoaWindow rocks (compared to others ofxCocoa*)
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindower.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLContext.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+endif()
 
 if (APPLE)
-	set (app_sources_files ../src/mainMacOSX.mm ../src/ofxAntescofog.cpp ../src/ofxAntescofoSim.cpp)
+	set (app_sources_files ../src/mainMacOSX.mm ../src/ofxAntescofog.cpp ../src/ofxAntescofoSim.cpp
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoSim.cpp
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src/ofxModifierKeys_impl_mac.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxHotKeys_impl_mac.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxRemoveCocoaMenu.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLView.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindower.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindow.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLView.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLContext.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxCodeEditor.mm
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
+	)
+elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+	set (app_sources_files ../src/main.cpp
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src/ofxModifierKeys_impl_linux.cpp
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxHotKeys_impl_linux.cpp
+	)
 endif(APPLE)
 
 set (app_sources_files ${app_sources_files}
@@ -239,7 +282,6 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLFlags.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/BeatKeyframes.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/Keyframes.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoSim.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoAction.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp
@@ -253,7 +295,6 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLMultiCurves.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLZoomer2D.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAccompAudioTrack.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src/ofxModifierKeys_impl_mac.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTextInputField/src/ofxTextInputField.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMSAInteractiveObject/ofxMSAInteractiveObject.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxXmlSettings/src/ofxXmlSettings.cpp
@@ -263,12 +304,10 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLVideoTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLColorTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLBangs.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxHotKeys_impl_mac.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLCurves.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLLFO.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLImageTrack.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxTLVideoThumb.cpp
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/src/ofxRemoveCocoaMenu.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimecode/src/ofxTimecode.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidi/src/ofxBaseMidi.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidi/src/ofxMidi.cpp
@@ -297,20 +336,10 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTween/src/Easings/ofxEasingElastic.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTween/src/Easings/ofxEasingSine.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTween/src/ofxTween.cpp 
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLView.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindower.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindow.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLView.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLContext.mm
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/ofxCodeEditor.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/ofxConsole.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/ofOpenALSoundPlayer_TimelineAdditions/ofOpenALSoundPlayer_TimelineAdditions.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fft.c
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/kiss/src/kiss_fftr.c
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUI2DGraph.cpp
   	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUI2DPad.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIBaseDraws.cpp
@@ -368,31 +397,13 @@ if (GUIDO)
 	)
 endif(GUIDO)
 
-SET_SOURCE_FILES_PROPERTIES(../src/mainMacOSX.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofog.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(../src/ofxAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoSim.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoAction.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatJump.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-
-# ofxCocoaWindow rocks (compared to others ofxCocoa*)
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/GLWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaDelegate.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxCocoaWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindower.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/ofxNSWindow.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLView.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/OpenGLContext.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
-
-# scintilla
-file ( GLOB_RECURSE SCINTILLA_SOURCES
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.cxx
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.mm
-)
+if (APPLE)
+	# scintilla
+	file ( GLOB_RECURSE SCINTILLA_SOURCES
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.cxx
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/*/*.mm
+	)
+endif()
 
 #get_filename_component(OSCPACK_DIR ${MUTANT_LIBS_PATH}/oscpack_1_1_0_RC2/ ABSOLUTE)
 
@@ -424,17 +435,9 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/ip
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/src
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/include
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexlib
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/cocoa
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/microhttpd/include
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/src/
+	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/
 
 	${OPENFRAMEWORKS_ROOT}/libs/glu/include
 	${OPENFRAMEWORKS_ROOT}/libs/glut/include
@@ -442,7 +445,17 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	CACHE STRING "OpenFrameworks includes search path")
 
 if(APPLE)
-    set(OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS 
+	set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS}
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCocoaWindow/src/
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/src
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/include
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/lexlib
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxCodeEditor/src/scintilla/cocoa
+		${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/
+	)
+
+	set(OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS 
     				     ${OPENFRAMEWORKS_ROOT}/libs/openFrameworksCompiled/lib/osx/
                                      ${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/cairo/lib/osx
@@ -467,21 +480,40 @@ if(APPLE)
                                      CACHE STRING "OpenFrameworks library search paths")
 
 elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
-  execute_process(COMMAND uname -m OUTPUT_VARIABLE ARCH)
-  if ( ${ARCH} MATCHES "x86_64" )
-    set (SUBLIBDIRSUFFIX "linux64")
-  else()
-    set(SUBLIBDIRSUFFIX "linux")
-  endif()
+	set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS}
+		/usr/include/gstreamer-1.0/
+		/usr/include/x86_64-linux-gnu/
+		/usr/include/glib-2.0
+		/usr/lib/x86_64-linux-gnu/glib-2.0/include/
+	)
+	# force 32 bits 
+	set(ARCH "i386")
+	#execute_process(COMMAND uname -m OUTPUT_VARIABLE ARCH)
+	if ( ${ARCH} MATCHES "x86_64" )
+    		set (SUBLIBDIRSUFFIX "linux64")
+  	else()
+    		set(SUBLIBDIRSUFFIX "linux")
+  	endif()
+	set (CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
+	set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
+	set (CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-m32") # -arch i386")
+	set (CMAKE_OSX_ARCHITECTURES "i386")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNDEBUG=1 -DTARGET_MAX=1 -DTARGET_PD=2 -DTARGET_STANDALONE_FILE=3 -DTARGET_MAXSDK -DARCHI_MAC_OS=4 -DARCHI_LINUX=5 -DARCHI_WINDOWS=6 -DTARGET_ASCOGRAPH=7 -DANTESCOFO_TARGET=TARGET_ASCOGRAPH -DANTESCOFO_ARCHI=ARCHI_LINUX -DUSE_MUSICXML=1")
 
-     set(OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS 
+	set(OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS 
                                      ${OPENFRAMEWORKS_ROOT}/libs/fmodex/lib/${SUBLIBDIRSUFFIX}
                                      ${OPENFRAMEWORKS_ROOT}/libs/glu/lib/${SUBLIBDIRSUFFIX}
 				     ${OPENFRAMEWORKS_ROOT}/libs/glut/lib/${SUBLIBDIRSUFFIX}
                                      ${OPENFRAMEWORKS_ROOT}/libs/gstappsink/lib/${SUBLIBDIRSUFFIX}
                                      ${OPENFRAMEWORKS_ROOT}/libs/rtAudio/lib/${SUBLIBDIRSUFFIX}
+                                     ${OPENFRAMEWORKS_ROOT}/libs/poco/lib/${SUBLIBDIRSUFFIX}
+                                     ${OPENFRAMEWORKS_ROOT}/libs/tess2/lib/${SUBLIBDIRSUFFIX}
+                                     ${OPENFRAMEWORKS_ROOT}/libs/glfw/lib/${SUBLIBDIRSUFFIX}
+
                                      /usr/lib/
-                                     CACHE STRING "OpenFrameworks library search paths")
+				     #/usr/lib/x86_64-linux-gnu/
+                                     CACHE STRING "OpenFrameworks library search paths"
+	)
 endif() 
 
 if ( APPLE )
@@ -658,6 +690,35 @@ if ( APPLE )
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
     of_find_library("openal")
     of_find_library("stdc++")
+elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+    of_find_library("PocoFoundation")
+    of_find_library("PocoCrypto")
+    of_find_library("PocoUtil")
+    of_find_library("PocoNet")
+    of_find_library("PocoNetSSL")
+    of_find_library("PocoData")
+    of_find_library("PocoXML")
+    of_find_library("PocoZip")
+    of_find_library("PocoDataODBC")
+    of_find_library("PocoDataSQLite")
+    of_find_library("FreeImage")
+    of_find_library("fmodex")
+    of_find_library("cairo")
+    of_find_library("cairo-script-interpreter")
+    of_find_library("pixman-1")
+    of_find_library("freetype")
+    of_find_library("tess2")
+    of_find_library("GLEW")
+    of_find_library("glut")
+    of_find_library("rtAudio")
+    of_find_library("sndfile")
+    of_find_library("antescofo")
+    of_find_library("glfw3")
+    of_find_library("crypto")
+    of_find_library("ssl")
+    set (CMAKE_FIND_LIBRARY_SUFFIXES ".dylib" ".a" ".lib" ".so")
+    of_find_library("openal")
+    #of_find_library("stdc++")
 endif(APPLE)
 
 if (GUIDO)
@@ -826,12 +887,15 @@ if ("${ANTESCOFO_FLUIDSYNTH}" MATCHES 1)
 endif()
 
 ###################################################################
-SET_SOURCE_FILES_PROPERTIES(../src/midiconvert.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
-find_library(MIDICONVERT_LIB NAMES cocoa PATHS ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS})
-add_executable( midi2antescofo
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
-	../src/midiconvert.cpp
-	${MIDICONVERT_LIB}
-)
-
-target_link_libraries(midi2antescofo ${MIDICONVERT_LIB})
+# Build midiconvert command line executable only on Mac           #
+###################################################################
+if(NOT "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+	SET_SOURCE_FILES_PROPERTIES(../src/midiconvert.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	find_library(MIDICONVERT_LIB NAMES cocoa PATHS ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS})
+	add_executable( midi2antescofo
+			${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm
+			../src/midiconvert.cpp
+			${MIDICONVERT_LIB}
+	)
+	target_link_libraries(midi2antescofo ${MIDICONVERT_LIB})
+endif()

@@ -4,15 +4,19 @@
 
 #include "ofxHotKeys.h"
 #include "ofxAntescofog.h"
-#include "ofxCocoaWindow.h"
+#ifdef TARGET_OSX
+# include "ofxCocoaWindow.h"
+# include <AppKit/NSCursor.h>
+# include "ofxMidiparser.h"
+#endif
 #include "ofxTLBeatTicker.h"
-#include "ofxMidiparser.h"
 #include "Function.h"
 #include "Environment.h"
 #include "AntescofoCore.h"
-#include <AppKit/NSCursor.h>
 
+#ifdef TARGET_OSX
 bool enable_simulate = true;
+#endif
 bool disable_httpd = true;
 
 bool enable_new_window = false;
@@ -75,6 +79,7 @@ ofxAntescofog::ofxAntescofog(int argc, char* argv[]) {
 	guiBottom = 0;
 }
 
+#ifdef TARGET_OSX
 @implementation NSFindWindow 
 @synthesize fog;
 -(void)keyDown:(NSEvent *)theEvent 
@@ -537,6 +542,7 @@ void ofxAntescofog::menu_item_hit(int n)
 			}
 #endif
 			break;
+#ifdef TARGET_OSX
 		case INT_CONSTANT_BUTTON_SIMULATE:
 			{
 				if (enable_simulate) {
@@ -553,7 +559,7 @@ void ofxAntescofog::menu_item_hit(int n)
 				}
 				break;
 			}
-
+#endif
 		case INT_CONSTANT_BUTTON_PLAY:
 			{
 				ofxOscMessage m;
@@ -737,7 +743,7 @@ void ofxAntescofog::setMouseCursorGoto(bool bState) {
 	}
 
 }
-
+#endif
 void ofxAntescofog::setGotoPos(float pos) {
 	cout << "Storing mGotopos " << pos << endl; 
 	mGotoPos = pos;
@@ -752,6 +758,7 @@ void ofxAntescofog::setGotoPos(float pos) {
 
 static ofxAntescofog *fog;
 
+#ifdef TARGET_OSX 
 @implementation ofxCocoaDelegate (ofxAntescofogAdditions)
 - (void)gonna_terminate:(id)sender
 {
@@ -854,13 +861,14 @@ void ofxAntescofog::populateOpenRecentMenu() {
 		created = true;
 	}
 }
+#endif
 
 void ofxAntescofog::setupUI() {
+#ifdef TARGET_OSX
 	id menubar = [[NSMenu new] autorelease];
 	id appMenu = [[NSMenu new] autorelease];
 	id appName = [[NSProcessInfo processInfo] processName];
 	[NSApp setMainMenu:menubar];
-
 
 	cout << "Creating OSX Menus..." << endl;
 	//////////////////
@@ -1159,6 +1167,7 @@ void ofxAntescofog::setupUI() {
 	//[helpMenu addItem:helpMenuItem];
 	[helpMenuItem setSubmenu:helpMenu];
 	[menubar addItem:helpMenuItem];
+#endif // TARGET_OSX
 
 	guiBottom = new ofxUICanvas(0, 0, score_x+score_w - 300, score_y);
 	guiBottom->setFont(ofFilePath::getCurrentExeDir() + "../Resources/DroidSansMono.ttf");
@@ -1176,9 +1185,11 @@ void ofxAntescofog::setupUI() {
 	   */
 
 
+#ifdef TARGET_OSX
 	// register double click on editor notification callback
 	[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:@"DoubleClick" object:nil];
 	//[[NSNotificationCenter defaultCenter] addObserver:[NSApp delegate] selector:@selector(receiveNotification:) name:NSTextDidChangeNotification object:nil];
+#endif
 
 	//guiSetup_Colors->setScrollableDirections(false, true);
 	guiError->setScrollAreaToScreen();
@@ -1438,7 +1449,9 @@ void ofxAntescofog::setupTimeline(){
 void ofxAntescofog::setup(){
 	console->addln("ofxAntescofo::setup()");
 	//ofSetDataPathRoot("../Resources/");
+#ifdef TARGET_OSX
 	ofSetDataPathRoot([[NSString stringWithFormat:@"%@/", [[NSBundle mainBundle] resourcePath]] cStringUsingEncoding:NSUTF8StringEncoding]);
+#endif
 
 	ofSetFrameRate(24);
 	ofSetVerticalSync(true);
@@ -2836,6 +2849,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
         
         ofxAntescofoNote->setAutoScroll(bAutoScroll);
 	}
+#ifdef TARGET_OSX
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_SIMULATE && enable_simulate)
     {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
@@ -2854,6 +2868,7 @@ void ofxAntescofog::guiEvent(ofxUIEventArgs &e)
 	    bIsSimulating = false;
 	    stop_simulate_and_goedit();
     }
+#endif
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_PLAY)
     {
 	    ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;

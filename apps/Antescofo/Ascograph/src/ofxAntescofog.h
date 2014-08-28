@@ -1,18 +1,22 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxNSWindowApp.h"
-#include "ofxCocoaDelegate.h"
+#ifdef TARGET_OSX
+# include "ofxNSWindowApp.h"
+# include "ofxCocoaDelegate.h"
+#endif
 #include "ofxTimeline.h"
 #include "ofxTLZoomer2D.h"
 #include "ofxTLAccompAudioTrack.h"
 #include "ofxTLBeatTicker.h"
 #include "ofxTLAntescofoNote.h"
 #include "ofxTLAntescofoAction.h"
-#include "ofxTLAntescofoSim.h"
+#ifdef TARGET_OSX
+# include "ofxTLAntescofoSim.h"
+#endif
 #include "ofxColorPicker.h"
 #include "ofxUI.h"
-#include "ofxOSC.h"
+#include "ofxOsc.h"
 #include "ofxConsole.h"
 #ifdef USE_HTTPD
 #include "ofxHTTPServer.h"
@@ -116,10 +120,12 @@
 #define TEXT_CONSTANT_LOCAL_SETTINGS		"Ascograph_settings.xml"
 
 
-@class ofxCodeEditor;
-class ofxCocoaWindow;
 class ofxTLBeatTicker;
 class rational;
+
+#ifdef TARGET_OSX
+@class ofxCodeEditor;
+class ofxCocoaWindow;
 
 @interface ofxCocoaDelegate (ofxAntescofogAdditions)
 - (void)menu_item_hit:(id)sender;
@@ -165,6 +171,7 @@ class action_trace {
 	string s;
 	int nbcurves;
 };
+#endif
 
 
 class AntescofoTimeline : public ofxTimeline
@@ -193,8 +200,11 @@ class AntescofoTimeline : public ofxTimeline
 @end
 #endif
 
-//class ofxAntescofog : public ofBaseApp
+#ifdef TARGET_OSX
 class ofxAntescofog : public ofxNSWindowApp
+#else
+class ofxAntescofog : public ofBaseApp
+#endif
 #ifdef USE_HTTPD
 		      , public ofxHTTPServerListener
 #endif
@@ -210,7 +220,9 @@ class ofxAntescofog : public ofxNSWindowApp
 
 		void setup();
 		void setupTimeline();
+#ifdef TARGET_OSX
 		void setupTimelineSim();
+#endif
 		void setupUI();
 		void setupOSC();
 		void update();
@@ -234,6 +246,12 @@ class ofxAntescofog : public ofxNSWindowApp
 
 		string mScore_filename;
 		void parse_AntescofoScore(const string filename);
+		void setGotoPos(float pos);
+		void shouldRedraw();
+		void display_error();
+		void showJumpTrack();
+		void setMouseCursorGoto(bool bState);
+#ifdef TARGET_OSX
 		void setEditorMode(bool state, float beatn, bool fullTextEditor=false);
 		ofxCodeEditor* editor;
 		void editorShowLine(int linea, int lineb, int cola, int colb);
@@ -241,11 +259,6 @@ class ofxAntescofog : public ofxNSWindowApp
 		void editorTextDidChange();
 		void replaceEditorScore(int linebegin, int lineend, int cola, int colb, string actstr);
 		void createCodeTemplate(int which);
-		void showJumpTrack();
-		void display_error();
-		void shouldRedraw();
-		void setMouseCursorGoto(bool bState);
-		void setGotoPos(float pos);
 		void findNextText_pressed();
 		void findPrevText_pressed();
 		void replaceText_pressed();
@@ -253,13 +266,20 @@ class ofxAntescofog : public ofxNSWindowApp
 		int askToSaveScore();
 		int draw_asksave_window();
 		NSFindWindow* mFindWindow;
-		
-		ofxTLAntescofoNote* ofxAntescofoNote, *ofxAntescofoNoteSim;
-		ofxTLBeatTicker *ofxAntescofoBeatTicker, *ofxAntescofoBeatTickerSim;
-		ofxTLZoomer2D *ofxAntescofoZoom, *ofxAntescofoZoomSim;
+#endif
+		ofxTLAntescofoNote* ofxAntescofoNote;
+		ofxTLBeatTicker *ofxAntescofoBeatTicker;
+		ofxTLZoomer2D *ofxAntescofoZoom;
 		ofxTLAccompAudioTrack* audioTrack;
-		ofxTLAntescofoSim* ofxAntescofoSim;
 		ofxTLBeatJump* ofxJumpTrack;
+
+#ifdef TARGET_OSX
+		// timeline tracks for simulation
+		ofxTLAntescofoNote* ofxAntescofoNoteSim;
+		ofxTLBeatTicker *ofxAntescofoBeatTickerSim;
+		ofxTLZoomer2D *ofxAntescofoZoomSim;
+		ofxTLAntescofoSim* ofxAntescofoSim;
+#endif
 
 	protected:
 		// display properties
@@ -277,7 +297,6 @@ class ofxAntescofog : public ofxNSWindowApp
 
 #ifdef TARGET_OSX
 		ofxCocoaWindow*	cocoaWindow;
-#endif
 
 		// UI
 		id mCuesMenuItem, mCuesMenu, mShowhideActiontrackMenuItem, mSnapMenuItem, mAutoscrollMenuItem, mLineWrapModeMenuItem, mLockMenuItem, mFileMenu, mActionsViewDeepLevelModeMenuItem;
@@ -288,12 +307,12 @@ class ofxAntescofog : public ofxNSWindowApp
 		ofxUILabel  *mLabelBeat, *mLabelBPM, *mLabelPitch, *mLabelAccompSpeed, *mFindReplaceOccur;
 		ofxUILabelButton *mSaveColorButton;
 		ofxUILabelToggle *mEditButton;
+#endif
 		void exit();
 		void guiEvent(ofxUIEventArgs &e);
 		ofxUIDropDownList *mUImenu;
 		ofFbo	drawCache;
 		bool bShouldRedraw, bLockAscoGraph;
-		//ofRectangle logoInria;
 		ofImage mLogoInria, mLogoIrcam;
 		vector<string> cuepoints;
 		string mPlayLabel;
@@ -304,8 +323,10 @@ class ofxAntescofog : public ofxNSWindowApp
 		int mCuesMaxIndex;
 		void cues_clear_menu();
 		void cues_add_menu(string s);
+#ifdef TARGET_OSX
 		void newWindow();
 		ofxCocoaWindow* subWindow;
+#endif
 		float mGotoPos;
 		string getApplicationSupportSettingFile();
 		vector<string> mRecentFiles;
@@ -348,6 +369,7 @@ class ofxAntescofog : public ofxNSWindowApp
 		void newScore();
 		bool edited();
 
+#ifdef TARGET_OSX
 		// MIDI file conversion
 		void setup_Midi(string& midifile, bool do_actions);
 		string convertMidiFileToActions(string& midifile);
@@ -360,15 +382,18 @@ class ofxAntescofog : public ofxNSWindowApp
 		void draw_simulate();
 
 		bool bEditorShow, bFullTextEditorShow;
+#endif
 
 		struct timeval last_draw_time;
 
+#ifdef TARGET_OSX
 		// find text
 		NSFindTextField* mFindTextField, *mReplaceTextField;
 		bool bFindTextInitDone, bShowFind;
 		void create_Find_and_Replace_window();
 		void draw_FindText();
 		NSButton* mBtnFindMatchCase, *mBtnFindWrapMode;
+#endif
 
 #ifdef USE_HTTPD
 		// httpd
