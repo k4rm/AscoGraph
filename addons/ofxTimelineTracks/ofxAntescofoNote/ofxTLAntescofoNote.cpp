@@ -83,7 +83,7 @@
 
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
-bool debug_loadscore = true;
+bool debug_loadscore = false;
 //#define DEBUG_GUIDO_ASCOGRAPH 1
 #define USE_GUIDO_IMAGE_STORAGE 1
 int bitmapFontSize = 8;
@@ -412,6 +412,7 @@ void ofxTLAntescofoNote::draw_showPianoRoll() {
 					int l = floor( (w+1) / (sizec ));
 					int s = switches[i]->label.size();
 					if (l > s) l = s;
+					if (w < 0) l = s;
 					string str = switches[i]->label.substr(s-l, l);
 					ofSetColor(0, 0, 0, 255);
 					//ofDrawBitmapString( str, startX, bounds.y-5);
@@ -2310,11 +2311,11 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			newSwitch->type = newtype;
 			newSwitch->startSelected = newSwitch->endSelected = false;
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
-			newSwitch->beat.max = newSwitch->beat.min + e->beat_duration();
 			newSwitch->pitch = abs(e->pitch_list()[0]) > 1000 ? abs(e->pitch_list()[0]) / 100 : abs(e->pitch_list()[0]);
 			newSwitch->is_tied = (e->pitch_list()[0] < 0);
 			newSwitch->duration = e->beat_duration();
 			newSwitch->beat.min = e->beatcum();
+			newSwitch->beat.max = newSwitch->beat.min + e->beat_duration();
 			newSwitch->notenum = e->notenum();
 			if (bGot_Action)  {
 				newSwitch->action = actstr;
