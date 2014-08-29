@@ -2,6 +2,7 @@
 
 set(ASCOGRAPH_VERSION_NUMBER "0.114")
 
+set(ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH 1)
 set(ANTESCOFO_FAUST 0)
 set(ANTESCOFO_CSOUND 0)
 set(ANTESCOFO_FLUIDSYNTH 0)
@@ -530,6 +531,9 @@ elseif( "${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 endif ()
 
+if ( ${ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH} )
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANTESCOFO_LISTENING_ARCHITECTURE_BRANCH")
+endif()
 set (CMAKE_LIBRARY_PATH ${OPENFRAMEWORKS_LIBRARIES_SEARCH_PATHS} ${CMAKE_LIBRARY_PATH} /usr/lib ${ANTESCOFO_LIB_PATH} /usr/local/lib ../bin/Ascograph.app/Contents/Frameworks) # ${LIB_GUIDO_PATH}/)
 set (CMAKE_INCLUDE_PATH ${OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS} /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain//usr/include/ /usr/include /usr/local/include )
 
