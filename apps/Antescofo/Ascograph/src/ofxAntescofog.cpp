@@ -441,13 +441,23 @@ void ofxAntescofog::menu_item_hit(int n)
 		case INT_CONSTANT_BUTTON_HIDE:
 			[[NSRunningApplication currentApplication] hide];
 			break;
-		case INT_CONSTANT_BUTTON_CREATE_GROUP:
-		case INT_CONSTANT_BUTTON_CREATE_LOOP:
-		case INT_CONSTANT_BUTTON_CREATE_CURVE:
-		case INT_CONSTANT_BUTTON_CREATE_CURVES:
-		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
-		case INT_CONSTANT_BUTTON_CREATE_OSCSEND:
-		case INT_CONSTANT_BUTTON_CREATE_OSCRECV:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_GROUP:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_LOOP:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_CURVE:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_CURVES:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_WHENEVER:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_OSCSEND:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_OSCRECV:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_MACRO:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_PROCESS:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_FUNCTION:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_TABINIT:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_MAPINIT:
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_NOTE:
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_CHORD:
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_SILENCE:
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_TRILL:
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_MULTI:
 			ofLogVerbose("Create Menu hit");
 			createCodeTemplate(n);
 			break;
@@ -980,45 +990,130 @@ void ofxAntescofog::setupUI() {
 	//////////////////
 	// Create
 	id createMenu = [[[NSMenu new] autorelease] initWithTitle:@"Create"];
-	id createMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create" action:NULL keyEquivalent:@""] autorelease];
+
+	//NSMenuItem* openRecent = [mFileMenu itemWithTag:INT_CONSTANT_BUTTON_OPENRECENT];
+	NSMenuItem* createMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create" action:NULL keyEquivalent:@""] autorelease];
+
+	// ACTIONS
+	NSMenuItem* actioncreateMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Actions" action:@selector(menu_item_hit:) keyEquivalent:@"" ] autorelease];
+	//mysubmenu = [[NSMenu alloc] init];
+	NSMenu* mysubmenu = [[[NSMenu new] autorelease] initWithTitle:@"Actions"];
+
 	// group
-	NSMenuItem* createGroupMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Group {...}" action:@selector(menu_item_hit:) keyEquivalent:@"g"] autorelease];
-	[createGroupMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_GROUP];
+	NSMenuItem* createGroupMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Group" action:@selector(menu_item_hit:) keyEquivalent:@"g"] autorelease];
+	[createGroupMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_GROUP];
 	createGroupMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
-	[createMenu addItem:createGroupMenuItem];
+	[mysubmenu addItem:createGroupMenuItem];
+
 	// loop
-	NSMenuItem* createLoopMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Loop {...}" action:@selector(menu_item_hit:) keyEquivalent:@"l"] autorelease];
+	NSMenuItem* createLoopMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Loop" action:@selector(menu_item_hit:) keyEquivalent:@"l"] autorelease];
 	createLoopMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
-	[createLoopMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_LOOP];
-	[createMenu addItem:createLoopMenuItem];
+	[createLoopMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_LOOP];
+	[mysubmenu addItem:createLoopMenuItem];
 
 	// curve
-	NSMenuItem* createCurveMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Curve {...}" action:@selector(menu_item_hit:) keyEquivalent:@"c"] autorelease];
-	[createCurveMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_CURVE];
+	NSMenuItem* createCurveMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Curve" action:@selector(menu_item_hit:) keyEquivalent:@"c"] autorelease];
+	[createCurveMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_CURVE];
 	createCurveMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
-	[createMenu addItem:createCurveMenuItem];
+	[mysubmenu addItem:createCurveMenuItem];
 	// curves
-	NSMenuItem* createCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Curves {...}" action:@selector(menu_item_hit:) keyEquivalent:@"C"] autorelease];
+	NSMenuItem* createCurvesMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Curves" action:@selector(menu_item_hit:) keyEquivalent:@"C"] autorelease];
 	createCurvesMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
-	[createCurvesMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_CURVES];
-	[createMenu addItem:createCurvesMenuItem];
+	[createCurvesMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_CURVES];
+	[mysubmenu addItem:createCurvesMenuItem];
 	// whenever
-	NSMenuItem* createWheneverMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Whenever {...}" action:@selector(menu_item_hit:) keyEquivalent:@"w"] autorelease];
+	NSMenuItem* createWheneverMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Whenever" action:@selector(menu_item_hit:) keyEquivalent:@"w"] autorelease];
 	createWheneverMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
-	[createWheneverMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_WHENEVER];
-	[createMenu addItem:createWheneverMenuItem];
+	[createWheneverMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_WHENEVER];
+	[mysubmenu addItem:createWheneverMenuItem];
+	// macro
+	NSMenuItem* createMacroMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Macro definition" action:@selector(menu_item_hit:) keyEquivalent:@"m"] autorelease];
+	createMacroMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createMacroMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_MACRO];
+	[mysubmenu addItem:createMacroMenuItem];
+	// process
+	NSMenuItem* createProcessMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Processus definition" action:@selector(menu_item_hit:) keyEquivalent:@"p"] autorelease];
+	createProcessMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createProcessMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_PROCESS];
+	[mysubmenu addItem:createProcessMenuItem];
+	// function
+	NSMenuItem* createFuncMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create Function definition" action:@selector(menu_item_hit:) keyEquivalent:@"f"] autorelease];
+	createFuncMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createFuncMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_FUNCTION];
+	[mysubmenu addItem:createFuncMenuItem];
+	// tab init
+	NSMenuItem* createTabMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create tab definition" action:@selector(menu_item_hit:) keyEquivalent:@"t"] autorelease];
+	createTabMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createTabMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_TABINIT];
+	[mysubmenu addItem:createTabMenuItem];
+	// map init
+	NSMenuItem* createMapMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create map definition" action:@selector(menu_item_hit:) keyEquivalent:@"M"] autorelease];
+	createMapMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createMapMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_MAPINIT];
+	[mysubmenu addItem:createMapMenuItem];
+	// pattern
+	NSMenuItem* createPatMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create pattern definition" action:@selector(menu_item_hit:) keyEquivalent:@"P"] autorelease];
+	createPatMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[createPatMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_PATTERN];
+	[mysubmenu addItem:createPatMenuItem];
 	// oscsend
-	NSMenuItem* createOscsendMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create OSCsend ..." action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	NSMenuItem* createOscsendMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create OSCsend" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	createOscsendMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
-	[createOscsendMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_OSCSEND];
-	[createMenu addItem:createOscsendMenuItem];
-	// whenever
-	NSMenuItem* createOscrecvMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create OSCrecv ..." action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[createOscsendMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_OSCSEND];
+	[mysubmenu addItem:createOscsendMenuItem];
+	// oscrecv
+	NSMenuItem* createOscrecvMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create OSCrecv" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
 	createOscrecvMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
-	[createOscrecvMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_OSCRECV];
-	[createMenu addItem:createOscrecvMenuItem];
+	[createOscrecvMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_ACTION_OSCRECV];
+	[mysubmenu addItem:createOscrecvMenuItem];
+
+	[actioncreateMenuItem setSubmenu:mysubmenu];
+
+	//[createMenu setSubmenu:mysubmenu];//actioncreateMenuItem];
+	[createMenu addItem:actioncreateMenuItem];
 
 	[createMenuItem setSubmenu:createMenu];
+
+	// EVENTS
+	NSMenuItem* eventscreateMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Events" action:@selector(menu_item_hit:) keyEquivalent:@"" ] autorelease];
+	mysubmenu = [[[NSMenu new] autorelease] initWithTitle:@"Event"];
+
+	// note
+	NSMenuItem* createNoteMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create NOTE" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[createNoteMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_EVENT_NOTE];
+	createNoteMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[mysubmenu addItem:createNoteMenuItem];
+
+	// chord
+	NSMenuItem* createChordMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create CHORD" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[createChordMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_EVENT_CHORD];
+	createChordMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[mysubmenu addItem:createChordMenuItem];
+
+	// silence
+	NSMenuItem* createSilenceMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create SILENCE" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[createSilenceMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_EVENT_SILENCE];
+	createSilenceMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[mysubmenu addItem:createSilenceMenuItem];
+
+	// trill
+	NSMenuItem* createTrillMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create TRILL" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[createTrillMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_EVENT_TRILL];
+	createTrillMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[mysubmenu addItem:createTrillMenuItem];
+
+	// multi
+	NSMenuItem* createMultiMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Create MULTI" action:@selector(menu_item_hit:) keyEquivalent:@""] autorelease];
+	[createMultiMenuItem setTag:INT_CONSTANT_BUTTON_CREATE_EVENT_MULTI];
+	createMultiMenuItem.keyEquivalentModifierMask = NSCommandKeyMask|NSAlternateKeyMask;
+	[mysubmenu addItem:createMultiMenuItem];
+
+
+
+
+	[eventscreateMenuItem setSubmenu:mysubmenu];
+	[createMenu addItem:eventscreateMenuItem];
+
 	[menubar addItem:createMenuItem];
 
 	//////////////////
@@ -3040,38 +3135,83 @@ void ofxAntescofog::createCodeTemplate(int which)
 	string str;
 
 	switch (which) {
-		case INT_CONSTANT_BUTTON_CREATE_GROUP:
+		// submenu Actions
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_GROUP:
 			str = "0. group /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n}\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
-		case INT_CONSTANT_BUTTON_CREATE_LOOP:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_LOOP:
 			str = "0. loop 6.66 /* name @tempo=expr (default $RT_TEMPO), @tight (default: @loose), @local (default @global) */ {\n\t1. action1\n\t1/4 action2\n   \n\t;...\n} /*until(expr)*/\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
-		case INT_CONSTANT_BUTTON_CREATE_CURVE:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_CURVE:
 			str = "curve slider  @Grain := 0.05s, @Action := print $x $y\n{\n\t$x, $y\n\t{\n\t    { 0. 2. } /*@type \"exp\"*/\n\t1   { 1. 0. }\n\t2/5 { 3. 1.4}\n\t; ...\n\t}\n}\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
-		case INT_CONSTANT_BUTTON_CREATE_CURVES:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_CURVES:
 			str = "curve @action := plot $NOW $x $y $z {\n\t$x\n\t{\t\t{ 2.0 }\n\t\t1.0\t{ 4.0 }\n\t\t1.0\t{ 1.4 }\n\t}\n\t$y, $z\n\t{\t\t{5.0, 4.0}\n\t\t3.0\t{0.3 ,7.0}\n\t}\n}\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
-		case INT_CONSTANT_BUTTON_CREATE_WHENEVER:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_WHENEVER:
 			str = "whenever(/*expr*/) {\n\t1. action1\n\t1/4 action2\n\t; ...\n} /*until(expr)*/\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
-
-		case INT_CONSTANT_BUTTON_CREATE_OSCSEND:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_MACRO:
+			str = "@macro_def @fun_name()\n\t{\n}\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_FUNCTION:
+			str = "@fun_def @fun_name() {\n\n}\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_PROCESS:
+			str = "@proc_def ::@proc_name() {\n\n}\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_TABINIT:
+			str = "tab := [1]\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_MAPINIT:
+			str = "map := {(\"a\",1)}\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_PATTERN:
+			str = "@pattern_def pattern::P {\n\tSTATE $x where($x>10) during 0.5s\n\tbefore 1s\n\tEVENT $y where($y=1)\n}\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_OSCSEND:
 			str = "oscsend test \"localhost\" :3004 \"/antescofo/hello2\"";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
-		case INT_CONSTANT_BUTTON_CREATE_OSCRECV:
+		case INT_CONSTANT_BUTTON_CREATE_ACTION_OSCRECV:
 			str = "oscrecv receivername 3007 \"/\" $varname";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		// events
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_NOTE:
+			str = "NOTE C5 1\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_CHORD:
+			str = "CHORD (A5 E5) 1\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_TRILL:
+			str = "TRILL (C3 D3) 1\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_MULTI:
+			str = "MULTI (D3 E4) 2\n";
+			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
+			break;
+		case INT_CONSTANT_BUTTON_CREATE_EVENT_SILENCE:
+			str = "NOTE 0 1\n";
 			[ editor insertStringAtPos:pos posb:pos str:str.c_str() ];
 			break;
 
