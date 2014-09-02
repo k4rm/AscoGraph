@@ -2240,11 +2240,14 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->is_tied = (*m < 0);
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;
+#ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
+
 					if (bGot_Action && m == e->pitch_list().begin())  { // associate action with first MULTI switch
 						newSwitch->action = actstr;
-#ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
 						add_action(e->beatcum(), actstr, e);
 #else
+					if (bGot_Action && m == e->pitch_list.begin())  { // associate action with first MULTI switch
+						newSwitch->action = actstr;
 						add_action(e->beatcum, actstr, e);
 #endif
 					}
@@ -2322,9 +2325,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				add_action(e->beatcum(), actstr, e);
 			}
 #else
-			newSwitch->beat.max = newSwitch->beat.min + e->beat_duration;
 			newSwitch->duration = e->beat_duration;
 			newSwitch->beat.min = e->beatcum;
+			newSwitch->beat.max = newSwitch->beat.min + e->beat_duration;
 			newSwitch->pitch = abs(e->pitch_list[0]) > 1000 ? abs(e->pitch_list[0]) / 100 : abs(e->pitch_list[0]);
 			newSwitch->is_tied = (e->pitch_list[0] < 0);
 			newSwitch->notenum = e->notenum;

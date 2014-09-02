@@ -2148,6 +2148,11 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 				//cout << "autocompletion: adding internal function: " << cmd << endl;
 				[editor pushback_keywords:cmd.c_str()];
 			}
+			// TODO recurse through all groups to get variable names
+			// TODO get macro names
+			// TODO get functions names
+			// TODO get proc names
+			// TODO get map and arrays names
 		}
 	} else {
 		if (editor) {
