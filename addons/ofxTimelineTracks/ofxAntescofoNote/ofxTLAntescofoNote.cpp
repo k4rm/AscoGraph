@@ -2004,34 +2004,15 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 	//<< " pitches:" << e->pitch_list.size() << endl; console->addln(str.str()); str.str(""); }
 	return ret;
 #else
-
-#if 0
-
-	if (e->type_string() == "TRILL")
-		ret = ANTESCOFO_TRILL;
-	else if (e->type_string() == "MULTI")
-		ret = ANTESCOFO_MULTI;
-	else if (e->type_string() == "CHORD")
-		ret = ANTESCOFO_CHORD;
-	else if (e->type_string() == "SILENCE")
-		ret = ANTESCOFO_REST;
-	else if (1 == e->pitch_list().size() && 0.0 == e->pitch_list()[0] && e->isSilence()) {
-		ret = ANTESCOFO_REST;
-		return ret;
-	}
-#endif
-
-    //! Indicating the type of Markov state.
-    //! 0= Semi-Markov, 1=Markov, 2=trill(semi-markov), 4=MULTI   (4 was Chord/Vector)
-	cout << "getNoteType: isMarkov = " << e->type() << endl;
-	
+	//! 0= Semi-Markov, 1=Markov, 2=trill(semi-markov), 4=MULTI   (4 was Chord/Vector)
+	//cout << "getNoteType: isMarkov = " << e->type() << endl;
 	if (e->type() == 2)
 		ret = ANTESCOFO_TRILL;
 	else if (e->type() == 4)
 		ret = ANTESCOFO_MULTI;
 	else if (e->type() == 1)
 		ret = ANTESCOFO_CHORD;
-	else if (e->isSilence()) //type_string() == "SILENCE")
+	else if (e->isSilence())
 		ret = ANTESCOFO_REST;
 	else {
 		ret = e->pitch_list().size() == 1 ? ANTESCOFO_NOTE : ANTESCOFO_CHORD;
@@ -2572,6 +2553,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 	update_duration();
 	getcues();
+#ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
+	get_identifiers();
+#endif
 
 #ifdef USE_GUIDO
 	if (!bShowPianoRoll)
@@ -2610,6 +2594,15 @@ void ofxTLAntescofoNote::getcues() {
 			}
 		}
 		cout << endl;
+	}
+
+}
+
+
+void ofxTLAntescofoNote::get_identifiers() {
+	if (switches.size() && mAntescofog)
+	{
+		mAntescofog->get_identifiers_for_completion();
 	}
 
 }

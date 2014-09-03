@@ -222,8 +222,12 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	antescofo_ascograph_offline *mAntescofo;
 	vector<string> cuepoints;
 	vector<ofxTLAntescofoNoteOn*>& getSwitches() {return switches;}
+#ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
+	void get_identifiers();
+#endif
 	ofTrueTypeFont mFont;
 	int fontsize;
+	Score *mNetscore;
 #ifdef USE_GUIDO
 	bool mode_pianoroll() { return bShowPianoRoll; }
 	bool mode_guido() { return !bShowPianoRoll; }
@@ -347,7 +351,6 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
     ofxTLAntescofoAction* ofxAntescofoAction;
 
 	// Antescofo score support
-	Score       *mNetscore;
 	map<int,int> line2note;
 
 	ofImage* noteImage;

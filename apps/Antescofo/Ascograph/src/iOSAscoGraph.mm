@@ -16,10 +16,9 @@
 #include "Function.h"
 #include "Environment.h"
 
-
 bool _debug = true;
 
-string ascograph_version = "1.07";
+string ascograph_version = "1.08";
 
 extern ofxConsole* console;
 
@@ -970,7 +969,10 @@ void iOSAscoGraph::send_OSC_getscore(string host) {
         try {
             mOSCsender.setup(mOsc_host, atoi(mOsc_port_MAX.c_str()));
         } catch (...)
-        { cerr << "ERROR OSC EXCEPTION" << endl; }
+        {
+            cerr << "ERROR OSC EXCEPTION" << endl;
+            return;
+        }
 
         ofxOscMessage m;
         m.setAddress("/antescofo/cmd");

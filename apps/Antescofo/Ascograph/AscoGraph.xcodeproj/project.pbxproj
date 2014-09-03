@@ -2569,6 +2569,7 @@
 					"ASCOGRAPH_IOS=1",
 					"OFX_UI_TARGET_TOUCH=1",
 					"USE_GUIDO=1",
+					"ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2640,6 +2641,7 @@
 					"OFX_UI_TARGET_TOUCH=1",
 					"USE_GUIDO=1",
 					"ASCOGRAPH_IOS=1",
+					"ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

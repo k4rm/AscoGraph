@@ -2120,6 +2120,7 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 				//cout << "autocompletion: adding internal command: " << cmd << endl;
 				[editor pushback_keywords:cmd.c_str()];
 			}
+#if 0
 			for (GlobalEnvironment::dicof_t::iterator i = ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.begin();
 			     i !=  ofxAntescofoNote->mAntescofo->get_env()->DicoFunctions.end(); i++) {
 				if (!i->second) break;
@@ -2127,12 +2128,11 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 				//cout << "autocompletion: adding internal function: " << cmd << endl;
 				[editor pushback_keywords:cmd.c_str()];
 			}
-			// TODO recurse through all groups to get variable names
-			// TODO get macro names
-			// TODO get functions names
-			// TODO get proc names
-			// TODO get map and arrays names
+#endif
+
+
 		}
+			
 	} else {
 		if (editor) {
 			[ editor die];
@@ -2146,6 +2146,45 @@ void ofxAntescofog::setEditorMode(bool state, float beatn, bool fullTextEditor) 
 	}
 #endif
 }
+
+#ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
+bool compare_stringptr_content(const string* lhs, const string* rhs) {
+	if (lhs && rhs) {
+		//if (*lhs != *rhs) return false;
+		if (lhs->compare(*rhs) == 0) return true;
+	}
+	return false;
+}
+
+bool greater_stringptr_content(const string* lhs, const string* rhs) {
+	if (lhs && rhs) {
+		return (*lhs) < (*rhs);
+	}
+	return false;
+}
+
+void ofxAntescofog::get_identifiers_for_completion()
+{
+	// add every variable of the current score
+	vector<const string*> tab;
+	if (ofxAntescofoNote->mAntescofo && ofxAntescofoNote->mNetscore) {
+		ofxAntescofoNote->mNetscore->get_identifiers(tab);
+		//cout << "ofxAntescofog::setEditorMode: size= " << tab.size() << endl;
+
+		std::sort(tab.begin(), tab.end(), greater_stringptr_content);
+		vector<const string*>::const_iterator f = std::unique(tab.begin(), tab.end(), compare_stringptr_content);
+		tab.resize(f - tab.begin());
+		//cout << "ofxAntescofog::setEditorMode: size= " << tab.size() << " after unique() " << endl;
+
+		for (int i = 0; i < tab.size(); i++) {
+			if (tab[i]) {
+				//cout << "ofxAntescofog::setEditorMode: adding to completion: " << *(tab[i]) << endl;
+				[editor pushback_keywords:tab[i]->c_str()];
+			}
+		}
+	}
+}
+#endif
 
 void ofxAntescofog::save_ColorPicker(string name)
 {

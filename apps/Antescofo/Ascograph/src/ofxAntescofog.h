@@ -273,6 +273,8 @@ class ofxAntescofog : public ofBaseApp
 		void replaceAllText_pressed();
 		int askToSaveScore();
 		int draw_asksave_window();
+		void get_identifiers_for_completion();
+		//bool compare_stringptr_content(const string* lhs, const string* rhs);
 		NSFindWindow* mFindWindow;
 #endif
 		ofxTLAntescofoNote* ofxAntescofoNote;
