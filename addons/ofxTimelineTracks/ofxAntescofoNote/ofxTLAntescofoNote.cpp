@@ -2149,7 +2149,9 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 	str << "Duration ------------------ " << mDur_in_secs << " seconds.";
 
 	if (mDur_in_beats == 0) {
+#ifndef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH // previous score is (or should be) deleted on load in ListeningArchitecture
 		if (score) delete score;
+#endif
 		mNetscore = 0;
 		return 0;
 	}
@@ -2989,8 +2991,10 @@ void ofxTLAntescofoNote::clear(){
 		mCurGuidoId = -1;
 #endif
 		deleteActionTrack();
-		//mAntescofo // TODO rajouter l'appel au ~Score() !!!
+#ifndef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH // previous score is (or should be) deleted on load in ListeningArchitecture
 		delete mNetscore;
+		mAntescofo->x_netscore = NULL;
+#endif
 		mNetscore = 0;
 		mCurSecs = 0.;
 		mCurBeat = -1;
