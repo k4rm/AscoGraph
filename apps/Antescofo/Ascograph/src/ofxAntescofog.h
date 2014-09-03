@@ -18,9 +18,6 @@
 #include "ofxUI.h"
 #include "ofxOsc.h"
 #include "ofxConsole.h"
-#ifdef USE_HTTPD
-#include "ofxHTTPServer.h"
-#endif
 #include "ofxTLBeatJump.h"
 
 
@@ -219,9 +216,6 @@ class ofxAntescofog : public ofxNSWindowApp
 #else
 class ofxAntescofog : public ofBaseApp
 #endif
-#ifdef USE_HTTPD
-		      , public ofxHTTPServerListener
-#endif
 {
 	public:
 #ifdef TARGET_OSX
@@ -408,26 +402,5 @@ class ofxAntescofog : public ofBaseApp
 		void draw_FindText();
 		NSButton* mBtnFindMatchCase, *mBtnFindWrapMode;
 #endif
-
-#ifdef USE_HTTPD
-		// httpd
-		ofxHTTPServer * httpd_server;
-		ofPoint radius[20]; // for drawing
-		ofImage image;
-		bool imageServed;
-		bool imageSaved;
-		void setup_httpd();
-		void getRequest(ofxHTTPServerResponse & response);
-		void postRequest(ofxHTTPServerResponse & response);
-		void fileNotFound(ofxHTTPServerResponse& response){}
-		void draw_http_image();
-		void update_http_image();
-		void httpd_update_beatpos();
-		string postedImgName;
-		string postedImgFile;
-		string prevPostedImg;
-		ofImage postedImg;
-#endif
-
 };
 

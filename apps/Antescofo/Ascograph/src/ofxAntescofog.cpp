@@ -17,7 +17,6 @@
 #ifdef TARGET_OSX
 bool enable_simulate = true;
 #endif
-bool disable_httpd = true;
 
 bool enable_new_window = false;
 
@@ -1606,10 +1605,6 @@ void ofxAntescofog::setup(){
 
 	if (mScore_filename.size())
 		loadScore(mScore_filename, true);
-
-#ifdef USE_HTTPD
-	if (!disable_httpd) setup_httpd();
-#endif
 }
 
 //--------------------------------------------------------------
@@ -1644,10 +1639,6 @@ void ofxAntescofog::update() {
 				mOsc_beat = m.getArgAsFloat(0);
 				mLabelBeat->setLabel(ofToString(mOsc_beat));
 				if (_debug) cout << "OSC received: beat: "<< mOsc_beat << endl;
-#ifdef USE_HTTPD
-				if (!disable_httpd)
-					httpd_update_beatpos();
-#endif
 				if (mOsc_beat == 0)
 					ofxAntescofoNote->missedAll();
 				mHasReadMessages = true;
@@ -1741,12 +1732,6 @@ void ofxAntescofog::update() {
 	}
 	//guiBottom->update();
 	push_tempo_value();
-
-#ifdef USE_HTTPD
-	// http update
-	if (!disable_httpd)
-		update_http_image();
-#endif
 }
 
 void ofxAntescofog::shouldRedraw()
@@ -1820,12 +1805,6 @@ void ofxAntescofog::draw() {
 			bShouldRedraw = false;
 		}
 	}
-
-#ifdef USE_HTTPD
-	// http draw
-	if (!disable_httpd)
-		draw_http_image();
-#endif
 }
 
 void ofxAntescofog::save_appsupport(string filename) {
@@ -2791,9 +2770,6 @@ int ofxAntescofog::loadScore(string filename, bool reloadEditor, bool sendOsc) {
 	showJumpTrack();
 
 	bShouldRedraw = true;
-#ifdef USE_HTTPD
-	imageSaved = false;
-#endif
 	return n;
 }
 
@@ -3289,92 +3265,6 @@ string ofxAntescofog::convertMidiFileToActions(string& midifile) {
 	string rets([ret UTF8String]);
 	return rets;
 }
-
-
-#ifdef USE_HTTPD
-//////////////////////////////////////
-///// HTTP server
-//////////////////////////////////////
-void ofxAntescofog::draw_http_image() {
-	if(!imageSaved){
-		int x = 4;
-		int y = ofxAntescofoNote->getBounds().y - x + 5;
-		int w = ofxAntescofoNote->getBounds().width;
-		int h = ofxAntescofoNote->getBounds().height + 30;
-		image.grabScreen(x, y, w, h);
-
-		image.saveImage("www/screen.jpg");
-		imageSaved = true;
-	}
-
-}
-
-void ofxAntescofog::update_http_image() {
-	if(postedImgFile!=prevPostedImg){
-		postedImg.loadImage("upload/" + postedImgFile);
-		prevPostedImg = postedImgFile;
-	}
-}
-
-
-void ofxAntescofog::setup_httpd() {
-	image.allocate(score_w+10 , ofGetWindowHeight(),OF_IMAGE_COLOR);
-	imageSaved  = false;
-	httpd_server = ofxHTTPServer::getServer(); // get the instance of the server
-	httpd_server->setServerRoot("www");		 // folder with files to be served
-	httpd_server->setUploadDir("upload");		 // folder to save uploaded files
-	httpd_server->setCallbackExtensions("of");	 // extension of urls that aren't files but will generate a post or get event
-	httpd_server->setListener(*this);
-
-	httpd_server->start(8888);
-
-	mOSCsender_www.setup("localhost", 8889);
-}
-
-void ofxAntescofog::getRequest(ofxHTTPServerResponse & response){
-	cout << "++++++++++ got request: " << response.url << endl;
-	if(response.url=="/"){
-		response.response="<html> \
-			<script type='text/javascript' src='barTest.js'> \
-				   function beginrefresh(){ \
-					   setTimeout(\"window.location.reload();\",83); \
-				   }\
-				   window.onload=beginrefresh; \
-				BarTest(); \
-			</script>\
-			</head> <body> <img src=\"screen.jpg\"/> </body></html>";
-
-
-		imageSaved  = false;
-	}
-}
-
-void ofxAntescofog::postRequest(ofxHTTPServerResponse & response){
-	cout << "++++++++++ got post request: " << response.url << endl;
-	if(response.url=="/postImage.of"){
-		postedImgName = response.requestFields["name"];
-		postedImgFile = response.uploadedFiles[0];
-		response.response = "<html> <head> oF http server </head> <body> image " + response.uploadedFiles[0] + " received correctly <body> </html>";
-	}
-}
-
-void ofxAntescofog::httpd_update_beatpos()
-{
-	ofxOscMessage m;
-	m.setAddress("/antescofo/event_beatpos");
-	float n = (mOsc_beat - 1.) / ofxAntescofoNote->get_max_note_beat();
-	cout<< "Sending OSC event beat pos: " << mOsc_beat << " :" << n << " : " << ofxAntescofoNote->get_max_note_beat() << endl;
-	char b[200];
-	getcwd(b, 200);
-	cout << b << endl;
-	ofstream ofs ("../Resources/www/pos", ofstream::trunc);
-	
-	ofs << n << endl;
-
-	ofs.close();
-}
-#endif //USE_HTTPD
-
 
 
 void ofxAntescofog::push_tempo_value() {

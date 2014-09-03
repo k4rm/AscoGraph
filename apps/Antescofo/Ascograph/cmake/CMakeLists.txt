@@ -2,13 +2,12 @@
 
 set(ASCOGRAPH_VERSION_NUMBER "0.114")
 
-set(ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH 0)
+set(ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH 1)
 set(ANTESCOFO_FAUST 0)
 set(ANTESCOFO_CSOUND 0)
 set(ANTESCOFO_FLUIDSYNTH 0)
 
 set(GUIDO 1)
-set(USE_HTTPD 0)
 
 SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
 
@@ -385,7 +384,6 @@ set (app_sources_files ${app_sources_files}
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIValuePlotter.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIWidget.cpp
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxUI/src/ofxUIWidgetWithLabel.cpp
-	#${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer//src/ofxHTTPServer.cpp
 	#${OPENFRAMEWORKS_ADDONS_ROOT}/
 )
 if (GUIDO)
@@ -436,8 +434,6 @@ set(OPENFRAMEWORKS_INCLUDES_SEARCH_PATHS
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/ip
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxOsc/libs/oscpack/src/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxModifierKeys/src
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/microhttpd/include
-	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/src/
 	${OPENFRAMEWORKS_ADDONS_ROOT}/ofxConsole/src/
 
 	${OPENFRAMEWORKS_ROOT}/libs/glu/include
@@ -476,7 +472,6 @@ if(APPLE)
                                      ${OPENFRAMEWORKS_ROOT}/libs/unicap/lib/osx
                                      ${OPENFRAMEWORKS_ROOT}/libs/videoInput/lib/osx
                                      ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimeline/libs/sndfile/lib/osx/${SUBLIBDIRSUFFIX}
-				     ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/
 
                                      CACHE STRING "OpenFrameworks library search paths")
 
@@ -686,7 +681,6 @@ if ( APPLE )
       of_find_library("fluidsynth")
     endif()
     set (CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
-    #of_find_library("microhttpd")
     of_find_library("antescofo")
     of_find_library("glfw3")
     of_find_library("crypto")
@@ -847,7 +841,6 @@ SET(CMAKE_INSTALL_RPATH @executable_path/../Frameworks/libfmodex.dylib)
 #	set (CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} @executable_path/../Frameworks/GUIDOEngine.framework//GUIDOEngine)
 #endif()
 
-#set (${OPENFRAMEWORKS_LIBRARIES} ${OPENFRAMEWORKS_LIBRARIES}) ${OPENFRAMEWORKS_ADDONS_ROOT}/ofxHttpServer/libs/libmicrohttpd.a )
 
 target_link_libraries(${PROJECT_NAME} ${OPENFRAMEWORKS_LIBRARIES})
 

@@ -79,14 +79,15 @@ NOTE A1 10
 NOTE A1 10
 Curve __anonymous187_curve  @Action :=
         {
-            plot $NOW $x $y $z	; tight=0 loose=0 no tempo_expr
+            plot $NOW $x $y $z 	; tight=0 loose=0 no tempo_expr
         }	; tight=0 loose=0 no tempo_expr
 {
     $x
     {
            { 2 } @type "linear"
         1  { 4 } @type "linear"
-        1 { 1.4 }
+        0.156851  { 2.53932 } @type "circ_out"
+        1.76791 { 1.14286 }
     }
     $y
     {
@@ -105,3 +106,17 @@ Curve __anonymous187_curve  @Action :=
 
 
 NOTE A1 10
+
+
+Curve slider3  @Grain := 0.05 s, @Action :=
+        {
+            print $x 
+        }
+{
+    $x
+    {
+          { 0.0 } @type "linear"
+        1.22111 { 0.923497 } @type "bounce"
+        4.77889 { 3.0 }
+    }
+}
