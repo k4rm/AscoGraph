@@ -2601,6 +2601,7 @@ void ofxTLAntescofoNote::getcues() {
 }
 
 
+#ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
 void ofxTLAntescofoNote::get_identifiers() {
 	if (switches.size() && mAntescofog)
 	{
@@ -2608,6 +2609,7 @@ void ofxTLAntescofoNote::get_identifiers() {
 	}
 
 }
+#endif
 
 void ofxTLAntescofoNote::update_duration() {
 	if (!ofxAntescofoAction)
@@ -2993,7 +2995,6 @@ void ofxTLAntescofoNote::clear(){
 		deleteActionTrack();
 #ifndef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH // previous score is (or should be) deleted on load in ListeningArchitecture
 		delete mNetscore;
-		mAntescofo->x_netscore = NULL;
 #endif
 		mNetscore = 0;
 		mCurSecs = 0.;
