@@ -361,7 +361,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 	}
 #if 1
 	rational abs_curBeat(0);
-	if (nmeasure > 1 && curBeat.toFloat() == 1.) {
+	if (nmeasure > 1 && curBeat.toFloat() == 1. && v_Notes.size()) {
 		if (pitch == 0.)
 			return;
 		cerr << "AntescofoWriter: something went wrong with note beats, trying to figure out current beat from measure number." << endl;
@@ -401,7 +401,7 @@ void antescofowriter::AddNote(int type, float pitch, rational dur, float nmeasur
 		}
 	}
 #endif
-	if (curBeat.getNumerator() == 1. && nmeasure > 1)  { antescofo_abort(); }
+	//if (curBeat.getNumerator() == 1. && nmeasure > 1)  { antescofo_abort(); }
 	if (debug_) {
 		if (flag_ == ANTESCOFO_FLAG_TIED_START) cout << "tie=Start";
 		if (flag_ == ANTESCOFO_FLAG_TIED_END) cout << "tie=End";
