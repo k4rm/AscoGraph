@@ -70,9 +70,10 @@ void ofxTLZoomer2D::draw() {
 	ofRectangle zoomRegion = ofRectangle(bounds.x + bounds.width*actualZoom.min, bounds.y,
 			bounds.width*actualZoom.span(),bounds.height);
 	ofFill();
-	ofSetColor(timeline->getColors().outlineColor, 72);
+	ofSetColor(timeline->getColors().outlineColor, 52);
 	ofRect(zoomRegion);
 	ofNoFill();
+	ofSetLineWidth(2);
 	ofSetColor(0, 0, 0, 255);
 	ofRectangle zoomRegionL = zoomRegion; 
 	zoomRegionL.y -= 1;
@@ -152,6 +153,7 @@ void ofxTLZoomer2D::mousePressed(ofMouseEventArgs& args) {
 	if (!bounds.inside(args.x, args.y)) return;
 	if(!enabled) return;
 
+	ofHideCursor();
 	minSelected = maxSelected = midSelected = false;
 	if (pointInScreenBounds(ofVec2f(args.x, args.y))) {
 		mouseIsDown = true;
@@ -162,6 +164,8 @@ void ofxTLZoomer2D::mousePressed(ofMouseEventArgs& args) {
 		yGrabOffset = args.y;
 		notifyZoomStarted();
 		midSelected = true;
+		mClickedX = args.x-bounds.x;
+		mClickedY = args.y;
 		return;
 	}
 }
@@ -226,12 +230,21 @@ void ofxTLZoomer2D::mouseReleased(ofMouseEventArgs& args){
 		notifyZoomEnded();
 	}
 	if(!enabled) return;
+	CGPoint point; 
+	point.x = args.x;
+	point.y = bounds.y+60;// + bounds.height/2;
+	//CGSetLocalEventsSuppressionInterval(0);
+	CGWarpMouseCursorPosition(point);
+	CGAssociateMouseAndMouseCursorPosition(true);
+	
+	ofShowCursor();
 	
 	if(mouseIsDown){
 		mouseIsDown = false;
 		notifyZoomEnded();
 		save(); //intentionally ignores auto save since this is just a view parameter
 	}
+	mClickedY = mClickedX = 0;
 }
 
 void ofxTLZoomer2D::notifyZoomStarted(){

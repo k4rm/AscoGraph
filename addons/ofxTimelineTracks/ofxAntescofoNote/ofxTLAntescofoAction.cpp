@@ -33,7 +33,7 @@
 ofxTimeline *_timeline;
 
 bool debug_edit_curve = false;
-bool debug_actiongroup = true;
+bool debug_actiongroup = false;
 template<class T>
 int inline findAndReplace(T& source, const T& find, const T& replace)
 {
@@ -717,7 +717,7 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	int del = 0; float beatdel = 0.;
 	ag->duration = 0;
 
-	bool debugsub = true;
+	bool debugsub = false;
 	if (debugsub) cout << "update_width: " << ag->title << endl;
 	ActionMessage* m;
 	ActionMultiCurves* c;
@@ -1083,7 +1083,7 @@ bool ofxTLAntescofoAction::mousePressed(ofMouseEventArgs& args, long millis)
 	}
 #endif
 
-	cout << "Leaving mousepressed: SHIT: clickedCurves:"<< clickedCurves.size() << endl;
+	//cout << "Leaving mousepressed: SHIT: clickedCurves:"<< clickedCurves.size() << endl;
 	return res;
 }
 

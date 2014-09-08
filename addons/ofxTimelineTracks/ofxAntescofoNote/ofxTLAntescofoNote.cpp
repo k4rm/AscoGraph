@@ -1658,13 +1658,22 @@ void ofxTLAntescofoNote::draw() {
 	if (bAutoScroll) autoscroll();
 	if (bShowPianoRoll) {
 		draw_showPianoRoll();
+		if (bMousePressed) { // draw zoom line
+			ofxTLZoomer2D* z = (ofxTLZoomer2D*)timeline->getZoomer();
+			if (z->mClickedX) {
+				float x = z->mClickedX / bounds.width;
+				x = timeline->normalizedXtoScreenX(x, zoomBounds);
+				ofSetColor(0, 0, 0, 255);
+				ofSetLineWidth(1);
+				ofLine(x, bounds.y, x, bounds.y+bounds.height);
+			}
+		}
 	} else
 #ifdef USE_GUIDO
 		draw_guido();
 #else
 		draw_showStaves();
 #endif
-
 	if (mCurSecs || mCurBeat != -1) draw_playhead();
 	ofPopStyle();
 }
@@ -1831,6 +1840,7 @@ void ofxTLAntescofoNote::mouseReleased(ofMouseEventArgs& args, long millis){
 		//	switches.erase(switches.begin()+i);
 	}	
 	draggingSelectionRange = false;
+	bMousePressed = false;
 }
 
 void ofxTLAntescofoNote::keyPressed(ofKeyEventArgs& args){

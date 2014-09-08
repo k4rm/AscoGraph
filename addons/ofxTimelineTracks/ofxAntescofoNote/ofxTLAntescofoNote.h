@@ -286,6 +286,7 @@ class ofxTLAntescofoNote : public ofxTLTrack //, public ofxMidiListener
 	bool activeNotes[127];
 	int pitchForScreenY(int y);
 	bool bMousePressed;
+	float mMousePressedX;
 
 	string getXMLStringForSwitches(bool selectedOnly);
 	vector<ofxTLAntescofoNoteOn*> switchesFromXML(ofxXmlSettings xml);

@@ -80,6 +80,7 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 	void notifyZoomStarted();
 	void notifyZoomDragged(ofRange oldZoom);
 	void notifyZoomEnded();
+	float mClickedX, mClickedY;
   private:
 
 
