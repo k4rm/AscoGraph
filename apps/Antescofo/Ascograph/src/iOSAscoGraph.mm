@@ -18,11 +18,37 @@
 
 bool _debug = true;
 
-string ascograph_version = "1.08";
+string ascograph_version = "1.09";
 
 extern ofxConsole* console;
 
 iOSAscoGraphMenu* guiMenu;
+
+
+@implementation LandscapeViewController
+
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    if ( UIInterfaceOrientationIsLandscape(toInterfaceOrientation) )
+    {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    // snap to new rotation
+    [UIView setAnimationsEnabled:NO];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    // animations back on so we get the nice slide-ons for the keyboard and so forth
+    [UIView setAnimationsEnabled:YES];
+}
+@end
 
 
 // callback for traces... unused yet.
@@ -63,10 +89,47 @@ void iOSAscoGraph::setup(){
 #endif
     fontsize = 10;
     if (is_retina) fontsize *= 2;
+    
+#if 1 // old shit
     // settings menu
     guiMenu = [[iOSAscoGraphMenu alloc] initWithNibName:@"iOSAscoGraphMenu" bundle:nil];
 	[ofxiOSGetGLView() addSubview:guiMenu.view];
     guiMenu.view.hidden = true;
+    guiMenu.view.transform  = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2);
+    guiMenu.view.center = ofxiOSGetGLView().center;
+
+#else
+    // remove the glview from the UIWindow, which is where openFrameworks puts it
+    //[ofxiOSGetGLView() removeFromSuperview];
+    
+    // create a plain old UIView that is the same size as the app
+    // just use OF sizes as our reference, everything should work out
+    CGRect mainFrame    = CGRectMake(0, 0, ofGetWidth(), ofGetHeight());
+    mMainView           = [[UIView alloc] initWithFrame:mainFrame];
+    
+    // grab the glView and rotate/position it so it looks correct
+    UIView* glView      = ofxiOSGetGLView();
+    glView.transform    = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2);
+    glView.center       = mMainView.center;
+    
+    // glView goes on our main view to prevent wonky resizing
+    [mMainView addSubview:glView];
+    
+    // root controller has main view as its view
+    mRootViewController      = [[LandscapeViewController alloc] init];
+    mRootViewController.view = mMainView;
+    
+    // and finally we set the root view controller
+    // which will make mMainView the window's primary view
+    // all other views are then added as subviews of mMainView
+    // NOT as subviews of the UIWindow or the EAGLView
+    //ofxiPhoneGetUIWindow().rootViewController = mRootViewController;
+    ofxiOSGetUIWindow().rootViewController = mRootViewController;
+    
+    guiMenu = [[iOSAscoGraphMenu alloc] initWithNibName:@"iOSAscoGraphMenu" bundle:nil];
+	[ofxiOSGetGLView() addSubview:guiMenu.view];
+    guiMenu.view.hidden = true;
+#endif
     
 	console = new ofxConsole(4, 500, 800, 300, 10);
 	mGotoPos = 0.;
@@ -88,7 +151,7 @@ void iOSAscoGraph::setup(){
     score_h = ofGetHeight()/2;
 #endif
     ofSetOrientation(OF_ORIENTATION_90_LEFT);
-
+    //ofSetOrientation(OF_ORIENTATION_90_RIGHT);
     ofSetVerticalSync(true);
 	
     ofxAntescofoZoom = new ofxTLZoomer2D();
@@ -119,7 +182,9 @@ void iOSAscoGraph::setup(){
     bShouldRedraw = true;
     bLoadingScore = false;
     bFastForwardOnOff = true;
-	bHide = true;
+	bPrevNextLabelMode = false;
+    bSuiviOffNextEvent = false;
+    bHide = true;
     
     //screenSize = ofToString(w) + "x" + ofToString(h);
     drawBonjour();
@@ -405,7 +470,7 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
         {
             cout << "So in the DynDropdownList we have selected: " << selected[i]->getName() << endl;
             string cue = selected[i]->getName();
-            string cmd = (bFastForwardOnOff ? "fastforward" : "gotolabel");
+            string cmd = (bFastForwardOnOff ? "scrubtolabel" : "startlabel");
             ofLog() << "Sending OSC: " << cmd << " "<< cue << endl;
 
             ofxOscMessage m;
@@ -459,14 +524,28 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
 	    if (b->getValue() == 1) {
 		    ofxOscMessage m;
 		    m.setAddress("/antescofo/cmd");
-		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT)
-			    m.addStringArg("nextevent");
-		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT)
-			    m.addStringArg("previousevent");
+		    if (e.widget->getName() == TEXT_CONSTANT_BUTTON_NEXT_EVENT) {
+                if (bPrevNextLabelMode)
+                    m.addStringArg("nextlabel");
+                else m.addStringArg("nextevent");
+		    }
+            if (e.widget->getName() == TEXT_CONSTANT_BUTTON_PREV_EVENT) {
+			    if (bPrevNextLabelMode)
+                    m.addStringArg("previouslabel");
+                else m.addStringArg("previousevent");
+            }
             cout << "going to send message!" << endl;
 		    mOSCsender.sendMessage(m);
+            b->setValue(false);
             cout << "sent message done" << endl;
-		    b->setValue(false);
+            // send "suivi off" if needed
+            if (bSuiviOffNextEvent) {
+                ofxOscMessage m;
+                m.setAddress("/antescofo/cmd");
+                m.addStringArg("suivi");
+                m.addIntArg(0);
+                mOSCsender.sendMessage(m);
+            }
 	    }
     }
     if(e.widget->getName() == TEXT_CONSTANT_BUTTON_STOP)
@@ -936,8 +1015,23 @@ void iOSAscoGraph::gotMemoryWarning(){
 
 //--------------------------------------------------------------
 void iOSAscoGraph::deviceOrientationChanged(int newOrientation){
+    cout << "iOSAscoGraph::deviceOrientationChanged" << endl;
+/*
+    UIApplication * app = [UIApplication sharedApplication];
+    // status bar orientations are reversed from device orientations
+    // so that we can use OF coordinates to layout UIKit widgets.
+    if ( newOrientation == UIDeviceOrientationLandscapeLeft )
+    {
+        [app setStatusBarOrientation: UIInterfaceOrientationLandscapeRight
+                            animated:NO];
+    }
+    else if ( newOrientation == UIDeviceOrientationLandscapeRight )
+    {
+        [app setStatusBarOrientation: UIInterfaceOrientationLandscapeLeft
+                            animated:NO];
+    }
+ */
     bShouldRedraw = true;
-
 }
 
 // Bonjour events handlers
@@ -995,3 +1089,29 @@ void iOSAscoGraph::setFastForwardOnOff(bool newstate)
     cout << "FastForward changed to " << newstate << endl;
     bFastForwardOnOff = newstate;
 }
+
+void iOSAscoGraph::setSuiviOffNextEvent(bool newstate)
+{
+    cout << "setSuiviOffNextEvent changed to " << newstate << endl;
+    bSuiviOffNextEvent = newstate;
+}
+
+void iOSAscoGraph::setPrevNextLabelModeOnOff(bool newstate)
+{
+    cout << "setPrevNextLabelModeOnOff changed to " << newstate << endl;
+    bPrevNextLabelMode = newstate;
+}
+
+void iOSAscoGraph::setSuiviOnOff(bool newstate)
+{
+    cout << "setSuivi changed to " << newstate << endl;
+    ofxOscMessage m;
+    m.setAddress("/antescofo/cmd");
+    ofLog() << "Sending OSC suivi" << endl;
+    m.addStringArg("suivi");
+    if (newstate)
+        m.addIntArg(1);
+    else m.addIntArg(0);
+    mOSCsender.sendMessage(m);
+}
+

@@ -23,6 +23,8 @@
 #include "Action.h"
 #include "Values.h"
 
+#define ACTION_SHOW_SWITCH 0
+
 #define GROUP_COLOR_ALPHA 80
 #define ELEVATOR_WIDTH 12
 
@@ -42,6 +44,7 @@ class ActionGroup;
 class ActionMessage;
 class ActionCurve;
 class ActionMultiCurves;
+class ActionSwitch;
 class TrackState;
 
 class ofxTLAntescofoAction : public ofxTLTrack
@@ -62,8 +65,11 @@ class ofxTLAntescofoAction : public ofxTLTrack
 		virtual void update();
 		void update_groups();
 		int update_sub_height(ActionGroup *ag);
+#if 0
 		int update_sub_height_curve(ActionMultiCurves* c, int& cury, int& curh);
 		int update_sub_height_message(ActionMessage* m, int& cury, int& curh);
+		int update_sub_height_switch(ActionSwitch* s, int& cury, int& curh);
+#endif
 		float update_sub_duration(ActionGroup *ag);
 		int update_sub_width(ActionGroup *ag);
 		void update_avoid_overlap();
@@ -194,9 +200,11 @@ class ActionGroup {
 		virtual void draw(ofxTLAntescofoAction *tlAction);
 		virtual void draw_header(ofxTLAntescofoAction *tlAction, bool draw_rect = true);
 		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
+		virtual int update_sub_height(ofxTLAntescofoAction* tlAction, int& cury, int& curh) {return 0;}
 		virtual void print();
 		virtual string dump();
 		virtual int getHeight();
+		virtual int getWidth() { return 0; }
 		bool is_in_bounds(ofxTLAntescofoAction *tlAction);
 		bool is_in_bounds_y(ofxTLAntescofoAction *tlAction);
 
@@ -252,6 +260,7 @@ class ActionMessage : public ActionGroup {
 		virtual ~ActionMessage() {}
 
 		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual int update_sub_height(ofxTLAntescofoAction* tlAction, int& cury, int& curh);
 		virtual int getHeight();
 		virtual void print();
 		string actionstr;
@@ -268,9 +277,10 @@ class ActionMultiCurves : public ActionGroup {
 		virtual void drawModalContent(ofxTLAntescofoAction *tlAction);
 		virtual void draw_header(ofxTLAntescofoAction *tlAction, bool draw_rect = true);
 		virtual void draw_big(ofxTLAntescofoAction* tlAction);
+		virtual int update_sub_height(ofxTLAntescofoAction* tlAction, int& cury, int& curh);
 		virtual void print();
 		virtual string dump();
-		int getWidth();
+		virtual int getWidth();
 		virtual int getHeight();
 		void setWidth(int w);
 
@@ -288,6 +298,26 @@ class ActionMultiCurves : public ActionGroup {
 		virtual bool mouseMoved(ofMouseEventArgs& args, long millis);
 		virtual bool mouseReleased(ofMouseEventArgs& args, long millis);
 };
+
+
+#ifdef ACTION_SHOW_SWITCH
+class ActionSwitch : public ActionGroup {
+	public:
+		ActionSwitch(float beatnum_, float delay_, Action* a, Event* e);
+		virtual ~ActionSwitch() {}
+
+		virtual void draw(ofxTLAntescofoAction *tlAction);
+		virtual int update_sub_height(ofxTLAntescofoAction* tlAction, int& cury, int& curh);
+		virtual int getHeight();
+		virtual int getWidth();
+		virtual void print();
+
+		SwitchAction* switchaction;
+		vector<string> cases;
+		bool is_switch;
+};
+#endif
+
 
 class ActionCurve {
 	public:

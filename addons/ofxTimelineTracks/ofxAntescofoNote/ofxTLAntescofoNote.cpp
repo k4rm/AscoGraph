@@ -2603,11 +2603,14 @@ void ofxTLAntescofoNote::getcues() {
 
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
 void ofxTLAntescofoNote::get_identifiers() {
+#ifndef ASCOGRAPH_IOS
+#ifndef TARGET_LINUX
 	if (switches.size() && mAntescofog)
 	{
 		mAntescofog->get_identifiers_for_completion();
 	}
-
+#endif
+#endif
 }
 #endif
 

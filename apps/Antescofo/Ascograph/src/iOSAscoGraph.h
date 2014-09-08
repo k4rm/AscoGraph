@@ -40,6 +40,12 @@ public:
 	void keypressed(ofKeyEventArgs& args) {}
 };
 
+// barebones UIViewController so we can control allowed orientations of SoundCloud interface.
+@interface LandscapeViewController : UIViewController
+{
+}
+@end
+
 #define TEXT_CONSTANT_BUTTON_BEAT               "Position in score (in beats): "
 #define TEXT_CONSTANT_BUTTON_PITCH              "Detected Pitch: "
 #define TEXT_CONSTANT_BUTTON_BPM              	"Detected BPM: "
@@ -98,6 +104,8 @@ public:
     ofFbo drawCache;
     bool bShouldRedraw, bLoadingScore;
     
+    UIView* mMainView;
+    LandscapeViewController* mRootViewController;
     AntescofoTimeline timeline;
 
     // Bonjour stuff
@@ -128,10 +136,15 @@ public:
     ofxUIDropDownList *mDdl_host_lists, *mDdl_cues_list;
     void guiEvent(ofxUIEventArgs &e);
     vector<string> antescofo_hostnames, antescofo_cuepoints;
+    
     void setAutoscroll(bool newstate);
     void setFastForwardOnOff(bool newstate);
+    void setSuiviOffNextEvent(bool newstate);
+    void setPrevNextLabelModeOnOff(bool newstate);
+    void setSuiviOnOff(bool newstate);
+    
     void cues_add_menu(string& str);
-    bool bFastForwardOnOff;
+    bool bFastForwardOnOff, bPrevNextLabelMode, bSuiviOffNextEvent;
     
     bool is_retina;
     int fontsize;

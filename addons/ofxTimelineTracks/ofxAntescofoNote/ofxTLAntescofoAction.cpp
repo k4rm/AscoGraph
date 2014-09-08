@@ -33,7 +33,7 @@
 ofxTimeline *_timeline;
 
 bool debug_edit_curve = false;
-bool debug_actiongroup = false;
+bool debug_actiongroup = true;
 template<class T>
 int inline findAndReplace(T& source, const T& find, const T& replace)
 {
@@ -47,6 +47,8 @@ int inline findAndReplace(T& source, const T& find, const T& replace)
 	}
 	return num;
 }
+
+static ActionGroup* create_ActionGroup(float beatnum, Action* g, Event* e);
 
 #ifdef ASCOGRAPH_IOS
 ofxTLAntescofoAction::ofxTLAntescofoAction(iOSAscoGraph *Antescofog)
@@ -418,45 +420,7 @@ void ofxTLAntescofoAction::add_action(float beatnum, string action, Event *e)
 	ofRectangle rect(bounds.x, bounds.y, 0, 0);
 	// extract data
 	if (e->gfwd) {
-		float d = 0;
-		if (e->gfwd && e->gfwd->delay().value() && e->gfwd->delay().value()->is_value())
-			d = (double)e->gfwd->delay().eval();
-
-		ActionGroup *ag = 0;
-		// can be group
-		Gfwd* g = dynamic_cast<Gfwd*>(e->gfwd);
-		AtomicSequence* as = dynamic_cast<AtomicSequence*>(e->gfwd);
-		Message* m = dynamic_cast<Message*>(e->gfwd);
-		AssignmentAction* asa = dynamic_cast<AssignmentAction*>(e->gfwd);
-		Curve* c = dynamic_cast<Curve*>(e->gfwd);
-		Lfwd* l = dynamic_cast<Lfwd*>(e->gfwd);
-		KillAction* k = dynamic_cast<KillAction*>(e->gfwd);
-		ProcCall* p = dynamic_cast<ProcCall*>(e->gfwd);
-
-		if (g) {
-			ag = new ActionGroup(beatnum, d, g, e);
-		}/* else if (as && as->_actions.size()) { // can be atomic actions list
-			d += as->delay().eval();
-			for (int i = 0; i < as->_actions.size(); i++) {
-
-			}
-
-		} */else if (m) { // can be message
-			ag = new ActionMessage(beatnum, d, m, e);
-		} else if (asa) { // can be an assignment action
-			ag = new ActionMessage(beatnum, d, asa, e);
-		} else if (k) { // can be kill/abort
-			ag = new ActionMessage(beatnum, d, k, e);
-		} else if (c) { // can be a curve
-			ag = new ActionMultiCurves(beatnum, d, c, e);
-		} else if (p) { // can be a proc call
-			ag = new ActionMessage(beatnum, d, p, e);
-		} else if (l && l->_group) { // can be a loop
-			ag = new ActionGroup(beatnum, d, l->_group, e);
-			if (l->_period.value() && l->_period.value()->is_value())
-				ag->period = l->_period.eval();
-			ag->realtitle = ag->title = l->label();
-		}
+		ActionGroup *ag = create_ActionGroup(beatnum, e->gfwd, e);
 		if (ag)
 			mActionGroups.push_back(ag);
 	}
@@ -530,6 +494,7 @@ int ofxTLAntescofoAction::get_max_note_beat()
 	return maxbeat;
 }
 
+#if 0 // OLD SHIT
 int ofxTLAntescofoAction::update_sub_height_curve(ActionMultiCurves* c, int& cury, int& curh)
 {
 	c->rect.y = cury;
@@ -576,6 +541,25 @@ int ofxTLAntescofoAction::update_sub_height_message(ActionMessage* m, int& cury,
 }
 
 
+int ofxTLAntescofoAction::update_sub_height_switch(ActionSwitch* s, int& cury, int& curh)
+{
+	if (mFilterActions && !s->in_selected_track) {
+		curh = 0;
+		s->rect.height = 0;
+		return 0;
+	}
+	s->rect.x = get_x(s->beatnum + s->delay);
+	s->rect.y = cury;
+	s->rect.height = s->HEADER_HEIGHT;
+	curh = s->HEADER_HEIGHT;
+	for (int i = 0; i < s->cases.size(); i++)
+		s->actions_cases[i]->update();
+	return s->getHeight();
+}
+#endif
+
+
+
 // for updating subgroups
 // return height of ActionGroup in px
 int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
@@ -595,30 +579,50 @@ int ofxTLAntescofoAction::update_sub_height(ActionGroup *ag)
 	}
 	ag->rect.height = toth;
 
-	ActionMessage *m = 0;
-	ActionMultiCurves *c = 0;
+#if 0
+	ActionMessage* m = 0;
+	ActionMultiCurves* c = 0;
+	ActionSwitch* s = 0;
 	
 	if ((c = dynamic_cast<ActionMultiCurves*>(ag))) {
-		update_sub_height_curve(c, cury, curh);
+		//OLDSHIT update_sub_height_curve(c, cury, curh);
+		cury += curh;
+		toth += curh;
+	} else if ((m = dynamic_cast<ActionMessage*>(ag))) {
+		//OLDSHIT update_sub_height_message(m, cury, curh);
+		m->update_sub_height(cury, curh);
+		cury += curh;
+		toth += curh;
+	} else if ((s = dynamic_cast<ActionSwitch*>(ag))) {
+		//OLDSHIT update_sub_height_switch(s, cury, curh);
+		s->update_sub_height_switch(cury, curh);
 		cury += curh;
 		toth += curh;
 	}
-	else if ((m = dynamic_cast<ActionMessage*>(ag))) {
-		update_sub_height_message(m, cury, curh);
-		cury += curh;
-		toth += curh;
-	}
+#else
+	ag->update_sub_height(this, cury, curh);
+	cury += curh;
+	toth += curh;
+
+	ActionMessage* m = 0;
+	ActionMultiCurves* c = 0;
+	ActionSwitch* s = 0;
+#endif
 
 	// go deep
 	vector<ActionGroup*>::iterator g;
 	for (g = ag->sons.begin(); g != ag->sons.end(); g++) {
+#if 0
 		if ((m = dynamic_cast<ActionMessage*>(*g)))
 			update_sub_height_message(m, cury, curh);
-
 		else if ((c = dynamic_cast<ActionMultiCurves*>(*g)))
 			update_sub_height_curve(c, cury, curh);
-
+		else if ((s = dynamic_cast<ActionSwitch*>(ag)))
+			update_sub_height_switch(s, cury, curh);
 		else { (*g)->rect.height = curh = (*g)->HEADER_HEIGHT; }
+#else
+		(*g)->update_sub_height(this, cury, curh);
+#endif
 
 		if (!(*g)->top_level_group) {
 			(*g)->rect.x = ag->rect.x;
@@ -713,11 +717,11 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 	int del = 0; float beatdel = 0.;
 	ag->duration = 0;
 
-	bool debugsub = false;
+	bool debugsub = true;
 	if (debugsub) cout << "update_width: " << ag->title << endl;
-	ActionMessage *m;
-	ActionMultiCurves *c;
-
+	ActionMessage* m;
+	ActionMultiCurves* c;
+	ActionSwitch* s;
 
 	if (!(mFilterActions && !ag->in_selected_track)) {
 		if ((m = dynamic_cast<ActionMessage*>(ag))) {
@@ -742,6 +746,13 @@ int ofxTLAntescofoAction::update_sub_width(ActionGroup *ag)
 			}
 			//cout << "c->delay=" << c->delay << " isValid=" << c->isValid << " len="<< len <<" getWidth= " << c->getWidth() << endl;
 			if (debugsub) cout << "\tupdate_width: curves msg maxw:" << maxw << endl;
+		} else if ((s = dynamic_cast<ActionSwitch*>(ag))) {
+			if (s->rect.x < 0)
+				maxw = s->getWidth() - abs(get_x(s->beatnum));
+			else maxw = s->getWidth();
+			for (int i = 0; i < s->sons.size(); i++) // update sub cases
+				//update_sub_width(s->actions_cases[i]);//->update_sub_height(tlAction, cury, curh);
+				update_sub_width(s->sons[i]);
 		}
 	}
 	vector<ActionGroup*>::const_iterator g;
@@ -1510,7 +1521,7 @@ void ActionGroup::createActionGroup_fill(Action* action)
 		if (strncmp(lab.c_str(), "__anonymous", 9) != 0 && strncmp(lab.c_str(), "eventgroup", 10) != 0)
 			realtitle = lab;
 		//if (lab.size() && strncmp(lab.c_str(), "eventgroup", 10) == 0) {
-		if (event->gfwd == action) {
+		if (event && event->gfwd == action) {
 			top_level_group = true;
 			hidden = false;
 		}
@@ -1520,6 +1531,8 @@ void ActionGroup::createActionGroup_fill(Action* action)
 		colNum_end = action->locate()->end.column;
 		Curve* c = dynamic_cast<Curve*>(action);
 		Gfwd *g = dynamic_cast<Gfwd*>(action);
+		SwitchAction *s = dynamic_cast<SwitchAction*>(action);
+		ConditionalAction* ca = dynamic_cast<ConditionalAction*>(action);
 		if (c) {
 			title = "Curve " + realtitle + "   ";
 			rect.height = HEADER_HEIGHT;
@@ -1527,6 +1540,26 @@ void ActionGroup::createActionGroup_fill(Action* action)
 		} else if (g) {
 			title = "Group " + realtitle;
 			if (debug_actiongroup) cout << "ActionGroup: createActionGroup_fill -----create group "<< title<< " from beatnum=" << beatnum << " ----" << endl;
+			rect.height = HEADER_HEIGHT;
+		} else if (s) {
+			string sel;
+			if (s->selector) {
+				ostringstream oss;
+				oss << *(s->selector);
+				sel = oss.str();
+			}
+			title = "switch " + sel;//realtitle;
+			if (debug_actiongroup) cout << "ActionGroup: createActionGroup_fill -----create switch "<< title<< " from beatnum=" << beatnum << " ----" << endl;
+			rect.height = HEADER_HEIGHT;
+		} else if (ca) {
+			string sel;
+			if (ca->cond) {
+				ostringstream oss;
+				oss << *(ca->cond);
+				sel = oss.str();
+			}
+			title = "if " + sel;//realtitle;
+			if (debug_actiongroup) cout << "ActionGroup: createActionGroup_fill -----create if "<< title<< " from beatnum=" << beatnum << " ----" << endl;
 			rect.height = HEADER_HEIGHT;
 		}
 	}
@@ -1547,6 +1580,8 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 	Lfwd* l = dynamic_cast<Lfwd*>(tmpa);
 	KillAction* k = dynamic_cast<KillAction*>(tmpa);
 	ProcCall* p = dynamic_cast<ProcCall*>(tmpa);
+	SwitchAction* s = dynamic_cast<SwitchAction*>(tmpa);
+	ConditionalAction* ca = dynamic_cast<ConditionalAction*>(tmpa);
 
 	if (g) {
 		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [group] ("<<action->label()<<")" << endl;
@@ -1572,6 +1607,12 @@ void ActionGroup::createActionGroup(Action* tmpa, Event* e, float d) {
 		if (l->_period.value() && l->_period.value()->is_value())
 			ag->period = l->_period.eval();
 		ag->realtitle = ag->title = l->label();
+	} else if (s) {
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [switch] ("<<action->label()<<")" << endl;
+		ag = new ActionSwitch(beatnum, d, s, e);
+	} else if (ca) {
+		if (debug_actiongroup) cout << "ActionGroup::createActionGroup [if] ("<<action->label()<<")" << endl;
+		ag = new ActionSwitch(beatnum, d, ca, e);
 	}
 	if (ag)
 		sons.push_back(ag);
@@ -1839,6 +1880,37 @@ void ActionMultiCurves::draw_header(ofxTLAntescofoAction* tlAction, bool draw_re
 		}
 	}
 }
+
+int ActionMultiCurves::update_sub_height(ofxTLAntescofoAction* tlAction, int& cury, int& curh)
+{
+	rect.y = cury;
+	// update curves rectangle bounds
+	int boxy = rect.y + HEADER_HEIGHT;
+	//int boxh = (bounds.height - c->HEADER_HEIGHT - curh - 5) / c->curves.size();
+	int boxh = 120 / curves.size();
+	boxh *= resize_factor;
+	int boxw = getWidth();
+	int boxx = rect.x;
+	if (delay) boxx = tlAction->get_x(beatnum /*c->header->delay*/ + delay);
+	//cout << "boxx: " << boxx << " delay:" << c->delay << endl;
+	ofRectangle cbounds(boxx, boxy, boxw, boxh);
+	for (int k = 0; k < curves.size(); k++) {
+		ActionCurve *ac = curves[k];
+		if (k) cbounds.y += boxh;
+		for (int iac = 0; iac < ac->beatcurves.size(); iac++) {
+			ac->beatcurves[iac]->setBounds(cbounds);
+			ofRange zr(tlAction->getZoomBounds());
+			ac->beatcurves[iac]->setZoomBounds(zr);
+			ofRectangle r(tlAction->getBounds());
+			ac->beatcurves[iac]->setTLBounds(r);
+			ac->beatcurves[iac]->viewIsDirty = true;
+		}
+	}
+	curh = rect.height = getHeight();
+	return 0;
+}
+
+
 
 /*
  * Split a multi curve into tracks
@@ -2552,7 +2624,6 @@ ActionMessage::ActionMessage(float beatnum_, float delay_, Action* a, Event *e)
 	if (dynamic_cast<ProcCall*>(a))
 		is_proc = true;
 
-	delay = delay_;
 	if (debug_actiongroup) 	cout << "Action: adding message with delay: " << delay << " : " << actionstr << endl;
 }
 
@@ -2563,6 +2634,20 @@ void ActionMessage::print() {
 
 int ActionMessage::getHeight() {
 	return HEADER_HEIGHT;
+}
+
+int ActionMessage::update_sub_height(ofxTLAntescofoAction* tlAction, int& cury, int& curh)
+{
+	if (tlAction->mFilterActions && !in_selected_track) {
+		curh = 0;
+		rect.height = 0;
+		return 0;
+	}
+	rect.x = tlAction->get_x(beatnum + delay);
+	rect.y = cury;
+	rect.height = HEADER_HEIGHT;
+	curh = HEADER_HEIGHT;
+	return 0;
 }
 
 void ActionMessage::draw(ofxTLAntescofoAction* tlAction) {
@@ -2810,5 +2895,173 @@ bool ActionMultiCurves::mouseReleased(ofMouseEventArgs& args, long millis) {
 		}
 	}
 	return res;
+}
+
+
+#ifdef ACTION_SHOW_SWITCH
+ActionSwitch::ActionSwitch(float beatnum_, float delay_, Action* a, Event* e) {
+	period = 0, duration = 0., hidden = true,
+	HEADER_HEIGHT = 16, ARROW_LEN = 15, LINE_SPACE = 12;
+
+	top_level_group = false;
+	beatnum = beatnum_;
+	delay = delay_;
+	event = e;
+	action = a;
+	createActionGroup_fill(a);
+
+	SwitchAction* sw = dynamic_cast<SwitchAction*>(a);
+	ConditionalAction* ca = dynamic_cast<ConditionalAction*>(a);
+	if (sw) {
+		is_switch = true;
+		ostringstream oss;
+		string str;
+		for (int i = 0; i < sw->cases.size(); i++) {
+			// get cases exprs strings
+			oss << * (sw->cases[i].first);
+			str = oss.str();
+			cases.push_back(str);
+			oss.clear(); oss.str("");
+			// get actions 
+			ActionGroup* ag = create_ActionGroup(beatnum, sw->cases[i].second, e);
+			//actions_cases.push_back(ag);
+			sons.push_back(ag);
+		}
+	} else if (ca) {
+		is_switch = false;
+		cases.push_back("");
+		ActionGroup* ag = create_ActionGroup(beatnum, ca->if_true, e);
+		//actions_cases.push_back(ag);
+		sons.push_back(ag);
+		cases.push_back("else");
+		ag = create_ActionGroup(beatnum, ca->if_false, e);
+		//actions_cases.push_back(ag);
+		sons.push_back(ag);
+	}
+	hidden = false;
+}
+
+void ActionSwitch::draw(ofxTLAntescofoAction* tlAction) {
+	if (tlAction->mFilterActions && !in_selected_track) return;
+	if (!is_in_bounds_y(tlAction)) return;
+
+	ofFill();
+	ofSetColor(200, 200, 200, 255);
+	ofRect(tlAction->getBoundedRect(rect));
+
+	ofNoFill();
+	ofSetColor(0, 0, 0, deep_level*255);
+	int strw = rect.width + rect.x - MAX(rect.x, 0);
+	ofSetColor(0, 0, 0, 255);
+	//cout << "Draw msg:" << tlAction->cut_str(strw, actionstr) << " x=" << rect.x+1 << " y=" << rect.y + HEADER_HEIGHT - 3 << endl;
+	//tlAction->mFont.drawString(tlAction->cut_str(strw, actionstr), rect.x + 1, rect.y + HEADER_HEIGHT - 3);
+	for (int i = 0; i < sons.size(); i++) {
+		//TODO DRAW IF OR ELSE tlAction->mFont.drawString(tlAction->cut_str(strw, cases[i]), rect.x + 1, rect.y + HEADER_HEIGHT -3);
+		ActionGroup* g = sons[i];//actions_cases[i];
+		if (g)
+			g->draw(tlAction);
+	}
+	ofSetColor(0, 0, 0, 80);
+	ofRect(tlAction->getBoundedRect(rect));
+	draw_header(tlAction);
+}
+
+void ActionSwitch::print() {
+	cout << "\t**** Action Switch: " <<  title << " x:" << rect.x << " y:" << rect.y << " w:" << rect.width << " h:" << rect.height << endl;
+	for (int i = 0; i < sons.size(); i++) {
+		cout << "--> sub case #" << i <<endl;
+		//actions_cases[i]->print();
+		sons[i]->print();
+	}
+}
+
+int ActionSwitch::getHeight() {
+	int h = 0;
+	//for (int i = 0; i < actions_cases.size(); i++) {
+	for (int i = 0; i < sons.size(); i++) {
+		//h += actions_cases[i]->getHeight();
+		h += sons[i]->getHeight();
+	}
+	return HEADER_HEIGHT + h;
+}
+
+int ActionSwitch::getWidth() {
+	int maxw = 0;
+	//for (int i = 0; i < actions_cases.size(); i++) {
+	for (int i = 0; i < sons.size(); i++) {
+		//int w = actions_cases[i]->getWidth();
+		int w = sons[i]->getWidth();
+		if (maxw < w)
+			maxw = w;
+	}
+	return maxw;
+}
+
+int ActionSwitch::update_sub_height(ofxTLAntescofoAction* tlAction, int& cury, int& curh)
+{
+	if (tlAction->mFilterActions && !in_selected_track) {
+		curh = 0;
+		rect.height = 0;
+		return 0;
+	}
+	rect.x = tlAction->get_x(beatnum + delay);
+	rect.y = cury;
+	rect.height = HEADER_HEIGHT;
+	curh = HEADER_HEIGHT;
+	for (int i = 0; i < sons.size(); i++)
+		//actions_cases[i]->update_sub_height(tlAction, cury, curh);
+		sons[i]->update_sub_height(tlAction, cury, curh);
+
+	// shift cases groups
+	for (int i = 0; i < sons.size(); i++) {
+		sons[i]->rect.x += 15;
+	}
+	return 0;
+}
+
+
+#endif
+
+
+// create an graphical ActionGroup from an Antescofo object group
+ActionGroup* create_ActionGroup(float beatnum, Action* g, Event* e) {
+	if (!g) return NULL;
+	float d = 0;
+	if (g && g->delay().value() && g->delay().value()->is_value())
+		d = (double)g->delay().eval();
+
+	ActionGroup *ag = 0;
+	// can be group
+	Gfwd* gr = dynamic_cast<Gfwd*>(g);
+	AtomicSequence* as = dynamic_cast<AtomicSequence*>(g);
+	Message* m = dynamic_cast<Message*>(g);
+	AssignmentAction* asa = dynamic_cast<AssignmentAction*>(g);
+	Curve* c = dynamic_cast<Curve*>(g);
+	Lfwd* l = dynamic_cast<Lfwd*>(g);
+	KillAction* k = dynamic_cast<KillAction*>(g);
+	ProcCall* p = dynamic_cast<ProcCall*>(g);
+	SwitchAction* sw = dynamic_cast<SwitchAction*>(g);
+	ConditionalAction* ca = dynamic_cast<ConditionalAction*>(g);
+
+	if (gr) {
+		ag = new ActionGroup(beatnum, d, gr, e);
+	} else if (m) { // can be message
+		ag = new ActionMessage(beatnum, d, m, e);
+	} else if (asa) { // can be an assignment action
+		ag = new ActionMessage(beatnum, d, asa, e);
+	} else if (k) { // can be kill/abort
+		ag = new ActionMessage(beatnum, d, k, e);
+	} else if (c) { // can be a curve
+		ag = new ActionMultiCurves(beatnum, d, c, e);
+	} else if (p) { // can be a proc call
+		ag = new ActionMessage(beatnum, d, p, e);
+	} else if (l && l->_group) { // can be a loop
+		ag = new ActionGroup(beatnum, d, l->_group, e);
+		if (l->_period.value() && l->_period.value()->is_value())
+			ag->period = l->_period.eval();
+		ag->realtitle = ag->title = l->label();
+	} else if (sw || ca) // can be a switch or an if
+		ag = new ActionSwitch(beatnum, d, g, e);
+	return ag;
 }
 

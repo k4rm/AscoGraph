@@ -28,4 +28,18 @@ iOSAscoGraph *myApp;
 	myApp->setFastForwardOnOff([switchObj isOn]);
 }
 
+-(IBAction)setSuiviOffNextEventOnOffSwitchHandler:(id)sender {
+	UISwitch *switchObj = sender;
+	myApp->setSuiviOffNextEvent([switchObj isOn]);
+}
+
+-(IBAction)setPrevNextLabelModeOnOffSwitchHandler:(id)sender {
+	UISwitch *switchObj = sender;
+	myApp->setPrevNextLabelModeOnOff([switchObj isOn]);
+}
+
+-(IBAction)setSuiviOnOffSwitchHandler:(id)sender {
+	UISwitch *switchObj = sender;
+	myApp->setSuiviOnOff([switchObj isOn]);
+}
 @end
