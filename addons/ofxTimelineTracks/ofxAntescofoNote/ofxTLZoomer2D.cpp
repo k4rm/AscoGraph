@@ -200,20 +200,29 @@ void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
 		currentViewRange.max = fmin(xmax, 1.);
 
 		// y
-		float yd = -(args.y - yGrabOffset)*6;
-		if (yd > 0) yd *= 10;
+		float yd = -(args.y - yGrabOffset)* 4; //6;
+		if (yd > 0) yd *= 4;//10;
+		//float nyd = ofClamp( screenXtoNormalizedX(yd, ofRange(0, 1.)), -1., 6.);
 		float nyd = screenXtoNormalizedX(yd, ofRange(0, 1.));
 		float d = screenXtoNormalizedX(xMinGrabOffset - currentViewRange.min);
 		xmin = currentViewRange.min - nyd * d;
 
 		d = screenXtoNormalizedX(currentViewRange.max - xMaxGrabOffset);
 		xmax = currentViewRange.max + nyd * d;
+		//cout << "mouse: xmin: " << xmin << " xmax:" << xmax<< " d=" << d<< " yd: " << yd << " nyd:" << nyd << endl;
+		if (xmax < xmin) {
+		//	cout << "WWWWWWWWWWWWWWWWW <<<<< yd= "<< yd <<  " d=" << d << endl;
+			//return;
+			currentViewRange.min = originalMin;
+			currentViewRange.max = originalMax;
+			//notifyZoomEnded();
+			return;
+		}
 
 		currentViewRange.min = fmax(0., xmin);
 		currentViewRange.max = fmin(xmax, 1.);
 
-		if (currentViewRange.max < currentViewRange.min)
-			currentViewRange.max = currentViewRange.min + 0.05;
+		//if (currentViewRange.max < currentViewRange.min) currentViewRange.max = currentViewRange.min + 0.05;
 		notify = true;
 	}
 
@@ -230,19 +239,29 @@ void ofxTLZoomer2D::mouseReleased(ofMouseEventArgs& args){
 		notifyZoomEnded();
 	}
 	if(!enabled) return;
-	CGPoint point; 
-	point.x = args.x;
-	point.y = bounds.y+60;// + bounds.height/2;
-	//CGSetLocalEventsSuppressionInterval(0);
-	CGWarpMouseCursorPosition(point);
-	CGAssociateMouseAndMouseCursorPosition(true);
-	
-	ofShowCursor();
-	
+
 	if(mouseIsDown){
 		mouseIsDown = false;
 		notifyZoomEnded();
 		save(); //intentionally ignores auto save since this is just a view parameter
+
+		// revert mouse cursor position
+#if 0 // TODO
+#if 0
+		CGPoint point; 
+		point.x = args.x;
+		point.y = bounds.y+60;// + bounds.height/2;
+		CGWarpMouseCursorPosition(point);
+		CGAssociateMouseAndMouseCursorPosition(true);
+#else
+		const NSRect contentRect = [window->ns.view frame];
+		const NSPoint localPoint = NSMakePoint(x, contentRect.size.height - y - 1);
+		const NSPoint globalPoint = [window->ns.object convertBaseToScreen:localPoint];
+#endif
+#endif
+
+		ofShowCursor();
+
 	}
 	mClickedY = mClickedX = 0;
 }
