@@ -284,6 +284,7 @@ class ofxAntescofog : public ofBaseApp
 		ofxTLBeatJump* ofxJumpTrack;
 
 #ifdef TARGET_OSX
+		void set_mouse_cursor(int x, int y);
 		// timeline tracks for simulation
 		ofxTLAntescofoNote* ofxAntescofoNoteSim;
 		ofxTLBeatTicker *ofxAntescofoBeatTickerSim;

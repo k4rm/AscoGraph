@@ -42,12 +42,20 @@
 #include "ofxXmlSettings.h"
 #include "ofRange.h"
 
-ofxTLZoomer2D::ofxTLZoomer2D()
+#ifdef TARGET_OSX
+#include "ofxAntescofog.h"
+#import <ApplicationServices/ApplicationServices.h>
+#import <Cocoa/Cocoa.h>
+#endif
+
+
+ofxTLZoomer2D::ofxTLZoomer2D(ofxAntescofog* _fog)
 :	minSelected(false),
 	maxSelected(false),
 	midSelected(false),
 	currentViewRange(ofRange(0.0, 1.0)),
-	zoomExponent(1.0)
+	zoomExponent(1.0),
+	fog(_fog)
 {
 }
 
@@ -153,9 +161,10 @@ void ofxTLZoomer2D::mousePressed(ofMouseEventArgs& args) {
 	if (!bounds.inside(args.x, args.y)) return;
 	if(!enabled) return;
 
-	ofHideCursor();
 	minSelected = maxSelected = midSelected = false;
 	if (pointInScreenBounds(ofVec2f(args.x, args.y))) {
+		ofHideCursor();
+		//CGAssociateMouseAndMouseCursorPosition(0);
 		mouseIsDown = true;
 		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
 		xMinGrabOffset = args.x - minScreenX;
@@ -202,20 +211,15 @@ void ofxTLZoomer2D::mouseDragged(ofMouseEventArgs& args) {
 		// y
 		float yd = -(args.y - yGrabOffset)* 4; //6;
 		if (yd > 0) yd *= 4;//10;
-		//float nyd = ofClamp( screenXtoNormalizedX(yd, ofRange(0, 1.)), -1., 6.);
 		float nyd = screenXtoNormalizedX(yd, ofRange(0, 1.));
 		float d = screenXtoNormalizedX(xMinGrabOffset - currentViewRange.min);
 		xmin = currentViewRange.min - nyd * d;
 
 		d = screenXtoNormalizedX(currentViewRange.max - xMaxGrabOffset);
 		xmax = currentViewRange.max + nyd * d;
-		//cout << "mouse: xmin: " << xmin << " xmax:" << xmax<< " d=" << d<< " yd: " << yd << " nyd:" << nyd << endl;
 		if (xmax < xmin) {
-		//	cout << "WWWWWWWWWWWWWWWWW <<<<< yd= "<< yd <<  " d=" << d << endl;
-			//return;
 			currentViewRange.min = originalMin;
 			currentViewRange.max = originalMax;
-			//notifyZoomEnded();
 			return;
 		}
 
@@ -258,6 +262,19 @@ void ofxTLZoomer2D::mouseReleased(ofMouseEventArgs& args){
 		const NSPoint localPoint = NSMakePoint(x, contentRect.size.height - y - 1);
 		const NSPoint globalPoint = [window->ns.object convertBaseToScreen:localPoint];
 #endif
+#endif
+#ifdef TARGET_OSX
+		/*
+		CGPoint point; 
+		point.x = args.x;
+		point.y = bounds.y+60;// + bounds.height/2;
+		NSScreen* scr = [NSScreen mainScreen];
+		cout << "point: " << point.x << ", " << point.y << endl;
+		CGDirectDisplayID display_id = [[[ scr deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
+		CGDisplayMoveCursorToPoint(display_id, point);
+		CGAssociateMouseAndMouseCursorPosition(1);
+		*/
+		fog->set_mouse_cursor(args.x, mClickedY);//bounds.y+60);
 #endif
 
 		ofShowCursor();

@@ -90,7 +90,7 @@ void ascograph_send_cont_trace(const string& var_name,
 //--------------------------------------------------------------
 void ofxAntescofog::setupTimelineSim(){
 
-	ofxAntescofoZoomSim = new ofxTLZoomer2D();
+	ofxAntescofoZoomSim = new ofxTLZoomer2D(this);
 	ofxAntescofoNoteSim = new ofxTLAntescofoNote(this);
 	ofxAntescofoBeatTickerSim = new ofxTLBeatTicker(this);
 	ofxAntescofoSim = new ofxTLAntescofoSim(this);

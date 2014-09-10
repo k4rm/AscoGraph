@@ -8,6 +8,8 @@
 # include "ofxCocoaWindow.h"
 # include <AppKit/NSCursor.h>
 # include "ofxMidiparser.h"
+# import <ApplicationServices/ApplicationServices.h>
+# import <Cocoa/Cocoa.h>
 #endif
 #include "ofxTLBeatTicker.h"
 #include "Function.h"
@@ -768,6 +770,31 @@ void ofxAntescofog::setGotoPos(float pos) {
 static ofxAntescofog *fog;
 
 #ifdef TARGET_OSX 
+/*
+ Move mouse cursor:
+ x,y inputs are in openFrameworks window relative coords.
+ CGDisplayMoveCursorToPoint uses screen coords
+ */
+void ofxAntescofog::set_mouse_cursor(int x, int y) {
+	NSScreen* scr = [[cocoaWindow->delegate getNSWindow] screen];
+	CGDirectDisplayID display_id = [[[ scr deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
+
+	NSPoint pos = NSMakePoint ((float) x, (float) y);
+	//cout << "set_mouse_cursor: point: " << x << ", " << y << endl;
+	CGPoint cgpoint;
+	NSRect f = [[cocoaWindow->delegate getNSWindow] frame];
+
+	//cout << "SCREEN: x:" << [scr frame].origin.x <<" y:"<< [scr frame].origin.y << " h:"  << [scr frame].size.height << endl;
+	//cout << "WINDOW: x:" << f.origin.x << " y:" << f.origin.y << " h:" << f.size.height << endl;
+
+	cgpoint.x = pos.x + f.origin.x + abs([scr frame].origin.x);
+	cgpoint.y = ([scr frame].origin.y + [scr frame].size.height - f.origin.y - f.size.height) + pos.y + 20;
+	//cout << " => " << cgpoint.x << ", " << cgpoint.y << endl;
+
+	CGDisplayMoveCursorToPoint(display_id, cgpoint);
+	CGAssociateMouseAndMouseCursorPosition(1);
+}
+
 @implementation ofxCocoaDelegate (ofxAntescofogAdditions)
 - (void)gonna_terminate:(id)sender
 {
@@ -1576,7 +1603,7 @@ void ofxAntescofog::setup(){
 
 	ofAddListener(ofEvents().windowResized, this, &ofxAntescofog::windowResized);
 
-	ofxAntescofoZoom = new ofxTLZoomer2D();
+	ofxAntescofoZoom = new ofxTLZoomer2D(this);
 	ofxAntescofoNote = new ofxTLAntescofoNote(this);
 	ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
 

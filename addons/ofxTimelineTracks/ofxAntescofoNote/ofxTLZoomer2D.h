@@ -45,10 +45,12 @@
 #include "ofxTLTrack.h"
 #include "ofxTLZoomer.h"
 
+class ofxAntescofog;
+
 class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 {
   public:
-	ofxTLZoomer2D();
+	ofxTLZoomer2D(ofxAntescofog* _fog);
 	virtual ~ofxTLZoomer2D();
 	
 	virtual void draw();
@@ -85,6 +87,7 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 
 
 	ofRange currentViewRange;
+	ofxAntescofog* fog;
 
 	float xMaxGrabOffset, xMinGrabOffset;
 	float yGrabOffset;

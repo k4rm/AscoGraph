@@ -186,6 +186,7 @@ if(APPLE)
 	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLAntescofoNote.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatTicker.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLBeatJump.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
+	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxTimelineTracks/ofxAntescofoNote/ofxTLZoomer2D.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 	SET_SOURCE_FILES_PROPERTIES(${OPENFRAMEWORKS_ADDONS_ROOT}/ofxMidiParser/ofxMidiParser.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
 	# ofxCocoaWindow rocks (compared to others ofxCocoa*)
