@@ -2239,7 +2239,6 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->velocity = 127;
 					newSwitch->channel = 1;
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
-
 					if (bGot_Action && m == e->pitch_list().begin())  { // associate action with first MULTI switch
 						newSwitch->action = actstr;
 						add_action(e->beatcum(), actstr, e);
@@ -2258,7 +2257,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->isLast = false;
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
 					newSwitch->notenum = e->notenum();
-					newSwitch->label = e->cuename();
+					if (se == e->get_sub_events()->begin()) newSwitch->label = e->cuename();
 #else
 					newSwitch->notenum = e->notenum;
 					newSwitch->label = e->cuename;
