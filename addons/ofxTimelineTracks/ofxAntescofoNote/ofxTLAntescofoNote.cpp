@@ -83,7 +83,7 @@
 
 #define ofGetModifierKeyShift()   ofGetModifierPressed(OF_KEY_SHIFT)
 
-bool debug_loadscore = false;
+bool debug_loadscore = true;
 //#define DEBUG_GUIDO_ASCOGRAPH 1
 #define USE_GUIDO_IMAGE_STORAGE 1
 int bitmapFontSize = 8;
@@ -2201,18 +2201,24 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 
 		int newtype = getNoteType(e);
 		//TODO if (i == score->begin() && !e->beat_duration) { add_action(e->beatcum, actstr, e); }
+		if (newtype == ANTESCOFO_MULTI) {
+			cout << "MULTI FUCKER: pitchs:" << e->pitch_list().size() << " dur:" << e->beat_duration() << endl;
+		}
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
-		if ((e->pitch_list().size() == 1 && e->beat_duration()) || (e->pitch_list().size() && e->pitch_list()[0] && !e->beat_duration())) { // NOTE, TRILL, MULTI
+		//if ((e->pitch_list().size() == 1 && e->beat_duration()) || (e->pitch_list().size() && e->pitch_list()[0] /*&& !e->beat_duration()*/)) { // NOTE, MULTI
+		if (newtype == ANTESCOFO_NOTE || newtype == ANTESCOFO_MULTI) {
 #else
 		if ((e->pitch_list.size() == 1 && e->beat_duration) || (e->pitch_list.size() && e->pitch_list[0] && !e->beat_duration)) { // NOTE, TRILL, MULTI
 #endif
 			//if (newtype == -1) continue;
 			if (newtype == ANTESCOFO_MULTI) {
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
-				double beatmulti = e->beatcum();
-				double durmulti = e->beat_duration();
 				if (e->pitch_list().size()) 
-				for (vector<float>::const_iterator m = e->pitch_list().begin(); m != e->pitch_list().end(); m++) { // MULTI sources
+				//for (vector<float>::const_iterator m = e->pitch_list().begin(); m != e->pitch_list().end(); m++) { // MULTI sources
+				for (vector<Event*>::iterator se = e->get_sub_events()->begin(); se != e->get_sub_events()->end(); se++) { // MULTI sources
+				  double beatmulti = (*se)->beatcum();
+			  	  double durmulti = (*se)->beat_duration();
+				  for (vector<float>::const_iterator m = (*se)->pitch_list().begin(); m != (*se)->pitch_list().end(); m++) { // was MULTI sources
 #else
 				double beatmulti = e->beatcum;
 				double durmulti = e->multi_dur;
@@ -2222,11 +2228,10 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					newSwitch->type = ANTESCOFO_MULTI;
 					newSwitch->startSelected = newSwitch->endSelected = false;
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
-					newSwitch->duration = e->beat_duration();
+					newSwitch->duration = (*se)->beat_duration();// / e->pitch_list().size();
 #else
 					newSwitch->duration = e->beat_duration;
 #endif
-
 					newSwitch->beat.min = beatmulti;
 					newSwitch->beat.max = newSwitch->beat.min + durmulti*2/3;
 					newSwitch->pitch = abs(*m) > 1000 ? abs(*m) / 100 : abs(*m);
@@ -2270,8 +2275,10 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 					if (debug_loadscore) { str << "added new switch for MULTI source: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 					switches.push_back(newSwitch);
 					bGot_Action = false;
+#ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
+				  }
 				}
-#ifndef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
+#else
 				for (vector<float>::iterator m = e->multi_target.begin(); m != e->multi_target.end(); m++) { // MULTI destinations
 					ofxTLAntescofoNoteOn *newSwitch = new ofxTLAntescofoNoteOn();
 					newSwitch->type = ANTESCOFO_MULTI_STOP;
@@ -2351,11 +2358,11 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				switches.push_back(newSwitch);
 				line2note[e->scloc->begin.line] = switches.size() - 1;
 			}
-			if (debug_loadscore) { str << "added new switch: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
+			if (debug_loadscore) { str << "added new switch: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch << " type:" << getNoteType(e); console->addln(str.str()); str.str(""); }
 			bGot_Action = false;
 		}
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
-		else if (e->pitch_list().size() > 1 && e->beat_duration()) {
+		else if (e->pitch_list().size() > 1 && e->beat_duration() && newtype == ANTESCOFO_CHORD) {
 			// remove duplicates pitches
 			vector<float> vf = e->pitch_list();
 			std::sort(vf.begin(), vf.end()); // sort
@@ -2424,14 +2431,15 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 		} else if (newtype == ANTESCOFO_TRILL) {
 			int pitch = 0;
 #ifdef ANTESCOFO_LISTENING_ARCHITECTURE_BRANCH
-			for (vector<float>::const_iterator r = e->pitch_list().begin(); r != e->pitch_list().end(); r++) {
-				//for (vector<float>::iterator r = t->begin(); r != t->end(); r++) {
+			//for (vector<float>::const_iterator r = e->pitch_list().begin(); r != e->pitch_list().end(); r++) {
+			for (vector<Event*>::iterator se = e->get_sub_events()->begin(); se != e->get_sub_events()->end(); se++) {
+			  for (vector<float>::const_iterator r = (*se)->pitch_list().begin(); r != (*se)->pitch_list().end(); r++) {
 				if (!*r) continue;
 				ofxTLAntescofoNoteOn *newSwitch = new ofxTLAntescofoNoteOn();
 				newSwitch->type = ANTESCOFO_TRILL;
 				newSwitch->startSelected = newSwitch->endSelected = false;
 
-				newSwitch->duration = e->beat_duration();
+				newSwitch->duration = e->beat_duration() / e->pitch_list().size();
 				newSwitch->beat.min = e->beatcum();
 				if (bGot_Action)  {
 					newSwitch->action = actstr;
@@ -2455,6 +2463,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 				line2note[e->scloc->begin.line] = switches.size() - 1;
 				if (debug_loadscore) { str << "added new switch for TRILL: beat:[" << newSwitch->beat.min << ":" << newSwitch->beat.max << "] pitch:"<<  newSwitch->pitch; console->addln(str.str()); str.str(""); }
 				bGot_Action = false;
+			}
 			}
 #else
 			for (vector< vector<float> >::iterator t = e->TrillMap.begin(); t != e->TrillMap.end(); t++) {
