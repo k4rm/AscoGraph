@@ -42,14 +42,20 @@
 #include "ofxXmlSettings.h"
 #include "ofRange.h"
 
+#ifdef ASCOGRAPH_IOS
+# include "iOSAscoGraph.h"
+class iOSAscoGraph;
+#endif
+
 #ifdef TARGET_OSX
 #include "ofxAntescofog.h"
 #import <ApplicationServices/ApplicationServices.h>
 #import <Cocoa/Cocoa.h>
-#endif
-
 
 ofxTLZoomer2D::ofxTLZoomer2D(ofxAntescofog* _fog)
+#else
+ofxTLZoomer2D::ofxTLZoomer2D(iOSAscoGraph* _fog)
+#endif
 :	minSelected(false),
 	maxSelected(false),
 	midSelected(false),

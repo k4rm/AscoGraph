@@ -154,7 +154,7 @@ void iOSAscoGraph::setup(){
     //ofSetOrientation(OF_ORIENTATION_90_RIGHT);
     ofSetVerticalSync(true);
 	
-    ofxAntescofoZoom = new ofxTLZoomer2D();
+    ofxAntescofoZoom = new ofxTLZoomer2D(this);
 	ofxAntescofoNote = new ofxTLAntescofoNote(this);
 	ofxAntescofoBeatTicker = new ofxTLBeatTicker(this);
     ofxJumpTrack = 0;
@@ -320,6 +320,8 @@ void iOSAscoGraph::setupUI() {
     mLabelBPM = new ofxUILabel(TEXT_CONSTANT_BUTTON_BPM, fontsize);
     mLabelBPM->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
     guiBottom->addWidgetEastOf(mLabelBPM, TEXT_CONSTANT_BUTTON_START);
+    
+    
     if (is_retina) mLabelBPM->getRect()->y = 100;
     else mLabelBPM->getRect()->y = 40;
     mLabelBPM->getRect()->x += 100;
@@ -341,8 +343,7 @@ void iOSAscoGraph::setupUI() {
     mLabelPitch = new ofxUILabel("0", fontsize);
     mLabelPitch->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
     guiBottom->addWidgetEastOf(mLabelPitch, TEXT_CONSTANT_BUTTON_PITCH);
-    
-    
+
 	img_path = "GUI/next_.png";
 	ofxUIMultiImageToggle* nextToggle = new ofxUIMultiImageToggle(wi*2, wi*2, false, img_path, TEXT_CONSTANT_BUTTON_NEXT_EVENT);
     nextToggle->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
@@ -388,7 +389,25 @@ void iOSAscoGraph::setupUI() {
     bu->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
 	guiBottom->addWidgetRight(bu);
 	bu->setColorBack(ofxAntescofoNote->color_note_trill);
-
+    
+    // suivi on/off
+    mSuiviOnOff = new ofxUILabelButton(TEXT_CONSTANT_SUIVI_ON, fontsize);
+    mSuiviOnOff->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
+    guiBottom->addWidgetRight(mSuiviOnOff);
+    mSuiviOnOff->getRect()->x += 40;
+    mSuiviOnOff->setDrawFill(false);
+    mSuiviOnOff->setDrawBack(false);
+    mSuiviOnOff->setDrawFillHighLight(false);
+    mSuiviOnOff->setDrawOutline(false);
+    mSuiviOnOff->setDrawOutlineHighLight(false);
+    mSuiviOnOff->setModal(false);
+    mSuiviOnOff->setDrawPadding(false);
+    mSuiviOnOff->setDrawPaddingOutline(false);
+    mSuiviOnOff->setTriggerType(OFX_UI_TRIGGER_BEGIN);
+    mSuiviOnOff->setState(false);
+    bSuiviState = false;
+    
+    
     //(guiBottom->addSpacer(5, hn))->setVisible(false);
     mDdl_host_lists = new ofxUIDropDownList("Antescofo", antescofo_hostnames);
     guiBottom->addWidgetRight(mDdl_host_lists);
@@ -426,9 +445,9 @@ void iOSAscoGraph::setupUI() {
     */
     
     ofxUILabel* l = new ofxUILabel(ascograph_version, fontsize);
-    guiBottom->addWidget(l);
-    l->getRect()->x = mDdl_cues_list->getRect()->x + mDdl_cues_list->getRect()->width + 40;
-    l->getRect()->y = 40;
+    guiBottom->addWidgetRight(l);
+    l->getRect()->x = mDdl_cues_list->getRect()->x + 20;//+ mDdl_cues_list->getRect()->width + 40;
+    l->getRect()->y = 140;
     l->setFont((ofxUIFont *)&ofxAntescofoNote->mFont);
     ofAddListener(guiBottom->newGUIEvent, this, &iOSAscoGraph::guiEvent);
 
@@ -572,6 +591,30 @@ void iOSAscoGraph::guiEvent(ofxUIEventArgs &e)
     if (e.widget->getName() == TEXT_CONSTANT_BUTTON_TOGGLEVIEW)
     {
         ofxAntescofoNote->toggleView();
+    }
+    if (e.widget->getName() == TEXT_CONSTANT_SUIVI_ON) {
+        ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+        bool val = b->getValue();
+        if (val) {
+            cout << "SUIVI_OFF= " << val << endl;
+            setSuiviOnOff(e.widget->getName() == TEXT_CONSTANT_SUIVI_ON);
+            e.widget->setName(TEXT_CONSTANT_SUIVI_OFF);
+            b->setLabelText(TEXT_CONSTANT_SUIVI_ON);
+            e.widget->setState(false);
+        }
+        return;
+    }
+    if (e.widget->getName() == TEXT_CONSTANT_SUIVI_OFF) {
+        ofxUILabelToggle *b = (ofxUILabelToggle *) e.widget;
+        bool val = b->getValue();
+        if (val) {
+            cout << "SUIVI_OFF= " << val << endl;
+            setSuiviOnOff(e.widget->getName() == TEXT_CONSTANT_SUIVI_ON);
+            e.widget->setName(TEXT_CONSTANT_SUIVI_ON);
+            b->setLabelText(TEXT_CONSTANT_SUIVI_OFF);
+            e.widget->setState(false);
+        }
+        return;
     }
 }
 void iOSAscoGraph::push_tempo_value() {

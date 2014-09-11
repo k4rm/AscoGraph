@@ -45,12 +45,23 @@
 #include "ofxTLTrack.h"
 #include "ofxTLZoomer.h"
 
+#ifdef ASCOGRAPH_IOS
+class iOSAscoGraph;
+#endif
+
+
 class ofxAntescofog;
 
 class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 {
   public:
+#ifdef TARGET_OSX
 	ofxTLZoomer2D(ofxAntescofog* _fog);
+#else
+#ifdef ASCOGRAPH_IOS
+    ofxTLZoomer2D(iOSAscoGraph *mAntescofog);
+#endif
+#endif
 	virtual ~ofxTLZoomer2D();
 	
 	virtual void draw();
@@ -87,8 +98,11 @@ class ofxTLZoomer2D : public ofxTLZoomer //ofxTLTrack
 
 
 	ofRange currentViewRange;
+#ifdef ASCOGRAPH_IOS
+    iOSAscoGraph* fog;
+#else
 	ofxAntescofog* fog;
-
+#endif
 	float xMaxGrabOffset, xMinGrabOffset;
 	float yGrabOffset;
 

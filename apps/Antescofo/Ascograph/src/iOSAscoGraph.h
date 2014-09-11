@@ -56,6 +56,11 @@ public:
 #define TEXT_CONSTANT_BUTTON_PREV_EVENT         "prev event"
 #define TEXT_CONSTANT_BUTTON_SETTINGS           "settings"
 #define TEXT_CONSTANT_BUTTON_TOGGLEVIEW         "Toggle view"
+#define TEXT_CONSTANT_SUIVI_OFF                 "suivi off"
+#define TEXT_CONSTANT_SUIVI_ON                  "suivi on"
+
+
+
 class iOSAscoGraph : public ofxiOSApp{
 	
 public:
@@ -132,6 +137,7 @@ public:
     ofxUICanvas *guiBottom;
     ofxUISlider *mSliderBPM;
     ofxUILabel  *mLabelBeat, *mLabelBPM, *mLabelPitch;
+    ofxUILabelButton *mSuiviOnOff;
     float* mBPMbuffer;
     ofxUIDropDownList *mDdl_host_lists, *mDdl_cues_list;
     void guiEvent(ofxUIEventArgs &e);
@@ -144,7 +150,7 @@ public:
     void setSuiviOnOff(bool newstate);
     
     void cues_add_menu(string& str);
-    bool bFastForwardOnOff, bPrevNextLabelMode, bSuiviOffNextEvent;
+    bool bFastForwardOnOff, bPrevNextLabelMode, bSuiviOffNextEvent, bSuiviState;
     
     bool is_retina;
     int fontsize;

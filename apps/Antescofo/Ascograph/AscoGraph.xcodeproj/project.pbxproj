@@ -497,7 +497,7 @@
 		D402F27118E6BD3400F757DC /* ofxTLBeatTicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLBeatTicker.h; sourceTree = "<group>"; };
 		D402F27218E6BD3400F757DC /* ofxTLMultiCurves.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ofxTLMultiCurves.cpp; sourceTree = "<group>"; };
 		D402F27318E6BD3400F757DC /* ofxTLMultiCurves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLMultiCurves.h; sourceTree = "<group>"; };
-		D402F27418E6BD3400F757DC /* ofxTLZoomer2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLZoomer2D.cpp; sourceTree = "<group>"; };
+		D402F27418E6BD3400F757DC /* ofxTLZoomer2D.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ofxTLZoomer2D.cpp; sourceTree = "<group>"; };
 		D402F27518E6BD3400F757DC /* ofxTLZoomer2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLZoomer2D.h; sourceTree = "<group>"; };
 		D402F27A18E6BD3400F757DC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D402F2B218E6BD5000F757DC /* ofxColorPicker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxColorPicker.cpp; sourceTree = "<group>"; };
