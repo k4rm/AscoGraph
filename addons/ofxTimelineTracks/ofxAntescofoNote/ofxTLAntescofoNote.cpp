@@ -2020,9 +2020,10 @@ int ofxTLAntescofoNote::getNoteType(Event *e)
 		ret = ANTESCOFO_TRILL;
 	else if (e->type() == 4)
 		ret = ANTESCOFO_MULTI;
-	else if (e->type() == 1)
+	else if (e->type() == 1) {
 		ret = ANTESCOFO_CHORD;
-	else if (e->isSilence())
+		ret = e->pitch_list().size() == 1 ? ANTESCOFO_NOTE : ANTESCOFO_CHORD;
+	} else if (e->isSilence())
 		ret = ANTESCOFO_REST;
 	else {
 		ret = e->pitch_list().size() == 1 ? ANTESCOFO_NOTE : ANTESCOFO_CHORD;
@@ -2540,7 +2541,7 @@ int ofxTLAntescofoNote::loadscoreAntescofo(string filename){
 			switches.push_back(newSwitch);
 			bGot_Action = false;
 		} else {
-			if (debug_loadscore) { cerr << endl << "ERROR: unhandled event!!!!"<< endl; }
+			if (debug_loadscore) { cerr << endl << "ERROR: unhandled event type: " << getNoteType(e) << " !!!! pitch.size=" << e->pitch_list().size()<< endl; }
 		}
 
 	}
